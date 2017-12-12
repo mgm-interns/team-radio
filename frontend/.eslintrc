@@ -20,10 +20,5 @@
         "trailingComma": "all"
       }
     ]
-  },
-  "settings": {
-    "import/resolver": {
-      "babel-root-import": {}
-    }
   }
 }
