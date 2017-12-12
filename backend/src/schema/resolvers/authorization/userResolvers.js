@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken';
 import pubsub from '../../pubsub';
 
+/**
+ * Resolver
+ */
 export default {
   User: {},
   Subscription: {

@@ -1,4 +1,4 @@
-const users = require('../seedData/authorization/userData');
+const users = require('./data/authorization/userData');
 // const users = [];
 
 // eslint-disable-next-line func-names, no-unused-vars
