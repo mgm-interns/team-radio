@@ -1,0 +1,14 @@
+{
+  "extends": "@istanbuljs/nyc-config-babel",
+  "reporter": [
+    "text",
+    "html"
+  ],
+  "require": [
+    "babel-register"
+  ],
+  "cache": true,
+  "sourceMap": false,
+  "instrument": false,
+  "all": true
+}
