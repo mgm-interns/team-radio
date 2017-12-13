@@ -1,0 +1,25 @@
+{
+  "name": "team-radio",
+  "version": "0.1.0",
+  "description": "Team Radio",
+  "scripts": {
+    "frontend:install": "cd frontend && echo Hello frontend && cd ../",
+    "backend:install": "cd backend && npm install && cd ../",
+    "postinstall": "run-s frontend:* backend:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgm-interns/team-radio.git"
+  },
+  "keywords": [
+    "team-radio"
+  ],
+  "author": "@pvtri96",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mgm-interns/team-radio/issues"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.2"
+  }
+}

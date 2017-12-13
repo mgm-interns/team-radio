@@ -42,7 +42,8 @@
     "pretty": "prettier --single-quote --trailing-comma all --write '{src,tests}/**/*.js'",
     "clean:build": "rimraf ./build",
     "clean:docs": "rimraf ./docs",
-    "clean-all": "run-s clean:*"
+    "clean-all": "run-s clean:*",
+    "postinstall": "run-s build-all"
   },
   "dependencies": {
     "apollo-server-express": "^1.1.3",
