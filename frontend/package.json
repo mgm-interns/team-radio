@@ -38,7 +38,7 @@
     "eject": "react-scripts eject",
     "copy-env:dev": "cp .env.development .env",
     "copy-env:production": "cp .env.production .env",
-    "postinstall": "run-s copy-env:production"
+    "postinstall": "run-s copy-env:production build"
   },
   "devDependencies": {
     "node-sass-chokidar": "0.0.3",
