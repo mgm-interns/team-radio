@@ -19,7 +19,8 @@
     "lint:frontend": "eslint frontend/src/**/*.js",
     "lint": "run-s lint:*",
     "lint-staged": "lint-staged",
-    "precommit": "run-s lint-staged lint"
+    "precommit": "run-s lint-staged lint",
+    "heroku-prebuild": "npm install"
   },
   "lint-staged": {
     "backend/src/**/*.js": [
