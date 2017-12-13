@@ -1,0 +1,22 @@
+{
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "parser": "babel-eslint",
+  "extends": ["airbnb-base", "prettier"],
+  "plugins": ["prettier"],
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": ["warn"],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "import/no-extraneous-dependencies": ["error"],
+    "prettier/prettier": [
+      "error",
+      { "singleQuote": true, "trailingComma": "all", "printWidth": 80 }
+    ]
+  }
+}

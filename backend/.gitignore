@@ -1,0 +1,10 @@
+node_modules/
+.env
+coverage/
+.nyc_output/
+yarn-error.log
+build/
+.vscode/
+package-lock.json
+yarn.lock
+docs/

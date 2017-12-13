@@ -1,1 +1,10 @@
-{}
+{
+  "extends": ["plugin:react/recommended"],
+  "plugins": ["react"],
+  "rules": {
+    "react/display-name": ["off"]
+  },
+  "env": {
+    "browser": true
+  }
+}

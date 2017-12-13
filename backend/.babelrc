@@ -1,0 +1,19 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ],
+    "stage-0"
+  ],
+  "env": {
+    "test": {
+      "plugins": ["istanbul"]
+    }
+  },
+  "plugins": ["inline-dotenv"]
+}
