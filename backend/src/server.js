@@ -2,6 +2,7 @@ import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
+import path from 'path';
 import { execute, subscribe } from 'graphql';
 import helmet from 'helmet';
 import { createServer } from 'http';
@@ -127,6 +128,18 @@ const start = async () => {
     // eslint-disable-next-line no-console
     console.log(
       `App's websocket is listening on port ${websocketServer.address().port}`,
+    );
+  });
+
+  // Serve react app
+
+  // Serve static assets
+  app.use(express.static(path.resolve(__dirname, '../../frontend', 'build')));
+
+  // Always return the main index.html, so react-router render the route in the client
+  app.use('*', (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, '../../frontend', 'build', 'index.html'),
     );
   });
 
