@@ -3,15 +3,30 @@
   "version": "0.1.0",
   "description": "Team Radio",
   "scripts": {
-    "install:frontend": "cd frontend && npm install",
     "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
     "postinstall": "run-s install:*",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm start",
     "dev": "run-p dev:*",
     "start:backend": "cd backend && npm start",
     "start:frontend": "cd frontend && npm start",
-    "start": "run-p start:*"
+    "start": "run-p start:*",
+    "lint:backend": "eslint backend/src/**/*.js",
+    "lint:frontend": "eslint frontend/src/**/*.js",
+    "lint": "run-s lint:*",
+    "lint-staged": "lint-staged",
+    "precommit": "run-s lint-staged lint"
+  },
+  "lint-staged": {
+    "backend/src/**/*.js": [
+      "prettier --single-quote --trailing-comma all --print-width 80 --tab-width 2 --write",
+      "git add"
+    ],
+    "frontend/src/**/*.js": [
+      "prettier --single-quote --trailing-comma all --print-width 80 --tab-width 2 --write",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
@@ -26,6 +41,17 @@
     "url": "https://github.com/mgm-interns/team-radio/issues"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.2"
+    "babel-eslint": "^8.0.3",
+    "eslint": "^4.13.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "eslint-plugin-react": "^7.5.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^6.0.0",
+    "npm-run-all": "^4.1.2",
+    "prettier": "^1.9.2",
+    "prettier-eslint": "^8.3.1"
   }
 }

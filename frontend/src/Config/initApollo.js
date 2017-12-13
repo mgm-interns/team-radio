@@ -1,16 +1,19 @@
 import { ApolloClient, createNetworkInterface } from 'react-apollo';
 import {
   SubscriptionClient,
-  addGraphQLSubscriptions,
+  // addGraphQLSubscriptions,
 } from 'subscriptions-transport-ws';
 
 let devtools = false;
 let apolloClient = null;
 
 // Get the Apollo DevTools extension and fallback to a no-op function
+// eslint-disable-next-line no-underscore-dangle
 if (window.__APOLLO_CLIENT__ && process.env.NODE_ENV === 'development') {
   devtools = true;
 }
+
+const { localStorage } = window;
 
 const create = (initialState = {}) => {
   const networkInterface = createNetworkInterface({
@@ -20,6 +23,7 @@ const create = (initialState = {}) => {
     },
     connectToDevTools: devtools,
   });
+  // eslint-disable-next-line
   const wsClient = new SubscriptionClient(
     process.env.REACT_APP_SUBCRIPTION_END_POINT,
     {
@@ -55,7 +59,6 @@ const create = (initialState = {}) => {
               localStorage.removeItem('token');
               localStorage.removeItem('refreshToken');
               localStorage.removeItem('id');
-              console.log('Clear');
               next();
             }
           });
@@ -76,7 +79,7 @@ const create = (initialState = {}) => {
   // );
   return new ApolloClient({
     initialState,
-    networkInterface
+    networkInterface,
     // networkInterface: networkInterfaceWithSubscriptions,
   });
 };

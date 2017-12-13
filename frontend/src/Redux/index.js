@@ -7,12 +7,15 @@ let store = null;
 
 // Get the Redux DevTools extension and fallback to a no-op function
 let devtools = f => f;
+
+/* eslint-disable */
 if (
   window.__REDUX_DEVTOOLS_EXTENSION__ &&
   process.env.NODE_ENV === 'development'
 ) {
   devtools = window.__REDUX_DEVTOOLS_EXTENSION__();
 }
+/* eslint-enable */
 
 const create = (apollo, initialState = {}) =>
   createStore(

@@ -2,11 +2,11 @@ const DEFAULT_WORDS_MAX_LENGTH = 25;
 const DEFAULT_CHAR_MAX_LENGTH = 50;
 
 export const reduceByWords = (text, length = DEFAULT_WORDS_MAX_LENGTH) => {
-  let words = text.split(' ');
-  let parts = [];
+  const words = text.split(' ');
+  const parts = [];
   for (let i = 0; i < words.length; i++) {
     if (i < length) {
-      if (i === length - 1) parts.push(words[i] + ' ...');
+      if (i === length - 1) parts.push(`${words[i]} ...`);
       else parts.push(words[i]);
     }
   }

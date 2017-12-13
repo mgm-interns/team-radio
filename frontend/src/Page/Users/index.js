@@ -4,18 +4,20 @@ import { graphql, gql } from 'react-apollo';
 
 class LandingPage extends Component {
   render() {
-    if(this.props.data.loading) {
-      return <h1>Loading</h1>
+    if (this.props.data.loading) {
+      return <h1>Loading</h1>;
     }
     const { data: { getAllUsers } } = this.props;
     return (
       <div>
-        {getAllUsers.map((user => (
+        {getAllUsers.map(user => (
           <div key={user.id}>
             <h2>{user.email}</h2>
-            <h6>{user.firstname} {user.lastname}</h6>
+            <h6>
+              {user.firstname} {user.lastname}
+            </h6>
           </div>
-        )))}
+        ))}
       </div>
     );
   }
@@ -26,14 +28,14 @@ LandingPage.propTypes = {
 };
 
 const QUERY = gql`
-{
-  getAllUsers {
-    id
-    firstname
-    lastname
-    email
+  {
+    getAllUsers {
+      id
+      firstname
+      lastname
+      email
+    }
   }
-}
 `;
 
 export default graphql(QUERY)(LandingPage);

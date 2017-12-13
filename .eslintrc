@@ -11,12 +11,9 @@
     "sourceType": "module"
   },
   "rules": {
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": ["tests/**/*.js"]
-      }
-    ],
+    "no-unused-vars": ["warn"],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "import/no-extraneous-dependencies": ["error"],
     "prettier/prettier": [
       "error",
       { "singleQuote": true, "trailingComma": "all", "printWidth": 80 }
