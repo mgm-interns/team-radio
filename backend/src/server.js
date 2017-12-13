@@ -11,8 +11,6 @@ import { Model } from 'objection';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 
 import config from './config';
-import transporter from './email';
-import emailTemplates from './email/templates';
 import knexConfig from './knexfile';
 import models from './models';
 import schema from './schema';
@@ -89,8 +87,6 @@ const start = async () => {
         config,
         models,
         user: req.user,
-        transporter,
-        emailTemplates,
       },
       formatError,
       schema,
@@ -121,8 +117,6 @@ const start = async () => {
         schema,
         onConnect: () => ({
           models,
-          transporter,
-          emailTemplates,
         }),
       },
       {

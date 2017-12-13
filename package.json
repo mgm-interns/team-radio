@@ -2,6 +2,9 @@
   "name": "team-radio",
   "version": "0.1.0",
   "description": "Team Radio",
+  "engines": {
+    "node": "8.x"
+  },
   "scripts": {
     "install:backend": "cd backend && npm install",
     "install:frontend": "cd frontend && npm install",
@@ -32,9 +35,7 @@
     "type": "git",
     "url": "git+https://github.com/mgm-interns/team-radio.git"
   },
-  "keywords": [
-    "team-radio"
-  ],
+  "keywords": ["team-radio"],
   "author": "@pvtri96",
   "license": "ISC",
   "bugs": {
