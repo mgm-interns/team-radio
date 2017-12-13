@@ -44,7 +44,9 @@
     "clean:build": "rimraf ./build",
     "clean:docs": "rimraf ./docs",
     "clean-all": "run-s clean:*",
-    "postinstall": "run-s build-all"
+    "copy-env:dev": "cp .env.development .env",
+    "copy-env:production": "cp .env.production .env",
+    "postinstall": "run-s copy-env:production build-all"
   },
   "dependencies": {
     "apollo-server-express": "^1.1.3",
