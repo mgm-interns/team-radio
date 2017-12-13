@@ -7,7 +7,9 @@
   },
   "scripts": {
     "install:backend": "cd backend && npm install",
+    "install:backend:postinstall": "cd backend && cp .env.production .env",
     "install:frontend": "cd frontend && npm install",
+    "install:frontend:postinstall": "cd frontend && cp .env.production .env",
     "postinstall": "run-s install:*",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm start",
