@@ -1,10 +1,13 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React from "react";
+import ApolloProvider from "react-apollo/ApolloProvider";
+import Router from "./Router";
+import { initApollo, initRedux } from "../Config";
 
-import LandingPage from '../Page/LandingPage/';
+const apolloClient = initApollo();
+const store = initRedux(apolloClient);
 
 export default () => (
-  <Switch>
-    <Route exact path="/" component={LandingPage} />
-  </Switch>
+  <ApolloProvider client={apolloClient} store={store}>
+    <Router />
+  </ApolloProvider>
 );

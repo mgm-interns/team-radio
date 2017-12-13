@@ -3,9 +3,15 @@
   "version": "0.1.0",
   "description": "Team Radio",
   "scripts": {
-    "frontend:install": "cd frontend && echo Hello frontend && cd ../",
-    "backend:install": "cd backend && npm install && cd ../",
-    "postinstall": "run-s frontend:* backend:*"
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && npm install",
+    "postinstall": "run-s install:*",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm start",
+    "dev": "run-p dev:*",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "start": "run-p start:*"
   },
   "repository": {
     "type": "git",
