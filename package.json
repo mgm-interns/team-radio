@@ -20,7 +20,8 @@
     "precommit": "run-s lint-staged lint",
     "db:migrate": "cd backend && npm run migrate:latest:dev",
     "db:seed": "cd backend && npm run seed:dev",
-    "db:rollback": "cd backend && npm run migrate:rollback:dev"
+    "db:rollback": "cd backend && npm run migrate:rollback:dev",
+    "heroku-postbuild": "run-s db:rollback db:migrate db:seed"
   },
   "lint-staged": {
     "backend/src/**/*.js": [
@@ -44,6 +45,9 @@
   "bugs": {
     "url": "https://github.com/mgm-interns/team-radio/issues"
   },
+  "dependencies": {
+    "npm-run-all": "^4.1.2"
+  },
   "devDependencies": {
     "babel-eslint": "^8.0.3",
     "eslint": "^4.13.1",
@@ -54,7 +58,6 @@
     "eslint-plugin-react": "^7.5.1",
     "husky": "^0.14.3",
     "lint-staged": "^6.0.0",
-    "npm-run-all": "^4.1.2",
     "prettier": "^1.9.2",
     "prettier-eslint": "^8.3.1"
   }
