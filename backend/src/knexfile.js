@@ -24,7 +24,7 @@ module.exports = {
   production: {
     client: 'pg',
     connection: {
-      host: `/cloudsql/${process.env.DATABASE_INSTANCE_NAME}`,
+      host: process.env.DATABASE_INSTANCE_NAME,
       user: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
