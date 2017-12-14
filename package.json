@@ -12,9 +12,7 @@
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm start",
     "dev": "run-p dev:*",
-    "start:backend": "cd backend && npm start",
-    "start:frontend": "cd frontend && npm start",
-    "start": "run-p start:*",
+    "start": "cd backend && npm start",
     "lint:backend": "eslint backend/src/**/*.js",
     "lint:frontend": "eslint frontend/src/**/*.js",
     "lint": "run-s lint:*",
@@ -35,7 +33,9 @@
     "type": "git",
     "url": "git+https://github.com/mgm-interns/team-radio.git"
   },
-  "keywords": ["team-radio"],
+  "keywords": [
+    "team-radio"
+  ],
   "author": "@pvtri96",
   "license": "ISC",
   "bugs": {
