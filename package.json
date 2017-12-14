@@ -17,7 +17,10 @@
     "lint:frontend": "eslint frontend/src/**/*.js",
     "lint": "run-s lint:*",
     "lint-staged": "lint-staged",
-    "precommit": "run-s lint-staged lint"
+    "precommit": "run-s lint-staged lint",
+    "db:migrate": "cd backend && npm run migrate:latest:dev",
+    "db:seed": "cd backend && npm run seed:dev",
+    "db:rollback": "cd backend && npm run migrate:rollback:dev"
   },
   "lint-staged": {
     "backend/src/**/*.js": [
