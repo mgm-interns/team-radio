@@ -12,14 +12,16 @@
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm start",
     "dev": "run-p dev:*",
-    "start:backend": "cd backend && npm start",
-    "start:frontend": "cd frontend && npm start",
-    "start": "run-p start:*",
+    "start": "cd backend && npm start",
     "lint:backend": "eslint backend/src/**/*.js",
     "lint:frontend": "eslint frontend/src/**/*.js",
     "lint": "run-s lint:*",
     "lint-staged": "lint-staged",
-    "precommit": "run-s lint-staged lint"
+    "precommit": "run-s lint-staged lint",
+    "db:migrate": "cd backend && npm run migrate:latest:dev",
+    "db:seed": "cd backend && npm run seed:dev",
+    "db:rollback": "cd backend && npm run migrate:rollback:dev",
+    "heroku-postbuild": "run-s db:rollback db:migrate db:seed"
   },
   "lint-staged": {
     "backend/src/**/*.js": [
@@ -35,11 +37,16 @@
     "type": "git",
     "url": "git+https://github.com/mgm-interns/team-radio.git"
   },
-  "keywords": ["team-radio"],
+  "keywords": [
+    "team-radio"
+  ],
   "author": "@pvtri96",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/mgm-interns/team-radio/issues"
+  },
+  "dependencies": {
+    "npm-run-all": "^4.1.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.3",
@@ -51,7 +58,6 @@
     "eslint-plugin-react": "^7.5.1",
     "husky": "^0.14.3",
     "lint-staged": "^6.0.0",
-    "npm-run-all": "^4.1.2",
     "prettier": "^1.9.2",
     "prettier-eslint": "^8.3.1"
   }
