@@ -1,6 +1,5 @@
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import Debug from 'debug';
 import express from 'express';
 import logger from 'morgan';
 import path from 'path';
@@ -8,7 +7,6 @@ import path from 'path';
 import api from './api';
 
 const app = express();
-const debug = Debug('server:app');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -42,12 +40,6 @@ app.use((err, req, res, next) => {
   // render the error page
   res.status(err.status || 500);
   res.json(err);
-});
-
-// Handle uncaughtException
-process.on('uncaughtException', err => {
-  debug('Caught exception: %j', err);
-  process.exit(1);
 });
 
 export default app;
