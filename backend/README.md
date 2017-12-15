@@ -1,6 +1,6 @@
-# Team-Radio-frontend
+# Team-Radio-backend
 
-Client project for team-radio
+Backend project for team-radio
 
 ## Instruction
 

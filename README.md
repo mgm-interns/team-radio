@@ -23,7 +23,6 @@ npm install
 * Generate enviroment variable
 
 ```
-cp ./backend/.env.development ./backend/.env
 cp ./frontend/.env.development ./frontend/.env
 ```
 
@@ -32,7 +31,7 @@ _Note_: Feel free to change these variables if you want to.
 * Start project
 
 ```
-npm run dev
+npm start
 ```
 
 ## Production

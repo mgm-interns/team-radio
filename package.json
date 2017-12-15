@@ -9,7 +9,7 @@
     "install:backend": "cd backend && npm install",
     "install:frontend": "cd frontend && npm install",
     "postinstall": "run-s install:*",
-    "dev:backend": "cd backend && npm run dev",
+    "dev:backend": "cd backend && npm start",
     "dev:frontend": "cd frontend && npm start",
     "dev": "run-p dev:*",
     "start": "cd backend && npm start",
@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mgm-interns/team-radio.git"
+    "url": "https://github.com/mgm-interns/team-radio.git"
   },
   "keywords": ["team-radio"],
   "author": "@pvtri96",
