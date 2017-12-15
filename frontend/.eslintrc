@@ -3,7 +3,8 @@
   "plugins": ["react"],
   "rules": {
     "react/display-name": ["off"],
-    "class-methods-use-this": ["off"]
+    "class-methods-use-this": ["off"],
+    "global-require": ["off"]
   },
   "env": {
     "browser": true
