@@ -1,91 +1,34 @@
 {
-  "name": "team-radio-backend",
+  "name": "server",
   "version": "0.1.0",
-  "description": "Backend Server for team-radio",
-  "author": "@pvtri96",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mgm-interns/team-radio.git"
-  },
-  "keywords": [
-    "team-radio",
-    "backend",
-    "nodejs",
-    "graphql",
-    "knex-js",
-    "objection-js",
-    "json-web-token"
-  ],
-  "bugs": {
-    "url": "https://github.com/mgm-interns/team-radio/issues"
-  },
-  "homepage": "https://github.com/mgm-interns/team-radio#readme",
-  "graphdoc": {
-    "endpoint": "http://localhost:8080/graphql",
-    "output": "./docs"
-  },
-  "main": "src/index.js",
-  "engines": {
-    "node": "8.x"
-  },
+  "private": true,
+  "main": "app.js",
   "scripts": {
-    "start": "node build/index.js",
-    "build:only": "babel -d ./build ./src",
-    "build-all": "run-s clean:build build:*",
-    "dev": "cross-env NODE_PATH=/ nodemon -e js --exec babel-node src/index.js",
-    "migrate:latest:dev": "knex migrate:latest --knexfile src/knexfile.js",
-    "migrate:rollback:dev": "knex migrate:rollback --knexfile src/knexfile.js",
-    "seed:dev": "knex seed:run --knexfile src/knexfile.js",
-    "reset:db:dev": "run-s migrate:rollback:dev migrate:latest:dev seed:dev",
-    "doc:gen": "graphdoc -f",
-    "pretty": "prettier --single-quote --trailing-comma all --write '{src,tests}/**/*.js'",
-    "clean:build": "rimraf ./build",
-    "clean:docs": "rimraf ./docs",
-    "clean-all": "run-s clean:*",
-    "copy-env:dev": "cp .env.development .env",
-    "copy-env:production": "cp .env.production .env",
-    "postinstall": "run-s copy-env:production build-all"
+    "start": "node ./bin/start",
+    "test":
+      "mocha --recursive './test/*Test.js' --compilers js:babel-core/register"
   },
   "dependencies": {
-    "apollo-server-express": "^1.1.3",
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.18.2",
-    "cors": "^2.8.4",
-    "dotenv": "^4.0.0",
-    "express": "^4.16.0",
-    "faker": "^4.1.0",
-    "graphql": "^0.10.5",
-    "graphql-subscriptions": "^0.5.4",
-    "graphql-tools": "^1.2.3",
-    "graphql-tools-types": "^1.1.12",
-    "helmet": "^3.8.2",
-    "jsonwebtoken": "^8.0.1",
-    "knex": "^0.13.0",
-    "merge-graphql-schemas": "^1.1.4",
-    "objection": "^0.8.9",
-    "objection-unique": "^0.2.1",
-    "path": "^0.12.7",
-    "pg": "^7.3.0",
-    "subscriptions-transport-ws": "^0.8.3",
-    "uuid": "^3.1.0"
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "body-parser": "^1.16.1",
+    "cookie-parser": "^1.4.3",
+    "debug": "^3.0.0",
+    "express": "^4.15.4",
+    "morgan": "^1.8.2"
   },
   "devDependencies": {
-    "@2fd/graphdoc": "^2.4.0",
-    "@istanbuljs/nyc-config-babel": "^1.2.2",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-plugin-inline-dotenv": "^1.1.1",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-stage-0": "^6.24.1",
-    "babel-register": "^6.26.0",
-    "cross-env": "^5.0.5",
-    "mocha": "^3.5.3",
-    "nodemon": "^1.12.1",
-    "npm-run-all": "^4.1.1",
-    "nyc": "^11.2.1",
-    "rimraf": "^2.6.2"
+    "babel-eslint": "^7.2.3",
+    "chai": "^4.1.1",
+    "chai-http": "^3.0.0",
+    "eslint": "^4.5.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-mocha": "^4.11.0",
+    "eslint-plugin-react": "^7.2.1"
   }
 }
