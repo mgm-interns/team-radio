@@ -17,7 +17,6 @@
     "moment": "^2.19.4",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
-    "react-apollo": "^1.4.15",
     "react-dom": "^16.2.0",
     "react-flexbox-grid": "^2.0.0",
     "react-redux": "^5.0.6",
@@ -30,8 +29,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+    "build-css":
+      "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "watch-css":
+      "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "copy-env:dev": "cp .env.development .env",
