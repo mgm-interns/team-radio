@@ -11,8 +11,13 @@ class Player extends Component {
     onPause: PropTypes.func,
   };
 
+  static defaultProps = {
+    width: '100%',
+    height: '100%',
+  };
+
   render() {
-    const { url, playing, onPlay, onPause } = this.props;
+    const { url, playing, onPlay, onPause, ...othersProps } = this.props;
     return (
       <ReactPlayer
         url={url}
@@ -23,6 +28,7 @@ class Player extends Component {
         playing={playing}
         onPlay={onPlay}
         onPause={onPause}
+        {...othersProps}
       />
     );
   }
