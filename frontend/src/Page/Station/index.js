@@ -57,12 +57,13 @@ class Station extends Component {
         },
       ],
     };
-
+  }
+  componentDidMount() {
     setInterval(() => {
       if (this.state.itemList.length !== 0) {
         this.updateList();
       }
-    }, 10000);
+    }, 20000);
   }
 
   addLink(e) {
@@ -108,30 +109,29 @@ class Station extends Component {
     return (
       <div>
         <Grid container spacing={24}>
-          <Grid item xs={1} />{' '}
+          <Grid item xs={1} />
           <Grid item xs={6}>
             <Player
               videoId={this.state.playing.videoId}
               startTime={this.state.startTime}
-            />{' '}
-          </Grid>{' '}
+            />
+          </Grid>
           <Grid item xs={5}>
-            {' '}
-            {/* <Playlist itemList={this.state.itemList}/> */}{' '}
-          </Grid>{' '}
-          <Grid item xs={1} />{' '}
+            {/* <Playlist itemList={this.state.itemList}/> */}
+          </Grid>
+          <Grid item xs={1} />
           <Grid item xs={10}>
             <AddLink
               inputUrl={this.state.inputUrl}
               addLink={this.addLink.bind(this)}
               updateInputUrl={this.updateInputUrl.bind(this)}
-            />{' '}
-          </Grid>{' '}
-          <Grid item xs={1} /> <Grid item xs={1} />{' '}
+            />
+          </Grid>
+          <Grid item xs={1} /> <Grid item xs={1} />
           <Grid item xs={10}>
-            <Playlist itemList={this.state.itemList} />{' '}
-          </Grid>{' '}
-        </Grid>{' '}
+            <Playlist itemList={this.state.itemList} />
+          </Grid>
+        </Grid>
       </div>
     );
   }
