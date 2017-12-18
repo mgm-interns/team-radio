@@ -5,10 +5,10 @@ import { MuiThemeProvider } from 'material-ui/styles';
 import registerServiceWorker from './registerServiceWorker';
 import App from './Container/App';
 
-import Theme from './Theme/';
+import { MuiTheme } from './Theme';
 
 ReactDOM.render(
-  <MuiThemeProvider theme={Theme}>
+  <MuiThemeProvider theme={MuiTheme}>
     <BrowserRouter>
       <App />
     </BrowserRouter>
