@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import './style.css';
 import fixture from '../../Fixture/landing';
@@ -12,9 +13,21 @@ const NavBar = () => (
         <h1 className="navbar_text logoName">{fixture.name}</h1>
       </div>
       <ul className="navigation">
-        <li className="navbar_text">HOME</li>
-        <li className="navbar_text">STATIONS</li>
-        <li className="navbar_text">LOGIN</li>
+        <li>
+          <Link to="/" className="navbar_text">
+            HOME
+          </Link>
+        </li>
+        <li>
+          <Link to="/station" className="navbar_text">
+            STATIONS
+          </Link>
+        </li>
+        <li>
+          <Link to="/auth/login" className="navbar_text">
+            LOGIN
+          </Link>
+        </li>
       </ul>
     </div>
   </div>
@@ -79,12 +92,12 @@ const Section = () => (
             When you needs to share music and your whole team can hear it!
           </span>
           <span className="section_content">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
+            {`Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
             and scrambled it to make a type specimen book. It has survived not
             only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged.{' '}
+            remaining essentially unchanged.`}
           </span>
         </div>
         <img

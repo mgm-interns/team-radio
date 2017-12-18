@@ -70,6 +70,7 @@
 
 .navigation {
     display: flex;
+    list-style: none;
 }
 
 .navbar_text {
@@ -79,7 +80,7 @@
     font-weight: 400;
     font-size: 24pt;
     padding-inline-start: 0.5em;
-    list-style: none;
+    text-decoration: none;
 }
 
 .logoName {
