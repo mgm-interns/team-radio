@@ -1,2 +1,5 @@
-h1 {
+
+.container {
+  display: flex;
+  flex: 1;
 }

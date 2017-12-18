@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Grid from 'material-ui/Grid';
 import { Player } from '../../../Component';
 
 const URL = 'https://www.youtube.com/watch?v=igSCSQ9fg14';
 
 class NowPlaying extends Component {
-  static propTypes = {};
+  static propTypes = {
+    style: PropTypes.any,
+  };
 
   constructor(props) {
     super(props);
@@ -60,15 +63,18 @@ class NowPlaying extends Component {
 
   render() {
     const { player: { isPlaying } } = this.state;
+    const { style } = this.props;
 
     return (
-      <Player
-        url={URL}
-        ref={this._getRefPlayer}
-        playing={isPlaying}
-        onPlay={this._onPlay}
-        onPause={this._onPause}
-      />
+      <Grid item xs={12} style={style}>
+        <Player
+          url={URL}
+          ref={this._getRefPlayer}
+          playing={isPlaying}
+          onPlay={this._onPlay}
+          onPause={this._onPause}
+        />
+      </Grid>
     );
   }
 }
