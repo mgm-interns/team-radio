@@ -2,7 +2,8 @@
   "extends": ["plugin:react/recommended"],
   "plugins": ["react"],
   "rules": {
-    "react/display-name": ["off"]
+    "react/display-name": ["off"],
+    "class-methods-use-this": ["off"]
   },
   "env": {
     "browser": true
