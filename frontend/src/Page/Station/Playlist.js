@@ -18,7 +18,7 @@ class Playlist extends Component {
       <div style={style.playlistContainer}>
         <h1>Playlist</h1>
         {this.props.itemList.map((item, index) => (
-          <PlaylistItem item={item} index={index} />
+          <PlaylistItem item={item} key={index} index={index} />
         ))}
       </div>
     );

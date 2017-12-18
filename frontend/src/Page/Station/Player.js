@@ -19,10 +19,10 @@ class Player extends Component {
             width="100%"
             height="480px"
             src={this.getEmbebLink(this.props.videoId, this.props.startTime)}
-            frameborder="0"
+            frameBorder="0"
             gesture="media"
             allow="encrypted-media"
-            allowfullscreen
+            allowFullScreen
           />
         </div>
       </div>

@@ -3,8 +3,6 @@ import Player from './Player';
 import Playlist from './Playlist';
 import AddLink from './AddLink';
 import Grid from 'material-ui/Grid';
-import io from 'socket.io-client';
-const socket = io('http://localhost:4000');
 
 //https://www.youtube.com/embed/JGYjKR69M6U?list=PLdlDU6Mx7qmgXsWG3gqXxfrykdaITNeEi&amp;ecver=1
 class Station extends Component {
@@ -60,20 +58,11 @@ class Station extends Component {
       ],
     };
 
-    socket.emit('startTime', Math.floor(Date.now() / 1000));
-    let that = this;
-    socket.on('startTime', function(timestamp) {
-      let startTime = Math.floor(Date.now() / 1000) - timestamp;
-      console.log(startTime);
-      that.setState((prevState, props) => {
-        return {
-          startTime: startTime,
-        };
-      });
-    });
-    // setInterval(() => {
-    //   this.updateList()
-    // }, 300000)
+    setInterval(() => {
+      if (this.state.itemList.length !== 0) {
+        this.updateList();
+      }
+    }, 10000);
   }
 
   addLink(e) {
@@ -124,30 +113,30 @@ class Station extends Component {
     return (
       <div>
         <Grid container spacing={24}>
-          <Grid item xs={1} />
+          <Grid item xs={1} />{' '}
           <Grid item xs={6}>
             <Player
               videoId={this.state.playing.videoId}
               startTime={this.state.startTime}
-            />
-          </Grid>
+            />{' '}
+          </Grid>{' '}
           <Grid item xs={5}>
-            {/* <Playlist itemList={this.state.itemList}/> */}
-          </Grid>
-          <Grid item xs={1} />
+            {' '}
+            {/* <Playlist itemList={this.state.itemList}/> */}{' '}
+          </Grid>{' '}
+          <Grid item xs={1} />{' '}
           <Grid item xs={10}>
             <AddLink
               inputUrl={this.state.inputUrl}
               addLink={this.addLink.bind(this)}
               updateInputUrl={this.updateInputUrl.bind(this)}
-            />
-          </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={1} />
+            />{' '}
+          </Grid>{' '}
+          <Grid item xs={1} /> <Grid item xs={1} />{' '}
           <Grid item xs={10}>
-            <Playlist itemList={this.state.itemList} />
-          </Grid>
-        </Grid>
+            <Playlist itemList={this.state.itemList} />{' '}
+          </Grid>{' '}
+        </Grid>{' '}
       </div>
     );
   }

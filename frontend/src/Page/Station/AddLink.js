@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Grid from 'material-ui/Grid';
 import Input from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import Button from 'material-ui/Button';
