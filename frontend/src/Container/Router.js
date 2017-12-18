@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import Landing from '../Page/Landing/';
-import Station from '../Page/Station/';
+import Landing from '../Page/Landing';
+import Station from '../Page/Station';
 import Player from '../Page/test';
 import Auth from '../Page/Auth/';
 import Login from '../Page/Auth/Login/';
