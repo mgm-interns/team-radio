@@ -27,7 +27,7 @@ const style = {
 };
 
 class PlaylistItem extends Component {
-  static getThumnail(videoId) {
+  getThumnail(videoId) {
     return `http://i3.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
   }
   render() {
