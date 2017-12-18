@@ -1,0 +1,243 @@
+* {
+    font-family: 'Roboto Slab', serif;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+
+/* Let's get this party started */
+
+::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(121, 119, 119, 0.8);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(121, 119, 119, 0.8);
+}
+
+
+/* navbar */
+
+.navbar_container {
+    background: #e06a4d;
+    padding-left: 5em;
+    padding-right: 5em;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100px;
+    z-index: 999999;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    min-height: 8vh;
+    margin-left: 5em;
+    margin-right: 5em;
+}
+
+.logo {
+    display: flex;
+    flex: 1;
+    align-items: center;
+}
+
+.navigation {
+    display: flex;
+}
+
+.navbar_text {
+    color: white;
+    font-family: 'Bebas Neue';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24pt;
+    padding-inline-start: 0.5em;
+    list-style: none;
+}
+
+.logoName {
+    font-size: 36pt;
+}
+
+
+/* background cover */
+
+.backdrop_container {
+    /* padding-top: 80px; */
+    position: relative;
+}
+
+.backdrop_foreground {
+    background: rgba(10, 55, 57, 0.9);
+    display: flex;
+    width: 100%;
+    height: 70vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.backdrop_foreground .something {
+    position: absolute;
+    font-weight: bold;
+    z-index: 999;
+}
+
+.backdrop_foreground img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: opacity(0.1);
+}
+
+.backdrop_slogan {
+    font-size: 36pt;
+    font-weight: 300;
+    color: white;
+    text-align: center;
+    max-width: 677px;
+}
+
+
+/* stations */
+
+.stations_container {
+    padding: 2em;
+}
+
+.stations_wrapper {
+    display: flex;
+    justify-content: space-around;
+    margin-left: 10em;
+    margin-right: 10em;
+    position: relative;
+    margin-bottom: 80px;
+}
+
+.stations_primary {
+    border: 1px solid black;
+    position: absolute;
+    left: 0;
+    top: -110px;
+    background: white;
+    padding: 8px;
+}
+
+.stations_primary img {
+    width: 250px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.stations_secondary {
+    display: flex;
+    list-style-type: none;
+    align-self: center;
+    max-width: 1000px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    /* padding-left: 8em; */
+}
+
+.station-text--title {
+    font-weight: bold;
+}
+
+.stations_secondary_avatar {
+    width: 150px;
+    height: 150px;
+}
+
+.station_item {
+    margin-right: 2.5em;
+}
+
+.subtitle {
+    color: grey;
+}
+
+
+/* section landing  */
+
+.section_container {
+    background: #e8e0d4;
+}
+
+.section_wrapper {
+    padding-left: 5em;
+    padding-top: 5em;
+    padding-right: 10em;
+}
+
+.section_foreground {
+    width: 100%;
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.section_slogan {
+    justify-content: flex-end;
+    font-size: 36pt;
+}
+
+.section_smalltext {
+    font-size: 21pt;
+}
+
+.section_largeIcon {
+    align-self: flex-start;
+    width: 40%;
+    height: auto;
+    padding-left: 5em;
+}
+
+.section_description {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    max-width: 1000px;
+    line-height: 2;
+}
+
+.section_content {
+    display: flex;
+    text-align: right;
+}
+
+
+/* footer */
+
+.footer_foreground {
+    background: #0a3739;
+    width: 100%;
+    height: 200px;
+    bottom: 0;
+}
