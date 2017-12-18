@@ -3,3 +3,35 @@
     src: url("/fonts/bebasneue-webfont.woff2") format("woff2"),
            url("/fonts/bebasneue-webfont.woff") format("woff");
 }
+
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url('/fonts/RobotoSlab-Bold.woff2') format('woff2'),
+        url('/fonts/RobotoSlab-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url('/fonts/RobotoSlab-Regular.woff2') format('woff2'),
+        url('/fonts/RobotoSlab-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url('/fonts/RobotoSlab-Thin.woff2') format('woff2'),
+        url('/fonts/RobotoSlab-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url('/fonts/RobotoSlab-Light.woff2') format('woff2'),
+        url('/fonts/RobotoSlab-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
