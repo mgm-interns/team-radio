@@ -1,15 +1,15 @@
 import express from 'express';
 
+// Initiate new Router instance
 const router = express.Router();
 
-// Prefix: api
+const handlers = [
+  // Declare api handlers
+  require('./dummy'),
+];
 
-// For demonstration
-router.get('/', (req, res) => {
-  res.json({
-    title: 'Express',
-    content: 'Hello Express',
-  });
-});
+// Register handlers
+handlers.map(handler => handler(router));
 
+// Export router
 export default router;
