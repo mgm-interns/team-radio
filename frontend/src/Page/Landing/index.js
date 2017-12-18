@@ -1,61 +1,62 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Grid from 'material-ui/Grid';
+import TextField from 'material-ui/TextField';
+import Button from 'material-ui/Button';
 
 import './style.css';
 import fixture from '../../Fixture/landing';
-import Images from '../../Theme/Images';
+import { Images } from '../../Theme';
 
 const NavBar = () => (
-  <div className="navbar_container">
-    <div className="wrapper">
-      <div className="logo">
-        <img src={fixture.logo} alt="Team Radio" height="50px" />
-        <h1 className="navbar_text logoName">{fixture.name}</h1>
-      </div>
-      <ul className="navigation">
-        <li>
-          <Link to="/" className="navbar_text">
-            HOME
-          </Link>
-        </li>
-        <li>
-          <Link to="/station" className="navbar_text">
-            STATIONS
-          </Link>
-        </li>
-        <li>
-          <Link to="/auth/login" className="navbar_text">
-            LOGIN
-          </Link>
-        </li>
-      </ul>
-    </div>
-  </div>
+  <Grid className="navbar_container" container>
+    <Grid className="logo">
+      <img src={fixture.logo} alt="Team Radio" height="50px" />
+      <h1 className="navbar_text logoName">{fixture.name}</h1>
+    </Grid>
+    <Grid className="navigation">
+      <Link to="/" className="navbar_text">
+        HOME
+      </Link>
+      <Link to="/station" className="navbar_text">
+        STATIONS
+      </Link>
+      <Link to="/auth/login" className="navbar_text">
+        LOGIN
+      </Link>
+    </Grid>
+  </Grid>
 );
 
 const Backdrop = () => (
-  <div className="backdrop_container">
-    <div className="backdrop_wrapper">
-      <div className="backdrop_foreground">
-        <div className="something">
-          <h3 className="backdrop_slogan">{fixture.slogan}</h3>
-        </div>
-        <img
-          src="https://avante.biz/wp-content/uploads/Music-Wallpaper/Music-Wallpaper-001.jpg"
-          alt="Team Radio - Cover"
-          height="900"
-          width="100%"
-        />
-      </div>
-    </div>
-  </div>
+  <Grid className="backdrop_container" container>
+    <Grid className="backdrop_foreground">
+      <Grid className="something" item xs>
+        <h3 className="backdrop_slogan">{fixture.slogan}</h3>
+        <Grid>
+          <TextField
+            label="Name your station"
+            placeholder="Name your station"
+            margin="normal"
+          />
+          <Button raised color="primary">
+            CREATE
+          </Button>
+        </Grid>
+      </Grid>
+      <img
+        src="https://avante.biz/wp-content/uploads/Music-Wallpaper/Music-Wallpaper-001.jpg"
+        alt="Team Radio - Cover"
+      />
+    </Grid>
+  </Grid>
 );
 
 const PopularStations = () => {
   const stations = [];
   fixture.stations.map((station, index) =>
     stations.push(
-      <div key={index} className="station_item">
+      <Grid key={index} className="station_item" item>
         <img
           src={station.avatar}
           alt=""
@@ -63,63 +64,67 @@ const PopularStations = () => {
         />
         <h1 className="station-text--title">{station.name}</h1>
         <span className="subtitle">{station.describe}</span>
-      </div>,
+      </Grid>,
     ),
   );
 
   const mainStation = fixture.stations[0];
   return (
-    <div className="stations_container">
-      <div className="stations_wrapper">
-        <div className="stations_primary">
+    <Grid className="stations_container" container>
+      <Grid className="stations_wrapper" item xs={12}>
+        <Grid className="stations_primary" item xs>
           <img src={mainStation.avatar} alt="" width="200" height="200" />
           <h1 className="station-text--title">{mainStation.name}</h1>
           <span className="subtitle">{mainStation.describe}</span>
-        </div>
-        <div className="stations_secondary">{stations}</div>
-      </div>
-    </div>
+        </Grid>
+        <Grid className="stations_secondary" item xs>
+          {stations}
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 
 const Section = () => (
-  <div className="section_container">
-    <div className="section_wrapper">
-      <div className="section_foreground">
-        <div className="section_description">
-          <h3 className="section_slogan">Where music happens</h3>
-          <span className="section_smalltext subtitle">
-            When you needs to share music and your whole team can hear it!
-          </span>
-          <span className="section_content">
-            {`Lorem Ipsum is simply dummy text of the printing and typesetting
+  <Grid className="section_container" container>
+    <Grid className="section_foreground" item xs={12}>
+      <Grid className="section_description" item xs>
+        <h3 className="section_slogan" item xs>
+          Where music happens
+        </h3>
+        <span className="section_smalltext subtitle" item xs>
+          When you needs to share music and your whole team can hear it!
+        </span>
+        <span className="section_content" item xs>
+          {`Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
             and scrambled it to make a type specimen book. It has survived not
             only five centuries, but also the leap into electronic typesetting,
             remaining essentially unchanged.`}
-          </span>
-        </div>
+        </span>
+      </Grid>
+      <Grid item xs>
         <img
           src={Images.drummer}
           alt="Team Radio"
           className="section_largeIcon"
         />
-      </div>
-    </div>
-  </div>
+      </Grid>
+    </Grid>
+  </Grid>
 );
 
-const Footer = () => <div className="footer_foreground" />;
+const Footer = () => <Grid className="footer_foreground" container />;
 
 const LandingPage = () => (
-  <div>
+  <Grid container>
     <NavBar />
     <Backdrop />
     <PopularStations />
     <Section />
     <Footer />
-  </div>
+  </Grid>
 );
 
 export default LandingPage;
