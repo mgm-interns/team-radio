@@ -1,11 +1,11 @@
 import { createMuiTheme } from 'material-ui/styles';
-import purple from 'material-ui/colors/purple';
-import green from 'material-ui/colors/green';
+import orange from 'material-ui/colors/orange';
+import grey from 'material-ui/colors/grey';
 
 export default createMuiTheme({
   palette: {
-    primary: purple,
-    secondary: green,
+    primary: orange,
+    secondary: grey,
   },
   status: {
     danger: 'orange',
