@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import Grid from 'material-ui/Grid';
 import Player from './Player';
 import Playlist from './Playlist';
 import AddLink from './AddLink';
-import Grid from 'material-ui/Grid';
 
-//https://www.youtube.com/embed/JGYjKR69M6U?list=PLdlDU6Mx7qmgXsWG3gqXxfrykdaITNeEi&amp;ecver=1
+// https://www.youtube.com/embed/JGYjKR69M6U?list=PLdlDU6Mx7qmgXsWG3gqXxfrykdaITNeEi&amp;ecver=1
 class Station extends Component {
   constructor(props) {
     super(props);
@@ -68,17 +68,15 @@ class Station extends Component {
   addLink(e) {
     // let newItemList = this.state.itemList;
     // newItemList.shift();
-    let newItem = {
+    const newItem = {
       videoId: this.getId(this.state.inputUrl),
       title: 'new title',
       singers: 'new singer',
     };
-    this.setState((prevState, props) => {
-      return {
-        inputUrl: '',
-        itemList: [...prevState.itemList, newItem],
-      };
-    });
+    this.setState((prevState, props) => ({
+      inputUrl: '',
+      itemList: [...prevState.itemList, newItem],
+    }));
   }
 
   updateInputUrl(e) {
@@ -88,25 +86,22 @@ class Station extends Component {
   }
 
   updateList() {
-    let newItemList = this.state.itemList;
-    let playing = newItemList.shift();
-    this.setState((prevState, props) => {
-      return {
-        playing: playing,
-        itemList: newItemList,
-      };
-    });
+    const newItemList = this.state.itemList;
+    const playing = newItemList.shift();
+    this.setState((prevState, props) => ({
+      playing,
+      itemList: newItemList,
+    }));
   }
 
-  getId(url) {
-    var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    var match = url.match(regExp);
+  static getId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
 
-    if (match && match[2].length == 11) {
+    if (match && match[2].length === 11) {
       return match[2];
-    } else {
-      return 'error';
     }
+    return 'error';
   }
 
   render() {

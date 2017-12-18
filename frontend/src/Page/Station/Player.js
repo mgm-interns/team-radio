@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 
 class Player extends Component {
-  getEmbebLink(videoId, startTime) {
-    return (
-      'https://www.youtube.com/embed/' +
-      videoId +
-      '?autoplay=1&start=' +
-      startTime
-    );
+  static getEmbebLink(videoId, startTime) {
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&start=${startTime}`;
   }
 
   render() {

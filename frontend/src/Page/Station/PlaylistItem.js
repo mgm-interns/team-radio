@@ -27,12 +27,8 @@ const style = {
 };
 
 class PlaylistItem extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  getThumnail(videoId) {
-    return 'http://i3.ytimg.com/vi/' + videoId + '/maxresdefault.jpg';
+  static getThumnail(videoId) {
+    return `http://i3.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
   }
   render() {
     const { videoId, title, singers } = this.props.item;
