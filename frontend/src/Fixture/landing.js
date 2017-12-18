@@ -1,10 +1,12 @@
 import Images from '../Theme/Images';
 
+const { logo } = Images;
 const { avatar1, avatar2, avatar3, avatar4, avatar5 } = Images.fixture;
 
 const landing = {
-  name: 'team station',
-  slogan: 'Music in the sould can be heard by the universe',
+  name: 'team radio',
+  logo,
+  slogan: 'Music in the soul can be heard by the universe.',
   stations: [
     {
       id: '1',
@@ -33,13 +35,6 @@ const landing = {
       describe: 'Internship 2016',
       owner: 'lybaokhanh',
       avatar: avatar4,
-    },
-    {
-      id: '4',
-      name: 'station 4',
-      describe: 'MGM Channel',
-      owner: 'lybaokhanh',
-      avatar: '',
     },
     {
       id: '5',
