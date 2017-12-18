@@ -14,7 +14,7 @@ class AddLink extends Component {
   };
 
   render() {
-    const { video_detail, video_url } = this.props;
+    const { video_detail } = this.props;
     return (
       <Grid container className="grid-container add-link-container">
         <Grid item xs={12} className="add-link-title">

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
