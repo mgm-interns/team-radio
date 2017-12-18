@@ -10,7 +10,7 @@
     "install:frontend": "cd frontend && npm install",
     "postinstall": "run-s install:*",
     "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm dev",
+    "dev:frontend": "cd frontend && npm run dev",
     "dev": "run-p dev:*",
     "start": "cd backend && npm start",
     "lint:backend": "eslint backend/src/**/*.js",
