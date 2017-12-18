@@ -1,160 +1,127 @@
 import React, { Component } from 'react';
-// import { Helmet } from 'react-helmet';
-import YouTube from 'react-youtube';
-// import styles from './styles.scss';
+import { transformNumber } from '../../Transformer';
+import { Player } from '../../Component';
 
 const PLAYLIST = [
   'https://www.youtube.com/watch?v=igSCSQ9fg14',
-  'https://www.youtube.com/watch?v=ZVc3vSyBC_c',
-  'https://www.youtube.com/watch?v=SGgzaiFIYV4',
-  'https://www.youtube.com/watch?v=Q7vuCH-8axg',
-  'https://www.youtube.com/watch?v=gaObISjSiBM',
+  // 'https://www.youtube.com/watch?v=ZVc3vSyBC_c',
+  // 'https://www.youtube.com/watch?v=SGgzaiFIYV4',
+  // 'https://www.youtube.com/watch?v=Q7vuCH-8axg',
+  // 'https://www.youtube.com/watch?v=gaObISjSiBM',
 ];
 
-class Player extends Component {
+class MediaPlayer extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      playlist: [],
-      video: '',
+      player: {
+        isPlaying: true,
+        pausedAt: 0,
+      },
+      refPlayer: null,
       text: '',
-      isPlay: true,
     };
-    this._onItemClick = this._onItemClick.bind(this);
-    this._onChange = this._onChange.bind(this);
-    this._onAddClick = this._onAddClick.bind(this);
-    this._onButtonClick = this._onButtonClick.bind(this);
-    this._renderVideo = this._renderVideo.bind(this);
-    this._onReady = this._onReady.bind(this);
-    this._onStateChange = this._onStateChange.bind(this);
+    this._onInputChange = this._onInputChange.bind(this);
+    // this._onAdd = this._onAdd.bind(this);
+    this._onActionClick = this._onActionClick.bind(this);
+    this._getRefPlayer = this._getRefPlayer.bind(this);
+    this._onPlay = this._onPlay.bind(this);
+    this._onPause = this._onPause.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({
-      playlist: [...PLAYLIST],
-      video: PLAYLIST[0],
-    });
+  /* Get player DOM */
+  _getRefPlayer(ref) {
+    const result = ref.refPlayer;
+    this.setState({ refPlayer: result });
   }
+  /* End of getting player DOM */
 
-  shouldComponentUpdate(nextProps, nextState) {
-    console.log('should update');
-    // console.log(nextState);
-    // console.log(this.state);
-    if (nextState.isPlay !== this.state.isPlay || nextState.video !== '') {
-      return true;
-    }
-    return false;
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    console.log('will update');
-    // console.log(nextState);
-    // console.log(this.state);
-    if (nextState.isPlay !== this.state.isPlay) {
-      this.setState({ isPlay: nextState.isPlay });
-    }
-  }
-
-  _getVideoId(url) {
-    return url.split('v=')[1];
-  }
-
-  _onItemClick(item) {
-    this.setState({
-      video: item,
-    });
-  }
-
-  _onChange(e) {
+  /* Add a media link */
+  _onInputChange(e) {
     const text = e.target.value;
-    this.setState({ text: text });
+    this.setState({ text });
   }
 
-  _onAddClick() {
+  // _onAdd() {}
+  /* End of adding a media link */
+
+  /* Pause or Play a video */
+  _onActionClick() {
     this.setState({
-      playlist: [...PLAYLIST, ...PLAYLIST.push(this.state.text)],
+      player: {
+        isPlaying: !this.state.player.isPlaying,
+      },
+    });
+  }
+  /* End of handling action button (pause/play) */
+
+  /* Handle player actions */
+  _onPlay() {
+    this.setState({
+      player: { isPlaying: true },
     });
   }
 
-  _onButtonClick() {
-    this.setState({ isPlay: !this.state.isPlay }, () => {
-      console.log('after clicked: ', this.state.isPlay);
+  _onPause() {
+    const { refPlayer } = this.state;
+    this.setState({
+      player: { pausedAt: refPlayer.getCurrentTime(), isPlaying: false },
     });
   }
-
-  _onReady(e) {
-    e.target.playVideo();
-  }
-
-  _onStateChange(e) {
-    // console.log(e.data);
-    // console.log('on state change: ',this.state);
-    if (e.data === YouTube.PlayerState.PLAYING && !this.state.isPlay) {
-      e.target.pauseVideo();
-    }
-    if (e.data === YouTube.PlayerState.PAUSED && this.state.isPlay) {
-      e.target.playVideo();
-    }
-  }
+  /* End of handling player actions */
 
   _renderVideo() {
-    const { video } = this.state;
-    const opts = {
-      width: '640',
-      height: '390',
-      playerVars: {
-        autoplay: 1,
-        enablejsapi: 1,
-      },
-    };
-
+    const url = PLAYLIST[0];
+    const { player: { isPlaying } } = this.state;
     return (
-      <YouTube
-        id="player"
-        videoId={this._getVideoId(video)}
-        opts={opts}
-        onReady={this._onReady}
-        onStateChange={e => this._onStateChange(e)}
+      <Player
+        url={url}
+        ref={this._getRefPlayer}
+        playing={isPlaying}
+        onPlay={this._onPlay}
+        onPause={this._onPause}
       />
     );
   }
 
   render() {
+    const { player } = this.state;
+
     return (
       <div>
         <h1>Playlist</h1>
         {this._renderVideo()}
         <div>
           <ul>
-            {PLAYLIST.map((item, index) => {
-              return (
-                <li key={index}>
-                  <button
-                    className="item"
-                    onClick={() => this._onItemClick(item)}
-                  >
-                    {item}
-                  </button>
-                </li>
-              );
-            })}
+            {PLAYLIST.map((item, index) => (
+              <li key={index}>
+                <p className="item">{item}</p>
+              </li>
+            ))}
           </ul>
         </div>
         <div>
-          <input
-            type="text"
-            value={this.state.text}
-            onChange={this._onChange}
-          />
-          <div>
-            <button onClick={this._onAddClick}>Add</button>
-            <button onClick={this._onButtonClick}>Play</button>
+          {/*
+         <div>
+            <input
+              type="text"
+              placeholder="Add your link..."
+              onClick={this._onInputChange}
+            />
           </div>
+        */}
+          <button onClick={this._onActionClick}>Action</button>
+          <p>
+            Paused at:{' '}
+            {transformNumber.convertNumberToTime(
+              !player.isPlaying && player.pausedAt,
+            )}
+          </p>
         </div>
       </div>
     );
   }
 }
 
-export default Player;
+export default MediaPlayer;
