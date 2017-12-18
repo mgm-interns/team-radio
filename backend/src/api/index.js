@@ -9,7 +9,7 @@ const handlers = [
 ];
 
 // Register handlers
-handlers.map(handler => handler(router));
+handlers.map(handler => handler.default(router));
 
 // Export router
 export default router;
