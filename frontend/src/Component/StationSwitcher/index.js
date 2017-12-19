@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Slider from 'react-slick';
-import './style.css';
+import styles from './styles';
+import { withStyles } from 'material-ui/styles';
 
 class StationSwitcher extends Component {
   constructor() {
@@ -20,6 +21,7 @@ class StationSwitcher extends Component {
 
   render() {
     const { stationList } = this.props;
+    const classes = this.props.classes;
     const { width } = this.state;
     const isMobile = width <= 500;
 
@@ -38,10 +40,16 @@ class StationSwitcher extends Component {
       <Slider {...settings}>
         {stationList.map((station, index) => (
           <div key={index}>
-            <img src={station.avatar} alt="" className="station_avatar" />
-            <div className="station_info">
-              <h1 className="station_title">{station.name}</h1>
-              <span className="station_subtitle">{station.description}</span>
+            <img
+              src={station.avatar}
+              alt=""
+              className={classes.station_avatar}
+            />
+            <div className={classes.station_info}>
+              <h1 className={classes.station_title}>{station.name}</h1>
+              <span className={classes.station_subtitle}>
+                {station.description}
+              </span>
             </div>
           </div>
         ))}
@@ -50,4 +58,4 @@ class StationSwitcher extends Component {
   }
 }
 
-export default StationSwitcher;
+export default withStyles(styles)(StationSwitcher);
