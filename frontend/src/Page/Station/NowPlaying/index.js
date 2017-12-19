@@ -8,6 +8,7 @@ const URL = 'https://www.youtube.com/watch?v=igSCSQ9fg14';
 class NowPlaying extends Component {
   static propTypes = {
     style: PropTypes.any,
+    className: PropTypes.any,
   };
 
   constructor(props) {
@@ -63,10 +64,10 @@ class NowPlaying extends Component {
 
   render() {
     const { player: { isPlaying } } = this.state;
-    const { style } = this.props;
+    const { className } = this.props;
 
     return (
-      <Grid item xs={12} style={style}>
+      <Grid item xs={12} className={className}>
         <Player
           url={URL}
           ref={this._getRefPlayer}
