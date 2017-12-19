@@ -5,6 +5,9 @@ import { withStyles } from 'material-ui/styles';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
+import StationSwitcher from './../../Component/StationSwitcher';
+import fixture from '../../Fixture/landing';
+
 import styles from './styles';
 
 const VIDEO_DEFAULT = {
@@ -18,6 +21,10 @@ class StationPage extends Component {
     const { classes } = this.props;
     return (
       <Grid direction="row" container style={{ margin: 0, width: '100%' }}>
+        <Grid item xs={12} md={12} lg={12}>
+          <StationSwitcher stationList={fixture.stations}/>
+        </Grid>
+        
         <Grid item xs={12} md={7} lg={9}>
           <Grid container>
             <Grid item xs={12}>
