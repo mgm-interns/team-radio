@@ -29,7 +29,7 @@ class Player extends Component {
         onPlay={onPlay}
         onPause={onPause}
         youtubeConfig={{ playerVars: { disablekb: 1 } }}
-        style={{ 'pointer-events': 'none' }}
+        style={{ pointerEvents: 'none' }}
         {...othersProps}
       />
     );

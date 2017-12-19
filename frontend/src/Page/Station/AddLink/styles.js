@@ -1,8 +1,12 @@
 export default theme => {
-  console.log(theme);
+  // console.log(theme);
+  const {
+    spacing: { smallMargin, baseMargin, doubleBaseMargin },
+    palette: { lightGrey },
+  } = theme;
   return {
     linkTitle: {
-      marginBottom: 20,
+      marginBottom: doubleBaseMargin,
     },
 
     primaryTitle: {
@@ -10,14 +14,14 @@ export default theme => {
     },
 
     secondaryTitle: {
-      color: 'grey',
+      color: lightGrey[900],
     },
 
     addLinkBox: {
       backgroundColor: '#fafafa !important',
       margin: '0 4px 20px 4px',
       width: '100%',
-      padding: 20,
+      padding: doubleBaseMargin,
       boxShadow: '0 0 10px -3px rgba(0, 0, 0, 0.5) !important',
     },
 
@@ -27,12 +31,12 @@ export default theme => {
 
     linkInput: {
       maxHeight: 100,
-      marginBottom: 10,
+      marginBottom: baseMargin,
     },
 
     sendIcon: {
-      marginLeft: 10,
-      fontSize: 18,
+      marginLeft: baseMargin,
+      fontSize: doubleBaseMargin,
     },
 
     addLinkBoxRight: {
@@ -43,7 +47,7 @@ export default theme => {
       width: '100%',
       height: '100%',
       objectFit: 'cover',
-      padding: '0 5 0 0',
+      padding: '0 4px 0 0',
     },
 
     content: {
@@ -54,7 +58,7 @@ export default theme => {
 
     loadingContainer: {
       height: '100%',
-      minHeight: 150,
+      minHeight: 156,
     },
   };
 };

@@ -54,12 +54,12 @@ class AddLink extends Component {
         className={[classes.gridContainer, classes.addLinkContainer]}
       >
         <Grid item xs={12} className={classes.linkTitle}>
-          <p>
+          <div>
             <h1 className={classes.primaryTitle}>
               ADD TO STATION {station.number}
             </h1>
             <span className={classes.secondaryTitle}> - {station.name}</span>
-          </p>
+          </div>
         </Grid>
         <Card className={classes.addLinkBox}>
           <Grid item xs={12}>
