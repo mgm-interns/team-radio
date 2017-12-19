@@ -1,4 +1,11 @@
-# **Welcome to the team-radio wiki!**
+
+# TeamRadio
+
+A playlist for teams that can be edited collaboratively by all users
+
+## Demo
+
+- *Reserved*
 
 ## Installation Guide
 
@@ -53,57 +60,11 @@ npm run dev:backend
 npm run dev:frontend
 ```
 
-## Document
+## CORS issue
 
-* Development
+This issue only appears in the development environment because the frontend & backend don't run on the same port.
 
-```
-npm run dev
-```
+We can solve this by installing this extension to allow CORS: 
+- Chrome: [Allow-Control-Allow-Origin: *](https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en)
 
-* Production
-
-```
-npm start
-```
-
-## Editor & Code convention
-
-We recommend using VS Code to enhance coding experience. You can download it from [here](https://code.visualstudio.com).
-
-Recommend extensions for VS Code:
-- Babel ES6/ES7
-- Editor Config for VS Code
-- ESLint
-- Prettier-Standard - JavaScript formatter
-- jsx
-
-Use these file for better code convention.
-
-`.editorconfig`
-```
-# editorconfig.org
-root = true
-
-[*]
-indent_style = space
-indent_size = 2
-end_of_line = lf
-charset = utf-8
-trim_trailing_whitespace = true
-insert_final_newline = true
-
-[*.md]
-trim_trailing_whitespace = false
-```
-
-`.vscode/setting.json`
-```
-{
-  "javascript.validate.enable": false,
-  "prettier.singleQuote": true,
-  "prettier.trailingComma": "all",
-  "prettier.tabWidth": 2,
-  "eslint.autoFixOnSave": true
-}
-```
+After installing this extension, add the server host address to the whitelist. For example: [http://localhost:8080/api/*]()
