@@ -22,9 +22,11 @@
     "react-player": "^0.25.3",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
+    "react-slick": "^0.16.0",
     "redux": "^3.7.2",
     "redux-form": "^7.2.0",
     "redux-thunk": "^2.2.0",
+    "slick-carousel": "^1.8.1",
     "socket.io-client": "^2.0.4",
     "subscriptions-transport-ws": "^0.9.4"
   },
