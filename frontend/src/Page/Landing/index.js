@@ -8,26 +8,7 @@ import './style.css';
 import fixture from '../../Fixture/landing';
 import Images from '../../Theme/Images';
 import StationSwitcher from '../../Component/StationSwitcher';
-
-const NavBar = () => (
-  <Grid className="navbar_container" container>
-    <Grid className="logo">
-      <img src={fixture.logo} alt="Team Radio" height="50px" />
-      <h1 className="navbar_text logoName">{fixture.name}</h1>
-    </Grid>
-    <Grid className="navigation">
-      <Link to="/" className="navbar_text">
-        HOME
-      </Link>
-      <Link to="/station" className="navbar_text">
-        STATIONS
-      </Link>
-      <Link to="/auth/login" className="navbar_text">
-        LOGIN
-      </Link>
-    </Grid>
-  </Grid>
-);
+import NavBar from '../../Component/NavBar';
 
 const Backdrop = () => (
   <Grid className="backdrop_container" container>
