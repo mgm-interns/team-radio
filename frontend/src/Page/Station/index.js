@@ -30,7 +30,7 @@ class StationPage extends Component {
 
     this.state = {
       video: {},
-      video_id: '',
+      videoId: '',
       isDisableButton: true,
       isAddLinkProgress: true,
     };

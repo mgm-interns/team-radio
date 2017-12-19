@@ -13,7 +13,7 @@ class AddLink extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     station: PropTypes.object,
-    video_url: PropTypes.string,
+    videoUrl: PropTypes.string,
     video: PropTypes.object,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
