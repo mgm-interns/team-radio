@@ -29,8 +29,10 @@ class NowPlaying extends Component {
 
   /* Get player DOM */
   _getRefPlayer(ref) {
-    const result = ref.refPlayer;
-    this.setState({ refPlayer: result });
+    if (ref) {
+      const result = ref.refPlayer;
+      this.setState({ refPlayer: result });
+    }
   }
 
   /* Add a media link */
