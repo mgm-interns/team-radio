@@ -2,6 +2,7 @@ import React from 'react';
 import './style.css';
 import fixture from '../../Fixture/landing';
 import Images from '../../Theme/Images';
+import PopularStations from '../../Component/PopularStations';
 import StationSwitcher from '../../Component/StationSwitcher';
 
 const NavBar = () => (
@@ -38,23 +39,6 @@ const Backdrop = () => (
   </div>
 );
 
-const PopularStations = () => {
-  const mainStation = fixture.stations[0];
-  return (
-    <div className="stations_container">
-      <div className="stations_primary">
-        <img src={mainStation.avatar} alt="" width="200" height="200" />
-        <h1 className="station_title">{mainStation.name}</h1>
-        <span className="station_subtitle">{mainStation.description}</span>
-      </div>
-
-      <div className="stations_secondary">
-        <StationSwitcher stationList={fixture.stations} />
-      </div>
-    </div>
-  );
-};
-
 const Section = () => (
   <div className="section_container">
     <div className="section_wrapper">
@@ -89,7 +73,7 @@ const LandingPage = () => (
   <div>
     <NavBar />
     <Backdrop />
-    <PopularStations />
+    <PopularStations stationList={fixture.stations} />
     <Section />
     <Footer />
   </div>
