@@ -22,12 +22,12 @@ class PlaylistItem extends Component {
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} alt="" />
         </Grid>
-        <Grid item xs={6} className={classes.info}>
+        <Grid item xs={7} className={classes.info}>
           <Grid className={classes.name}>{name}</Grid>
           <Grid className={classes.singer}>{singer}</Grid>
           <Grid className={classes.uploader}>Added by {uploader}</Grid>
         </Grid>
-        <Grid item xs={3} className={classes.actions}>
+        <Grid item xs={2} className={classes.actions}>
           <IconButton
             className={classes.action}
             color={isUpvoted ? 'primary' : 'secondary'}

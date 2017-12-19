@@ -8,6 +8,9 @@ export default createMuiTheme({
     secondary: grey,
   },
   status: {
-    danger: 'orange',
+    danger: orange,
+  },
+  typography: {
+    fontFamily: `'Roboto Slab', sans-serif`,
   },
 });

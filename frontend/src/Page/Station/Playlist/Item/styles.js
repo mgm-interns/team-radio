@@ -1,5 +1,5 @@
 export default ({ spacing, palette, typography, ...other }) => {
-  console.log(other);
+  console.log(typography);
   return {
     container: {
       marginBottom: spacing.unit,
@@ -18,16 +18,15 @@ export default ({ spacing, palette, typography, ...other }) => {
       padding: spacing.unit,
     },
     name: {
-      ...typography.body1,
+      ...typography.body2,
       fontWeight: 'bold',
     },
     singer: {
-      ...typography.body1,
+      ...typography.body2,
       fontWeight: 'bold',
     },
     uploader: {
-      ...typography.body1,
-      color: palette.grey['600'],
+      ...typography.caption,
     },
     actions: {
       textAlign: 'center',
@@ -38,7 +37,7 @@ export default ({ spacing, palette, typography, ...other }) => {
       height: spacing.unit * 3,
     },
     score: {
-      ...typography.body1,
+      ...typography.body2,
       color: palette.secondary['600'],
       '&.active': {
         color: palette.primary['600'],
