@@ -1,8 +1,9 @@
 export default theme => {
-  // console.log(theme);
+  // console.log(theme.typography);
   const {
     spacing: { smallMargin, baseMargin, doubleBaseMargin },
     palette: { lightGrey },
+    typography,
   } = theme;
   return {
     linkTitle: {
@@ -43,7 +44,11 @@ export default theme => {
       paddingLeft: '30px !important',
     },
 
-    linkImg: {
+    previewTitle: {
+      ...typography.title,
+    },
+
+    previewImg: {
       width: '100%',
       height: '100%',
       objectFit: 'cover',
@@ -58,7 +63,7 @@ export default theme => {
 
     loadingContainer: {
       height: '100%',
-      minHeight: 156,
+      minHeight: 155,
     },
   };
 };

@@ -14,13 +14,6 @@ const STATION_DEFAULT = {
   name: 'mgm internship 2017',
 };
 
-const VIDEO_DEFAULT = {
-  title: 'Video Title',
-  url: 'https://www.youtube.com/watch?v=iDmIX00yUi4',
-  thumbnail:
-    'https://upload.wikimedia.org/wikipedia/en/c/cb/Meghan_Trainor_Title_EP_Album_Cover.png',
-};
-
 const API_KEY = 'AIzaSyD_HCz-IjU056WTFjBgWYmjjg1YnwRPXXM';
 const API_URL = 'https://www.googleapis.com/youtube/v3/videos';
 
@@ -32,14 +25,19 @@ class StationPage extends Component {
       video: {},
       videoId: '',
       isDisableButton: true,
-      isAddLinkProgress: true,
+      isAddLinkProgress: false,
     };
     this._onChange = this._onChange.bind(this);
     this._onSendClick = this._onSendClick.bind(this);
   }
 
-  _getVideoId(url) {
-    return url.split('v=')[1];
+  _checkValidUrl(url) {
+    const p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+    const matches = url.match(p);
+    if (matches) {
+      return matches[1];
+    }
+    return false;
   }
 
   async _getData(id) {
@@ -53,39 +51,32 @@ class StationPage extends Component {
     return items;
   }
 
-  async componentDidMount() {
-    try {
-      const data = await this._getData(this._getVideoId(VIDEO_DEFAULT.url));
-      this.setState({ video: { ...data[0] }, isAddLinkProgress: false }, () => {
-        this.tempVideo = this.state.video;
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   async _onChange(e) {
     this.setState({ isAddLinkProgress: true });
     try {
-      if (e.target.value !== '') {
-        const data = await this._getData(this._getVideoId(e.target.value));
+      if (e.target.value !== '' && this._checkValidUrl(e.target.value)) {
+        const id = this._checkValidUrl(e.target.value);
+        const data = await this._getData(id);
         this.setState({
           video: { ...data[0] },
+          videoId: id,
           isDisableButton: false,
         });
       } else {
-        this.setState({ video: { ...this.tempVideo }, isDisableButton: true });
+        this.setState({ video: {}, isDisableButton: true });
       }
     } catch (error) {
       console.log(error);
     } finally {
       setTimeout(() => {
         this.setState({ isAddLinkProgress: false });
-      }, 600);
+      }, 300);
     }
   }
 
-  _onSendClick() {}
+  _onSendClick() {
+    console.log(this.state.videoId);
+  }
 
   render() {
     const { video, isDisableButton, isAddLinkProgress } = this.state;
@@ -110,7 +101,6 @@ class StationPage extends Component {
         </Grid>
         <Grid item xs={12}>
           <AddLink
-            placeholder={VIDEO_DEFAULT.url}
             video={video}
             station={STATION_DEFAULT}
             isDisableButton={isDisableButton}
