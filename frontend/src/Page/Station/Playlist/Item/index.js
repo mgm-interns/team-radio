@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
-import withTheme from 'material-ui/styles/withTheme';
-import './styles.css';
+import withStyles from 'material-ui/styles/withStyles';
+import styles from './styles';
 
 class PlaylistItem extends Component {
   render() {
@@ -15,40 +15,27 @@ class PlaylistItem extends Component {
       uploader,
       isUpvoted,
       playing,
-      theme: { palette },
+      classes,
     } = this.props;
-    const primaryColor = palette.primary['600'];
-    const secondaryColor = palette.secondary['600'];
     return (
-      <Grid
-        container
-        className={`PlaylistItem-container ${playing ? 'playing' : ''}`}
-      >
-        <Grid item xs={3} className="PlaylistItem-thumbnail">
-          <img className="PlaylistItem-img" src={thumbnail} alt="" />
+      <Grid container className={[classes.container, playing && 'playing']}>
+        <Grid item xs={3} className={classes.thumbnail}>
+          <img className={classes.img} src={thumbnail} alt="" />
         </Grid>
-        <Grid item xs={7} className="PlaylistItem-info">
-          <Grid className="PlaylistItem-name">{name}</Grid>
-          <Grid className="PlaylistItem-singer">{singer}</Grid>
-          <Grid className="PlaylistItem-uploader">Added by {uploader}</Grid>
+        <Grid item xs={6} className={classes.info}>
+          <Grid className={classes.name}>{name}</Grid>
+          <Grid className={classes.singer}>{singer}</Grid>
+          <Grid className={classes.uploader}>Added by {uploader}</Grid>
         </Grid>
-        <Grid item xs={2} className="PlaylistItem-actions">
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            alignItems="center"
-            style={{ height: '100%' }}
+        <Grid item xs={3} className={classes.actions}>
+          <IconButton
+            className={classes.action}
+            color={isUpvoted ? 'primary' : 'secondary'}
           >
-            <IconButton color={isUpvoted ? 'primary' : 'secondary'}>
-              star
-            </IconButton>
-            <Grid
-              className="PlaylistItem-score"
-              style={{ color: isUpvoted ? primaryColor : secondaryColor }}
-            >
-              {score}
-            </Grid>
+            star
+          </IconButton>
+          <Grid className={[classes.score, isUpvoted && 'active']}>
+            {score}
           </Grid>
         </Grid>
       </Grid>
@@ -63,8 +50,9 @@ PlaylistItem.propTypes = {
   singer: PropTypes.string,
   uploader: PropTypes.string,
   isUpvoted: PropTypes.bool,
-  theme: PropTypes.any,
   playing: PropTypes.bool,
+  theme: PropTypes.any,
+  classes: PropTypes.any,
 };
 
-export default withTheme()(PlaylistItem);
+export default withStyles(styles)(PlaylistItem);
