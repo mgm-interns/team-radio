@@ -1,13 +1,16 @@
 import { createMuiTheme } from 'material-ui/styles';
-import orange from 'material-ui/colors/orange';
-import grey from 'material-ui/colors/grey';
+import { jellyBean, sunray, pearl, mummyTomb, richBlack } from './Color';
 
 export default createMuiTheme({
   palette: {
-    primary: orange,
-    secondary: grey,
+    primary: jellyBean,
+    secondary: richBlack,
+    yellow: sunray,
+    lightGrey: pearl,
+    green: mummyTomb,
+    darkGreen: richBlack,
   },
-  status: {
-    danger: 'orange',
+  typography: {
+    fontFamily: `'Roboto Slab', sans-serif`,
   },
 });

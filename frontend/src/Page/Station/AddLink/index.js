@@ -54,7 +54,11 @@ class AddLink extends Component {
               <Grid item xs={7} className="add-link-box-right">
                 <Grid container className="grid-container content">
                   <Grid item xs={2} className="link-img">
-                    <img src={video_detail.thumbnail} className="link-img" />
+                    <img
+                      src={video_detail.thumbnail}
+                      className="link-img"
+                      alt=""
+                    />
                   </Grid>
                   <Grid item xs={10}>
                     <h3>{video_detail.name}</h3>
