@@ -1,4 +1,5 @@
 import React from 'react';
+import StationSwitcher from '../../Component/StationSwitcher';
 
 import './style.css';
 import fixture from '../../Fixture/landing';

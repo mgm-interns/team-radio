@@ -1,0 +1,22 @@
+@font-face {
+    font-family: 'Bebas Neue';
+    src: url('fonts/bebasneue-webfont.woff2') format('woff2'),
+         url('fonts/bebasneue-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto Slab', sans-serif;
+}
+
+h1 {
+    font-family: "Bebas Neue", sans-serif;
+    padding: 10px;
+}

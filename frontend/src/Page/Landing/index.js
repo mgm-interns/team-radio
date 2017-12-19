@@ -1,8 +1,8 @@
 import React from 'react';
-
 import './style.css';
 import fixture from '../../Fixture/landing';
 import Images from '../../Theme/Images';
+import StationSwitcher from '../../Component/StationSwitcher';
 
 const NavBar = () => (
   <div className="navbar_container">
@@ -39,31 +39,17 @@ const Backdrop = () => (
 );
 
 const PopularStations = () => {
-  const stations = [];
-  fixture.stations.map((station, index) =>
-    stations.push(
-      <div key={index} className="station_item">
-        <img
-          src={station.avatar}
-          alt=""
-          className="stations_secondary_avatar"
-        />
-        <h1 className="station-text--title">{station.name}</h1>
-        <span className="subtitle">{station.describe}</span>
-      </div>,
-    ),
-  );
-
   const mainStation = fixture.stations[0];
   return (
     <div className="stations_container">
-      <div className="stations_wrapper">
-        <div className="stations_primary">
-          <img src={mainStation.avatar} alt="" width="200" height="200" />
-          <h1 className="station-text--title">{mainStation.name}</h1>
-          <span className="subtitle">{mainStation.describe}</span>
-        </div>
-        <div className="stations_secondary">{stations}</div>
+      <div className="stations_primary">
+        <img src={mainStation.avatar} alt="" width="200" height="200" />
+        <h1 className="station_title">{mainStation.name}</h1>
+        <span className="station_subtitle">{mainStation.description}</span>
+      </div>
+
+      <div className="stations_secondary">
+        <StationSwitcher stationList={fixture.stations} />
       </div>
     </div>
   );
