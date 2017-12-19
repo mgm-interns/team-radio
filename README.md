@@ -1,55 +1,70 @@
+
 # TeamRadio
 
 A playlist for teams that can be edited collaboratively by all users
 
-## Requirement
+## Demo
+
+- *Reserved*
+
+## Installation Guide
+
+### Requirement
 
 * NodeJS 8+
 
 * NPM 5+
 
-* PostgreSQL 9.6+
+* MongoDB
 
-## Development
+### Production
 
 * Clone this project
 
 * Install dependencies
-
 ```
 npm install
 ```
 
-* Generate enviroment variable
+* Start the server
+```
+npm start
+```
 
+### Development
+
+* Clone this project
+
+* Install dependencies
 ```
-cp ./frontend/.env.development ./frontend/.env
+npm install
 ```
+
+* Generate environment variables
+
+After install dependencies, the environment variables will be generated from env.production by default. You can add `--no-scripts` to skip that. (Example: `npm install --no-scripts`)
 
 _Note_: Feel free to change these variables if you want to.
 
-* Start project
-
-```
-npm start
-```
-
-## Production
-
-```
-// TODO: Update this later!
-```
-
-## Document
-
-* Development
-
+* Start packager
 ```
 npm run dev
 ```
+This script will start the packager for both backend & frontend
 
-* Production
+* If you just want to work on backend or frontend. There are 2 scripts that will be helpful for you:
+```
+npm run dev:backend
+```
+```
+npm run dev:frontend
+```
 
-```
-npm start
-```
+## CORS issue
+
+This issue only appears in the development environment because the frontend & backend don't run on the same port.
+
+We can solve this by installing this extension to allow CORS: 
+- Chrome: [Allow-Control-Allow-Origin: *](https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en)
+
+After installing this extension, add the server host address to the whitelist. For example: [http://localhost:8080/api/*]()
