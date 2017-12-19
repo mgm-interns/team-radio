@@ -5,6 +5,7 @@ export default styles => ({
     alignItems: 'center',
     padding: '10px 0'
   },
+
   station_title: {
     fontWeight: 'bold'
   },
