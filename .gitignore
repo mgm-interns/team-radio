@@ -19,3 +19,4 @@ package-lock.json
 .editorconfig
 .vscode
 .idea
+.DS_Store

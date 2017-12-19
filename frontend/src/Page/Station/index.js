@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
+import { withStyles } from 'material-ui/styles';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
-
-const maxHeight = '600px';
+import styles from './styles';
 
 const VIDEO_DEFAULT = {
   name: '3 Hours of Christmas Music - Holiday Classics with the best new stuff',
@@ -15,22 +15,23 @@ const VIDEO_DEFAULT = {
 
 class StationPage extends Component {
   render() {
+    const { classes } = this.props;
     return (
       <Grid direction="row" container style={{ margin: 0, width: '100%' }}>
-        <Grid item xs={6} md={7} lg={8}>
+        <Grid item xs={12} md={7} lg={9}>
           <Grid container>
             <Grid item xs={12}>
-              <h1>My Station</h1>
+              <h1>MY STATION</h1>
             </Grid>
-            <NowPlaying style={{ height: maxHeight }} />
+            <NowPlaying className={classes.content} />
           </Grid>
         </Grid>
-        <Grid item xs={4} md={4} lg={4}>
+        <Grid item xs={12} md={5} lg={3}>
           <Grid container>
             <Grid item xs={12}>
-              <h1>Now Playing</h1>
+              <h1>NOW PLAYING</h1>
             </Grid>
-            <Playlist style={{ maxHeight }} />
+            <Playlist className={classes.content} />
           </Grid>
         </Grid>
         <Grid item xs={12}>
@@ -41,6 +42,8 @@ class StationPage extends Component {
   }
 }
 
-StationPage.propTypes = {};
+StationPage.propTypes = {
+  classes: PropTypes.any,
+};
 
-export default StationPage;
+export default withStyles(styles)(StationPage);
