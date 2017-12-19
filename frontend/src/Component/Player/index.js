@@ -24,10 +24,12 @@ class Player extends Component {
         ref={input => {
           this.refPlayer = input;
         }}
-        controls
+        controls={false}
         playing={playing}
         onPlay={onPlay}
         onPause={onPause}
+        youtubeConfig={{ playerVars: { disablekb: 1 } }}
+        style={{ 'pointer-events': 'none' }}
         {...othersProps}
       />
     );

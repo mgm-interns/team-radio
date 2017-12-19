@@ -5,61 +5,113 @@ import Input from 'material-ui/Input';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 import Card from 'material-ui/Card';
-import './styles.css';
+import { CircularProgress } from 'material-ui/Progress';
+import { withStyles } from 'material-ui/styles';
+import styles from './styles';
 
 class AddLink extends Component {
   static propTypes = {
+    classes: PropTypes.object.isRequired,
+    station: PropTypes.object,
     video_url: PropTypes.string,
-    video_detail: PropTypes.object,
+    video: PropTypes.object,
+    placeholder: PropTypes.string,
+    onChange: PropTypes.func,
+    onSendClick: PropTypes.func,
+    isDisableButton: PropTypes.bool,
+    isAddLinkProgress: PropTypes.bool,
   };
 
-  render() {
-    const { video_detail } = this.props;
+  _renderLoading() {
+    const { classes } = this.props;
     return (
-      <Grid container className="grid-container add-link-container">
-        <Grid item xs={12} className="add-link-title">
+      <Grid
+        container
+        className={[classes.gridContainer, classes.loadingContainer]}
+        justify="center"
+        alignItems="center"
+      >
+        <CircularProgress color="primary" thickness={3} size={20} />
+      </Grid>
+    );
+  }
+
+  render() {
+    const {
+      classes,
+      video,
+      station,
+      placeholder,
+      onChange,
+      onSendClick,
+      isDisableButton,
+      isAddLinkProgress,
+    } = this.props;
+
+    return (
+      <Grid
+        container
+        className={[classes.gridContainer, classes.addLinkContainer]}
+      >
+        <Grid item xs={12} className={classes.linkTitle}>
           <p>
-            <span className="primary-title">ADD TO STATION 1</span>
-            <span className="secondary-title">mgm internship 2017</span>
+            <h1 className={classes.primaryTitle}>
+              ADD TO STATION {station.number}
+            </h1>
+            <span className={classes.secondaryTitle}> - {station.name}</span>
           </p>
         </Grid>
-        <Card className="add-link-box">
+        <Card className={classes.addLinkBox}>
           <Grid item xs={12}>
-            <Grid container className="grid-container">
-              <Grid item xs={5} className="add-link-box-left">
+            <Grid container className={classes.gridContainer}>
+              <Grid item xs={5} className={classes.addLinkBoxLeft}>
                 <Grid
                   container
-                  className="grid-container"
+                  className={classes.gridContainer}
                   direction="column"
                   justify="space-between"
                 >
                   <Grid item xs={12}>
                     <Input
-                      className="link-input"
-                      placeholder="Add your link..."
+                      className={classes.linkInput}
+                      placeholder={placeholder}
                       autoFocus
                       fullWidth
-                      multiline
-                      rows={3}
-                      disableUnderline
+                      onChange={onChange}
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <Button className="send-btn" raised color="primary">
-                      Send <Icon className="send-icon">send</Icon>
+                    <Button
+                      className={classes.sendBtn}
+                      raised
+                      color="primary"
+                      disabled={isDisableButton}
+                      onClick={onSendClick}
+                    >
+                      Send <Icon className={classes.sendIcon}>send</Icon>
                     </Button>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={7} className="add-link-box-right">
-                <Grid container className="grid-container content">
-                  <Grid item xs={2} className="link-img">
-                    <img src={video_detail.thumbnail} className="link-img" />
+              <Grid item xs={7} className={classes.addLinkBoxRight}>
+                {isAddLinkProgress ? (
+                  this._renderLoading()
+                ) : (
+                  <Grid
+                    container
+                    className={[classes.gridContainer, classes.content]}
+                  >
+                    <Grid item xs={4} className={classes.linkImg}>
+                      <img
+                        src={video.snippet.thumbnails.medium.url}
+                        className={classes.linkImg}
+                      />
+                    </Grid>
+                    <Grid item xs={8}>
+                      <h3>{video.snippet.title}</h3>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={10}>
-                    <h3>{video_detail.name}</h3>
-                  </Grid>
-                </Grid>
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -69,4 +121,4 @@ class AddLink extends Component {
   }
 }
 
-export default AddLink;
+export default withStyles(styles)(AddLink);
