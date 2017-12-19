@@ -1,7 +1,7 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import { reducer as formReducer } from 'redux-form';
-// import * as reducers from './ducks';
+import { apiMiddleware } from 'redux-api-middleware';
+import reducers from './reducers';
 
 let store = null;
 
@@ -19,12 +19,9 @@ if (
 
 const create = (initialState = {}) =>
   createStore(
-    combineReducers({
-      // ...reducers,
-      form: formReducer, // Initialize redux form
-    }),
+    reducers,
     initialState,
-    compose(applyMiddleware(thunk), devtools), // Compose redux devtools
+    compose(applyMiddleware(thunk, apiMiddleware), devtools), // Compose redux devtools
   );
 
 export default function initRedux(initialState = {}) {
