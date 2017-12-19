@@ -90,13 +90,11 @@ const Section = () => (
   <Grid className="section_container" container>
     <Grid className="section_foreground" item xs={12}>
       <Grid className="section_description" item xs>
-        <h3 className="section_slogan" item xs>
-          Where music happens
-        </h3>
-        <span className="section_smalltext subtitle" item xs>
+        <h3 className="section_slogan">Where music happens</h3>
+        <span className="section_smalltext subtitle">
           When you needs to share music and your whole team can hear it!
         </span>
-        <span className="section_content" item xs>
+        <span className="section_content">
           {`Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
