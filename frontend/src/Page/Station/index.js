@@ -15,7 +15,7 @@ const VIDEO_DEFAULT = {
   thumbnail:
     'https://upload.wikimedia.org/wikipedia/en/c/cb/Meghan_Trainor_Title_EP_Album_Cover.png',
 };
-console.log(fetchStations());
+
 class StationPage extends Component {
   componentDidMount() {
     setTimeout(() => {

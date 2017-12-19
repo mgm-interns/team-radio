@@ -8,14 +8,18 @@ export const ADD_STATION = 'ADD_STATION';
 export const ADD_STATION_SUCCESS = 'ADD_STATION_SUCCESS';
 export const ADD_STATION_FAILURE = 'ADD_STATION_SUCCESS';
 
-export const DELETE_STATION = 'DELETE_STATION';
-export const DELETE_STATION_SUCCESS = 'DELETE_STATION_SUCCESS';
-export const DELETE_STATION_FAILURE = 'DELETE_STATION_FAILURE';
-
 export const fetchStations = () => ({
   [CALL_API]: {
     types: [FETCH_STATIONS, FETCH_STATIONS_SUCCESS, FETCH_STATIONS_FAILURE],
-    endpoint: 'http://localhost:8080/api/dummy',
+    endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/dummy`,
     method: 'GET',
+  },
+});
+
+export const addStation = () => ({
+  [CALL_API]: {
+    types: [ADD_STATION, ADD_STATION_SUCCESS, ADD_STATION_FAILURE],
+    endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/dummy`,
+    method: 'POST',
   },
 });
