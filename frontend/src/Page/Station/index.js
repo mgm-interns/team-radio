@@ -18,7 +18,7 @@ class StationPage extends Component {
     const { classes } = this.props;
     return (
       <Grid direction="row" container style={{ margin: 0, width: '100%' }}>
-        <Grid item xs={12} md={7} lg={9}>
+        <Grid item xs={12} md={8} lg={9}>
           <Grid container>
             <Grid item xs={12}>
               <h1>MY STATION</h1>
@@ -26,7 +26,7 @@ class StationPage extends Component {
             <NowPlaying className={classes.content} />
           </Grid>
         </Grid>
-        <Grid item xs={12} md={5} lg={3}>
+        <Grid item xs={12} md={4} lg={3}>
           <Grid container>
             <Grid item xs={12}>
               <h1>NOW PLAYING</h1>
