@@ -1,4 +1,5 @@
 export default ({ palette }) => ({
+  // backdrop cover
   backdropContainer: {
     position: 'relative',
     margin: 'auto',
@@ -38,4 +39,25 @@ export default ({ palette }) => ({
   buttonSubmit: {
     paddingTop: '10px',
   },
+
+  // popular stations
+  stationsContainer: {
+    padding: '2em',
+    margin: 0,
+  },
+  stationsWrapper: {
+    justifyContent: 'center',
+  },
+  stationPrimary: {},
+  stationPrimaryAvatar: {
+    width: '150px',
+    height: '150px',
+  },
+  stationPrimaryTitle: {},
+  stationPrimarySubTitle: {},
+  stationSecondary: {},
+  stationItem: {},
+  stationSecondaryAvatar: {},
+  stationSecondaryTitle: {},
+  stationSecondarySubTitle: {},
 });

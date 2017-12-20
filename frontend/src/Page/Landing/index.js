@@ -46,38 +46,41 @@ const Backdrop = withStyles(styles)(
   },
 );
 
-// const PopularStations = () => {
-//   const stations = [];
-//   fixture.stations.map((station, index) =>
-//     stations.push(
-//       <Grid key={index} className="station_item" item>
-//         <img
-//           src={station.avatar}
-//           alt=""
-//           className="stations_secondary_avatar"
-//         />
-//         <h1 className="station-text--title">{station.name}</h1>
-//         <span className="subtitle">{station.describe}</span>
-//       </Grid>,
-//     ),
-//   );
+const PopularStations = withStyles(styles)(
+  class PopularStations extends Component {
+    render() {
+      const { classes } = this.props;
 
-//   const mainStation = fixture.stations[0];
-//   return (
-//     <Grid className="stations_container" container xs={12}>
-//       <Grid className="stations_wrapper" item xs={12}>
-//         <Grid className="stations_primary" item xs>
-//           <img src={mainStation.avatar} alt="" width="200" height="200" />
-//           <h1 className="station-text--title">{mainStation.name}</h1>
-//           <span className="subtitle">{mainStation.describe}</span>
-//         </Grid>
-//         <Grid className="stations_secondary" item xs>
-//           <StationSwitcher stationList={fixture.stations} />
-//         </Grid>
-//       </Grid>
-//     </Grid>
-//   );
-// };
+      const mainStation = fixture.stations[0];
+      return (
+        <Grid container xs={12} className={classes.stationsContainer}>
+          <Grid container xs={12} className={classes.stationsWrapper}>
+            <Grid container xs={12} className={classes.stationPrimary}>
+              <Grid item xs={6}>
+                <img
+                  src={mainStation.avatar}
+                  alt="Most popular station"
+                  className={classes.stationPrimaryAvatar}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <h1 className={classes.stationPrimaryTitle}>
+                  {mainStation.name}
+                </h1>
+                <span className={classes.stationPrimarySubTitle}>
+                  {mainStation.description}
+                </span>
+              </Grid>
+            </Grid>
+            <Grid item xs className={classes.stationSecondary}>
+              <StationSwitcher stationList={fixture.stations} />
+            </Grid>
+          </Grid>
+        </Grid>
+      );
+    }
+  },
+);
 
 // const Section = () => (
 //   <Grid className="section_container" container xs={12}>
@@ -113,6 +116,7 @@ const LandingPage = () => (
   <Grid container xs={12} style={{ margin: 0 }}>
     <NavBar />
     <Backdrop />
+    <PopularStations />
   </Grid>
 );
 
