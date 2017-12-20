@@ -89,31 +89,35 @@ class StationPage extends Component {
         <Grid item xs={12}>
           <StationSwitcher stationList={fixture.stations} />
         </Grid>
-        <Grid item xs={12} md={8} lg={9}>
+        <Grid item xs={12} className={classes.container}>
           <Grid container>
-            <Grid item xs={12}>
-              <h1>MY STATION</h1>
+            <Grid item xs={12} md={8} lg={9}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <h1>MY STATION</h1>
+                </Grid>
+                <NowPlaying className={classes.content} />
+              </Grid>
             </Grid>
-            <NowPlaying className={classes.content} />
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={4} lg={3}>
-          <Grid container>
-            <Grid item xs={12}>
-              <h1>NOW PLAYING</h1>
+            <Grid item xs={12} md={4} lg={3}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <h1>NOW PLAYING</h1>
+                </Grid>
+                <Playlist className={classes.content} />
+              </Grid>
             </Grid>
-            <Playlist className={classes.content} />
+            <Grid item xs={12}>
+              <AddLink
+                video={video}
+                station={STATION_DEFAULT}
+                isDisableButton={isDisableButton}
+                isAddLinkProgress={isAddLinkProgress}
+                onChange={this._onChange}
+                onSendClick={this._onSendClick}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <AddLink
-            video={video}
-            station={STATION_DEFAULT}
-            isDisableButton={isDisableButton}
-            isAddLinkProgress={isAddLinkProgress}
-            onChange={this._onChange}
-            onSendClick={this._onSendClick}
-          />
         </Grid>
       </Grid>
     );

@@ -1,7 +1,6 @@
 export default theme => {
-  console.log(theme.typography.title);
   const {
-    spacing: { smallMargin, baseMargin, doubleBaseMargin },
+    spacing: { baseMargin, doubleBaseMargin },
     palette: { lightGrey },
     typography,
     breakpoints,
