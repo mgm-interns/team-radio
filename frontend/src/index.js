@@ -6,6 +6,7 @@ import registerServiceWorker from './registerServiceWorker';
 import App from './Container/App';
 
 import { MuiTheme } from './Theme';
+import './index.css';
 
 ReactDOM.render(
   <MuiThemeProvider theme={MuiTheme}>
