@@ -55,12 +55,12 @@ class StationPage extends Component {
     this.setState({ isAddLinkProgress: true });
     try {
       if (e.target.value !== '' && this._checkValidUrl(e.target.value)) {
+        this.setState({ isDisableButton: false });
         const id = this._checkValidUrl(e.target.value);
         const data = await this._getData(id);
         this.setState({
           video: { ...data[0] },
           videoId: id,
-          isDisableButton: false,
         });
       } else {
         this.setState({ video: {}, isDisableButton: true });

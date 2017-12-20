@@ -1,11 +1,15 @@
 export default theme => {
-  // console.log(theme.typography);
+  console.log(theme.typography.title);
   const {
     spacing: { smallMargin, baseMargin, doubleBaseMargin },
     palette: { lightGrey },
     typography,
+    breakpoints,
   } = theme;
   return {
+    addLinkContainer: {
+      marginTop: doubleBaseMargin,
+    },
     linkTitle: {
       marginBottom: doubleBaseMargin,
     },
@@ -42,10 +46,16 @@ export default theme => {
 
     addLinkBoxRight: {
       paddingLeft: '30px !important',
+      [breakpoints.down('md')]: {
+        paddingLeft: '8px !important',
+      },
     },
 
     previewTitle: {
       ...typography.title,
+      [breakpoints.down('sm')]: {
+        fontSize: '1rem',
+      },
     },
 
     previewImg: {
@@ -53,6 +63,9 @@ export default theme => {
       height: '100%',
       objectFit: 'cover',
       padding: '0 4px 0 0',
+      [breakpoints.down('md')]: {
+        paddingLeft: '0 !important',
+      },
     },
 
     content: {

@@ -62,7 +62,7 @@ class AddLink extends Component {
     const { classes, onChange, isDisableButton, onSendClick } = this.props;
 
     return (
-      <Grid item xs={5} className={classes.addLinkBoxLeft}>
+      <Grid item md={5} xs={12} className={classes.addLinkBoxLeft}>
         <Grid
           container
           className={classes.gridContainer}
@@ -96,26 +96,29 @@ class AddLink extends Component {
 
   _renderPreviewSection() {
     const { classes, video, isAddLinkProgress } = this.props;
-
-    return (
-      <Grid item xs={7} className={classes.addLinkBoxRight}>
-        {video.id === undefined ? (
-          this._renderEmptyComponent()
-        ) : isAddLinkProgress ? (
-          this._renderLoading()
-        ) : (
-          <Grid container className={classes.content}>
-            <Grid item xs={4} className={classes.previewImg}>
-              <img
-                src={video.snippet.thumbnails.medium.url}
-                className={classes.previewImg}
-              />
-            </Grid>
-            <Grid item xs={8} className={classes.previewTitle}>
-              {video.snippet.title}
-            </Grid>
+    let view = null;
+    if (video.id === undefined) {
+      view = this._renderEmptyComponent();
+    } else if (isAddLinkProgress) {
+      view = this._renderLoading();
+    } else {
+      view = (
+        <Grid container className={classes.content}>
+          <Grid item xs={4} className={classes.previewImg}>
+            <img
+              src={video.snippet.thumbnails.medium.url}
+              className={classes.previewImg}
+            />
           </Grid>
-        )}
+          <Grid item xs={8} className={classes.previewTitle}>
+            {video.snippet.title}
+          </Grid>
+        </Grid>
+      );
+    }
+    return (
+      <Grid item md={7} xs={12} className={classes.addLinkBoxRight}>
+        {view}
       </Grid>
     );
   }
