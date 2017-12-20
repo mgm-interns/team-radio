@@ -126,44 +126,6 @@
     max-width: 677px;
 }
 
-
-/* stations */
-
-.stations_container {
-    padding: 2em;
-    margin-left: 10em;
-    margin-right: 10em;
-    position: relative;
-    margin-bottom: 80px;
-}
-
-.stations_primary {
-    border: 1px solid black;
-    position: absolute;
-    left: 0;
-    top: -80px;
-    background: white;
-    padding: 8px;
-    z-index: 1000;
-}
-
-.stations_primary img {
-    width: 250px;
-    height: 300px;
-    object-fit: cover;
-}
-
-.stations_secondary {
-    /* display: flex;
-    list-style-type: none;
-    align-self: center;
-    max-width: 1000px;
-    overflow-x: auto;
-    padding-bottom: 20px; 
-    padding-left: 8em; */
-}
-
-
 /* section landing  */
 
 .section_container {
@@ -223,16 +185,3 @@
     bottom: 0;
 }
 
-
-@media screen and (max-width: 1366px) {
-    .stations_container {
-        margin-left: 1em;
-        margin-right: 1em;
-    }     
-}
-
-@media screen and (max-width: 500px) {
-    .stations_primary {
-        display: none;
-    }     
-}
