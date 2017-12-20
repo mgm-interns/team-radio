@@ -1,42 +1,46 @@
-export default styles => ({
+export default ({ breakpoints }) => ({
   station_wrapper: {
     display: 'flex !important',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '10px 0'
+    padding: '10px 0',
   },
 
   station_title: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   station_subtitle: {
-    color: 'grey'
+    color: 'grey',
+    fontSize: '0.75em',
   },
   station_avatar: {
-    width: '150px',
-    height: '150px'
+    width: '100px',
+    height: '100px',
   },
   station_item: {
     marginRight: '2.5em',
-    width: '150px'
+    width: '100px',
   },
   station_info: {
-    width: '150px'
+    width: '100px',
   },
   active_station: {
-    border: "2px solid #333"
+    border: '2px solid #333',
   },
-  '@media screen and (max-width: 500px)': {
-    __expression__: 'screen and (max-width: 500px)',
+  [breakpoints.down('sm')]: {
     station_avatar: {
       width: '80px',
-      height: '80px'
+      height: '80px',
     },
     station_info: {
-      width: '80px'
+      width: '80px',
     },
     station_title: {
-      fontSize: '16px'
+      fontSize: '1.2em',
+    },
+    station_subtitle: {
+      color: 'grey',
+      fontSize: '0.65em',
     },
   },
 });
