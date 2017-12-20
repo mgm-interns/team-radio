@@ -1,3 +1,4 @@
+/* eslint-disable */
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -10,7 +11,7 @@ import Routes from './Routes';
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-mongoose.connect('mongodb://localhost:27017/radio');
+mongoose.connect('mongodb://mgm:mgm123@ds013564.mlab.com:13564/mgm-radio');
 mongoose.connection.on('open', () => {
   console.log('Mongoose is connected!');
 });

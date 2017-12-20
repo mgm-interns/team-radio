@@ -1,3 +1,4 @@
+/* eslint-disable */
 import express from 'express';
 
 // Initiate new Router instance
@@ -6,6 +7,7 @@ const router = express.Router();
 const handlers = [
   // Declare api handlers
   require('./SongRoute'),
+  require('./StationRoute'),
 ];
 
 // Register handlers
