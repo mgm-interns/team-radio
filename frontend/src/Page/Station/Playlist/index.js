@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
 import List from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
 import Item from './Item';
-import playlist from './fixtures';
 import styles from './styles';
 
 class Playlist extends Component {
   render() {
-    const { className, style } = this.props;
+    const { playlist, className, style } = this.props;
     return (
       <Grid
         item
@@ -28,6 +29,11 @@ class Playlist extends Component {
 Playlist.propTypes = {
   className: PropTypes.any,
   style: PropTypes.any,
+  playlist: PropTypes.array,
 };
 
-export default withStyles(styles)(Playlist);
+const mapStateToProps = state => ({
+  playlist: state.api.playlist.playlist,
+});
+
+export default compose(withStyles(styles), connect(mapStateToProps))(Playlist);

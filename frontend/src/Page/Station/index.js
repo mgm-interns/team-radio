@@ -8,7 +8,6 @@ import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
 import styles from './styles';
-import { fetchStations } from '../../Redux/api/stations/actions';
 
 const VIDEO_DEFAULT = {
   name: '3 Hours of Christmas Music - Holiday Classics with the best new stuff',
@@ -18,9 +17,9 @@ const VIDEO_DEFAULT = {
 
 class StationPage extends Component {
   componentDidMount() {
-    setTimeout(() => {
-      this.props.fetchStations();
-    }, 1200);
+    // Get station id from react-router
+    const stationId = 1;
+    this.props.joinStation(stationId);
   }
 
   render() {
@@ -53,10 +52,15 @@ class StationPage extends Component {
 
 StationPage.propTypes = {
   classes: PropTypes.any,
+  joinStation: PropTypes.any,
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchStations: () => dispatch(fetchStations()),
+  joinStation: stationId =>
+    dispatch({
+      type: 'CLIENT:JOIN_STATION',
+      stationId,
+    }),
 });
 
 export default compose(
