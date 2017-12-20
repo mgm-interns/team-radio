@@ -18,26 +18,24 @@ const Backdrop = withStyles(styles)(
       return (
         <Grid container xs={12} className={classes.backdropContainer}>
           <Grid container className={classes.backdropForeground}>
-            <Grid item xs className={classes.wrapper}>
-              <h3 className={classes.backdropSlogan}>{fixture.slogan}</h3>
-              <Grid item xs className={classes.formInput}>
-                <TextField
-                  label="Name your station"
-                  placeholder="Name your station"
-                  margin="normal"
-                  autoFocus={true}
-                />
-                <Button raised color="primary">
-                  CREATE
-                </Button>
-              </Grid>
-              <Grid item xs={12} className={classes.backdropImg}>
-                <img
-                  src="https://avante.biz/wp-content/uploads/Music-Wallpaper/Music-Wallpaper-001.jpg"
-                  alt="Team Radio - Cover"
-                  className={classes.backdropImg}
-                />
-              </Grid>
+            <h3 className={classes.backdropSlogan}>{fixture.slogan}</h3>
+            <Grid item xs className={classes.formInput}>
+              <TextField
+                label="Name your station"
+                placeholder="Name your station"
+                margin="normal"
+                autoFocus={true}
+              />
+              <Button raised color="primary">
+                CREATE
+              </Button>
+            </Grid>
+            <Grid item xs={12} className={classes.backdropImg}>
+              <img
+                src="https://avante.biz/wp-content/uploads/Music-Wallpaper/Music-Wallpaper-001.jpg"
+                alt="Team Radio - Cover"
+                className={classes.backdropImg}
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -64,9 +62,9 @@ const PopularStations = withStyles(styles)(
                 />
               </Grid>
               <Grid item xs={6}>
-                <h1 className={classes.stationPrimaryTitle}>
+                <h3 className={classes.stationPrimaryTitle}>
                   {mainStation.name}
-                </h1>
+                </h3>
                 <span className={classes.stationPrimarySubTitle}>
                   {mainStation.description}
                 </span>
@@ -82,33 +80,41 @@ const PopularStations = withStyles(styles)(
   },
 );
 
-// const Section = () => (
-//   <Grid className="section_container" container xs={12}>
-//     <Grid className="section_foreground" item xs={12}>
-//       <Grid className="section_description" item xs>
-//         <h3 className="section_slogan">Where music happens</h3>
-//         <span className="section_smalltext subtitle">
-//           When you needs to share music and your whole team can hear it!
-//         </span>
-//         <span className="section_content">
-//           {`Lorem Ipsum is simply dummy text of the printing and typesetting
-//             industry. Lorem Ipsum has been the industry's standard dummy text
-//             ever since the 1500s, when an unknown printer took a galley of type
-//             and scrambled it to make a type specimen book. It has survived not
-//             only five centuries, but also the leap into electronic typesetting,
-//             remaining essentially unchanged.`}
-//         </span>
-//       </Grid>
-//       <Grid item xs>
-//         <img
-//           src={Images.drummer}
-//           alt="Team Radio"
-//           className="section_largeIcon"
-//         />
-//       </Grid>
-//     </Grid>
-//   </Grid>
-// );
+const Section = withStyles(styles)(
+  class Section extends Component {
+    render() {
+      const { classes } = this.props;
+      return (
+        <Grid container xs={12} className={classes.sectionContainer}>
+          <Grid item xs={12} className={classes.sectionDescription}>
+            <h3 className={classes.sectionTitle}>Where music happens</h3>
+            <span className={classes.sectionSubtitle}>
+              When you needs to share music and your whole team can hear it!
+            </span>
+            <br />
+          </Grid>
+          <Grid item xs={11}>
+            <img
+              src={Images.drummer}
+              alt="Team Radio"
+              className={classes.sectionImages}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <span className={classes.sectionContent}>
+              {`Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry. Lorem Ipsum has been the industry's standard dummy text
+        ever since the 1500s, when an unknown printer took a galley of type
+        and scrambled it to make a type specimen book. It has survived not
+        only five centuries, but also the leap into electronic typesetting,
+        remaining essentially unchanged.`}
+            </span>
+          </Grid>
+        </Grid>
+      );
+    }
+  },
+);
 
 // const Footer = () => <Grid className="footer_foreground" container xs={12} />;
 
@@ -117,6 +123,7 @@ const LandingPage = () => (
     <NavBar />
     <Backdrop />
     <PopularStations />
+    <Section />
   </Grid>
 );
 

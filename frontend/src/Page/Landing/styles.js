@@ -11,10 +11,13 @@ export default ({ palette }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 0,
+    margin: 0,
+    padding: '8%',
   },
-  backdropWrapper: {
-    fontWeight: 'bold',
-  },
+  // backdropWrapper: {
+  //   // fontWeight: 'bold',
+  //   padding: '8%',
+  // },
   backdropImg: {
     position: 'absolute',
     width: '100%',
@@ -50,8 +53,8 @@ export default ({ palette }) => ({
   },
   stationPrimary: {},
   stationPrimaryAvatar: {
-    width: '150px',
-    height: '150px',
+    width: '100%',
+    height: '100%',
   },
   stationPrimaryTitle: {},
   stationPrimarySubTitle: {},
@@ -60,4 +63,19 @@ export default ({ palette }) => ({
   stationSecondaryAvatar: {},
   stationSecondaryTitle: {},
   stationSecondarySubTitle: {},
+
+  // section
+  sectionContainer: {
+    margin: 0,
+    background: palette.lightGrey['500'],
+    padding: '8%',
+    lineHeight: '1.8',
+  },
+  sectionDescription: {},
+  sectionTitle: {},
+  sectionSubtitle: {},
+  sectionContent: {},
+  sectionImages: {
+    // maxWidth: '60%',
+  },
 });
