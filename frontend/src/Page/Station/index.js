@@ -86,7 +86,7 @@ class StationPage extends Component {
     const { classes } = this.props;
     return (
       <Grid direction="row" container style={{ margin: 0, width: '100%' }}>
-        <Grid item xs={12}>
+        <Grid item xs={11} className={classes.switcherContainer}>
           <StationSwitcher stationList={fixture.stations} />
         </Grid>
         <Grid item xs={12} className={classes.container}>

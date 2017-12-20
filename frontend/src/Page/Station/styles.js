@@ -9,6 +9,9 @@ export default theme => ({
       maxWidth: 1280,
     },
   },
+  switcherContainer: {
+    margin: 'auto',
+  },
   content: {
     height: 300,
     [theme.breakpoints.up('md')]: {
