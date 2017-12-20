@@ -5,6 +5,7 @@ export default createMuiTheme({
   palette: {
     primary: jellyBean,
     secondary: richBlack,
+    red: jellyBean,
     yellow: sunray,
     lightGrey: pearl,
     green: mummyTomb,
@@ -12,5 +13,10 @@ export default createMuiTheme({
   },
   typography: {
     fontFamily: `'Roboto Slab', sans-serif`,
+  },
+  spacing: {
+    smallMargin: 4,
+    baseMargin: 8,
+    doubleBaseMargin: 16,
   },
 });

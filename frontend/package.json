@@ -10,6 +10,7 @@
     "node": "8.x"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "font-awesome": "^4.7.0",
     "graphql": "^0.11.7",
     "immutable": "^3.8.2",
