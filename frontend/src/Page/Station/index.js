@@ -22,9 +22,8 @@ class StationPage extends Component {
     return (
       <Grid direction="row" container style={{ margin: 0, width: '100%' }}>
         <Grid item xs={12} md={12} lg={12}>
-          <StationSwitcher stationList={fixture.stations}/>
+          <StationSwitcher stationList={fixture.stations} />
         </Grid>
-        
         <Grid item xs={12} md={7} lg={9}>
           <Grid container>
             <Grid item xs={12}>
