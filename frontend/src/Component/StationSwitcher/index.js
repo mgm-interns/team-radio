@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import withStyles from 'material-ui/styles/withStyles';
 import Slider from 'react-slick';
-import './style.css';
+import styles from './styles';
 
 class StationSwitcher extends Component {
   constructor() {
@@ -19,17 +20,17 @@ class StationSwitcher extends Component {
   };
 
   render() {
-    const { stationList } = this.props;
+    const { stationList, classes } = this.props;
     const { width } = this.state;
     const isMobile = width <= 500;
 
     const settings = {
-      dots: true,
+      dots: !isMobile,
       infinite: true,
       speed: 500,
       slidesToShow: isMobile
         ? Math.floor(width / 100)
-        : Math.floor(width / 200),
+        : Math.floor(width / 130),
       slidesToScroll: 1,
       swipeToSlide: true,
     };
@@ -37,11 +38,23 @@ class StationSwitcher extends Component {
     return (
       <Slider {...settings}>
         {stationList.map((station, index) => (
-          <div key={index}>
-            <img src={station.avatar} alt="" className="station_avatar" />
-            <div className="station_info">
-              <h1 className="station_title">{station.name}</h1>
-              <span className="station_subtitle">{station.description}</span>
+          <div
+            key={index}
+            className={[
+              classes.station_wrapper,
+              station.isActive && classes.active_station,
+            ]}
+          >
+            <img
+              src={station.avatar}
+              alt=""
+              className={classes.station_avatar}
+            />
+            <div className={classes.station_info}>
+              <h3 className={classes.station_title}>{station.name}</h3>
+              <span className={classes.station_subtitle}>
+                {station.description}
+              </span>
             </div>
           </div>
         ))}
@@ -50,4 +63,4 @@ class StationSwitcher extends Component {
   }
 }
 
-export default StationSwitcher;
+export default withStyles(styles)(StationSwitcher);

@@ -5,6 +5,7 @@ import { MuiThemeProvider } from 'material-ui/styles';
 import { registerServiceWorker } from './Config';
 import App from './Container/App';
 import { MuiTheme } from './Theme';
+import './index.css';
 
 //
 ReactDOM.render(
