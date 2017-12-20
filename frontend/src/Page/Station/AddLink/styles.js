@@ -53,6 +53,7 @@ export default theme => {
 
     previewTitle: {
       ...typography.title,
+      marginBottom: baseMargin,
       [breakpoints.down('sm')]: {
         fontSize: '1rem',
       },
@@ -65,6 +66,11 @@ export default theme => {
       padding: '0 4px 0 0',
       [breakpoints.down('md')]: {
         paddingLeft: '0 !important',
+      },
+      [breakpoints.down('sm')]: {
+        width: 'initial',
+        height: 'initial',
+        objectFit: 'contain',
       },
     },
 

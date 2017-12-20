@@ -104,14 +104,17 @@ class AddLink extends Component {
     } else {
       view = (
         <Grid container className={classes.content}>
-          <Grid item xs={4} className={classes.previewImg}>
+          <Grid item sm={4} xs={12} className={classes.previewImg}>
             <img
               src={video.snippet.thumbnails.medium.url}
               className={classes.previewImg}
             />
           </Grid>
-          <Grid item xs={8} className={classes.previewTitle}>
-            {video.snippet.title}
+          <Grid item sm={8} xs={12}>
+            <p className={classes.previewTitle}>{video.snippet.title}</p>
+            <p className={classes.secondaryTitle}>
+              Channel: {video.snippet.channelTitle}
+            </p>
           </Grid>
         </Grid>
       );
