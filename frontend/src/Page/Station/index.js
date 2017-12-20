@@ -8,6 +8,7 @@ import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
 import styles from './styles';
+import { joinStation } from '../../Redux/api/currentStation/actions';
 
 const VIDEO_DEFAULT = {
   name: '3 Hours of Christmas Music - Holiday Classics with the best new stuff',
@@ -56,11 +57,7 @@ StationPage.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  joinStation: stationId =>
-    dispatch({
-      type: 'CLIENT:JOIN_STATION',
-      stationId,
-    }),
+  joinStation: stationId => dispatch(joinStation(stationId)),
 });
 
 export default compose(

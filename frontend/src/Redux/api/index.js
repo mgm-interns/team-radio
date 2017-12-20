@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
 import stations from './stations';
-import playlist from './playlist';
+import currentStation from './currentStation';
 
 export default combineReducers({
   stations,
-  playlist,
+  currentStation,
 });

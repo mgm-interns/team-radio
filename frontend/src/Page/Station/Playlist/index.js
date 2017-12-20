@@ -33,7 +33,7 @@ Playlist.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  playlist: state.api.playlist.playlist,
+  playlist: state.api.currentStation.playlist,
 });
 
 export default compose(withStyles(styles), connect(mapStateToProps))(Playlist);

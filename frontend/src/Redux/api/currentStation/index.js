@@ -1,3 +1,4 @@
+import { SERVER_JOINED_STATION, SERVER_UPDATE_STATION } from './actions';
 import playlist from './fixtures';
 
 const INITIAL_STATE = {
@@ -10,14 +11,14 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'SERVER:JOINED_STATION':
+    case SERVER_JOINED_STATION:
       return {
         ...state,
         playlist: action.payload.playlist,
         nowPlaying: action.payload.nowplaying,
       };
 
-    case 'SERVER:UPDATE_STATION':
+    case SERVER_UPDATE_STATION:
       return {
         ...state,
         playlist: action.payload.playlist,
