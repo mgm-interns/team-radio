@@ -3,6 +3,9 @@
     "global-require": ["off"],
     "dot-notation": ["off"],
     "func-names": ["off"],
-    "prefer-template": ["off"]
+    "prefer-template": ["off"],
+    "no-use-before-define":"warn",
+    "prefer-arrow-callback": ["off"],
+    "object-shorthand":"off"
   }
 }
