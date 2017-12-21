@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import withStyles from 'material-ui/styles/withStyles';
 import Slider from 'react-slick';
 import styles from './styles';
-import { log } from 'util';
 
 class StationSwitcher extends Component {
   constructor(props) {
@@ -40,10 +39,10 @@ class StationSwitcher extends Component {
 
     const settings = {
       speed: 500,
-      slidesToShow: slidesToShow,
+      slidesToShow,
       slidesToScroll: Math.min(stationList.length, slidesToShow),
       swipeToSlide: true,
-      infinite: false
+      infinite: false,
     };
 
     return (

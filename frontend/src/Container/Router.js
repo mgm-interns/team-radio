@@ -15,7 +15,7 @@ const routes = [
     exact: true,
   },
   {
-    path: '/station',
+    path: '/station/:stationName?',
     component: Station,
   },
   {
