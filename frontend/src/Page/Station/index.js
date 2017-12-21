@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import AddLink from './AddLink';
@@ -11,6 +13,7 @@ import StationSwitcher from './../../Component/StationSwitcher';
 import fixture from '../../Fixture/landing';
 
 import styles from './styles';
+import { joinStation } from '../../Redux/api/currentStation/actions';
 
 const STATION_DEFAULT = {
   number: 1,
@@ -32,6 +35,12 @@ class StationPage extends Component {
     };
     this._onChange = this._onChange.bind(this);
     this._onSendClick = this._onSendClick.bind(this);
+  }
+
+  componentDidMount() {
+    // Get station id from react-router
+    const stationId = 1;
+    this.props.joinStation(stationId);
   }
 
   _checkValidUrl(url) {
@@ -126,6 +135,14 @@ class StationPage extends Component {
 
 StationPage.propTypes = {
   classes: PropTypes.any,
+  joinStation: PropTypes.any,
 };
 
-export default withStyles(styles)(StationPage);
+const mapDispatchToProps = dispatch => ({
+  joinStation: stationId => dispatch(joinStation(stationId)),
+});
+
+export default compose(
+  withStyles(styles),
+  connect(undefined, mapDispatchToProps),
+)(StationPage);

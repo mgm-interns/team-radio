@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
 import { Player } from '../../../Component';
-
-const URL = 'https://www.youtube.com/watch?v=igSCSQ9fg14';
 
 class NowPlaying extends Component {
   static propTypes = {
     style: PropTypes.any,
     className: PropTypes.any,
+    nowPlaying: PropTypes.object,
   };
 
   constructor(props) {
@@ -66,12 +66,12 @@ class NowPlaying extends Component {
 
   render() {
     const { player: { isPlaying } } = this.state;
-    const { className } = this.props;
+    const { className, nowPlaying } = this.props;
 
     return (
       <Grid item xs={12} className={className}>
         <Player
-          url={URL}
+          url={nowPlaying.url}
           ref={this._getRefPlayer}
           playing={isPlaying}
           onPlay={this._onPlay}
@@ -82,4 +82,8 @@ class NowPlaying extends Component {
   }
 }
 
-export default NowPlaying;
+const mapStateToProps = state => ({
+  nowPlaying: state.api.currentStation.nowPlaying,
+});
+
+export default connect(mapStateToProps)(NowPlaying);
