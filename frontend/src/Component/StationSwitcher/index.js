@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'material-ui/styles/withStyles';
 import Slider from 'react-slick';
 import styles from './styles';
+import { log } from 'util';
 
 class StationSwitcher extends Component {
   constructor(props) {
@@ -27,16 +28,20 @@ class StationSwitcher extends Component {
     }
   };
 
+  slidesToShow(width, isMobile) {
+    return isMobile ? width / 100 : Math.floor(width / 120);
+  }
+
   render() {
     const { stationList, classes } = this.props;
     const { width } = this.state;
     const isMobile = width <= 568;
+    const slidesToShow = this.slidesToShow(width, isMobile);
 
     const settings = {
-      dots: !isMobile,
       speed: 500,
-      slidesToShow: isMobile ? width / 100 : Math.floor(width / 120),
-      slidesToScroll: !isMobile ? Math.floor(width / 120) : 3,
+      slidesToShow: slidesToShow,
+      slidesToScroll: Math.min(stationList.length, slidesToShow),
       swipeToSlide: true,
     };
 
