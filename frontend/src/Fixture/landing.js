@@ -14,6 +14,7 @@ const landing = {
       description: 'Internship 2017',
       owner: 'lybaokhanh',
       avatar: avatar1,
+      isActive: true,
     },
     {
       id: '2',
