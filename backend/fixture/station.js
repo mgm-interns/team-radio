@@ -120,7 +120,11 @@ let index = 0;
 export const getNowplaying = () => nowplaying;
 export const nextNowplaying = () => {
   playlist[index].playing = false;
-  index += 1;
+  if (index === playlist.length - 1) {
+    index = 0;
+  } else {
+    index += 1;
+  }
   playlist[index].playing = true;
   nowplaying = {
     ...playlist[index],
