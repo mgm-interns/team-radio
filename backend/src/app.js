@@ -9,9 +9,12 @@ import api from './api';
 import Routes from './Routes';
 // import mongoose from 'mongoose'
 const mongoose = require('mongoose');
+const mongodbConnectionString =
+  process.env.MONGODB ||
+  'mongodb://mgm:mgm123@ds013564.mlab.com:13564/mgm-radio';
 
 const Schema = mongoose.Schema;
-mongoose.connect('mongodb://mgm:mgm123@ds013564.mlab.com:13564/mgm-radio');
+mongoose.connect(mongodbConnectionString);
 mongoose.connection.on('open', () => {
   console.log('Mongoose is connected!');
 });
