@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
-import TextField from 'material-ui/TextField';
+import { FormControl, FormHelperText } from 'material-ui/Form';
+import Input, { InputLabel } from 'material-ui/Input';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
@@ -43,16 +44,20 @@ class Backdrop extends Component {
             <span className={classes.backdropSlogan}>{fixture.slogan}</span>
           </Grid>
           <Grid item xs lg={12} className={classes.formInput}>
-            <TextField
-              label="Name your station"
-              placeholder="Name your station"
-              margin="normal"
-              autoFocus={true}
-              className={classes.textField}
-              onChange={this._handleStationNameChanged}
-              value={this.state.stationName}
-              error={error}
-            />
+            <FormControl className={classes.textField} error={!!error}>
+              <InputLabel htmlFor="station-name">Name your station</InputLabel>
+              <Input
+                id="station-name"
+                placeholder="Name your station"
+                margin="normal"
+                autoFocus={true}
+                onChange={this._handleStationNameChanged}
+                value={this.state.stationName}
+              />
+              <FormHelperText>
+                {error && error.response && error.response.error.name}
+              </FormHelperText>
+            </FormControl>
             {loading ? (
               <div className={classes.buttonNew}>
                 <CircularProgress />
@@ -83,6 +88,8 @@ class Backdrop extends Component {
 
 Backdrop.propTypes = {
   classes: PropTypes.any,
+  loading: PropTypes.any,
+  error: PropTypes.any,
   addStation: PropTypes.func,
 };
 
