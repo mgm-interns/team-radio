@@ -1,22 +1,22 @@
 import Station from '../Models/Station';
-import stationHandler from '../../fixture/station';
+import { getNowplaying, nextNowplaying, playlist } from '../../fixture/station';
 
-let nowplaying = stationHandler.randomNowplaying();
+let nowplaying = getNowplaying();
 
 /* eslint-disable import/no-named-as-default-member */
 export default socket => {
   // auto emit new data to client per 200s
   setInterval(() => {
-    nowplaying = stationHandler.randomNowplaying();
+    nowplaying = nextNowplaying();
     // Emit action
     socket.emit('action', {
       type: 'SERVER:UPDATE_STATION',
       payload: {
-        playlist: stationHandler.playlist,
+        playlist: playlist,
         nowplaying: nowplaying,
       },
     });
-  }, 200000);
+  }, 50000);
 
   // handle redux action
   socket.on('action', action => {
@@ -29,7 +29,7 @@ export default socket => {
             type: 'SERVER:JOINED_STATION',
             payload: {
               station: station,
-              playlist: stationHandler.playlist,
+              playlist: playlist,
               nowplaying: nowplaying,
             },
           });
