@@ -39,7 +39,7 @@ export default ({ palette, breakpoints }) => ({
     height: '100%',
     top: 0,
     margin: 'auto',
-    filter: 'opacity(0.4)',
+    filter: 'opacity(0.3)',
     zIndex: -1,
   },
   backdropSlogan: {

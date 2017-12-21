@@ -18,6 +18,7 @@ mongoose.connection.on('open', () => {
 
 const app = express();
 
+//app.use(bodyParser.text());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(

@@ -25,6 +25,7 @@ class Backdrop extends Component {
               margin="normal"
               autoFocus={true}
               className={classes.textField}
+              error={true}
             />
             <Button raised color="primary" className={classes.buttonNew}>
               NEW <Icon className={classes.sendIcon}>send</Icon>
