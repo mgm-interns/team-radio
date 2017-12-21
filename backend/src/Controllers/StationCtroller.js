@@ -8,18 +8,17 @@ var Song = require('./SongController');
 // create a station
 stationController.addStation = function(req, res) {
   var station = req.body;
-
-  console.log(station);
   var stationName = station.stationName;
+  
    if(station.stationName == '')
    {
-     var error={
-       name : 'The name is empty'
+    var errorRes = {
+       name : 'The name is empty',
+       url : ''
      }
-    var response = new ResponeModel(false, null,error);
-    res.status(422);
-    res.json(response.get());
-    
+     console.log(errorRes);
+    var response = new ResponeModel(false, null,errorRes);
+    res.status(422).json(response.get());
    }
    else{
   //check available of station
@@ -35,21 +34,22 @@ stationController.addStation = function(req, res) {
       //  console.log(station);
       if (mess == null) {
         // create station
+
           Station.addStation(station, function(err, stationCallBack) {
           if (err) throw err;
+          console.log(stationCallBack);
           var response = new ResponeModel(true, stationCallBack, null);
           console.log(stationCallBack);
           res.json(response.get());
         
         });
       } else {
+       
         var error = {
           name: 'The station name available !',
         };
         var response = new ResponeModel(false, null, error);
-        res.status(400);
-        res.json(response.get());
-    
+        res.status(400).json(response.get());
       }
     });
   }
@@ -62,8 +62,8 @@ stationController.getStationByName = function(req, res) {
     if (err) {
       throw err;
       var response = new ResponeModel(false, null, err);
-      res.status(400);
-      res.json(response.get());
+      res.status(400).json(response.get());
+     
     }
     if (station == null) {
       console.log('err : ' + err);
@@ -71,10 +71,8 @@ stationController.getStationByName = function(req, res) {
        name : 'Can not find station name.'
      }
       var response = new ResponeModel(false, null, error);
-      res.status(404);
-      res.json(response.get());
-     
-    } else {
+      res.status(404).json(response.get());
+     } else {
       var response = new ResponeModel(true, station, null);
       res.json(response.get());
     }
@@ -86,10 +84,8 @@ stationController.getStations = function(req, res) {
     if (err) {
       throw err;
       var response = new ResponeModel(false, null, err);
-      res.status(400);
-      res.json(response.get());
-    
-    } else {
+      res.status(400).json(response.get());
+     } else {
       var response = new ResponeModel(true, stations, null);
       res.json(response.get());
     }
@@ -102,7 +98,7 @@ stationController.getListVideo = function(req,res)
    var stationName = 'Station2';
    Station.findSongIdOfPlaylist(stationName,function(err,response){
      if(err) throw err;
-
+      console.log(stationName);
       console.log(response);
    });
 }
@@ -156,8 +152,7 @@ stationController.addVideo = async function(req,res)
   
     
 }
-*/
 // add new song at station
-
+*/
 module.exports = stationController;
 

@@ -1,27 +1,10 @@
-/* eslint-disable */
 
-// module.exports = function(success,data,error)
-// {
-//     this.success = success;
-//     this.data = data;
-//     this.error = {
-//         name: '',
-//         url: ''
-//     };
-//     return {
-//         success : success,
-//         data:data,
-//         error:error
-//     }
-// }
 class Response {
+ 
   constructor(success, data, error) {
     this.success = success;
     this.data = data;
-    this.error = {
-      name: '',
-      url: '',
-    };
+    this.error = error;
 
     this.get = this.get.bind(this);
   }
@@ -29,7 +12,7 @@ class Response {
     return {
       success: this.success,
       data: this.data,
-      error: this.error,
+      error: this.error
     };
   }
 }
