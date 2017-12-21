@@ -2,6 +2,7 @@
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import cors from 'cors';
 import logger from 'morgan';
 import path from 'path';
 
@@ -21,7 +22,6 @@ mongoose.connection.on('open', () => {
 
 const app = express();
 
-//app.use(bodyParser.text());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(
@@ -34,7 +34,7 @@ app.use(cookieParser());
 
 // Serve api router
 // app.use('/api', api)
-app.use('/api', Routes);
+app.use('/api', cors(['http://localhost:3000']), Routes);
 
 // Serve static assets
 app.use(express.static(path.resolve(__dirname, '../..', 'frontend', 'build')));
