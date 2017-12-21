@@ -22,7 +22,9 @@ class StationSwitcher extends Component {
   }
 
   handleWindowSizeChange = () => {
-    this.setState({ width: this.sliderRef.clientWidth });
+    if (this.sliderRef) {
+      this.setState({ width: this.sliderRef.clientWidth });
+    }
   };
 
   render() {
