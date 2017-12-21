@@ -16,7 +16,7 @@ import { joinStation } from '../../Redux/api/currentStation/actions';
 class StationPage extends Component {
   componentDidMount() {
     // Get station id from react-router
-    const stationId = 1;
+    const stationId = 'hthth';
     this.props.joinStation(stationId);
   }
 

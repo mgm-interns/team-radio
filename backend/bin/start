@@ -12,7 +12,7 @@ require('babel-core/register');
 require('babel-polyfill');
 
 const app = require('../src/app').default;
-const debug = require('debug')('server:server');
+const socket = require('../src/socket').default;
 const http = require('http');
 
 /**
@@ -53,6 +53,8 @@ const server = http.createServer(app);
  */
 
 server.listen(port);
+
+socket.attach(server);
 
 /**
  * Event listener for HTTP server "error" event.

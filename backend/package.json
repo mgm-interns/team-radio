@@ -22,7 +22,8 @@
     "get-video-id": "^2.1.7",
     "mongoose": "^4.13.7",
     "morgan": "^1.8.2",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "socket.io": "^2.0.4"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
