@@ -6,8 +6,8 @@ export const SERVER_UPDATE_STATION = 'SERVER:UPDATE_STATION';
 
 // Client action types
 export const CLIENT_JOIN_STATION = 'CLIENT:JOIN_STATION';
-export const CLIENT_UPVOTE_VIDEO = 'CLIENT:UP_VOTE_VIDEO';
-export const CLIENT_UN_UPVOTE_VIDEO = 'CLIENT:UN_UP_VOTE_VIDEO';
+export const CLIENT_UPVOTE_VIDEO = 'CLIENT:UPVOTE_VIDEO';
+export const CLIENT_UN_UPVOTE_VIDEO = 'CLIENT:UN_UPVOTE_VIDEO';
 
 // Client action creator
 export const joinStation = stationId => ({
@@ -23,4 +23,12 @@ export const upVoteVideo = ({ stationId, videoId }) => ({
 export const unUpVoteVideo = ({ stationId, videoId }) => ({
   type: CLIENT_UN_UPVOTE_VIDEO,
   payload: { stationId, videoId },
+});
+
+// Friday demo action
+export const SET_CURRENT_STATION = 'SET_CURRENT_STATION';
+
+export const setCurrentStation = station => ({
+  type: SET_CURRENT_STATION,
+  payload: { station },
 });
