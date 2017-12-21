@@ -73,7 +73,6 @@ class AddLink extends Component {
             <Input
               className={classes.linkInput}
               placeholder="Add your link..."
-              autoFocus
               fullWidth
               onChange={onChange}
             />
