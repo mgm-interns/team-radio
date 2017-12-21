@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
+import withRouter from 'react-router-dom/withRouter';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
@@ -14,14 +15,20 @@ import styles from './styles';
 import { joinStation } from '../../Redux/api/currentStation/actions';
 
 class StationPage extends Component {
-  componentDidMount() {
+  componentWillMount() {
     // Get station id from react-router
-    const stationId = 'hthth';
-    this.props.joinStation(stationId);
+    const { match: { params: { stationName } }, history } = this.props;
+    console.log(this.props.match.params.stationName);
+    if (stationName) {
+      this.props.joinStation(stationName);
+    } else {
+      console.log('go to landing page');
+      history.push(`/`);
+    }
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, currentStation: { station } } = this.props;
     return (
       <div>
         <NavBar />
@@ -34,7 +41,7 @@ class StationPage extends Component {
               <Grid item xs={12} md={8} lg={9}>
                 <Grid container>
                   <Grid item xs={12}>
-                    <h1>MY STATION</h1>
+                    <h1>{station && station.stationName}</h1>
                   </Grid>
                   <NowPlaying className={classes.content} />
                 </Grid>
@@ -62,7 +69,13 @@ class StationPage extends Component {
 StationPage.propTypes = {
   classes: PropTypes.any,
   joinStation: PropTypes.any,
+  match: PropTypes.any,
+  history: PropTypes.any,
 };
+
+const mapStateToProps = state => ({
+  currentStation: state.api.currentStation,
+});
 
 const mapDispatchToProps = dispatch => ({
   joinStation: stationId => dispatch(joinStation(stationId)),
@@ -70,5 +83,6 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   withStyles(styles),
-  connect(undefined, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
 )(StationPage);
