@@ -7,7 +7,7 @@ import Button from 'material-ui/Button';
 import './style.css';
 import fixture from '../../Fixture/landing';
 import Images from '../../Theme/Images';
-import StationSwitcher from '../../Component/StationSwitcher';
+import PopularStations from '../../Component/PopularStations';
 
 const NavBar = () => (
   <Grid className="navbar_container" container>
@@ -53,39 +53,6 @@ const Backdrop = () => (
   </Grid>
 );
 
-const PopularStations = () => {
-  const stations = [];
-  fixture.stations.map((station, index) =>
-    stations.push(
-      <Grid key={index} className="station_item" item>
-        <img
-          src={station.avatar}
-          alt=""
-          className="stations_secondary_avatar"
-        />
-        <h1 className="station-text--title">{station.name}</h1>
-        <span className="subtitle">{station.describe}</span>
-      </Grid>,
-    ),
-  );
-
-  const mainStation = fixture.stations[0];
-  return (
-    <Grid className="stations_container" container>
-      <Grid className="stations_wrapper" item xs={12}>
-        <Grid className="stations_primary" item xs>
-          <img src={mainStation.avatar} alt="" width="200" height="200" />
-          <h1 className="station-text--title">{mainStation.name}</h1>
-          <span className="subtitle">{mainStation.describe}</span>
-        </Grid>
-        <Grid className="stations_secondary" item xs>
-          <StationSwitcher stationList={fixture.stations} />
-        </Grid>
-      </Grid>
-    </Grid>
-  );
-};
-
 const Section = () => (
   <Grid className="section_container" container>
     <Grid className="section_foreground" item xs={12}>
@@ -120,7 +87,7 @@ const LandingPage = () => (
   <Grid container>
     <NavBar />
     <Backdrop />
-    <PopularStations />
+    <PopularStations stationList={fixture.stations} />
     <Section />
     <Footer />
   </Grid>

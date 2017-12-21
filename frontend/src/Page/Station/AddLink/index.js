@@ -160,7 +160,6 @@ class AddLink extends Component {
               name="search"
               placeholder="Add your link..."
               autoComplete="search"
-              autoFocus
               fullWidth
               onChange={e => {
                 this._onChange(e.target.value);
