@@ -9,7 +9,7 @@ import styles from './styles';
 class Footer extends Component {
   render() {
     const { classes } = this.props;
-    return <Grid container xs={12} className={classes.footerContainer} />;
+    return <Grid container className={classes.footerContainer} />;
   }
 }
 

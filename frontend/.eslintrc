@@ -5,7 +5,8 @@
     "react/display-name": ["off"],
     "class-methods-use-this": ["off"],
     "global-require": ["off"],
-    "no-console": ["off"]
+    "no-console": ["off"],
+    "react/prop-types": ["warn"]
   },
   "env": {
     "browser": true

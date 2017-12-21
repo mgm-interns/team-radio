@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
 import { CircularProgress } from 'material-ui/Progress';
 import Slider from 'react-slick';
@@ -25,6 +26,7 @@ class StationSwitcher extends Component {
     stationList: PropTypes.array,
     fetchStations: PropTypes.func,
     stations: PropTypes.array,
+    history: PropTypes.object,
   };
   constructor(props) {
     super(props);
@@ -33,6 +35,7 @@ class StationSwitcher extends Component {
       width: window.innerWidth,
     };
     this._renderSwitcher = this._renderSwitcher.bind(this);
+    this._goToStationPage = this._goToStationPage.bind(this);
   }
 
   componentWillMount() {
@@ -52,6 +55,10 @@ class StationSwitcher extends Component {
 
   _slidesToShow(width, isMobile) {
     return isMobile ? width / 100 : Math.floor(width / 120);
+  }
+
+  _goToStationPage(station) {
+    this.props.history.push(`station/${station.stationName}`);
   }
 
   _renderSwitcher() {
@@ -85,6 +92,7 @@ class StationSwitcher extends Component {
                 classes.station_wrapper,
                 // station.isActive && classes.active_station,
               ]}
+              onClick={() => this._goToStationPage(station)}
             >
               <img src={station.avatar} className={classes.station_avatar} />
               <div className={classes.station_info}>
@@ -102,20 +110,38 @@ class StationSwitcher extends Component {
     );
   }
 
-  render() {
-    const { stations, classes } = this.props;
+  _renderLoading() {
+    const { classes } = this.props;
 
     return (
-      <div>
-        {stations === undefined ? (
-          <div className={classes.loadingContainer}>
-            <CircularProgress color="primary" thickness={3} size={20} />
-          </div>
-        ) : (
-          this._renderSwitcher()
-        )}
+      <div className={classes.loadingContainer}>
+        <CircularProgress color="primary" thickness={3} size={20} />
       </div>
     );
+  }
+
+  _renderEmptyComponent() {
+    const { classes } = this.props;
+
+    return (
+      <div className={classes.loadingContainer}>
+        <p>Create your first station.</p>
+      </div>
+    );
+  }
+
+  render() {
+    const { stations, classes } = this.props;
+    let view = null;
+    if (stations === undefined) {
+      view = this._renderLoading();
+    } else if (stations.length === 0) {
+      view = this._renderEmptyComponent();
+    } else {
+      view = this._renderSwitcher();
+    }
+
+    return view;
   }
 }
 
@@ -130,4 +156,5 @@ const mapDispatchToProps = dispatch => ({
 export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
 )(StationSwitcher);

@@ -28,12 +28,11 @@ class NavBar extends Component {
     const { classes } = this.props;
     const menusLength = Object.keys(MENUS).length;
     return (
-      <Grid container xs={12} lg={12} className={classes.container}>
-        <Grid container xs={3} lg={3}>
+      <Grid container className={classes.container}>
+        <Grid item xs={3}>
           <Grid container className={classes.logo}>
             <Grid item xs={0}>
               <img
-                item
                 src={fixture.logo}
                 alt="Team Radio"
                 className={classes.img}
@@ -46,16 +45,18 @@ class NavBar extends Component {
             </Hidden>
           </Grid>
         </Grid>
-        <Grid container xs={7} className={classes.navigationContainer}>
-          <Grid item className={classes.wrapper}>
-            {Object.keys(MENUS).map((key, index) => {
-              const title = MENUS[key].title.toUpperCase();
-              return (
-                <Link key={index} to={MENUS[key].url} className={classes.text}>
-                  {index === menusLength - 1 ? title : `${title} - `}
-                </Link>
-              );
-            })}
+        <Grid item xs={7}>
+          <Grid container className={classes.navigationContainer}>
+            <Grid item className={classes.wrapper}>
+              {Object.keys(MENUS).map((key, index) => {
+                const title = MENUS[key].title.toUpperCase();
+                return (
+                  <Link key={index} to={MENUS[key].url} classes={classes.text}>
+                    {index === menusLength - 1 ? title : `${title} - `}
+                  </Link>
+                );
+              })}
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
