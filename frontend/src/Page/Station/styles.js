@@ -11,6 +11,7 @@ export default theme => ({
   },
   switcherContainer: {
     margin: 'auto',
+    background: theme.palette.lightGrey['500'],
   },
   content: {
     height: 300,

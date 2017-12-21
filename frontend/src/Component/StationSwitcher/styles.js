@@ -1,12 +1,32 @@
-export default ({ breakpoints }) => ({
+export default ({ breakpoints, spacing }) => ({
+  container: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    '& .slick-dots': {
+      position: 'relative',
+      bottom: 0,
+    },
+    '& .slick-arrow': {
+      height: '100%',
+      transition: '300ms',
+      paddingLeft: 2,
+      paddingRight: 2,
+      '&::before': {
+        fontSize: 16,
+      },
+      '&:hover': {
+        background: 'rgba(255,255,255,0.33)',
+      },
+    },
+  },
   station_wrapper: {
     display: 'flex !important',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '10px 0',
+    paddingTop: spacing.baseMargin,
   },
-
   station_title: {
+    marginTop: spacing.smallMargin,
     fontWeight: 'bold',
   },
   station_subtitle: {
@@ -23,9 +43,11 @@ export default ({ breakpoints }) => ({
   },
   station_info: {
     width: '100px',
+    marginBottom: spacing.baseMargin,
   },
   active_station: {
-    border: '2px solid #333',
+    border: '1px solid #333',
+    background: 'white',
   },
   [breakpoints.down('sm')]: {
     station_avatar: {

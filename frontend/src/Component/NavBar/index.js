@@ -8,9 +8,25 @@ import { withStyles } from 'material-ui/styles';
 import fixture from '../../Fixture/landing';
 import styles from './styles';
 
+const MENUS = {
+  home: {
+    title: 'home',
+    url: '/',
+  },
+  stations: {
+    title: 'my station',
+    url: '/station',
+  },
+  login: {
+    title: 'login',
+    url: '/auth/login',
+  },
+};
+
 class NavBar extends Component {
   render() {
     const { classes } = this.props;
+    const menusLength = Object.keys(MENUS).length;
     return (
       <Grid container xs={12} lg={12} className={classes.container}>
         <Grid container xs={3} lg={3}>
@@ -31,16 +47,15 @@ class NavBar extends Component {
           </Grid>
         </Grid>
         <Grid container xs={7} className={classes.navigationContainer}>
-          <Grid container xs className={classes.wrapper}>
-            <Link to="/" className={classes.text}>
-              HOME
-            </Link>
-            <Link to="/station" className={classes.text}>
-              STATIONS
-            </Link>
-            <Link to="/auth/login" className={classes.text}>
-              LOGIN
-            </Link>
+          <Grid item className={classes.wrapper}>
+            {Object.keys(MENUS).map((key, index) => {
+              const title = MENUS[key].title.toUpperCase();
+              return (
+                <Link key={index} to={MENUS[key].url} className={classes.text}>
+                  {index === menusLength - 1 ? title : `${title} - `}
+                </Link>
+              );
+            })}
           </Grid>
         </Grid>
       </Grid>
