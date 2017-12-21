@@ -18,6 +18,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_JOINED_STATION:
       return {
         ...state,
+        station: action.payload.station,
         playlist: action.payload.playlist,
         nowPlaying: action.payload.nowplaying,
       };

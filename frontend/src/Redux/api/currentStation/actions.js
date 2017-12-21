@@ -10,9 +10,9 @@ export const CLIENT_UPVOTE_VIDEO = 'CLIENT:UPVOTE_VIDEO';
 export const CLIENT_UN_UPVOTE_VIDEO = 'CLIENT:UN_UPVOTE_VIDEO';
 
 // Client action creator
-export const joinStation = stationId => ({
+export const joinStation = stationName => ({
   type: CLIENT_JOIN_STATION,
-  payload: { stationId },
+  payload: { stationName },
 });
 
 export const upVoteVideo = ({ stationId, videoId }) => ({
