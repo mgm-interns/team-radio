@@ -17,4 +17,10 @@ export default router => {
   router.get('/stations', function(req, res) {
     station.getStations(req, res);
   });
+  // add a new video
+  /*
+  router.put('/stations/:stationName',function(req,res){
+      station.addVideo(req,res);
+  })
+  */
 };

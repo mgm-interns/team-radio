@@ -1,3 +1,6 @@
+import { Schema, model } from 'mongoose';
+
+/* eslint-disable */
 var mongoose = require('mongoose');
 //const ObjectId = mongoose.Schema.Types.ObjectId;
 var stationSchema = mongoose.Schema({
@@ -18,9 +21,10 @@ var stationSchema = mongoose.Schema({
       songId: {
         type: mongoose.Schema.Types.ObjectId,
         require: true,
+        ref : "songs"
       },
       addId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
       },
       upVote: [
         String, // userID
@@ -55,3 +59,20 @@ module.exports.getStations = function(callback, limit) {
 module.exports.getStationByName = function(stationNameToFind, callback) {
   Station.findOne({ stationName: stationNameToFind }, callback);
 };
+// update playlist of station
+module.exports.addVideo = function(stationName,video,callback)
+{
+    var query = {stationName : stationName};
+    var videoToAdd = {
+        $addToSet : {
+            playlist :video 
+        }
+    }
+    Station.update(query,videoToAdd,callback);
+}
+//get playlist of station
+model.exports.findSongIdOfPlaylist = function(stationName,callback){
+  var query = {stationName : stationName};
+  Station.find(query).toArray(callback);
+
+}
