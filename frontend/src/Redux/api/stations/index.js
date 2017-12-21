@@ -31,10 +31,9 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
     case FETCH_STATIONS_FAILURE: {
-      const error = { message: action.payload.message };
       return {
         data: [],
-        error,
+        error: { ...action.payload },
         loading: false,
       };
     }
@@ -57,10 +56,9 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
     case ADD_STATION_FAILURE: {
-      const error = { message: action.payload.message };
       return {
         ...state,
-        error,
+        error: { ...action.payload },
         loading: false,
       };
     }

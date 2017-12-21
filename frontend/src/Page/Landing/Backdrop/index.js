@@ -35,7 +35,7 @@ class Backdrop extends Component {
   }
 
   render() {
-    const { classes, loading } = this.props;
+    const { classes, loading, error } = this.props;
     return (
       <Grid container xs={12} className={classes.backdropContainer}>
         <Grid container className={classes.backdropForeground}>
@@ -51,6 +51,7 @@ class Backdrop extends Component {
               className={classes.textField}
               onChange={this._handleStationNameChanged}
               value={this.state.stationName}
+              error={error}
             />
             {loading ? (
               <div className={classes.buttonNew}>
@@ -87,6 +88,7 @@ Backdrop.propTypes = {
 
 const mapStateToProps = state => ({
   loading: state.api.stations.loading,
+  error: state.api.stations.error,
 });
 
 const mapDispatchToProps = dispatch => ({
