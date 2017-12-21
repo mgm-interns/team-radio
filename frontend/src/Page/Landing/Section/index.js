@@ -12,11 +12,13 @@ class Section extends Component {
     const { classes } = this.props;
     return (
       <Grid container className={classes.sectionContainer}>
-        <img
-          src={Images.drummer}
-          alt="Team Radio"
-          className={classes.sectionImages}
-        />
+        <Grid>
+          <img
+            src={Images.drummer}
+            alt="Team Radio"
+            className={classes.sectionImages}
+          />
+        </Grid>
         <Grid item xs={12} lg={12} className={classes.sectionDescription}>
           <Grid>
             <span className={classes.sectionTitle}>WHERE MUSIC HAPPENS</span>
@@ -26,7 +28,7 @@ class Section extends Component {
             </span>
           </Grid>
         </Grid>
-        <Grid item xs={11} lg={6} />
+        <Grid item xs={8} sm lg={6} />
         <Grid item xs lg className={classes.sectionContentContainer}>
           <span className={classes.sectionContent}>
             {`Lorem Ipsum is simply dummy text of the printing and typesetting

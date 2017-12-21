@@ -13,11 +13,9 @@ class PopularStation extends Component {
     const { classes } = this.props;
 
     return (
-      <Grid container className={classes.stationsContainer}>
-        <Grid item className={classes.stationsWrapper}>
-          <Grid item xs={12} className={classes.stationSecondary}>
-            <StationSwitcher stationList={fixture.stations} />
-          </Grid>
+      <Grid direction="row" container style={{ margin: 0, width: '100%' }}>
+        <Grid item xs={12} className={classes.stationSwitcher}>
+          <StationSwitcher stationList={fixture.stations} />
         </Grid>
       </Grid>
     );

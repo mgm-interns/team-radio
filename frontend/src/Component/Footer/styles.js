@@ -4,5 +4,6 @@ export default ({ palette }) => ({
     margin: 0,
     background: palette.darkGreen['500'],
     height: '200px',
+    width: '100%',
   },
 });

@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import Grid from 'material-ui/Grid';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
 
-import NavBar from '../../Component/NavBar';
-import Footer from '../../Component/Footer';
+import { NavBar, Footer } from '../../Component';
 
 import Backdrop from './Backdrop';
 import PopularStation from './PopularStation';
@@ -27,13 +25,13 @@ class Landing extends Component {
 
   render() {
     return (
-      <Grid container>
+      <div>
         <NavBar />
         <Backdrop />
         <PopularStation />
         <Section />
         <Footer />
-      </Grid>
+      </div>
     );
   }
 }

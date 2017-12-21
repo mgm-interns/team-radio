@@ -59,17 +59,15 @@ class Backdrop extends Component {
               </FormHelperText>
             </FormControl>
             {loading ? (
-              <div className={classes.buttonNew}>
-                <CircularProgress />
-              </div>
+              <CircularProgress />
             ) : (
               <Button
                 raised
                 color="primary"
-                className={classes.buttonNew}
                 onClick={this._submit}
+                className={classes.buttonSend}
               >
-                NEW <Icon className={classes.sendIcon}>send</Icon>
+                New Station <Icon className={classes.sendIcon}>send</Icon>
               </Button>
             )}
           </Grid>

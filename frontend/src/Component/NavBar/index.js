@@ -13,14 +13,14 @@ const MENUS = {
     title: 'home',
     url: '/',
   },
-  stations: {
-    title: 'my station',
-    url: '/station',
-  },
-  login: {
-    title: 'login',
-    url: '/auth/login',
-  },
+  // stations: {
+  //   title: 'my station',
+  //   url: '/station',
+  // },
+  // login: {
+  //   title: 'login',
+  //   url: '/auth/login',
+  // },
 };
 
 class NavBar extends Component {
@@ -38,7 +38,7 @@ class NavBar extends Component {
                 className={classes.img}
               />
             </Grid>
-            <Hidden xsDown>
+            <Hidden smDown>
               <Grid item xs={8} className={classes.logoName}>
                 {fixture.name}
               </Grid>

@@ -6,6 +6,7 @@ export default ({ palette, breakpoints }) => ({
     margin: '0',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   logo: {
     alignItems: 'center',
@@ -30,13 +31,12 @@ export default ({ palette, breakpoints }) => ({
     '& a': {
       textDecoration: 'none',
       color: 'white',
-      fontSize: '20pt',
+      fontSize: '25pt',
       fontFamily: 'Bebas Neue',
     },
   },
   text: {
-    // textDecoration: 'none',
-    fontZize: '20pt',
+    // fontZize: '25pt',
     color: 'white',
     [breakpoints.up('lg')]: {
       fontSize: '18pt',

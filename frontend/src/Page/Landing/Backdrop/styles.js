@@ -4,24 +4,26 @@ export default ({ palette, breakpoints }) => ({
     position: 'relative',
     margin: 'auto',
     padding: 'auto',
+    width: '100%',
   },
   backdropForeground: {
     background: palette.darkGreen['500'],
-    height: '40vh',
+    // height: '40vh',
     // alignItems: 'center',
     justifyContent: 'center',
     zIndex: 0,
     margin: 0,
     padding: '8%',
+    [breakpoints.down('lg')]: {
+      // height: '40vh',
+      paddingTop: '15em',
+      alignItems: 'center',
+    },
     [breakpoints.up('lg')]: {
       height: '65vh',
       paddingBottom: '2em',
     },
   },
-  // backdropWrapper: {
-  //   // fontWeight: 'bold',
-  //   padding: '8%',
-  // },
   backdropSloganContainer: {
     position: 'absolute',
     width: '100%',
@@ -33,6 +35,7 @@ export default ({ palette, breakpoints }) => ({
     width: '100%',
     height: '100%',
     top: 0,
+    left: 0,
     margin: 'auto',
     filter: 'opacity(0.3)',
     zIndex: -1,
@@ -54,10 +57,14 @@ export default ({ palette, breakpoints }) => ({
     textAlign: 'center',
     '& input': {
       color: 'white',
-      // backgroundColor: 'white',
     },
     '& label': {
       color: 'white',
+    },
+    '& div': {
+      [breakpoints.down('sm')]: {
+        width: '100%',
+      },
     },
     '& div::before': {
       backgroundColor: palette.primary['500'],
@@ -66,19 +73,16 @@ export default ({ palette, breakpoints }) => ({
       backgroundColor: palette.primary['500'],
       color: palette.primary['500'],
     },
-  },
-  buttonSubmit: {
-    paddingTop: '10px',
-  },
-  textField: {
-    [breakpoints.up('lg')]: {
-      width: '30%',
-      paddingRight: '1.5em',
+    '& button': {
+      [breakpoints.down('sm')]: {
+        width: '100%',
+      },
     },
   },
-  buttonNew: {
+  textField: {
+    paddingRight: '1.5em',
     [breakpoints.up('lg')]: {
-      width: '8%',
+      width: '30%',
     },
   },
   sendIcon: {

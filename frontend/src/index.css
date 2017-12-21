@@ -1,10 +1,9 @@
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
-
 * {
-  margin: 0;
-  padding: 0;
-  font-family: 'Roboto Slab', serif;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto Slab', serif;
 }
 
 h1,
@@ -13,5 +12,6 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Bebas Neue', sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 35pt
 }
