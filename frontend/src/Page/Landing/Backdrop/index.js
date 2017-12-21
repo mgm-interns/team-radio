@@ -38,9 +38,9 @@ class Backdrop extends Component {
   render() {
     const { classes, loading, error } = this.props;
     return (
-      <Grid container xs={12} className={classes.backdropContainer}>
+      <Grid container className={classes.backdropContainer}>
         <Grid container className={classes.backdropForeground}>
-          <Grid lg={12} className={classes.backdropSloganContainer}>
+          <Grid item lg={12} className={classes.backdropSloganContainer}>
             <span className={classes.backdropSlogan}>{fixture.slogan}</span>
           </Grid>
           <Grid item xs lg={12} className={classes.formInput}>

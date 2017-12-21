@@ -27,11 +27,6 @@ export default ({ palette, breakpoints }) => ({
     width: '100%',
     height: '100%',
     textAlign: 'center',
-    // margin: 'auto',
-    // top: 0,
-    [breakpoints.up('lg')]: {
-      maxWidth: '40%',
-    },
   },
   backdropImg: {
     position: 'absolute',
@@ -41,6 +36,7 @@ export default ({ palette, breakpoints }) => ({
     margin: 'auto',
     filter: 'opacity(0.3)',
     zIndex: -1,
+    objectFit: 'cover',
   },
   backdropSlogan: {
     fontSize: '20pt',
@@ -56,10 +52,20 @@ export default ({ palette, breakpoints }) => ({
     margin: 'auto',
     zIndex: 2,
     textAlign: 'center',
-    // paddingTop: '10em',
-    // [breakpoints.up('lg')]: {
-    //   paddingTop: '10em',
-    // },
+    '& input': {
+      color: 'white',
+      // backgroundColor: 'white',
+    },
+    '& label': {
+      color: 'white',
+    },
+    '& div::before': {
+      backgroundColor: palette.primary['500'],
+    },
+    '& div::after': {
+      backgroundColor: palette.primary['500'],
+      color: palette.primary['500'],
+    },
   },
   buttonSubmit: {
     paddingTop: '10px',

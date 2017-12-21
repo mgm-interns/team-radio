@@ -11,7 +11,7 @@ import Section from './Section';
 class Landing extends Component {
   render() {
     return (
-      <Grid container xs={12} style={{ margin: 0, padding: 0 }}>
+      <Grid container>
         <NavBar />
         <Backdrop />
         <PopularStation />

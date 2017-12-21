@@ -11,7 +11,7 @@ class Section extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <Grid container xs={12} className={classes.sectionContainer}>
+      <Grid container className={classes.sectionContainer}>
         <img
           src={Images.drummer}
           alt="Team Radio"
@@ -27,7 +27,7 @@ class Section extends Component {
           </Grid>
         </Grid>
         <Grid item xs={11} lg={6} />
-        <Grid item xs className={classes.sectionContentContainer} lg={6}>
+        <Grid item xs lg className={classes.sectionContentContainer}>
           <span className={classes.sectionContent}>
             {`Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text
