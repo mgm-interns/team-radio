@@ -42,7 +42,12 @@
     "url": "https://github.com/mgm-interns/team-radio/issues"
   },
   "dependencies": {
-    "npm-run-all": "^4.1.2"
+    "cheerio": "^1.0.0-rc.2",
+    "get-video-id": "^2.1.7",
+    "mongoose": "^4.13.7",
+    "npm-run-all": "^4.1.2",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.3",

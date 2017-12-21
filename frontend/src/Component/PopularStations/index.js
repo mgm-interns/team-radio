@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import styles from './styles';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+import styles from './styles';
 import StationSwitcher from './../StationSwitcher';
 
 class PopularStations extends Component {
+  static propTypes = {
+    stationList: PropTypes.array,
+    classes: PropTypes.any,
+  };
   render() {
-    const { stationList } = this.props;
+    const { stationList, classes } = this.props;
     const mainStation = stationList[0];
     const otherStations = stationList.slice(1, stationList.length);
-    const classes = this.props.classes;
 
     return (
       <div className={classes.stations_container}>
@@ -23,7 +27,6 @@ class PopularStations extends Component {
             {mainStation.description}
           </span>
         </div>
-
         <div className="stations_secondary">
           <StationSwitcher stationList={otherStations} />
         </div>

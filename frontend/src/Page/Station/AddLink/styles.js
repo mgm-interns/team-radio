@@ -1,7 +1,7 @@
 export default theme => {
   // console.log(theme.typography.title);
   const {
-    spacing: { baseMargin, doubleBaseMargin },
+    spacing: { smallMargin, baseMargin, doubleBaseMargin },
     palette: { lightGrey },
     typography,
     breakpoints,
@@ -24,7 +24,9 @@ export default theme => {
 
     addLinkBox: {
       backgroundColor: '#fafafa !important',
-      margin: '0 4px 20px 4px',
+      marginHorizontal: smallMargin,
+      marginTop: 0,
+      marginBottom: doubleBaseMargin * 3,
       width: '100%',
       padding: doubleBaseMargin,
       boxShadow: '0 0 10px -3px rgba(0, 0, 0, 0.5) !important',

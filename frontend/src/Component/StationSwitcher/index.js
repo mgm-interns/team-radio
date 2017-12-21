@@ -5,8 +5,9 @@ import Slider from 'react-slick';
 import styles from './styles';
 
 class StationSwitcher extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       width: window.innerWidth,
     };
@@ -73,7 +74,7 @@ class StationSwitcher extends Component {
 }
 
 StationSwitcher.propTypes = {
-  stationList: PropTypes.any,
+  stationList: PropTypes.array,
   classes: PropTypes.any,
 };
 
