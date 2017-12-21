@@ -42,7 +42,8 @@ class StationSwitcher extends Component {
       speed: 500,
       slidesToShow: slidesToShow,
       slidesToScroll: Math.min(stationList.length, slidesToShow),
-      swipeToSlide: true
+      swipeToSlide: true,
+      infinite: false
     };
 
     return (
