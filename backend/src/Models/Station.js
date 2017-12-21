@@ -70,9 +70,13 @@ module.exports.addVideo = function(stationName,video,callback)
     }
     Station.update(query,videoToAdd,callback);
 }
+/*
 //get playlist of station
 model.exports.findSongIdOfPlaylist = function(stationName,callback){
+  console.log('1\n');
   var query = {stationName : stationName};
   Station.find(query).toArray(callback);
+  console.log('2\n');
 
 }
+*/
