@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 
 import { withStyles } from 'material-ui/styles';
@@ -11,28 +12,10 @@ class PopularStation extends Component {
   render() {
     const { classes } = this.props;
 
-    const mainStation = fixture.stations[0];
     return (
-      <Grid container xs={12} className={classes.stationsContainer}>
-        <Grid container xs={12} className={classes.stationsWrapper}>
-          <Grid container xs={12} className={classes.stationPrimary}>
-            <Grid item xs={6}>
-              <img
-                src={mainStation.avatar}
-                alt="Most popular station"
-                className={classes.stationPrimaryAvatar}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <h3 className={classes.stationPrimaryTitle}>
-                {mainStation.name}
-              </h3>
-              <span className={classes.stationPrimarySubTitle}>
-                {mainStation.description}
-              </span>
-            </Grid>
-          </Grid>
-          <Grid item xs className={classes.stationSecondary}>
+      <Grid container className={classes.stationsContainer}>
+        <Grid item className={classes.stationsWrapper}>
+          <Grid item xs={12} className={classes.stationSecondary}>
             <StationSwitcher stationList={fixture.stations} />
           </Grid>
         </Grid>
@@ -40,5 +23,9 @@ class PopularStation extends Component {
     );
   }
 }
+
+PopularStation.propTypes = {
+  classes: PropTypes.any,
+};
 
 export default withStyles(styles)(PopularStation);

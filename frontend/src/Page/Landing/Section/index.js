@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 
 import { withStyles } from 'material-ui/styles';
@@ -11,21 +12,22 @@ class Section extends Component {
     const { classes } = this.props;
     return (
       <Grid container xs={12} className={classes.sectionContainer}>
-        <Grid item xs={12} className={classes.sectionDescription}>
-          <h3 className={classes.sectionTitle}>Where music happens</h3>
-          <span className={classes.sectionSubtitle}>
-            When you needs to share music and your whole team can hear it!
-          </span>
-          <br />
+        <img
+          src={Images.drummer}
+          alt="Team Radio"
+          className={classes.sectionImages}
+        />
+        <Grid item xs={12} lg={12} className={classes.sectionDescription}>
+          <Grid>
+            <span className={classes.sectionTitle}>WHERE MUSIC HAPPENS</span>
+            <br />
+            <span className={classes.sectionSubtitle}>
+              When you needs to share music and your whole team can hear it!
+            </span>
+          </Grid>
         </Grid>
-        <Grid item xs={11}>
-          <img
-            src={Images.drummer}
-            alt="Team Radio"
-            className={classes.sectionImages}
-          />
-        </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={11} lg={6} />
+        <Grid item xs className={classes.sectionContentContainer} lg={6}>
           <span className={classes.sectionContent}>
             {`Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text
@@ -39,5 +41,9 @@ class Section extends Component {
     );
   }
 }
+
+Section.propTypes = {
+  classes: PropTypes.any,
+};
 
 export default withStyles(styles)(Section);

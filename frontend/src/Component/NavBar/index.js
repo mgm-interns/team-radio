@@ -11,12 +11,11 @@ import styles from './styles';
 class NavBar extends Component {
   render() {
     const { classes } = this.props;
-    // console.log(palette.primary['500']);
     return (
-      <Grid container xs={12} className={classes.container}>
-        <Grid container xs={3}>
+      <Grid container xs={12} lg={12} className={classes.container}>
+        <Grid container xs={3} lg={3}>
           <Grid container className={classes.logo}>
-            <Grid xs={0}>
+            <Grid item xs={0}>
               <img
                 item
                 src={fixture.logo}
@@ -25,7 +24,7 @@ class NavBar extends Component {
               />
             </Grid>
             <Hidden xsDown>
-              <Grid item xs={8} className={[classes.logoName, classes.text]}>
+              <Grid item xs={8} className={classes.logoName}>
                 {fixture.name}
               </Grid>
             </Hidden>
