@@ -15,6 +15,10 @@ import styles from './styles';
 import { joinStation } from '../../Redux/api/currentStation/actions';
 
 class StationPage extends Component {
+  static propTypes = {
+    classes: PropTypes.any,
+    joinStation: PropTypes.any,
+  };
   componentWillMount() {
     // Get station id from react-router
     const { match: { params: { stationName } }, history } = this.props;
@@ -34,7 +38,7 @@ class StationPage extends Component {
         <NavBar />
         <Grid direction="row" container style={{ margin: 0, width: '100%' }}>
           <Grid item xs={12} className={classes.switcherContainer}>
-            <StationSwitcher stationList={fixture.stations} />
+            <StationSwitcher />
           </Grid>
           <Grid item xs={12} className={classes.container}>
             <Grid container>
