@@ -4,8 +4,8 @@ export default theme => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     [theme.breakpoints.up('lg')]: {
-      minWidth: 1024,
-      maxWidth: 1280,
+      // minWidth: 1024,
+      // maxWidth: 1280,
     },
   },
 });
