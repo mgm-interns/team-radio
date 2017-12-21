@@ -1,5 +1,3 @@
-import { Schema, model } from 'mongoose';
-
 /* eslint-disable */
 var mongoose = require('mongoose');
 //const ObjectId = mongoose.Schema.Types.ObjectId;
@@ -19,9 +17,9 @@ var stationSchema = mongoose.Schema({
   playlist: [
     {
       songId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         require: true,
-        ref : "songs"
+      //  ref : "songs"
       },
       addId: {
         type: String,
@@ -59,7 +57,7 @@ module.exports.getStations = function(callback, limit) {
 module.exports.getStationByName = function(stationNameToFind, callback) {
   Station.findOne({ stationName: stationNameToFind }, callback);
 };
-// update playlist of station
+// add video in playllist of station
 module.exports.addVideo = function(stationName,video,callback)
 {
     var query = {stationName : stationName};
@@ -72,10 +70,10 @@ module.exports.addVideo = function(stationName,video,callback)
 }
 
 //get playlist of station
-module.exports.findSongIdOfPlaylist = function(stationName,callback){
-  console.log('1*******\n');
+module.exports.getPlaylistOfStation = function(stationName,callback){
+ 
   var query = {stationName : stationName};
-  Station.find(query).toArray(callback);
+  Station.findOne(query,{playlist:true,_id:false},callback);
   console.log('2****\n');
 
 }

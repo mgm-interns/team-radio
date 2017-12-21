@@ -91,7 +91,7 @@ stationController.getStations = function(req, res) {
     }
   });
 };
-/*
+
 // get play list 
 stationController.getListVideo = function(req,res)
 {
@@ -99,60 +99,93 @@ stationController.getListVideo = function(req,res)
    Station.findSongIdOfPlaylist(stationName,function(err,response){
      if(err) throw err;
       console.log(stationName);
-      console.log(response);
+      res.send(response);
    });
 }
+
 // add the information the video in db
 stationController.addVideo = async function(req,res)
 {
     var stationName = req.params.stationName;
-    var video = req.body;
+    var videoUrl = req.body;
+    
     // check url has empty
-   if(video.url =='')
+   if(videoUrl.url =='')
     {
       var error = {
         url : 'The url is emply !'
       }
       var response = new ResponeModel(false, null, error);
-      res.json(response.get());
-      res.status(422);
+
+      res.status(400).json(response.get());
+     
     }
     else{
-      var result = await Song.addNewSong(video.url);
+      var video = await Song.addNewSong(videoUrl.url);
+     // console.log(video);
       // if Song module can not add in collection
-      if(result == null)
+      if(video == null)
       {
         var error = {
           name : 'Can not add video in station !'
         }
         var response = new ResponeModel(false, null, error);
-        res.json(response.get());
-        
+        res.status(400).json(response.get());
       }
-      else{
+      else{ 
         // check id of song has playlist
-     //   if()
-     //   {
-
-     //   }
-     //   else{
-          var videoToAddPlayList = {
-            songId : video._id
-          } 
-          Station.addVideo(stationName,videoToAddPlayList,function(err,mess){
-            if(err) throw err;
-            else res.json(mess);
-  
-        })
-     //   }
-     
+         Station.getPlaylistOfStation(stationName,function(err,callback){
+            if(err){
+              throw err;
+              var response = new ResponeModel(false, null, error);
+              res.status(400).json(response.get());
+            }
+            var jsonCallBack = callback.playlist;
+             // if have not id in playlist
+             if(checkIdVideo(video._id,jsonCallBack)==false)
+             {
+                var videoToAddPlayList = {
+                songId : video._id
+               }
+                Station.addVideo(stationName,videoToAddPlayList,function(err,results){
+                  if(err) throw err;
+                  res.json(results);
+                })
+             }
+              // if have id in playlist
+             else{
+                var error = {
+                  name : 'The video is available'
+                }
+                var response = new ResponeModel(false, null, error);
+                res.status(400).json(response.get());
+             }
+           
+         })
+       
       }
      
     }
   
     
 }
+ /**
+  * check song id has playlist 
+ */
+var checkIdVideo = function(videoId,playList)
+{
+  for(var i=0;i<playList.length;i++)
+  {
+     if(playList[i].songId == videoId)
+     {
+       //if has
+        return true;
+     }
+  }
+  // if not has
+  return false;
+}
+
 // add new song at station
-*/
 module.exports = stationController;
 
