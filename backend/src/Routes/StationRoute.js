@@ -16,5 +16,12 @@ export default router => {
   //// get list station but can limit if need
   router.get('/stations', function(req, res) {
     station.getStations(req, res);
+  // stationController.getListVideo(req,res);
   });
+  // add a new video
+  /*
+  router.put('/stations/:stationName',function(req,res){
+      station.addVideo(req,res);
+  })
+  */
 };
