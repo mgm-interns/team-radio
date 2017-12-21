@@ -84,7 +84,7 @@ export default theme => {
 
     loadingContainer: {
       height: '100%',
-      minHeight: 155,
+      minHeight: 158,
     },
   };
 };

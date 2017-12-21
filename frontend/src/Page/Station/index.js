@@ -14,6 +14,10 @@ import styles from './styles';
 import { joinStation } from '../../Redux/api/currentStation/actions';
 
 class StationPage extends Component {
+  static propTypes = {
+    classes: PropTypes.any,
+    joinStation: PropTypes.any,
+  };
   componentDidMount() {
     // Get station id from react-router
     const stationId = 'hthth';
@@ -27,7 +31,7 @@ class StationPage extends Component {
         <NavBar />
         <Grid direction="row" container style={{ margin: 0, width: '100%' }}>
           <Grid item xs={12} className={classes.switcherContainer}>
-            <StationSwitcher stationList={fixture.stations} />
+            <StationSwitcher />
           </Grid>
           <Grid item xs={12} className={classes.container}>
             <Grid container>
@@ -58,11 +62,6 @@ class StationPage extends Component {
     );
   }
 }
-
-StationPage.propTypes = {
-  classes: PropTypes.any,
-  joinStation: PropTypes.any,
-};
 
 const mapDispatchToProps = dispatch => ({
   joinStation: stationId => dispatch(joinStation(stationId)),

@@ -12,6 +12,9 @@ const convertNumberToTime = (number = 0) => {
   return `${hours}:${minutes}:${seconds}`;
 };
 
+const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
 export default {
   convertNumberToTime,
+  random,
 };

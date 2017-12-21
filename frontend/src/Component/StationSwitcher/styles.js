@@ -49,6 +49,12 @@ export default ({ breakpoints, spacing }) => ({
     border: '1px solid #333',
     background: 'white',
   },
+  loadingContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: 158,
+  },
   [breakpoints.down('sm')]: {
     station_avatar: {
       width: '80px',
@@ -63,6 +69,9 @@ export default ({ breakpoints, spacing }) => ({
     station_subtitle: {
       color: 'grey',
       fontSize: '0.65em',
+    },
+    loadingContainer: {
+      minHeight: 138,
     },
   },
 });

@@ -15,9 +15,6 @@ const STATION_DEFAULT = {
   name: 'mgm internship 2017',
 };
 
-const API_KEY = 'AIzaSyD_HCz-IjU056WTFjBgWYmjjg1YnwRPXXM';
-const API_URL = 'https://www.googleapis.com/youtube/v3/';
-
 class AddLink extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -49,13 +46,16 @@ class AddLink extends Component {
   }
 
   async _getVideoInfo(id) {
-    const { data: { items } } = await axios.get(`${API_URL}videos`, {
-      params: {
-        key: API_KEY,
-        part: 'id,snippet',
-        id,
+    const { data: { items } } = await axios.get(
+      `${process.env.REACT_APP_YOUTUBE_API_URL}/videos`,
+      {
+        params: {
+          key: process.env.REACT_APP_YOUTUBE_API_KEY,
+          part: 'id,snippet',
+          id,
+        },
       },
-    });
+    );
     return items;
   }
 
