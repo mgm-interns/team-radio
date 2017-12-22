@@ -16,7 +16,7 @@ class NowPlaying extends Component {
 
     this.state = {
       player: {
-        isPlaying: false,
+        isPlaying: true,
         pausedAt: 0,
       },
       refPlayer: null,
