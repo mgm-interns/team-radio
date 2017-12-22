@@ -1,6 +1,4 @@
-
 class Response {
- 
   constructor(success, data, error) {
     this.success = success;
     this.data = data;
@@ -12,7 +10,7 @@ class Response {
     return {
       success: this.success,
       data: this.data,
-      error: this.error
+      error: this.error,
     };
   }
 }

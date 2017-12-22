@@ -9,42 +9,38 @@ var Song = require('./SongController');
 stationController.addStation = function(req, res) {
   var station = req.body;
   var stationName = station.stationName;
-  
-   if(station.stationName == '')
-   {
+
+  if (station.stationName == '') {
     var errorRes = {
-       name : 'The name is empty',
-       url : ''
-     }
-     console.log(errorRes);
-    var response = new ResponeModel(false, null,errorRes);
+      name: 'The name is empty',
+      url: '',
+    };
+    console.log(errorRes);
+    var response = new ResponeModel(false, null, errorRes);
     res.status(422).json(response.get());
-   }
-   else{
-  //check available of station
+  } else {
+    //check available of station
     Station.getStationByName(stationName, function(err, mess) {
-      if (err){
+      if (err) {
         throw err;
-        
+
         var response = new ResponeModel(false, null, err);
         res.status(400);
         res.json(response.get());
-      } 
-      
+      }
+
       //  console.log(station);
       if (mess == null) {
         // create station
 
-          Station.addStation(station, function(err, stationCallBack) {
+        Station.addStation(station, function(err, stationCallBack) {
           if (err) throw err;
           console.log(stationCallBack);
           var response = new ResponeModel(true, stationCallBack, null);
           console.log(stationCallBack);
           res.json(response.get());
-        
         });
       } else {
-       
         var error = {
           name: 'The station name available !',
         };
@@ -63,16 +59,15 @@ stationController.getStationByName = function(req, res) {
       throw err;
       var response = new ResponeModel(false, null, err);
       res.status(400).json(response.get());
-     
     }
     if (station == null) {
       console.log('err : ' + err);
-     var error = {
-       name : 'Can not find station name.'
-     }
+      var error = {
+        name: 'Can not find station name.',
+      };
       var response = new ResponeModel(false, null, error);
       res.status(404).json(response.get());
-     } else {
+    } else {
       var response = new ResponeModel(true, station, null);
       res.json(response.get());
     }
@@ -85,7 +80,7 @@ stationController.getStations = function(req, res) {
       throw err;
       var response = new ResponeModel(false, null, err);
       res.status(400).json(response.get());
-     } else {
+    } else {
       var response = new ResponeModel(true, stations, null);
       res.json(response.get());
     }
@@ -156,15 +151,17 @@ stationController.addVideo = async function(req,res)
 */
 module.exports = stationController;
 
-
 function stringToUrl(str) {
-  return str.toLowerCase().replace(/ /g, "-").replace(/[^a-z\-]/g, '');
+  return str
+    .toLowerCase()
+    .replace(/ /g, '-')
+    .replace(/[^a-z\-]/g, '');
 }
-async function createStationUrl(stationName){
+async function createStationUrl(stationName) {
   var url = stringToUrl(stationName);
   var newUrl = url;
   var i = 1;
-  while((await Station.getStationByUrl(newUrl)) != null)){
+  while ((await Station.getStationByUrl(newUrl)) != null) {
     i = i + 1;
     newUrl = url + i;
   }
