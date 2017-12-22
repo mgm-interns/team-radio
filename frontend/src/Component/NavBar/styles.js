@@ -7,6 +7,7 @@ export default ({ palette, breakpoints }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    position: 'fixed',
   },
   logo: {
     alignItems: 'center',
