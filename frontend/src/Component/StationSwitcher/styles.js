@@ -2,6 +2,9 @@ export default ({ breakpoints, spacing }) => ({
   container: {
     paddingLeft: 20,
     paddingRight: 20,
+    '& .slick-track': {
+      height: 140,
+    },
     '& .slick-dots': {
       position: 'relative',
       bottom: 0,
@@ -65,7 +68,7 @@ export default ({ breakpoints, spacing }) => ({
       width: '80px',
     },
     station_title: {
-      fontSize: '1.2em',
+      fontSize: '0.875em',
     },
     station_subtitle: {
       color: 'grey',
