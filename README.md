@@ -68,3 +68,5 @@ We can solve this by installing this extension to allow CORS:
 - Chrome: [Allow-Control-Allow-Origin: *](https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en)
 
 After installing this extension, add the server host address to the whitelist. For example: [http://localhost:8080/api/*]()
+
+Install Mongodb: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#configure-a-windows-service-for-mongodb-community-edition
