@@ -59,6 +59,10 @@ module.exports.getStations = function(callback, limit) {
 module.exports.getStationByName = function(stationNameToFind, callback) {
   Station.findOne({ stationName: stationNameToFind }, callback);
 };
+// get station by station url
+module.exports.getStationByUrl = function(stationUrlToFind) {
+  Station.findOne({ stationUrl: stationUrlToFind });
+};
 // update playlist of station
 module.exports.addVideo = function(stationName,video,callback)
 {

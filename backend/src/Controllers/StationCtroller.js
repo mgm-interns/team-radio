@@ -156,3 +156,17 @@ stationController.addVideo = async function(req,res)
 */
 module.exports = stationController;
 
+
+function stringToUrl(str) {
+  return str.toLowerCase().replace(/ /g, "-").replace(/[^a-z\-]/g, '');
+}
+async function createStationUrl(stationName){
+  var url = stringToUrl(stationName);
+  var newUrl = url;
+  var i = 1;
+  while((await Station.getStationByUrl(newUrl)) != null)){
+    i = i + 1;
+    newUrl = url + i;
+  }
+  return newUrl;
+}
