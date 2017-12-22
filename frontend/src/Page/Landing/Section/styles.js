@@ -3,20 +3,19 @@ export default ({ palette, breakpoints }) => ({
   sectionContainer: {
     margin: 0,
     background: palette.lightGrey['500'],
-    lineHeight: '1.8',
     padding: '2em',
     paddingTop: '4em',
     paddingBottom: '4em',
     width: '100%',
+    height: '100vh',
   },
   sectionDescription: {
     textAlign: 'right',
-    [breakpoints.up('lg')]: {
-      fontSize: '40pt',
-      paddingRight: '0',
+    [breakpoints.down('xs')]: {
+      lineHeight: '1.8',
     },
-    [breakpoints.down('lg')]: {
-      paddingTop: '3em',
+    [breakpoints.up('sm')]: {
+      lineHeight: '2',
     },
   },
   sectionTitle: {
@@ -32,10 +31,6 @@ export default ({ palette, breakpoints }) => ({
   },
   sectionContentContainer: {
     textAlign: 'right',
-    [breakpoints.up('lg')]: {
-      paddingRight: '10em',
-      paddingTop: '35em',
-    },
   },
   sectionContent: {
     color: 'grey',
@@ -44,17 +39,17 @@ export default ({ palette, breakpoints }) => ({
     },
   },
   sectionImages: {
+    [breakpoints.down('xs')]: {
+      width: '10%',
+      paddingLeft: 0,
+    },
     [breakpoints.up('sm')]: {
-      position: 'absolute',
-      width: '30%',
-      paddingTop: '1em',
+      width: '80%',
       paddingLeft: '5em',
     },
     [breakpoints.up('lg')]: {
-      width: '30%',
-      paddingTop: '1em',
-      paddingLeft: '5em',
-      paddingBottom: '3em',
+      width: '60%',
+      paddingLeft: '10em',
     },
   },
 });
