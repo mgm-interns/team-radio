@@ -14,7 +14,7 @@ var stationSchema = mongoose.Schema({
   },
   owner: {
     type: String,
-    default: 'unknow',
+    default: 'unknown',
   },
   playlist: [
     {
