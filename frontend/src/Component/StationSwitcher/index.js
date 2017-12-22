@@ -62,7 +62,7 @@ class StationSwitcher extends Component {
   }
 
   _renderSwitcher() {
-    const { classes, stationList, stations } = this.props;
+    const { classes, stations } = this.props;
     const { width } = this.state;
     const isMobile = width <= 568;
     const slidesToShow = this._slidesToShow(width, isMobile);
@@ -73,7 +73,7 @@ class StationSwitcher extends Component {
       swipeToSlide: true,
       infinite: false,
     };
-    stations.map((station, index) => {
+    stations.map(station => {
       station.avatar = AVATARS_DEFAULT[transformNumber.random(1, 5)].avatar;
     });
 
@@ -131,7 +131,7 @@ class StationSwitcher extends Component {
   }
 
   render() {
-    const { stations, classes } = this.props;
+    const { stations } = this.props;
     let view = null;
     if (stations === undefined) {
       view = this._renderLoading();

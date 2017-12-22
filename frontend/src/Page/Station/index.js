@@ -10,7 +10,6 @@ import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
 import { StationSwitcher, NavBar, Footer } from '../../Component';
-import fixture from '../../Fixture/landing';
 import styles from './styles';
 import { joinStation } from '../../Redux/api/currentStation/actions';
 

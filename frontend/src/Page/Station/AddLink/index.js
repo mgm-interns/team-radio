@@ -9,6 +9,7 @@ import TextField from 'material-ui/TextField';
 import { CircularProgress } from 'material-ui/Progress';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
+import Search from '../Search';
 
 const STATION_DEFAULT = {
   number: 1,
@@ -167,6 +168,9 @@ class AddLink extends Component {
             />
           </Grid>
           <Grid item xs={12}>
+            <Search />
+          </Grid>
+          <Grid item xs={12}>
             <Button
               className={classes.sendBtn}
               raised
@@ -227,8 +231,7 @@ class AddLink extends Component {
               ADD TO STATION {STATION_DEFAULT.number}
             </h1>
             <span className={classes.secondaryTitle}>
-              {' '}
-              - {STATION_DEFAULT.name}
+              {' - '} {STATION_DEFAULT.name}
             </span>
           </div>
         </Grid>
