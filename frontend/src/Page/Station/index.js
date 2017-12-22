@@ -42,7 +42,7 @@ class StationPage extends Component {
           </Grid>
           <Grid item xs={12} className={classes.container}>
             <Grid container>
-              <Grid item xs={12} md={8} lg={9}>
+              <Grid item xs={12} md={7} xl={8}>
                 <Grid container>
                   <Grid item xs={12}>
                     <h1>{station && station.stationName}</h1>
@@ -50,7 +50,7 @@ class StationPage extends Component {
                   <NowPlaying className={classes.content} />
                 </Grid>
               </Grid>
-              <Grid item xs={12} md={4} lg={3}>
+              <Grid item xs={12} md={5} xl={4}>
                 <Grid container>
                   <Grid item xs={12}>
                     <h1>NOW PLAYING</h1>
@@ -64,7 +64,6 @@ class StationPage extends Component {
             </Grid>
           </Grid>
         </Grid>
-        <Footer />
       </div>
     );
   }
