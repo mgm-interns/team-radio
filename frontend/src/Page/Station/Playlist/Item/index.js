@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import styles from './styles';
+import { upVoteVideo, unUpVoteVideo } from '../../../../Redux/api/currentStation/actions';
 
 class PlaylistItem extends Component {
   render() {
@@ -16,6 +19,8 @@ class PlaylistItem extends Component {
       isUpvoted,
       playing,
       classes,
+      upVoteVideo,
+      id,
     } = this.props;
     return (
       <Grid container className={[classes.container, playing && 'playing']}>
@@ -29,6 +34,7 @@ class PlaylistItem extends Component {
         </Grid>
         <Grid item xs={2} className={classes.actions}>
           <IconButton
+            onClick={() => upVoteVideo(id)}
             className={classes.action}
             color={isUpvoted ? 'primary' : 'secondary'}
           >
@@ -53,6 +59,14 @@ PlaylistItem.propTypes = {
   playing: PropTypes.bool,
   theme: PropTypes.any,
   classes: PropTypes.any,
+  upVoteVideo: PropTypes.func,
 };
 
-export default withStyles(styles)(PlaylistItem);
+const mapDispatchToProps = dispatch => ({
+  upVoteVideo: videoId => dispatch(upVoteVideo({ videoId })),
+});
+
+export default compose(
+  connect(undefined, mapDispatchToProps),
+  withStyles(styles),
+)(PlaylistItem);
