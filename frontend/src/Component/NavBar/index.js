@@ -45,7 +45,7 @@ class NavBar extends Component {
                 />
               </Grid>
               <Hidden smDown>
-                <Link to={'/'} item xs={8} className={classes.logoName}>
+                <Link to={'/'} className={classes.logoName}>
                   {fixture.name}
                 </Link>
               </Hidden>

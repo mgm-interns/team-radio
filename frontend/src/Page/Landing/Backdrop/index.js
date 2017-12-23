@@ -41,7 +41,7 @@ class Backdrop extends Component {
       <Grid container className={classes.container}>
         <Grid container className={classes.foreground}>
           <Grid item xs sm={10} lg={8} className={classes.formInput}>
-            <div item xs className={classes.sloganContainer}>
+            <div className={classes.sloganContainer}>
               <span className={classes.sloganText}>{fixture.slogan}</span>
             </div>
             <FormControl className={classes.textField} error={!!error}>
