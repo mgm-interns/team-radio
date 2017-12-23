@@ -1,61 +1,48 @@
 export default ({ palette, breakpoints }) => ({
-  // backdrop cover
-  backdropContainer: {
-    position: 'relative',
+  container: {
     margin: 'auto',
-    padding: 'auto',
-    width: '100%',
-  },
-  backdropForeground: {
+    width: '100vw',
     background: palette.darkGreen['500'],
-    // height: '40vh',
-    // alignItems: 'center',
-    paddingTop: '20em',
-    justifyContent: 'center',
+  },
+  foreground: {
+    height: '100vh',
+    width: '100%',
     zIndex: 0,
-    margin: 0,
-    // padding: '8%',
-    [breakpoints.down('lg')]: {
-      // height: '40vh',
-      paddingTop: '15em',
-      alignItems: 'center',
-    },
+    margin: 'auto',
     [breakpoints.up('lg')]: {
-      height: '100vh',
-      paddingBottom: '2em',
+      minWidth: 1024,
+      maxWidth: 1280,
     },
   },
-  backdropSloganContainer: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    textAlign: 'center',
+  sloganContainer: {
+    [breakpoints.down('sm')]: {
+      textAlign: 'center',
+    },
   },
-  backdropImg: {
+  backgroundImg: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
+    width: '100vw',
+    height: '100vh',
     top: 0,
     left: 0,
     margin: 'auto',
-    filter: 'opacity(0.3)',
+    filter: 'opacity(0.6)',
     zIndex: -1,
     objectFit: 'cover',
   },
-  backdropSlogan: {
-    fontSize: '20pt',
-    fontWeight: '300',
+  sloganText: {
+    fontSize: '2.5rem',
     color: 'white',
     textAlign: 'center',
     zIndex: 2,
     [breakpoints.up('lg')]: {
-      fontSize: '40pt',
+      fontSize: '3rem',
     },
   },
   formInput: {
+    flexGrow: 0,
     margin: 'auto',
     zIndex: 2,
-    textAlign: 'center',
     '& input': {
       color: 'white',
     },
@@ -64,7 +51,7 @@ export default ({ palette, breakpoints }) => ({
     },
     '& div': {
       [breakpoints.down('sm')]: {
-        width: '100%',
+        width: '80vw',
       },
     },
     '& div::before': {
@@ -76,14 +63,25 @@ export default ({ palette, breakpoints }) => ({
     },
     '& button': {
       [breakpoints.down('sm')]: {
-        width: '100%',
+        width: '80vw',
       },
+      [breakpoints.up('sm')]: {
+        marginLeft: '2em',
+      },
+    },
+    [breakpoints.up('sm')]: {
+      flexGrow: 1,
+      textAlign: 'center',
     },
   },
   textField: {
-    paddingRight: '1.5em',
-    [breakpoints.up('lg')]: {
-      width: '30%',
+    [breakpoints.down('sm')]: {
+      marginTop: '5em',
+      paddingBottom: '1em',
+    },
+    [breakpoints.up('sm')]: {
+      marginTop: '10em',
+      width: '40vh',
     },
   },
   sendIcon: {

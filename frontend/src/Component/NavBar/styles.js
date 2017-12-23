@@ -1,48 +1,40 @@
-export default ({ palette, breakpoints }) => ({
+export default ({ breakpoints }) => ({
   container: {
-    background: palette.primary['500'],
-    zIndex: '9999',
-    height: '80px',
-    margin: '0',
-    alignItems: 'center',
-    justifyContent: 'center',
+    margin: 'auto',
+    zIndex: '3',
+    height: '8vh',
     width: '100%',
     position: 'fixed',
-    top: 0,
-    left: 0,
+    fontFamily: 'Lato',
+  },
+  wrapper: {
+    margin: 'auto',
+    [breakpoints.up('lg')]: {
+      minWidth: 1024,
+      maxWidth: 1280,
+    },
   },
   logo: {
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
   img: {
-    height: '40px',
+    height: '2em',
   },
   logoName: {
-    fontFamily: 'Bebas Neue',
-    fontSize: '25pt',
+    fontSize: '1rem',
     color: 'white',
     textDecoration: 'none',
-    [breakpoints.up('lg')]: {
-      fontSize: '34pt',
-    },
   },
-  navigationContainer: {
+  navContainer: {
+    width: '100%',
     justifyContent: 'flex-end',
   },
-  wrapper: {
+  navWrapper: {
     '& a': {
       textDecoration: 'none',
       color: 'white',
-      fontSize: '25pt',
-      fontFamily: 'Bebas Neue',
-    },
-  },
-  text: {
-    // fontZize: '25pt',
-    color: 'white',
-    [breakpoints.up('lg')]: {
-      fontSize: '18pt',
+      fontSize: '1rem',
     },
   },
 });

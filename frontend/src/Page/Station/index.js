@@ -10,7 +10,7 @@ import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
 import { StationSwitcher, NavBar, Footer } from '../../Component';
-import fixture from '../../Fixture/landing';
+// import fixture from '../../Fixture/landing';
 import styles from './styles';
 import { joinStation } from '../../Redux/api/currentStation/actions';
 
@@ -35,12 +35,8 @@ class StationPage extends Component {
     const { classes, currentStation: { station } } = this.props;
     return (
       <div>
-        <NavBar />
-        <Grid
-          direction="row"
-          container
-          style={{ width: '100%', margin: 0, marginTop: 80 }}
-        >
+        <NavBar color="primary" />
+        <Grid direction="row" container>
           <Grid item xs={12} className={classes.switcherContainer}>
             <StationSwitcher />
           </Grid>
@@ -68,6 +64,7 @@ class StationPage extends Component {
             </Grid>
           </Grid>
         </Grid>
+        <Footer />
       </div>
     );
   }
@@ -78,6 +75,7 @@ StationPage.propTypes = {
   joinStation: PropTypes.any,
   match: PropTypes.any,
   history: PropTypes.any,
+  currentStation: PropTypes.any,
 };
 
 const mapStateToProps = state => ({

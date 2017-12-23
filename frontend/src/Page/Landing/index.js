@@ -28,9 +28,6 @@ class Landing extends Component {
       <div>
         <NavBar />
         <Backdrop />
-        <PopularStation />
-        <Section />
-        <Footer />
       </div>
     );
   }

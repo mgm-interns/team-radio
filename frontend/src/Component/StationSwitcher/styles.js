@@ -1,5 +1,7 @@
 export default ({ breakpoints, spacing }) => ({
   container: {
+    margin: 'auto',
+    paddingTop: '8vh',
     paddingLeft: 20,
     paddingRight: 20,
     '& .slick-track': {
@@ -20,6 +22,10 @@ export default ({ breakpoints, spacing }) => ({
       '&:hover': {
         background: 'rgba(255,255,255,0.33)',
       },
+    },
+    [breakpoints.up('lg')]: {
+      minWidth: 1024,
+      maxWidth: 1280,
     },
   },
   station_wrapper: {
