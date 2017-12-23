@@ -1,5 +1,14 @@
 import { createMuiTheme } from 'material-ui/styles';
-import { jellyBean, sunray, pearl, mummyTomb, richBlack } from './Color';
+import {
+  jellyBean,
+  sunray,
+  pearl,
+  mummyTomb,
+  richBlack,
+  white,
+  black,
+  transparent,
+} from './Color';
 
 export default createMuiTheme({
   palette: {
@@ -10,6 +19,9 @@ export default createMuiTheme({
     lightGrey: pearl,
     green: mummyTomb,
     darkGreen: richBlack,
+    white,
+    black,
+    transparent,
   },
   typography: {
     fontFamily: `'Roboto Slab', sans-serif`,

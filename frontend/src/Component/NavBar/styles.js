@@ -3,7 +3,7 @@ export default ({ breakpoints }) => ({
     margin: 'auto',
     zIndex: '3',
     height: '8vh',
-    width: '100vw',
+    width: '100%',
     position: 'fixed',
     fontFamily: 'Lato',
   },
