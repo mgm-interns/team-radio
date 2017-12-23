@@ -25,12 +25,15 @@ const routes = [
       {
         path: '/auth/login',
         component: Login,
+        // exact: true,
       },
       {
         path: '/auth/register',
         component: Register,
+        // exact: true,
       },
     ],
+    // exact: true,
   },
 ];
 
