@@ -1,8 +1,6 @@
-export default ({ palette, breakpoints }) => ({
+export default ({ breakpoints }) => ({
   container: {
     margin: 'auto',
-    backgroundColor: palette.primary['500'],
-    // backgroundColor: 'rgba(10, 55, 58, 0.4) !important',
     zIndex: '3',
     height: 80,
     width: '100vw',

@@ -23,12 +23,28 @@ const MENUS = {
   },
 };
 
+// const defaultColor = 'rgba(10, 55, 58, 0.4) !important';
+
+const setColor = {
+  default: 'rgba(10, 55, 58, 0.4) !important',
+  primary: '#e06a4e',
+};
+
 class NavBar extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, color } = this.props;
     const menusLength = Object.keys(MENUS).length;
     return (
-      <Grid container justify="center" className={classes.container}>
+      <Grid
+        container
+        justify="center"
+        className={classes.container}
+        style={
+          color === 'primary'
+            ? { backgroundColor: setColor.primary }
+            : { backgroundColor: setColor.default }
+        }
+      >
         <Grid
           container
           alignItems="center"
@@ -74,6 +90,7 @@ class NavBar extends Component {
 NavBar.propTypes = {
   classes: PropTypes.any,
   style: PropTypes.any,
+  color: PropTypes.string,
 };
 
 export default withStyles(styles)(NavBar);

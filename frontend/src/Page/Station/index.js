@@ -35,7 +35,7 @@ class StationPage extends Component {
     const { classes, currentStation: { station } } = this.props;
     return (
       <div>
-        <NavBar />
+        <NavBar color="primary" />
         <Grid direction="row" container style={{ width: '100%' }}>
           <Grid item xs={12} className={classes.switcherContainer}>
             <StationSwitcher />
