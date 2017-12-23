@@ -27,6 +27,7 @@ class Landing extends Component {
     return (
       <div>
         <NavBar />
+        <Backdrop />
       </div>
     );
   }
