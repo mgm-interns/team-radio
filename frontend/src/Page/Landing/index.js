@@ -27,10 +27,6 @@ class Landing extends Component {
     return (
       <div>
         <NavBar />
-        <Backdrop />
-        <PopularStation />
-        <Section />
-        <Footer />
       </div>
     );
   }
