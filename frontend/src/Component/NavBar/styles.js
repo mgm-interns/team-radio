@@ -2,7 +2,7 @@ export default ({ breakpoints }) => ({
   container: {
     margin: 'auto',
     zIndex: '3',
-    height: 80,
+    height: '8vh',
     width: '100vw',
     position: 'fixed',
     fontFamily: 'Lato',

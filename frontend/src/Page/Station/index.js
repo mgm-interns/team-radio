@@ -36,7 +36,7 @@ class StationPage extends Component {
     return (
       <div>
         <NavBar color="primary" />
-        <Grid direction="row" container style={{ width: '100%' }}>
+        <Grid direction="row" container>
           <Grid item xs={12} className={classes.switcherContainer}>
             <StationSwitcher />
           </Grid>
