@@ -8,6 +8,7 @@ const images = {
     avatar5: require('../Images/station-avatar/5.jpg'),
   },
   drummer: require('../Images/drummer.png'),
+  landing: require('../Images/logo/landing.png'),
 };
 
 export default images;

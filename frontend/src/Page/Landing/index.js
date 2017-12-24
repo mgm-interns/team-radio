@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
 
-import { NavBar, Footer } from '../../Component';
+import { NavBar } from '../../Component';
 
 import Backdrop from './Backdrop';
 import PopularStation from './PopularStation';

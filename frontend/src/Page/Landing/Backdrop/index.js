@@ -13,6 +13,8 @@ import fixture from '../../../Fixture/landing';
 import { addStation } from '../../../Redux/api/stations/actions';
 import styles from './styles';
 
+import { Images } from '../../../Theme';
+
 class Backdrop extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +44,8 @@ class Backdrop extends Component {
         <Grid container className={classes.foreground}>
           <Grid item xs sm={10} lg={8} className={classes.formInput}>
             <div className={classes.sloganContainer}>
-              <span className={classes.sloganText}>{fixture.slogan}</span>
+              <img src={Images.landing} alt="Team Radio" />
+              <h3 className={classes.sloganText}>A Radio station for Teams</h3>
             </div>
             <FormControl className={classes.textField} error={!!error}>
               <InputLabel htmlFor="station-name">Your team station</InputLabel>

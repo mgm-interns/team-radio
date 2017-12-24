@@ -5,7 +5,7 @@ export default ({ palette, breakpoints }) => ({
     background: palette.darkGreen['500'],
   },
   foreground: {
-    height: '100vh',
+    height: '80vh',
     width: '100%',
     zIndex: 0,
     margin: 'auto',
@@ -22,7 +22,7 @@ export default ({ palette, breakpoints }) => ({
   backgroundImg: {
     position: 'absolute',
     width: '100vw',
-    height: '100vh',
+    height: '80vh',
     top: 0,
     left: 0,
     margin: 'auto',
@@ -31,12 +31,13 @@ export default ({ palette, breakpoints }) => ({
     objectFit: 'cover',
   },
   sloganText: {
-    fontSize: '2.5rem',
+    fontSize: '2rem',
+    fontWeight: '200',
     color: 'white',
     textAlign: 'center',
     zIndex: 2,
     [breakpoints.up('lg')]: {
-      fontSize: '3rem',
+      fontSize: '2.5rem',
     },
   },
   formInput: {
@@ -80,8 +81,8 @@ export default ({ palette, breakpoints }) => ({
       paddingBottom: '1em',
     },
     [breakpoints.up('sm')]: {
-      marginTop: '10em',
-      width: '40vh',
+      marginTop: '7em',
+      width: '30vh',
     },
   },
   sendIcon: {
