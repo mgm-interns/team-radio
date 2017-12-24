@@ -9,6 +9,9 @@ const images = {
   },
   drummer: require('../Images/drummer.png'),
   landing: require('../Images/logo/landing.png'),
+  windows: {
+    w1: require('../Images/windows/1-windows.jpg'),
+  },
 };
 
 export default images;

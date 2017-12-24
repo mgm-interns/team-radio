@@ -8,6 +8,7 @@ import { NavBar } from '../../Component';
 import Backdrop from './Backdrop';
 import PopularStation from './PopularStation';
 import Section from './Section';
+import ImageTextLayout from './ImageTextLayout';
 
 class Landing extends Component {
   componentWillReceiveProps(nextProps) {
@@ -28,6 +29,7 @@ class Landing extends Component {
       <div>
         <NavBar />
         <Backdrop />
+        <ImageTextLayout />
       </div>
     );
   }
