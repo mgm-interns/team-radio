@@ -8,7 +8,6 @@ import { FormControl, FormHelperText } from 'material-ui/Form';
 import Input, { InputLabel } from 'material-ui/Input';
 import Icon from 'material-ui/Icon';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
-import DoneIcon from 'material-ui-icons/Done';
 
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
@@ -127,7 +126,7 @@ class Register extends Component {
                   <ul className={classes.listWrapper}>
                     {benefits.map(benefit => (
                       <li className={classes.listItem}>
-                        <DoneIcon />
+                        <Icon>done</Icon>
                         <span className={classes.listText}>{benefit}</span>
                       </li>
                     ))}
