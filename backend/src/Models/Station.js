@@ -37,6 +37,7 @@ var stationSchema = mongoose.Schema({
         default: true
       },
       description: {
+      
       },
       creator_id: {
         type: String,
@@ -88,5 +89,4 @@ module.exports.addSong = function (stationName, song, callback) {
 module.exports.getPlaylistOfStation = function (stationName, callback) {
   var query = { station_name: stationName };
   Station.findOne(query, { playlist: true, _id: false }, callback);
-  //console.log('2****\n');
 }
