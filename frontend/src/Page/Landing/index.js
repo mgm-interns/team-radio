@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
 
-import { NavBar, Footer } from '../../Component';
+import { NavBar, Footer } from 'Component';
 
 import Backdrop from './Backdrop';
 import PopularStation from './PopularStation';
@@ -32,6 +33,11 @@ class Landing extends Component {
     );
   }
 }
+
+Landing.propTypes = {
+  currentStation: PropTypes.object,
+  history: PropTypes.object,
+};
 
 const mapStateToProps = state => ({
   currentStation: state.api.currentStation,

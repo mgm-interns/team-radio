@@ -6,7 +6,10 @@
     "class-methods-use-this": ["off"],
     "global-require": ["off"],
     "no-console": ["off"],
-    "react/prop-types": ["warn"]
+    "react/prop-types": ["warn"],
+    "import/no-extraneous-dependencies": ["off"],
+    "import/extensions": ["off"],
+    "import/no-unresolved": ["off"]
   },
   "env": {
     "browser": true

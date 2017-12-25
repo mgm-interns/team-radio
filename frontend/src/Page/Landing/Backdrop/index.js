@@ -9,8 +9,8 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles } from 'material-ui/styles';
-import fixture from '../../../Fixture/landing';
-import { addStation } from '../../../Redux/api/stations/actions';
+import fixture from 'Fixture/landing';
+import { addStation } from 'Redux/api/stations';
 import styles from './styles';
 
 class Backdrop extends Component {
@@ -92,9 +92,9 @@ Backdrop.propTypes = {
   addStation: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-  loading: state.api.stations.loading,
-  error: state.api.stations.error,
+const mapStateToProps = ({ api: { stations } }) => ({
+  loading: stations.add.loading,
+  error: stations.add.error,
 });
 
 const mapDispatchToProps = dispatch => ({
