@@ -1,4 +1,4 @@
-import { CALL_API } from 'redux-api-middleware';
+import { RSAA } from 'redux-api-middleware';
 
 const REQUEST_POSTFIX = '_REQUEST';
 const SUCCESS_POSTFIX = '_SUCCESS';
@@ -67,7 +67,7 @@ class HttpRequest {
 
   _getDefaultAction({ ...others }) {
     return {
-      [CALL_API]: {
+      [RSAA]: {
         types: [
           this.getTypeRequest(),
           this.getTypeSuccess(),
