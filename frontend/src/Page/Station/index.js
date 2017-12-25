@@ -44,7 +44,7 @@ class StationPage extends Component {
                   <Grid item xs={12}>
                     <h1>{station && station.stationName}</h1>
                   </Grid>
-                  <NowPlaying className={classes.content} />
+                  <NowPlaying className={classes.content} autoplay={true} />
                 </Grid>
               </Grid>
               <Grid item xs={12} md={5} xl={4}>

@@ -53,6 +53,7 @@ class AddLink extends Component {
     const p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
     const matches = url.match(p);
     if (matches) {
+      // return video_id if url is valid
       return matches[1];
     }
     return false;
@@ -146,6 +147,7 @@ class AddLink extends Component {
     try {
       clearTimeout(this._timeoutSearchFunc);
       this._timeoutSearchFunc = setTimeout(async () => {
+        // value is a video link
         if (value !== '' && this._checkValidUrl(value)) {
           const id = this._checkValidUrl(value);
           const data = await this._getVideoInfo(id);
@@ -156,6 +158,7 @@ class AddLink extends Component {
             suggestions: [],
           });
         } else {
+          // value is not a link will be searched
           const data = await this._getSearchResult(value);
           this.setState({
             isDisableButton: true,
