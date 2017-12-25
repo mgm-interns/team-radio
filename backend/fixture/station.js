@@ -1,4 +1,5 @@
-let playlist = [{
+let playlist = [
+  {
     id: 'LjhCEhWiKXk',
     name: 'Bruno Mars - Just The Way You Are [OFFICIAL VIDEO]',
     singer: 'Bruno Mars',
@@ -7,7 +8,8 @@ let playlist = [{
     score: 30,
     isUpvoted: true,
     url: 'https://www.youtube.com/watch?v=LjhCEhWiKXk',
-    thumbnail: 'https://yt3.ggpht.com/-Ymp7v1ycCBA/AAAAAAAAAAI/AAAAAAAAAAA/-R7WfWSAkag/s88-c-k-no-mo-rj-c0xffffff/photo.jpg',
+    thumbnail:
+      'https://yt3.ggpht.com/-Ymp7v1ycCBA/AAAAAAAAAAI/AAAAAAAAAAA/-R7WfWSAkag/s88-c-k-no-mo-rj-c0xffffff/photo.jpg',
     playing: true,
   },
   {
@@ -19,18 +21,21 @@ let playlist = [{
     score: 6,
     isUpvoted: false,
     url: 'https://www.youtube.com/watch?v=ekzHIouo8Q4',
-    thumbnail: 'https://i.ytimg.com/vi/ekzHIouo8Q4/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLD8LkYflJBQvDH4IsAJZyW8KPxcEg',
+    thumbnail:
+      'https://i.ytimg.com/vi/ekzHIouo8Q4/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLD8LkYflJBQvDH4IsAJZyW8KPxcEg',
   },
   {
     id: 'IumYMCllMsM',
-    name: 'Machine Gun Kelly, X Ambassadors & Bebe Rexha - Home (from Bright: The Album) [Music Video]',
+    name:
+      'Machine Gun Kelly, X Ambassadors & Bebe Rexha - Home (from Bright: The Album) [Music Video]',
     singer: 'Atlantic Records',
     duration: 5000,
     uploader: 'lybaokhanh',
     score: 5,
     isUpvoted: true,
     url: 'https://www.youtube.com/watch?v=IumYMCllMsM',
-    thumbnail: 'https://i.ytimg.com/vi/IumYMCllMsM/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLCrV8CgDYwlsMgC0VFdROESFvubdQ',
+    thumbnail:
+      'https://i.ytimg.com/vi/IumYMCllMsM/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLCrV8CgDYwlsMgC0VFdROESFvubdQ',
   },
   {
     id: 'Io0fBr1XBUA',
@@ -41,7 +46,8 @@ let playlist = [{
     score: 3,
     isUpvoted: false,
     url: 'https://www.youtube.com/watch?v=Io0fBr1XBUA',
-    thumbnail: 'https://i.ytimg.com/vi/Io0fBr1XBUA/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLB5o4_eyhXNTWQc0ePYZRcnFaSTjw',
+    thumbnail:
+      'https://i.ytimg.com/vi/Io0fBr1XBUA/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLB5o4_eyhXNTWQc0ePYZRcnFaSTjw',
   },
   {
     id: '2vjPBrBU-TM',
@@ -52,7 +58,8 @@ let playlist = [{
     score: 1,
     isUpvoted: false,
     url: 'https://www.youtube.com/watch?v=2vjPBrBU-TM',
-    thumbnail: 'https://i.ytimg.com/an_webp/2vjPBrBU-TM/mqdefault_6s.webp?du=3000&sqp=CMq77dEF&rs=AOn4CLDy8fYNy_Bq1mLdWY9sqCUpScMxoA',
+    thumbnail:
+      'https://i.ytimg.com/an_webp/2vjPBrBU-TM/mqdefault_6s.webp?du=3000&sqp=CMq77dEF&rs=AOn4CLDy8fYNy_Bq1mLdWY9sqCUpScMxoA',
   },
   {
     id: 'hT_nvWreIhg',
@@ -63,7 +70,8 @@ let playlist = [{
     score: 1,
     isUpvoted: false,
     url: 'https://www.youtube.com/watch?v=hT_nvWreIhg',
-    thumbnail: 'https://i.ytimg.com/vi/hT_nvWreIhg/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLASfQgh61rq4R3vrI0j8gkUl7pijw',
+    thumbnail:
+      'https://i.ytimg.com/vi/hT_nvWreIhg/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLASfQgh61rq4R3vrI0j8gkUl7pijw',
   },
   {
     id: 'OPf0YbXqDm0',
