@@ -6,9 +6,9 @@ import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
 import { CircularProgress } from 'material-ui/Progress';
 import Slider from 'react-slick';
-import { fetchStations } from '../../Redux/api/stations/actions';
-import { transformNumber } from '../../Transformer';
-import Images from '../../Theme/Images';
+import { fetchStations } from 'Redux/api/stations';
+import { transformNumber } from 'Transformer';
+import Images from 'Theme/Images';
 import styles from './styles';
 
 const { avatar1, avatar2, avatar3, avatar4, avatar5 } = Images.fixture;
@@ -62,7 +62,7 @@ class StationSwitcher extends Component {
   }
 
   _renderSwitcher() {
-    const { classes, stationList, stations } = this.props;
+    const { classes, stations } = this.props;
     const { width } = this.state;
     const isMobile = width <= 568;
     const slidesToShow = this._slidesToShow(width, isMobile);
@@ -73,7 +73,7 @@ class StationSwitcher extends Component {
       swipeToSlide: true,
       infinite: false,
     };
-    stations.map((station, index) => {
+    stations.map(station => {
       station.avatar = AVATARS_DEFAULT[transformNumber.random(1, 5)].avatar;
     });
 
@@ -133,7 +133,7 @@ class StationSwitcher extends Component {
   }
 
   render() {
-    const { stations, classes } = this.props;
+    const { stations } = this.props;
     let view = null;
     if (stations === undefined) {
       view = this._renderLoading();
@@ -148,7 +148,7 @@ class StationSwitcher extends Component {
 }
 
 const mapStateToProps = ({ api: { stations } }) => ({
-  stations: stations.data.data,
+  stations: stations.fetch.data,
 });
 
 const mapDispatchToProps = dispatch => ({
