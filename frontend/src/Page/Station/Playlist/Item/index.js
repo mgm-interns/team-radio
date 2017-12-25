@@ -5,8 +5,8 @@ import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { upVoteVideo, unUpVoteVideo } from 'Redux/api/currentStation/actions';
 import styles from './styles';
-import { upVoteVideo, unUpVoteVideo } from '~/Redux/api/currentStation/actions';
 
 class PlaylistItem extends Component {
   render() {

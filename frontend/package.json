@@ -36,13 +36,13 @@
     "subscriptions-transport-ws": "^0.9.4"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "dev": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
-    "test": "react-app-rewired test --env=jsdom",
-    "eject": "react-app-rewired eject",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
     "copy-env:dev": "cp .env.development .env",
     "copy-env:production": "cp .env.production .env",
     "postinstall": "run-s copy-env:production build"
@@ -52,7 +52,6 @@
     "node-sass-chokidar": "0.0.3",
     "npm-run-all": "^4.1.2",
     "prettier": "^1.9.2",
-    "react-app-rewired": "^1.4.0",
     "react-scripts": "1.0.17"
   }
 }

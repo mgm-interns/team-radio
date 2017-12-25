@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 
 import { withStyles } from 'material-ui/styles';
-import Images from '~/Theme/Images';
-// import fixture from '~/Fixture/landing';
+import Images from 'Theme/Images';
+// import fixture from 'Fixture/landing';
 import styles from './styles';
 
 class Section extends Component {

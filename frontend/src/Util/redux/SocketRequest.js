@@ -56,8 +56,8 @@ class SocketRequest {
     const INITIAL_STATE = {
       data: this.initialData,
       loading: false,
-      error: null
-    }
+      error: null,
+    };
     return (state = INITIAL_STATE, action) => {
       switch (action.type) {
         case this.getTypeRequest():
@@ -65,23 +65,23 @@ class SocketRequest {
             ...state,
             data: this.initialData,
             loading: true,
-          }
+          };
         case this.getTypeSuccess():
           return {
             ...state,
             data: action.payload,
             loading: false,
-          }
+          };
         case this.getTypeFailure():
           return {
             data: this.initialData,
             loading: false,
             error: action.payload,
-          }
+          };
         default:
           return state;
       }
-    }
+    };
   }
 }
 
