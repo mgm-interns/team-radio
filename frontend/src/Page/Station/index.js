@@ -22,11 +22,9 @@ class StationPage extends Component {
   componentWillMount() {
     // Get station id from react-router
     const { match: { params: { stationName } }, history } = this.props;
-    console.log(this.props.match.params.stationName);
     if (stationName) {
       this.props.joinStation(stationName);
     } else {
-      console.log('go to landing page');
       history.push(`/`);
     }
   }

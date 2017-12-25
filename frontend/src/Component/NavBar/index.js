@@ -60,7 +60,7 @@ class NavBar extends Component {
                   className={classes.img}
                 />
               </Grid>
-              <Hidden smDown>
+              <Hidden xsUp>
                 <Link to={'/'} className={classes.logoName}>
                   Team Radio
                 </Link>

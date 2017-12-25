@@ -44,14 +44,16 @@ class Backdrop extends Component {
         <Grid container className={classes.foreground}>
           <Grid item xs sm={10} lg={8} className={classes.formInput}>
             <div className={classes.sloganContainer}>
-              <span className={classes.mainLine}>Team Radio</span>
-              <h3 className={classes.sloganText}>A Radio station for Teams</h3>
+              <h1 className={classes.mainLine}>Team Radio</h1>
+              <span className={classes.sloganText}>
+                A Radio station for your Team
+              </span>
             </div>
             <FormControl className={classes.textField} error={!!error}>
               <InputLabel htmlFor="station-name">Your team station</InputLabel>
               <Input
                 id="station-name"
-                placeholder="Name your team station"
+                placeholder="e.g. Awesome Station"
                 margin="normal"
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
@@ -69,6 +71,7 @@ class Backdrop extends Component {
                 color="primary"
                 onClick={this._submit}
                 className={classes.buttonSend}
+                disabled={!this.state.stationName}
               >
                 Create <Icon className={classes.sendIcon}>send</Icon>
               </Button>
@@ -76,7 +79,7 @@ class Backdrop extends Component {
           </Grid>
           <Grid item xs className={classes.backgroundImg}>
             <img
-              src="https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-483328.jpg"
+              src="https://images.unsplash.com/photo-1510130564579-d2caf45b72f3?auto=format&fit=crop&w=1650&q=80"
               alt="Team Radio - Cover"
               className={classes.backgroundImg}
             />

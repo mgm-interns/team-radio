@@ -26,21 +26,28 @@ export default ({ palette, breakpoints }) => ({
     top: 0,
     left: 0,
     margin: 'auto',
-    filter: 'opacity(0.9)',
+    filter: 'opacity(0.7)',
     zIndex: -1,
     objectFit: 'cover',
   },
   mainLine: {
-    fontFamily: 'Pacifico',
-    fontSize: '7em',
+    cursor: 'default',
     color: 'white',
+    fontSize: '3em',
+    [breakpoints.up('sm')]: {
+      fontSize: '7em',
+    },
   },
   sloganText: {
+    cursor: 'default',
     fontSize: '2rem',
     fontWeight: '200',
     color: 'white',
     textAlign: 'center',
     zIndex: 2,
+    [breakpoints.up('md')]: {
+      fontSize: '2.5rem',
+    },
     [breakpoints.up('lg')]: {
       fontSize: '2.5rem',
     },
@@ -88,6 +95,12 @@ export default ({ palette, breakpoints }) => ({
     [breakpoints.up('sm')]: {
       marginTop: '7em',
       width: '30vh',
+    },
+  },
+  buttonSend: {
+    '&[disabled]': {
+      backgroundColor: 'rgba(224,106,78,.25)',
+      color: 'rgba(255,255,255,.25)',
     },
   },
   sendIcon: {

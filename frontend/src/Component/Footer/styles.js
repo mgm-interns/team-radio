@@ -1,9 +1,10 @@
-export default ({ breakpoints }) => ({
+export default ({ breakpoints, palette }) => ({
   container: {
     width: '100%',
     margin: 'auto',
     fontFamily: 'Lato',
     height: '50px',
+    background: palette.primary['500'],
   },
   wrapper: {
     margin: 'auto',
@@ -13,10 +14,10 @@ export default ({ breakpoints }) => ({
     },
   },
   copyright: {
-    borderTop: '1px solid #808080',
+    // borderTop: '1px solid #808080',
   },
   copyrightText: {
-    color: '#808080',
+    color: palette.white,
     fontSize: '0.8rem',
   },
 });
