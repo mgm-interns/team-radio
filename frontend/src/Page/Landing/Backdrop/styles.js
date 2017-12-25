@@ -1,63 +1,62 @@
 export default ({ palette, breakpoints }) => ({
-  // backdrop cover
-  backdropContainer: {
-    position: 'relative',
+  container: {
     margin: 'auto',
-    padding: 'auto',
-  },
-  backdropForeground: {
+    width: '100vw',
     background: palette.darkGreen['500'],
-    height: '40vh',
-    // alignItems: 'center',
-    justifyContent: 'center',
+  },
+  foreground: {
+    minHeight: 550,
+    height: '100vh',
+    width: '100%',
     zIndex: 0,
-    margin: 0,
-    padding: '8%',
+    margin: 'auto',
     [breakpoints.up('lg')]: {
-      height: '65vh',
-      paddingBottom: '2em',
+      minWidth: 1024,
+      maxWidth: 1280,
     },
   },
-  // backdropWrapper: {
-  //   // fontWeight: 'bold',
-  //   padding: '8%',
-  // },
-  backdropSloganContainer: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    textAlign: 'center',
+  sloganContainer: {
+    [breakpoints.down('sm')]: {
+      textAlign: 'center',
+    },
   },
-  backdropImg: {
+  backgroundImg: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
+    width: '100vw',
+    height: '100vh',
     top: 0,
+    left: 0,
     margin: 'auto',
-    filter: 'opacity(0.3)',
+    filter: 'opacity(0.6)',
     zIndex: -1,
     objectFit: 'cover',
   },
-  backdropSlogan: {
-    fontSize: '20pt',
-    fontWeight: '300',
+  sloganText: {
+    fontSize: '1.8rem',
     color: 'white',
     textAlign: 'center',
     zIndex: 2,
+    [breakpoints.up('md')]: {
+      fontSize: '2.5rem',
+    },
     [breakpoints.up('lg')]: {
-      fontSize: '40pt',
+      fontSize: '3rem',
     },
   },
   formInput: {
+    flexGrow: 0,
     margin: 'auto',
     zIndex: 2,
-    textAlign: 'center',
     '& input': {
       color: 'white',
-      // backgroundColor: 'white',
     },
     '& label': {
       color: 'white',
+    },
+    '& div': {
+      [breakpoints.down('sm')]: {
+        width: '80vw',
+      },
     },
     '& div::before': {
       backgroundColor: palette.primary['500'],
@@ -66,19 +65,33 @@ export default ({ palette, breakpoints }) => ({
       backgroundColor: palette.primary['500'],
       color: palette.primary['500'],
     },
-  },
-  buttonSubmit: {
-    paddingTop: '10px',
-  },
-  textField: {
-    [breakpoints.up('lg')]: {
-      width: '30%',
-      paddingRight: '1.5em',
+    '& button': {
+      [breakpoints.down('sm')]: {
+        width: '80vw',
+      },
+      [breakpoints.up('sm')]: {
+        marginLeft: '2em',
+      },
+    },
+    [breakpoints.up('sm')]: {
+      flexGrow: 1,
+      textAlign: 'center',
     },
   },
-  buttonNew: {
-    [breakpoints.up('lg')]: {
-      width: '8%',
+  textField: {
+    [breakpoints.down('sm')]: {
+      marginTop: '5em',
+      paddingBottom: '1em',
+    },
+    [breakpoints.up('sm')]: {
+      marginTop: '10em',
+      width: '40vh',
+    },
+  },
+  buttonSend: {
+    '&[disabled]': {
+      backgroundColor: 'rgba(224,106,78,.25)',
+      color: 'rgba(255,255,255,.25)',
     },
   },
   sendIcon: {

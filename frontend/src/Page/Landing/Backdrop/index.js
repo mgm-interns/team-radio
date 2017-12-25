@@ -38,17 +38,17 @@ class Backdrop extends Component {
   render() {
     const { classes, loading, error } = this.props;
     return (
-      <Grid container className={classes.backdropContainer}>
-        <Grid container className={classes.backdropForeground}>
-          <Grid item lg={12} className={classes.backdropSloganContainer}>
-            <span className={classes.backdropSlogan}>{fixture.slogan}</span>
-          </Grid>
-          <Grid item xs lg={12} className={classes.formInput}>
+      <Grid container className={classes.container}>
+        <Grid container className={classes.foreground}>
+          <Grid item xs sm={10} lg={8} className={classes.formInput}>
+            <div className={classes.sloganContainer}>
+              <span className={classes.sloganText}>{fixture.slogan}</span>
+            </div>
             <FormControl className={classes.textField} error={!!error}>
-              <InputLabel htmlFor="station-name">Name your station</InputLabel>
+              <InputLabel htmlFor="station-name">Your team station</InputLabel>
               <Input
                 id="station-name"
-                placeholder="Name your station"
+                placeholder="e.g. Awesome Station"
                 margin="normal"
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
@@ -59,25 +59,24 @@ class Backdrop extends Component {
               </FormHelperText>
             </FormControl>
             {loading ? (
-              <div className={classes.buttonNew}>
-                <CircularProgress />
-              </div>
+              <CircularProgress />
             ) : (
               <Button
                 raised
                 color="primary"
-                className={classes.buttonNew}
                 onClick={this._submit}
+                className={classes.buttonSend}
+                disabled={!this.state.stationName}
               >
-                NEW <Icon className={classes.sendIcon}>send</Icon>
+                Create <Icon className={classes.sendIcon}>send</Icon>
               </Button>
             )}
           </Grid>
-          <Grid item xs={12} className={classes.backdropImg}>
+          <Grid item xs className={classes.backgroundImg}>
             <img
-              src="https://avante.biz/wp-content/uploads/Music-Wallpaper/Music-Wallpaper-001.jpg"
+              src="https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-483328.jpg"
               alt="Team Radio - Cover"
-              className={classes.backdropImg}
+              className={classes.backgroundImg}
             />
           </Grid>
         </Grid>

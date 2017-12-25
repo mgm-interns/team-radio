@@ -18,7 +18,7 @@ class Playlist extends Component {
         className={className}
         style={{ ...style, overflowY: 'auto' }}
       >
-        <List>
+        <List style={{ paddingTop: 0, paddingBottom: 0 }}>
           {playlist.map((video, index) => <Item key={index} {...video} />)}
         </List>
       </Grid>

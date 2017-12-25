@@ -280,7 +280,7 @@ class AddLink extends Component {
               disabled={isDisableButton}
               onClick={this._onSendClick}
             >
-              Send <Icon className={classes.sendIcon}>send</Icon>
+              Add <Icon className={classes.sendIcon}>send</Icon>
             </Button>
           </Grid>
         </Grid>

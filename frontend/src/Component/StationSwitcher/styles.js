@@ -1,7 +1,12 @@
 export default ({ breakpoints, spacing }) => ({
   container: {
+    margin: 'auto',
+    paddingTop: '8vh',
     paddingLeft: 20,
     paddingRight: 20,
+    '& .slick-track': {
+      height: 140,
+    },
     '& .slick-dots': {
       position: 'relative',
       bottom: 0,
@@ -18,6 +23,10 @@ export default ({ breakpoints, spacing }) => ({
         background: 'rgba(255,255,255,0.33)',
       },
     },
+    [breakpoints.up('lg')]: {
+      minWidth: 1024,
+      maxWidth: 1280,
+    },
   },
   station_wrapper: {
     display: 'flex !important',
@@ -28,6 +37,7 @@ export default ({ breakpoints, spacing }) => ({
   station_title: {
     marginTop: spacing.smallMargin,
     fontWeight: 'bold',
+    fontSize: '13pt',
   },
   station_subtitle: {
     color: 'grey',
@@ -64,7 +74,7 @@ export default ({ breakpoints, spacing }) => ({
       width: '80px',
     },
     station_title: {
-      fontSize: '1.2em',
+      fontSize: '0.875em',
     },
     station_subtitle: {
       color: 'grey',

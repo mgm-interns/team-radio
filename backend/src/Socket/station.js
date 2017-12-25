@@ -1,22 +1,28 @@
 import Station from '../Models/Station';
-import { getNowplaying, nextNowplaying, playlist } from '../../fixture/station';
+import {
+  getNowplaying,
+  nextNowplaying,
+  getPlaylist,
+  upVoteVideo,
+  unUpVoteVideo,
+} from '../../fixture/station';
 
 let nowplaying = getNowplaying();
 
 /* eslint-disable import/no-named-as-default-member */
-export default socket => {
-  // auto emit new data to client per 200s
+export default (socket, io) => {
+  // auto emit new data to client
   setInterval(() => {
     nowplaying = nextNowplaying();
     // Emit action
     socket.emit('action', {
       type: 'SERVER:UPDATE_STATION',
       payload: {
-        playlist: playlist,
+        playlist: getPlaylist(),
         nowplaying: nowplaying,
       },
     });
-  }, 50000);
+  }, nowplaying.duration); // setInterval match song duration
 
   // handle redux action
   socket.on('action', action => {
@@ -29,10 +35,34 @@ export default socket => {
             type: 'SERVER:JOINED_STATION',
             payload: {
               station: station,
-              playlist: playlist,
+              playlist: getPlaylist(),
               nowplaying: nowplaying,
             },
           });
+        });
+        break;
+      case 'CLIENT:UPVOTE_VIDEO':
+        // Params: videoID, stationID, userID
+        // Upvote and return new playlist
+        upVoteVideo(action.payload.videoId);
+        io.sockets.emit('action', {
+          type: 'SERVER:UPDATE_STATION',
+          payload: {
+            playlist: getPlaylist(),
+            nowplaying: nowplaying,
+          },
+        });
+        break;
+      case 'CLIENT:UN_UPVOTE_VIDEO':
+        // Params: videoID, stationID, userID
+        // Un upvote and return new playlist
+        unUpVoteVideo(action.payload.videoId);
+        io.sockets.emit('action', {
+          type: 'SERVER:UPDATE_STATION',
+          payload: {
+            playlist: getPlaylist(),
+            nowplaying: nowplaying,
+          },
         });
         break;
       default:

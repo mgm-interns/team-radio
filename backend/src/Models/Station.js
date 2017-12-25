@@ -14,14 +14,14 @@ var stationSchema = mongoose.Schema({
   },
   owner: {
     type: String,
-    default: 'unknow',
+    default: 'unknown',
   },
   playlist: [
     {
       songId: {
         type: mongoose.Schema.Types.ObjectId,
         require: true,
-        ref : "songs"
+        ref: 'songs',
       },
       addId: {
         type: String,
@@ -59,23 +59,25 @@ module.exports.getStations = function(callback, limit) {
 module.exports.getStationByName = function(stationNameToFind, callback) {
   Station.findOne({ stationName: stationNameToFind }, callback);
 };
+// get station by station url
+module.exports.getStationByUrl = function(stationUrlToFind) {
+  Station.findOne({ stationUrl: stationUrlToFind });
+};
 // update playlist of station
-module.exports.addVideo = function(stationName,video,callback)
-{
-    var query = {stationName : stationName};
-    var videoToAdd = {
-        $addToSet : {
-            playlist :video 
-        }
-    }
-    Station.update(query,videoToAdd,callback);
-}
+module.exports.addVideo = function(stationName, video, callback) {
+  var query = { stationName: stationName };
+  var videoToAdd = {
+    $addToSet: {
+      playlist: video,
+    },
+  };
+  Station.update(query, videoToAdd, callback);
+};
 
 //get playlist of station
-module.exports.findSongIdOfPlaylist = function(stationName,callback){
+module.exports.findSongIdOfPlaylist = function(stationName, callback) {
   console.log('1*******\n');
-  var query = {stationName : stationName};
+  var query = { stationName: stationName };
   Station.find(query).toArray(callback);
   console.log('2****\n');
-
-}
+};

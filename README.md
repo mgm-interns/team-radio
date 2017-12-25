@@ -11,11 +11,11 @@ A playlist for teams that can be edited collaboratively by all users
 
 ### Requirement
 
-* NodeJS 8+
+* NodeJS 8+ 
 
 * NPM 5+
 
-* MongoDB
+* MongoDB - [Guide](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#configure-a-windows-service-for-mongodb-community-edition)
 
 ### Production
 

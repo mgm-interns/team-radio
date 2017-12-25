@@ -1,45 +1,45 @@
-export default ({ palette, breakpoints }) => ({
+export default ({ breakpoints }) => ({
   container: {
-    background: palette.primary['500'],
-    zIndex: '9999',
-    height: '80px',
-    margin: '0',
-    alignItems: 'center',
-    justifyContent: 'center',
+    margin: 'auto',
+    zIndex: '3',
+    height: '8vh',
+    width: '100%',
+    position: 'fixed',
+    fontFamily: 'Lato',
+    transition: 'all 0.3s',
+    [breakpoints.down('md')]: {
+      background: 'rgba(0,0,0,0.2)',
+      height: 'auto',
+    },
+  },
+  wrapper: {
+    margin: '8px 16px',
+    [breakpoints.up('lg')]: {
+      minWidth: 1024,
+      maxWidth: 1280,
+    },
   },
   logo: {
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
   img: {
-    height: '40px',
+    height: '2em',
   },
   logoName: {
-    fontFamily: 'Bebas Neue',
-    fontSize: '25pt',
+    fontSize: '1rem',
     color: 'white',
     textDecoration: 'none',
-    [breakpoints.up('lg')]: {
-      fontSize: '34pt',
-    },
   },
-  navigationContainer: {
+  navContainer: {
+    width: '100%',
     justifyContent: 'flex-end',
   },
-  wrapper: {
+  navWrapper: {
     '& a': {
       textDecoration: 'none',
       color: 'white',
-      fontSize: '20pt',
-      fontFamily: 'Bebas Neue',
-    },
-  },
-  text: {
-    // textDecoration: 'none',
-    fontZize: '20pt',
-    color: 'white',
-    [breakpoints.up('lg')]: {
-      fontSize: '18pt',
+      fontSize: '1rem',
     },
   },
 });

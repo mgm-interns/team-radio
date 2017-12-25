@@ -54,7 +54,7 @@ class StationSwitcher extends Component {
   };
 
   _slidesToShow(width, isMobile) {
-    return isMobile ? width / 100 : Math.floor(width / 120);
+    return isMobile ? Math.floor(width / 100) : Math.floor(width / 140);
   }
 
   _goToStationPage(station) {
@@ -96,7 +96,9 @@ class StationSwitcher extends Component {
             >
               <img src={station.avatar} className={classes.station_avatar} />
               <div className={classes.station_info}>
-                <h3 className={classes.station_title}>{station.stationName}</h3>
+                <span className={classes.station_title}>
+                  {station.stationName}
+                </span>
                 {/*
                 <span className={classes.station_subtitle}>
                   {station.description}

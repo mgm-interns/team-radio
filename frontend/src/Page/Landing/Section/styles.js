@@ -3,29 +3,25 @@ export default ({ palette, breakpoints }) => ({
   sectionContainer: {
     margin: 0,
     background: palette.lightGrey['500'],
-    // width: '25%',
-    lineHeight: '1.8',
-    padding: '2%',
-    paddingLeft: '10em',
-    paddingRight: '10em',
-    paddingBottom: '8em',
-  },
-  stationsWrapper: {
-    [breakpoints.up('lg')]: {
-      // maxWidth: '0%',
-    },
+    padding: '2em',
+    paddingTop: '4em',
+    paddingBottom: '4em',
+    width: '100%',
+    height: '100vh',
   },
   sectionDescription: {
-    [breakpoints.up('lg')]: {
-      fontSize: '40pt',
-      textAlign: 'right',
-      paddingRight: '0',
+    textAlign: 'right',
+    [breakpoints.down('xs')]: {
+      lineHeight: '1.8',
+    },
+    [breakpoints.up('sm')]: {
+      lineHeight: '2',
     },
   },
   sectionTitle: {
+    fontWeight: 'bold',
     [breakpoints.up('lg')]: {
       fontSize: '25pt',
-      fontWeight: 'bold',
     },
   },
   sectionSubtitle: {
@@ -34,23 +30,26 @@ export default ({ palette, breakpoints }) => ({
     },
   },
   sectionContentContainer: {
-    [breakpoints.up('lg')]: {
-      textAlign: 'right',
-      paddingRight: '10em',
-      paddingTop: '35em',
-    },
+    textAlign: 'right',
   },
   sectionContent: {
+    color: 'grey',
     [breakpoints.up('lg')]: {
       fontSize: '15pt',
-      color: 'grey',
     },
   },
   sectionImages: {
+    [breakpoints.down('xs')]: {
+      width: '10%',
+      paddingLeft: 0,
+    },
+    [breakpoints.up('sm')]: {
+      width: '80%',
+      paddingLeft: '5em',
+    },
     [breakpoints.up('lg')]: {
-      position: 'absolute',
-      width: '25%',
-      paddingTop: '5em',
+      width: '60%',
+      paddingLeft: '10em',
     },
   },
 });
