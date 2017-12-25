@@ -9,8 +9,8 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles } from 'material-ui/styles';
-import fixture from '../../../Fixture/landing';
-import { addStation } from '../../../Redux/api/stations';
+import fixture from '~/Fixture/landing';
+import { addStation } from '~/Redux/api/stations';
 import styles from './styles';
 
 class Backdrop extends Component {

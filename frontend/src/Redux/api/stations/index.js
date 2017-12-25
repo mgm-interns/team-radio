@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import HttpRequest from '../../../Util/redux/HttpRequest';
+import HttpRequest from '~/Util/redux/HttpRequest';
 
 export const fetchRequest = new HttpRequest({
   type: 'FETCH_STATIONS',

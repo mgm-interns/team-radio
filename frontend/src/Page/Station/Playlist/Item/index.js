@@ -6,7 +6,7 @@ import withStyles from 'material-ui/styles/withStyles';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import styles from './styles';
-import { upVoteVideo, unUpVoteVideo } from '../../../../Redux/api/currentStation/actions';
+import { upVoteVideo, unUpVoteVideo } from '~/Redux/api/currentStation/actions';
 
 class PlaylistItem extends Component {
   render() {

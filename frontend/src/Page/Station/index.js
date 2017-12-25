@@ -6,13 +6,13 @@ import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
+import { StationSwitcher, NavBar, Footer } from '~/Component';
+import { joinStation } from '~/Redux/api/currentStation/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
-import { StationSwitcher, NavBar, Footer } from '../../Component';
-// import fixture from '../../Fixture/landing';
+// import fixture from 'Fixture/landing';
 import styles from './styles';
-import { joinStation } from '../../Redux/api/currentStation/actions';
 
 class StationPage extends Component {
   static propTypes = {

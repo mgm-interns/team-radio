@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 
 import { withStyles } from 'material-ui/styles';
-import fixture from '../../../Fixture/landing';
+import fixture from '~/Fixture/landing';
 import styles from './styles';
 
-import StationSwitcher from '../../../Component/StationSwitcher';
+import StationSwitcher from '~/Component/StationSwitcher';
 
 class PopularStation extends Component {
   render() {
