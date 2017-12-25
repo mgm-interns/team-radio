@@ -7,44 +7,41 @@ var Station = require('./../Models/Station');
 var Song = require('./SongController');
 // create a station
 stationController.addStation = function(req, res) {
+  // (stationName, creatorId)
   var station = req.body;
   var stationName = station.stationName;
-  
-   if(station.stationName == '')
-   {
+
+  if (station.stationName == '') {
     var errorRes = {
-       name : 'The name is empty',
-       url : ''
-     }
-     console.log(errorRes);
-    var response = new ResponeModel(false, null,errorRes);
+      name: 'The name is empty',
+      url: '',
+    };
+    console.log(errorRes);
+    var response = new ResponeModel(false, null, errorRes);
     res.status(422).json(response.get());
-   }
-   else{
-  //check available of station
+  } else {
+    //check available of station
     Station.getStationByName(stationName, function(err, mess) {
-      if (err){
+      if (err) {
         throw err;
-        
+
         var response = new ResponeModel(false, null, err);
         res.status(400);
         res.json(response.get());
-      } 
-      
+      }
+
       //  console.log(station);
       if (mess == null) {
         // create station
 
-          Station.addStation(station, function(err, stationCallBack) {
+        Station.addStation(station, function(err, stationCallBack) {
           if (err) throw err;
           console.log(stationCallBack);
           var response = new ResponeModel(true, stationCallBack, null);
           console.log(stationCallBack);
           res.json(response.get());
-        
         });
       } else {
-       
         var error = {
           name: 'The station name available !',
         };
@@ -55,42 +52,70 @@ stationController.addStation = function(req, res) {
   }
 };
 
+stationController.joinStation = (userId, stationId) => {
+  // user join station
+};
+
 // get a station by name
 stationController.getStationByName = function(req, res) {
+  // (stationName)
   var stationName = req.params.stationName;
   Station.getStationByName(stationName, function(err, station) {
     if (err) {
       throw err;
       var response = new ResponeModel(false, null, err);
       res.status(400).json(response.get());
-     
     }
     if (station == null) {
       console.log('err : ' + err);
-     var error = {
-       name : 'Can not find station name.'
-     }
+      var error = {
+        name: 'Can not find station name.',
+      };
       var response = new ResponeModel(false, null, error);
       res.status(404).json(response.get());
-     } else {
+    } else {
       var response = new ResponeModel(true, station, null);
       res.json(response.get());
     }
   });
 };
+
+stationController.getStationById = function(stationId) {
+  // return a station
+};
+
 // get list station but can limit if need
 stationController.getStations = function(req, res) {
+  // () no params
   Station.getStations(function(err, stations) {
     if (err) {
       throw err;
       var response = new ResponeModel(false, null, err);
       res.status(400).json(response.get());
-     } else {
+    } else {
       var response = new ResponeModel(true, stations, null);
       res.json(response.get());
     }
   });
 };
+
+stationController.addVideo = function(stationId, videoUrl, userId) {
+  // fetch youtube api to get video info
+  // add video to station
+};
+
+stationController.getPlaylist = function(stationId) {
+  // return playlist of station
+};
+
+stationController.upVoteVideo = function(stationId, videoId, userId) {
+  // 
+};
+
+stationController.unUpVoteVideo = function(stationId, videoId, userId) {
+  // 
+};
+
 /*
 // get play list 
 stationController.getListVideo = function(req,res)
@@ -155,4 +180,3 @@ stationController.addVideo = async function(req,res)
 // add new song at station
 */
 module.exports = stationController;
-
