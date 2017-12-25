@@ -42,9 +42,11 @@ module.exports.addNewSong = async function(inputUrl) {
       thumbnail: videoInfo.thumbnailUrl,
       duration: videoInfo.duration,
     });
+    /*
     newSong.validate(function(err) {
       console.log('THONG BAO LOI: ' + err);
     });
+    */
     newSong.save();
     return newSong;
   }

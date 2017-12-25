@@ -20,7 +20,7 @@ export default router => {
   });
   // add a new video
 
-  router.put('/stations/:stationName',function(req,res){
-      station.addVideo(req,res);
+  router.put('/stations/:stationName',function(req, res){
+      station.addSong(req, res);
   })
 };

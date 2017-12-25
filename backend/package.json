@@ -22,6 +22,7 @@
     "get-video-id": "^2.1.7",
     "mongoose": "^4.13.7",
     "morgan": "^1.8.2",
+    "promise": "^8.0.1",
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
