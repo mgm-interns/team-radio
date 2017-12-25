@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
-import Hidden from 'material-ui/Hidden';
 
 import { withStyles } from 'material-ui/styles';
 import fixture from 'Fixture/landing';
@@ -77,17 +76,14 @@ class NavBar extends Component {
           <Grid item xs={4}>
             <Grid container className={classes.logo}>
               <Grid item xs={0}>
-                <img
-                  src={fixture.logo}
-                  alt="Team Radio"
-                  className={classes.img}
-                />
-              </Grid>
-              <Hidden xsUp>
-                <Link to={'/'} className={classes.logoName}>
-                  {fixture.name}
+                <Link to="/">
+                  <img
+                    src={fixture.logo}
+                    alt="Team Radio"
+                    className={classes.img}
+                  />
                 </Link>
-              </Hidden>
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs={8}>
