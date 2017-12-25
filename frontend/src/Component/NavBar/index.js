@@ -62,7 +62,7 @@ class NavBar extends Component {
               </Grid>
               <Hidden smDown>
                 <Link to={'/'} className={classes.logoName}>
-                  {fixture.name}
+                  Team Radio
                 </Link>
               </Hidden>
             </Grid>

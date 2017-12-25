@@ -3,26 +3,25 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
 
-import { NavBar } from '../../Component';
+import { NavBar, Footer } from '../../Component';
 
 import Backdrop from './Backdrop';
-import PopularStation from './PopularStation';
 import SectionCover from './SectionCover';
 import SectionContent from './SectionContent';
 
 class Landing extends Component {
-  componentWillReceiveProps(nextProps) {
-    const { history } = this.props;
-    const currentStationId =
-      this.props.currentStation.station &&
-      this.props.currentStation.station._id;
-    const nextStationId =
-      nextProps.currentStation.station && nextProps.currentStation.station._id;
-    if (currentStationId !== nextStationId) {
-      const { stationName } = nextProps.currentStation.station;
-      history.push(`/station/${stationName}`);
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   const { history } = this.props;
+  //   const currentStationId =
+  //     this.props.currentStation.station &&
+  //     this.props.currentStation.station._id;
+  //   const nextStationId =
+  //     nextProps.currentStation.station && nextProps.currentStation.station._id;
+  //   if (currentStationId !== nextStationId) {
+  //     const { stationName } = nextProps.currentStation.station;
+  //     history.push(`/station/${stationName}`);
+  //   }
+  // }
 
   render() {
     return (
@@ -31,6 +30,7 @@ class Landing extends Component {
         <Backdrop />
         <SectionCover />
         <SectionContent />
+        <Footer />
       </div>
     );
   }

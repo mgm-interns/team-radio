@@ -30,6 +30,11 @@ export default ({ palette, breakpoints }) => ({
     zIndex: -1,
     objectFit: 'cover',
   },
+  mainLine: {
+    fontFamily: 'Pacifico',
+    fontSize: '7em',
+    color: 'white',
+  },
   sloganText: {
     fontSize: '2rem',
     fontWeight: '200',

@@ -1,5 +1,6 @@
 export default ({ breakpoints }) => ({
   container: {
+    width: '100%',
     margin: 'auto',
     fontFamily: 'Lato',
     height: '50px',

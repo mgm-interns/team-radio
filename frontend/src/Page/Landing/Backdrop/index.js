@@ -44,7 +44,7 @@ class Backdrop extends Component {
         <Grid container className={classes.foreground}>
           <Grid item xs sm={10} lg={8} className={classes.formInput}>
             <div className={classes.sloganContainer}>
-              <img src={Images.landing} alt="Team Radio" />
+              <span className={classes.mainLine}>Team Radio</span>
               <h3 className={classes.sloganText}>A Radio station for Teams</h3>
             </div>
             <FormControl className={classes.textField} error={!!error}>

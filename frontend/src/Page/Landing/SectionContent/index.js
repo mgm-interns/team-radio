@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
+import Hidden from 'material-ui/Hidden';
 
 import { withStyles } from 'material-ui/styles';
 import Images from '../../../Theme/Images';
@@ -13,14 +14,16 @@ class SectionContent extends Component {
     return (
       <Grid container justify="center" className={classes.container}>
         <Grid container className={classes.wrapper}>
-          <Grid item xs={12} sm={6} lg={6} className={classes.imageBlock}>
-            <img
-              src={Images.windows.addSongs}
-              alt=""
-              style={{ width: '100%' }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} lg={6} className={classes.textBlock}>
+          <Hidden mdDown>
+            <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>
+              <img
+                src={Images.windows.addSongs}
+                alt=""
+                style={{ width: '100%' }}
+              />
+            </Grid>
+          </Hidden>
+          <Grid item xs={12} sm={12} lg={6} className={classes.textBlock}>
             <div className={classes.textContent}>
               <h3 className={classes.textTitle}>Add link to playlist</h3>
               <p
@@ -29,9 +32,18 @@ class SectionContent extends Component {
               <a className={classes.button}>Share your passion</a>
             </div>
           </Grid>
+          <Hidden lgUp>
+            <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>
+              <img
+                src={Images.windows.addSongs}
+                alt=""
+                style={{ width: '100%' }}
+              />
+            </Grid>
+          </Hidden>
         </Grid>
         <Grid container className={classes.wrapper}>
-          <Grid item xs={12} sm={6} lg={6} className={classes.textBlock}>
+          <Grid item xs={12} sm={12} lg={6} className={classes.textBlock}>
             <div className={classes.textContent}>
               <h3 className={classes.textTitle}>Share your station</h3>
               <p
@@ -40,7 +52,7 @@ class SectionContent extends Component {
               <a className={classes.button}>Explore music together</a>
             </div>
           </Grid>
-          <Grid item xs={12} sm={6} lg={6} className={classes.imageBlock}>
+          <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>
             <img src={Images.windows.link} alt="" style={{ width: '100%' }} />
           </Grid>
         </Grid>

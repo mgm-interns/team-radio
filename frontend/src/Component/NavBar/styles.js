@@ -6,6 +6,7 @@ export default ({ breakpoints }) => ({
     width: '100%',
     position: 'fixed',
     fontFamily: 'Lato',
+    transition: 'top 0.2s ease-in-out',
   },
   wrapper: {
     margin: 'auto',
@@ -22,7 +23,8 @@ export default ({ breakpoints }) => ({
     height: '2em',
   },
   logoName: {
-    fontSize: '1rem',
+    fontSize: '1.5rem',
+    fontFamily: 'Pacifico',
     color: 'white',
     textDecoration: 'none',
   },

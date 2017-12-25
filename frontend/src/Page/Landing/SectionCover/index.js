@@ -13,7 +13,7 @@ class SectionCover extends Component {
     return (
       <Grid container justify="center" className={classes.container}>
         <Grid container className={classes.wrapper}>
-          <Grid item xs sm={6} lg={6} className={classes.textBlock}>
+          <Grid item xs sm={12} lg={6} className={classes.textBlock}>
             <div className={classes.textContent}>
               <h3 className={classes.textTitle}>Create your own</h3>
               <p
@@ -22,7 +22,7 @@ class SectionCover extends Component {
               <a className={classes.button}>Try it now</a>
             </div>
           </Grid>
-          <Grid item xs={12} sm={6} lg={6} className={classes.imageBlock}>
+          <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>
             <img
               src={Images.windows.stations}
               alt=""
