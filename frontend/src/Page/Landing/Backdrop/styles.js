@@ -2,7 +2,7 @@ export default ({ palette, breakpoints }) => ({
   container: {
     margin: 'auto',
     width: '100%',
-    background: palette.primary['500'],
+    background: palette.secondary['500'],
   },
   foreground: {
     height: '80vh',

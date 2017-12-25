@@ -2,7 +2,7 @@ export default ({ palette, breakpoints }) => ({
   container: {
     position: 'relative',
     marginTop: '-4.5em',
-    zIndex: 10,
+    zIndex: 3,
     width: '100%',
   },
   wrapper: {

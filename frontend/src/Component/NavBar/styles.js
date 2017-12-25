@@ -1,7 +1,7 @@
 export default ({ breakpoints }) => ({
   container: {
     margin: 'auto',
-    zIndex: '3',
+    zIndex: '10',
     height: '8vh',
     width: '100%',
     position: 'fixed',
