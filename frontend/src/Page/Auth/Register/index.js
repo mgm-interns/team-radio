@@ -58,9 +58,9 @@ class Register extends Component {
   }
 
   _submit() {
-    // if(this._validate()) {
-    //   console.log('submit')
-    // }
+    if (this._validate()) {
+      console.log('submit');
+    }
   }
 
   _validate() {
@@ -216,7 +216,10 @@ class Register extends Component {
                     </FormHelperText>
                   </FormControl>
                 </CardContent>
-                <CardActions>
+                <CardActions
+                  className={classes.cardButton}
+                  style={{ justifyContent: 'flex-end' }}
+                >
                   {loading ? (
                     <CircularProgress />
                   ) : (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 import Landing from '../Page/Landing';
 import Station from '../Page/Station';
@@ -19,21 +19,26 @@ const routes = [
     component: Station,
   },
   {
+    path: '/auth/login',
+    component: Login,
+  },
+  {
+    path: '/auth/register',
+    component: Register,
+  },
+  {
     path: '/auth',
     component: Auth,
-    routes: [
-      {
-        path: '/auth/login',
-        component: Login,
-        // exact: true,
-      },
-      {
-        path: '/auth/register',
-        component: Register,
-        // exact: true,
-      },
-    ],
-    // exact: true,
+    // routes: [
+    //   {
+    //     path: '/auth/login',
+    //     component: Login,
+    //   },
+    //   {
+    //     path: '/auth/register',
+    //     component: Register,
+    //   },
+    // ],
   },
 ];
 
