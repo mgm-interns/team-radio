@@ -20,9 +20,9 @@ class StationPage extends Component {
   };
   componentWillMount() {
     // Get station id from react-router
-    const { match: { params: { stationName } }, history } = this.props;
-    if (stationName) {
-      this.props.joinStation(stationName);
+    const { match: { params: { station_name } }, history } = this.props;
+    if (station_name) {
+      this.props.joinStation(station_name);
     } else {
       history.push(`/`);
     }
@@ -33,7 +33,7 @@ class StationPage extends Component {
     return (
       <div>
         <NavBar color="primary" />
-        <Grid direction="row" container>
+        <Grid direction="row" container className={classes.containerWrapper}>
           <Grid item xs={12} className={classes.switcherContainer}>
             <StationSwitcher />
           </Grid>
@@ -42,7 +42,7 @@ class StationPage extends Component {
               <Grid item xs={12} md={7} xl={8}>
                 <Grid container>
                   <Grid item xs={12}>
-                    <h1>{station && station.stationName}</h1>
+                    <h1>{station && station.station_name}</h1>
                   </Grid>
                   <NowPlaying className={classes.content} autoplay={true} />
                 </Grid>
@@ -50,7 +50,7 @@ class StationPage extends Component {
               <Grid item xs={12} md={5} xl={4}>
                 <Grid container>
                   <Grid item xs={12}>
-                    <h1>NOW PLAYING</h1>
+                    <h1>Now Playing</h1>
                   </Grid>
                   <Playlist className={classes.content} />
                 </Grid>
