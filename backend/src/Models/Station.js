@@ -65,7 +65,7 @@ module.exports.getStationByUrl = function(stationUrlToFind) {
 };
 // update playlist of station
 module.exports.addVideo = function(stationName, video, callback) {
-  var query = { stationName: stationName };
+  var query = { stationame: stationName };
   var videoToAdd = {
     $addToSet: {
       playlist: video,
@@ -80,4 +80,9 @@ module.exports.findSongIdOfPlaylist = function(stationName, callback) {
   var query = { stationName: stationName };
   Station.find(query).toArray(callback);
   console.log('2****\n');
+};
+
+// get station from name
+module.exports.getStationByName2 = function(stationNameToFind) {
+  return Station.findOne({ station_name: stationNameToFind });
 };
