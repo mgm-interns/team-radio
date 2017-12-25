@@ -12,11 +12,15 @@ class SectionContent extends Component {
     const { classes } = this.props;
     return (
       <Grid container justify="center" className={classes.container}>
-        <Grid container alignItems="center" className={classes.wrapper}>
+        <Grid container className={classes.wrapper}>
           <Grid item xs={12} sm={6} lg={6} className={classes.imageBlock}>
-            <img src={Images.windows.w1} alt="" style={{ width: '100%' }} />
+            <img
+              src={Images.windows.addSongs}
+              alt=""
+              style={{ width: '100%' }}
+            />
           </Grid>
-          <Grid item xs sm={6} lg={6} className={classes.textBlock}>
+          <Grid item xs={12} sm={6} lg={6} className={classes.textBlock}>
             <div className={classes.textContent}>
               <h3 className={classes.textTitle}>Add link to playlist</h3>
               <p
@@ -26,8 +30,8 @@ class SectionContent extends Component {
             </div>
           </Grid>
         </Grid>
-        <Grid container alignItems="center" className={classes.wrapper}>
-          <Grid item xs sm={6} lg={6} className={classes.textBlock}>
+        <Grid container className={classes.wrapper}>
+          <Grid item xs={12} sm={6} lg={6} className={classes.textBlock}>
             <div className={classes.textContent}>
               <h3 className={classes.textTitle}>Share your station</h3>
               <p
@@ -37,7 +41,7 @@ class SectionContent extends Component {
             </div>
           </Grid>
           <Grid item xs={12} sm={6} lg={6} className={classes.imageBlock}>
-            <img src={Images.windows.w1} alt="" style={{ width: '100%' }} />
+            <img src={Images.windows.link} alt="" style={{ width: '100%' }} />
           </Grid>
         </Grid>
       </Grid>

@@ -1,21 +1,19 @@
 export default ({ palette, breakpoints }) => ({
   container: {
-    // position: 'relative',
-    // marginTop: '-4.5em',
     zIndex: 10,
     width: '100%',
   },
   wrapper: {
     display: 'flex',
     alignTtems: 'center',
-    height: '80vh',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
+      height: '60vh',
     },
   },
   textContent: {
-    paddingTop: '5em',
+    paddingTop: '2em',
     padding: '2em 4em',
   },
   textTitle: {

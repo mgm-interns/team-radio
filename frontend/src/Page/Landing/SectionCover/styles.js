@@ -7,10 +7,10 @@ export default ({ palette, breakpoints }) => ({
   },
   wrapper: {
     display: 'flex',
-    height: '60vh',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
+      height: '60vh',
     },
   },
   textContent: {

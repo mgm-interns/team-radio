@@ -10,7 +10,9 @@ const images = {
   drummer: require('../Images/drummer.png'),
   landing: require('../Images/logo/landing.png'),
   windows: {
-    w1: require('../Images/windows/1-windows.jpg'),
+    stations: require('../Images/windows/stations.png'),
+    addSongs: require('../Images/windows/add-songs.png'),
+    link: require('../Images/windows/link.png'),
   },
 };
 

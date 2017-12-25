@@ -23,7 +23,11 @@ class SectionCover extends Component {
             </div>
           </Grid>
           <Grid item xs={12} sm={6} lg={6} className={classes.imageBlock}>
-            <img src={Images.windows.w1} alt="" style={{ width: '100%' }} />
+            <img
+              src={Images.windows.stations}
+              alt=""
+              style={{ width: '100%' }}
+            />
           </Grid>
         </Grid>
       </Grid>
