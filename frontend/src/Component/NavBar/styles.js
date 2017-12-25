@@ -6,9 +6,14 @@ export default ({ breakpoints }) => ({
     width: '100%',
     position: 'fixed',
     fontFamily: 'Lato',
+    transition: 'all 0.3s',
+    [breakpoints.down('md')]: {
+      background: 'rgba(0,0,0,0.2)',
+      height: 'auto',
+    },
   },
   wrapper: {
-    margin: 'auto',
+    margin: '8px 16px',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
