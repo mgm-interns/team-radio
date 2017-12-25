@@ -6,9 +6,9 @@ import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
 import { CircularProgress } from 'material-ui/Progress';
 import Slider from 'react-slick';
-import { fetchStations } from '../../Redux/api/stations/actions';
-import { transformNumber } from '../../Transformer';
-import Images from '../../Theme/Images';
+import { fetchStations } from 'Redux/api/stations';
+import { transformNumber } from 'Transformer';
+import Images from 'Theme/Images';
 import styles from './styles';
 
 const { avatar1, avatar2, avatar3, avatar4, avatar5 } = Images.fixture;
@@ -148,7 +148,7 @@ class StationSwitcher extends Component {
 }
 
 const mapStateToProps = ({ api: { stations } }) => ({
-  stations: stations.data.data,
+  stations: stations.fetch.data,
 });
 
 const mapDispatchToProps = dispatch => ({
