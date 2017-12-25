@@ -1,8 +1,8 @@
 export default ({ palette, breakpoints }) => ({
   container: {
     margin: 'auto',
-    width: '100vw',
-    background: palette.darkGreen['500'],
+    width: '100%',
+    background: palette.primary['500'],
   },
   foreground: {
     height: '80vh',
@@ -21,12 +21,12 @@ export default ({ palette, breakpoints }) => ({
   },
   backgroundImg: {
     position: 'absolute',
-    width: '100vw',
+    width: '100%',
     height: '80vh',
     top: 0,
     left: 0,
     margin: 'auto',
-    filter: 'opacity(0.6)',
+    filter: 'opacity(0.9)',
     zIndex: -1,
     objectFit: 'cover',
   },

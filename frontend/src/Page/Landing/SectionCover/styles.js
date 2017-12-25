@@ -1,22 +1,26 @@
 export default ({ palette, breakpoints }) => ({
   container: {
-    // margin: 'auto',
     position: 'relative',
     marginTop: '-4.5em',
     zIndex: 10,
     width: '100%',
-    // background: palette.darkGreen['500'],
   },
   wrapper: {
     display: 'flex',
-    height: '80vh',
+    height: '60vh',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
     },
   },
   textContent: {
-    paddingTop: '15em',
+    paddingTop: '10em',
+    padding: '2em 4em',
+  },
+  textTitle: {
+    textAlign: 'left',
+    fontSize: '30pt',
+    paddingBottom: '0.5em',
   },
   imageBlock: {
     paddingTop: '-15em',
@@ -24,7 +28,8 @@ export default ({ palette, breakpoints }) => ({
   button: {
     color: palette.primary['500'],
   },
-  lowerMargin: {
+  textDescription: {
     marginBottom: '1em',
+    color: '#808080',
   },
 });
