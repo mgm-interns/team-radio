@@ -62,7 +62,7 @@ class NavBar extends Component {
               </Grid>
               <Hidden xsUp>
                 <Link to={'/'} className={classes.logoName}>
-                  Team Radio
+                  {fixture.name}
                 </Link>
               </Hidden>
             </Grid>

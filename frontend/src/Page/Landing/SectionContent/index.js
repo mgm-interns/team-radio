@@ -4,8 +4,7 @@ import Grid from 'material-ui/Grid';
 import Hidden from 'material-ui/Hidden';
 
 import { withStyles } from 'material-ui/styles';
-import Images from '../../../Theme/Images';
-// import fixture from '../../../Fixture/landing';
+import fixture from '../../../Fixture/landing';
 import styles from './styles';
 
 class SectionContent extends Component {
@@ -17,26 +16,30 @@ class SectionContent extends Component {
           <Hidden mdDown>
             <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>
               <img
-                src={Images.windows.addSongs}
-                alt=""
+                src={fixture.section.content1.windows}
+                alt={fixture.section.content1.alt}
                 style={{ width: '100%' }}
               />
             </Grid>
           </Hidden>
           <Grid item xs={12} sm={12} lg={6} className={classes.textBlock}>
             <div className={classes.textContent}>
-              <h3 className={classes.textTitle}>Add link to playlist</h3>
-              <p
-                className={classes.textDescription}
-              >{`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`}</p>
-              <a className={classes.button}>Share your passion</a>
+              <h3 className={classes.textTitle}>
+                {fixture.section.content1.title}
+              </h3>
+              <p className={classes.textDescription}>
+                {fixture.section.content1.description}
+              </p>
+              <a className={classes.button}>
+                {fixture.section.content1.linkTitle}
+              </a>
             </div>
           </Grid>
           <Hidden lgUp>
             <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>
               <img
-                src={Images.windows.addSongs}
-                alt=""
+                src={fixture.section.content1.windows}
+                alt={fixture.section.content1.alt}
                 style={{ width: '100%' }}
               />
             </Grid>
@@ -45,15 +48,21 @@ class SectionContent extends Component {
         <Grid container className={classes.wrapper}>
           <Grid item xs={12} sm={12} lg={6} className={classes.textBlock}>
             <div className={classes.textContent}>
-              <h3 className={classes.textTitle}>Share your station</h3>
-              <p
-                className={classes.textDescription}
-              >{`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`}</p>
+              <h3 className={classes.textTitle}>
+                {fixture.section.content2.title}
+              </h3>
+              <p className={classes.textDescription}>
+                {fixture.section.content2.description}
+              </p>
               <a className={classes.button}>Explore music together</a>
             </div>
           </Grid>
           <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>
-            <img src={Images.windows.link} alt="" style={{ width: '100%' }} />
+            <img
+              src={fixture.section.content2.windows}
+              alt={fixture.section.content2.alt}
+              style={{ width: '100%' }}
+            />
           </Grid>
         </Grid>
       </Grid>

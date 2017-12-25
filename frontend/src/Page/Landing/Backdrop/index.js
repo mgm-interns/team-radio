@@ -13,8 +13,6 @@ import fixture from '../../../Fixture/landing';
 import { addStation } from '../../../Redux/api/stations/actions';
 import styles from './styles';
 
-import { Images } from '../../../Theme';
-
 class Backdrop extends Component {
   constructor(props) {
     super(props);
@@ -44,16 +42,16 @@ class Backdrop extends Component {
         <Grid container className={classes.foreground}>
           <Grid item xs sm={10} lg={8} className={classes.formInput}>
             <div className={classes.sloganContainer}>
-              <h1 className={classes.mainLine}>Team Radio</h1>
-              <span className={classes.sloganText}>
-                A Radio station for your Team
-              </span>
+              <h1 className={classes.mainLine}>{fixture.name}</h1>
+              <span className={classes.sloganText}>{fixture.slogan}</span>
             </div>
             <FormControl className={classes.textField} error={!!error}>
-              <InputLabel htmlFor="station-name">Your team station</InputLabel>
+              <InputLabel htmlFor="station-name">
+                {fixture.input.label}
+              </InputLabel>
               <Input
                 id="station-name"
-                placeholder="e.g. Awesome Station"
+                placeholder={fixture.input.placeholder}
                 margin="normal"
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
@@ -68,19 +66,20 @@ class Backdrop extends Component {
             ) : (
               <Button
                 raised
-                color="primary"
+                color={fixture.button.color}
                 onClick={this._submit}
                 className={classes.buttonSend}
                 disabled={!this.state.stationName}
               >
-                Create <Icon className={classes.sendIcon}>send</Icon>
+                {fixture.button.name}
+                <Icon className={classes.sendIcon}>send</Icon>
               </Button>
             )}
           </Grid>
           <Grid item xs className={classes.backgroundImg}>
             <img
-              src="https://images.unsplash.com/photo-1510130564579-d2caf45b72f3?auto=format&fit=crop&w=1650&q=80"
-              alt="Team Radio - Cover"
+              src={fixture.background.src}
+              alt={fixture.background.alt}
               className={classes.backgroundImg}
             />
           </Grid>
