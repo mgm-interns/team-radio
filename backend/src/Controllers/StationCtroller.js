@@ -1,6 +1,5 @@
 /* eslint-disable */
 var mongoose = require('mongoose');
-var Promise = require('promise');
 var Station = require('./../Models/Station');
 var Song = require('./SongController');
 
@@ -8,13 +7,13 @@ var Song = require('./SongController');
 var stationController = {};
 module.exports = stationController;
 
-stationController.addStation = function (stationName) {
+stationController.addStation = async function (stationName,callback) {
 
   var station = {
     station_name: stationName
   };
   if (!stationName) {
-    return null;
+    callback(null,null);
   } else {
     // Check if station is available
     Station.getStationByName(stationName, function (err, currentStation) {
@@ -22,12 +21,21 @@ stationController.addStation = function (stationName) {
 
       if (!currentStation) {
         // Create a new station
-        Station.addStation(station, function (err, newStation) {
+      
+        Station.addStation(station, function (err, station) {
           if (err) throw err;
-          return newStation;
+          console.log('station : ' + station);
+          console.log('***2****');
+       
+          callback(null,station);
         });
+        console.log('***4****');
+       
+        //var station =  await Station.addStation(station);
+       
       } else {
-        return null;
+        callback(null,null);
+       // return null;
       }
     });
   }
@@ -35,39 +43,39 @@ stationController.addStation = function (stationName) {
 
 // get a station by name
 
-stationController.getStationByName = function (stationName) {
+stationController.getStationByName = function (stationName,callback) {
 
   Station.getStationByName(stationName, function (err, currentStation) {
     if (err) throw err;
 
     if (!currentStation) {
-      return null;
+      callback(null,null);
     } else {
-      return currentStation;
+      callback(null,currentStation);
     }
   });
 };
 
 // get list station but can limit if need
-stationController.getStations = function () {
+stationController.getStations = function (callback) {
   Station.getStations(function (err, stations) {
     if (err) throw err;
 
-    return stations;
+    callback(null,stations);
   });
 };
 
 // get play list 
-stationController.getListSong = function (stationName) {
+stationController.getListSong = function (stationName,callback) {
   Station.findSongIdOfPlaylist(stationName, function (err, listSongs) {
     if (err) throw err;
 
-    return listSongs;
+    callback(null,listSongs);
   });
 }
 
 // add the information the song in db
-stationController.addSong = async function (stationName, songUrl) {
+stationController.addSong = async function (stationName, songUrl,callback) {
   // check url has empty
   if (!songUrl) {
     return null;
@@ -75,7 +83,7 @@ stationController.addSong = async function (stationName, songUrl) {
     var song = await Song.addNewSong(songUrl);
     // if Song module can not add in collection
     if (!song) {
-      return null;
+      callback(null,null);
     } else {
 
       // get playlist of station
@@ -94,12 +102,13 @@ stationController.addSong = async function (stationName, songUrl) {
               if (err) throw err;
               getAllInfoPlaylist(currentListSong.playlist, function (err, currentListSong) {
                 if (err) throw err;
-                return currentListSong;
+               // return currentListSong;
+               callback(null,currentListSong);
               })
             })
           });
         } else {
-          return null;
+          callback(null,null);
         }
       });
     }
