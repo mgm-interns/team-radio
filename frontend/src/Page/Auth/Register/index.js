@@ -6,9 +6,9 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Input, { InputLabel } from 'material-ui/Input';
-// import Button from 'material-ui/Button';
-// import Icon from 'material-ui/Icon';
+import Icon from 'material-ui/Icon';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
+import DoneIcon from 'material-ui-icons/Done';
 
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
@@ -20,18 +20,29 @@ class Register extends Component {
     super(props);
 
     this.state = {
+      userName: '',
       fullName: '',
       email: '',
       organizationName: '',
+      benefits: [
+        'Edit profile',
+        'Be rewarded',
+        'Play more songs than these anonymous freaks',
+        'See some information of the past activities',
+      ],
     };
-    this._handleFullNameChanged = this._handleFullNameChanged.bind(this);
+    this._handleUserNameChanged = this._handleUserNameChanged.bind(this);
     this._handleEmailChanged = this._handleEmailChanged.bind(this);
+    this._handleFullNameChanged = this._handleFullNameChanged.bind(this);
     this._handleOrganizationNameChanged = this._handleOrganizationNameChanged.bind(
       this,
     );
     this._submit = this._submit.bind(this);
   }
 
+  _handleUserNameChanged(e) {
+    this.setState({ userName: e.target.value });
+  }
   _handleFullNameChanged(e) {
     this.setState({ fullName: e.target.value });
   }
@@ -48,40 +59,63 @@ class Register extends Component {
 
   render() {
     const { classes, loading, error } = this.props;
+    const { benefits } = this.state;
+
     return (
       <div>
         <NavBar />
         <Grid container direction="column" className={classes.container}>
           <Grid container className={classes.foreground}>
-            <Grid item xs={10} sm={5} className={classes.formInput}>
-              <Card
-                raised
-                style={{
-                  minWidth: 275,
-                  padding: '2em',
-                }}
-              >
+            <Grid
+              item
+              xs={0}
+              sm={5}
+              className={[classes.cardWrapper, classes.cardInfoWrapper]}
+            >
+              <Card className={classes.cardInfo}>
+                <CardContent>
+                  <Typography
+                    type="headline"
+                    component="h2"
+                    className={classes.text}
+                  >
+                    A registered user can:
+                  </Typography>
+                  <ul className={classes.listWrapper}>
+                    {benefits.map(benefit => (
+                      <li className={classes.listItem}>
+                        <DoneIcon />
+                        <span className={classes.listText}>{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={11} sm={5} className={classes.cardWrapper}>
+              <Card raised className={classes.cardForm}>
                 <CardContent>
                   <Grid style={{ paddingBottom: '2em' }}>
                     <Typography type="headline" component="h2">
                       Sign Up
                     </Typography>
                     <Typography component="p">
-                      for a free Team Radio account
+                      to get the most out of Team Radio
                     </Typography>
                   </Grid>
 
                   <FormControl className={classes.textField} error={!!error}>
-                    <InputLabel htmlFor="full-name" required>
-                      Your full name
+                    <InputLabel htmlFor="user-name" required>
+                      Username
                     </InputLabel>
                     <Input
-                      id="station-name"
-                      placeholder="What's your name?"
+                      required
+                      id="user-name"
+                      placeholder="Choose a username"
                       margin="normal"
                       autoFocus={true}
-                      onChange={this._handleFullNameChanged}
-                      value={this.state.fullName}
+                      onChange={this._handleUserNameChanged}
+                      value={this.state.userName}
                     />
                     <FormHelperText>
                       {error && error.response && error.response.error.name}
@@ -89,12 +123,10 @@ class Register extends Component {
                   </FormControl>
 
                   <FormControl className={classes.textField} error={!!error}>
-                    <InputLabel htmlFor="station-name" required>
-                      Work email
-                    </InputLabel>
+                    <InputLabel htmlFor="email">Email</InputLabel>
                     <Input
-                      id="station-name"
-                      placeholder="What's your email address?"
+                      id="email"
+                      placeholder="hello@example.com"
                       margin="normal"
                       onChange={this._handleEmailChanged}
                       value={this.state.email}
@@ -105,12 +137,27 @@ class Register extends Component {
                   </FormControl>
 
                   <FormControl className={classes.textField} error={!!error}>
-                    <InputLabel htmlFor="station-name" required>
-                      Your organizations name
+                    <InputLabel htmlFor="password">Password</InputLabel>
+                    <Input
+                      id="password"
+                      placeholder="Must be at least 6 characters"
+                      type="password"
+                      margin="normal"
+                      onChange={this._handleFullNameChanged}
+                      value={this.state.fullName}
+                    />
+                    <FormHelperText>
+                      {error && error.response && error.response.error.name}
+                    </FormHelperText>
+                  </FormControl>
+
+                  <FormControl className={classes.textField} error={!!error}>
+                    <InputLabel htmlFor="confirm-password">
+                      Confirm Password
                     </InputLabel>
                     <Input
-                      id="station-name"
-                      placeholder="Where are you coming from?"
+                      placeholder="Re-enter your password"
+                      type="password"
                       margin="normal"
                       onChange={this._handleOrganizationNameChanged}
                       value={this.state.organizationName}
@@ -130,15 +177,16 @@ class Register extends Component {
                       // onClick={this._submit}
                       className={classes.buttonSend}
                     >
-                      Continue
+                      Sign Up
                     </Button>
                   )}
                 </CardActions>
               </Card>
             </Grid>
+
             <Grid item xs className={classes.backgroundImg}>
               <img
-                src="https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-177947.jpg"
+                src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=2250&q=80"
                 alt="Team Radio - Cover"
                 className={classes.backgroundImg}
               />

@@ -39,58 +39,30 @@ export default ({ palette, breakpoints }) => ({
       fontSize: '3rem',
     },
   },
-  formInput: {
-    // flexGrow: 0,
+  cardWrapper: {
     margin: 'auto',
-    // zIndex: 2,
-    // '& input': {
-    // color: 'white',
-    // },
-    // '& label': {
-    // color: 'white',
-    // },
-    // '& div': {
-    //   [breakpoints.down('sm')]: {
-    //     width: '80vw',
-    //   },
-    // },
-    // '& div::before': {
-    //   backgroundColor: palette.primary['500'],
-    // },
-    // '& div::after': {
-    //   backgroundColor: palette.primary['500'],
-    //   color: palette.primary['500'],
-    // },
-    // '& button': {
-    // [breakpoints.down('sm')]: {
-    //   width: '80vw',
-    // },
-    // [breakpoints.up('sm')]: {
-    //   marginLeft: '2em',
-    // },
-    // },
-    // [breakpoints.up('sm')]: {
-    //   flexGrow: 1,
-    //   textAlign: 'center',
-    // },
+  },
+  cardInfoWrapper: {
+    [breakpoints.down('sm')]: {
+      display: 'none',
+    },
+  },
+  cardInfo: {
+    background: 'none',
+    boxShadow: 'none',
   },
   textField: {
     width: '100%',
-    // [breakpoints.down('sm')]: {
-    //   marginTop: '5em',
-    //   paddingBottom: '1em',
-    // },
-    // [breakpoints.up('sm')]: {
-    //   marginTop: '10em',
-    //   width: '40vh',
-    // },
   },
   sendIcon: {
     paddingLeft: '0.5em',
   },
 
-  card: {
-    minWidth: '80em',
+  cardForm: {
+    padding: '2em',
+    [breakpoints.down('sm')]: {
+      padding: '1em',
+    },
   },
   bullet: {
     display: 'inline-block',
@@ -105,5 +77,27 @@ export default ({ palette, breakpoints }) => ({
   pos: {
     marginBottom: '12',
     color: palette.primary,
+  },
+  text: {
+    color: '#fff !important',
+  },
+  listWrapper: {
+    // paddingLeft: 20,
+    fontWeight: 400,
+    listStyle: 'none',
+    marginTop: 20,
+  },
+  listItem: {
+    color: '#fff',
+
+    padding: 10,
+    fontSize: 18,
+    [breakpoints.down('sm')]: {
+      padding: 0,
+      fontSize: 16,
+    },
+  },
+  listText: {
+    paddingLeft: 20,
   },
 });
