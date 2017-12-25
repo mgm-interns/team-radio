@@ -7,28 +7,31 @@ import withRouter from 'react-router-dom/withRouter';
 import { NavBar, Footer } from 'Component';
 
 import Backdrop from './Backdrop';
-import PopularStation from './PopularStation';
-import Section from './Section';
+import SectionCover from './SectionCover';
+import SectionContent from './SectionContent';
 
 class Landing extends Component {
-  componentWillReceiveProps(nextProps) {
-    const { history } = this.props;
-    const currentStationId =
-      this.props.currentStation.station &&
-      this.props.currentStation.station._id;
-    const nextStationId =
-      nextProps.currentStation.station && nextProps.currentStation.station._id;
-    if (currentStationId !== nextStationId) {
-      const { stationName } = nextProps.currentStation.station;
-      history.push(`/station/${stationName}`);
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   const { history } = this.props;
+  //   const currentStationId =
+  //     this.props.currentStation.station &&
+  //     this.props.currentStation.station._id;
+  //   const nextStationId =
+  //     nextProps.currentStation.station && nextProps.currentStation.station._id;
+  //   if (currentStationId !== nextStationId) {
+  //     const { stationName } = nextProps.currentStation.station;
+  //     history.push(`/station/${stationName}`);
+  //   }
+  // }
 
   render() {
     return (
       <div>
         <NavBar />
         <Backdrop />
+        <SectionCover />
+        <SectionContent />
+        <Footer />
       </div>
     );
   }

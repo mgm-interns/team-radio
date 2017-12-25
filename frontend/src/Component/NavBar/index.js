@@ -31,6 +31,29 @@ const setColor = {
 };
 
 class NavBar extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      transform: 0,
+    };
+    this.handleScroll = this.handleScroll.bind(this);
+  }
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll(event) {
+    const { scrollTop } = event.srcElement.documentElement;
+    this.setState({
+      transform: scrollTop,
+    });
+  }
+
   render() {
     const { classes, color } = this.props;
     const menusLength = Object.keys(MENUS).length;
@@ -40,9 +63,9 @@ class NavBar extends Component {
         justify="center"
         className={classes.container}
         style={
-          color === 'primary'
-            ? { backgroundColor: setColor.primary }
-            : { backgroundColor: setColor.default }
+          color === undefined && this.state.transform !== 0
+            ? { filter: 'opacity(0.8)', backgroundColor: setColor.primary }
+            : { backgroundColor: setColor[color] }
         }
       >
         <Grid
