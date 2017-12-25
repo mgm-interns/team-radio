@@ -47,6 +47,7 @@ class AddLink extends Component {
     this._onSuggestionSelected = this._onSuggestionSelected.bind(this);
     this._renderLinkBoxSection = this._renderLinkBoxSection.bind(this);
     this._renderPreviewSection = this._renderPreviewSection.bind(this);
+    this._renderSuggestion = this._renderSuggestion.bind(this);
   }
 
   _checkValidUrl(url) {
@@ -115,14 +116,22 @@ class AddLink extends Component {
   }
 
   _renderSuggestion(suggestion, { query, isHighlighted }) {
+    const { classes } = this.props;
+
     const matches = match(suggestion.snippet.title, query);
     const parts = parse(suggestion.snippet.title, matches);
 
+    console.log(suggestion);
+
     return (
       <MenuItem selected={isHighlighted} component="div">
-        <div>
+        <img
+          src={suggestion.snippet.thumbnails.default.url}
+          className={classes.searchItemImg}
+        />
+        <span>
           {parts.map((part, index) => <span key={index}>{part.text}</span>)}
-        </div>
+        </span>
       </MenuItem>
     );
   }

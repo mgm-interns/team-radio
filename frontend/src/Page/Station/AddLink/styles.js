@@ -111,6 +111,10 @@ export default theme => {
     textField: {
       width: '100%',
     },
+    searchItemImg: {
+      height: '100%',
+      marginRight: baseMargin,
+    },
     /* End search */
   };
 };
