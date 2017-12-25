@@ -14,6 +14,7 @@ import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
 import { NavBar } from '../../../Component';
+import { error } from 'util';
 
 class Register extends Component {
   constructor(props) {
@@ -21,9 +22,10 @@ class Register extends Component {
 
     this.state = {
       userName: '',
-      fullName: '',
       email: '',
-      organizationName: '',
+      password: '',
+      confirmPassword: '',
+      formErrors: {},
       benefits: [
         'Edit profile',
         'Be rewarded',
@@ -33,8 +35,8 @@ class Register extends Component {
     };
     this._handleUserNameChanged = this._handleUserNameChanged.bind(this);
     this._handleEmailChanged = this._handleEmailChanged.bind(this);
-    this._handleFullNameChanged = this._handleFullNameChanged.bind(this);
-    this._handleOrganizationNameChanged = this._handleOrganizationNameChanged.bind(
+    this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
+    this._handleConfirmPasswordChanged = this._handleConfirmPasswordChanged.bind(
       this,
     );
     this._submit = this._submit.bind(this);
@@ -43,19 +45,60 @@ class Register extends Component {
   _handleUserNameChanged(e) {
     this.setState({ userName: e.target.value });
   }
-  _handleFullNameChanged(e) {
-    this.setState({ fullName: e.target.value });
-  }
-
   _handleEmailChanged(e) {
     this.setState({ email: e.target.value });
   }
 
-  _handleOrganizationNameChanged(e) {
-    this.setState({ organizationName: e.target.value });
+  _handlePasswordChanged(e) {
+    this.setState({ password: e.target.value });
   }
 
-  _submit() {}
+  _handleConfirmPasswordChanged(e) {
+    this.setState({ confirmPassword: e.target.value });
+  }
+
+  _submit() {
+    // if(this._validate()) {
+    //   console.log('submit')
+    // }
+  }
+
+  _validate() {
+    const {
+      userName,
+      email,
+      password,
+      confirmPassword,
+      formErrors,
+    } = this.state;
+    let newFormErrors = {};
+    if (!userName) {
+      newFormErrors.userName = 'Username is required';
+    }
+
+    if (email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+      newFormErrors.email = 'Invalid email address';
+    }
+
+    if (!password) {
+      newFormErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newFormErrors.password = 'Password must be at least 6 characters';
+    } else if (confirmPassword && password != confirmPassword) {
+      newFormErrors.confirmPassword =
+        'Password and confirm password does not match';
+    }
+
+    if (!confirmPassword) {
+      newFormErrors.confirmPassword = 'Confirm Password is required';
+    }
+
+    this.setState({
+      formErrors: newFormErrors,
+    });
+
+    console.log(newFormErrors);
+  }
 
   render() {
     const { classes, loading, error } = this.props;
@@ -117,8 +160,10 @@ class Register extends Component {
                       onChange={this._handleUserNameChanged}
                       value={this.state.userName}
                     />
-                    <FormHelperText>
-                      {error && error.response && error.response.error.name}
+                    <FormHelperText className={classes.error}>
+                      {this.state.formErrors.userName}
+
+                      {/* {error && error.response && error.response.error.name} */}
                     </FormHelperText>
                   </FormControl>
 
@@ -131,23 +176,26 @@ class Register extends Component {
                       onChange={this._handleEmailChanged}
                       value={this.state.email}
                     />
-                    <FormHelperText>
-                      {error && error.response && error.response.error.name}
+                    <FormHelperText className={classes.error}>
+                      {this.state.formErrors.email}
+                      {/* {error && error.response && error.response.error.name} */}
                     </FormHelperText>
                   </FormControl>
 
                   <FormControl className={classes.textField} error={!!error}>
                     <InputLabel htmlFor="password">Password</InputLabel>
                     <Input
+                      required
                       id="password"
                       placeholder="Must be at least 6 characters"
                       type="password"
                       margin="normal"
-                      onChange={this._handleFullNameChanged}
-                      value={this.state.fullName}
+                      onChange={this._handlePasswordChanged}
+                      value={this.state.password}
                     />
-                    <FormHelperText>
-                      {error && error.response && error.response.error.name}
+                    <FormHelperText className={classes.error}>
+                      {this.state.formErrors.password}
+                      {/* {error && error.response && error.response.error.name} */}
                     </FormHelperText>
                   </FormControl>
 
@@ -159,11 +207,12 @@ class Register extends Component {
                       placeholder="Re-enter your password"
                       type="password"
                       margin="normal"
-                      onChange={this._handleOrganizationNameChanged}
-                      value={this.state.organizationName}
+                      onChange={this._handleConfirmPasswordChanged}
+                      value={this.state.confirmPassword}
                     />
-                    <FormHelperText>
-                      {error && error.response && error.response.error.name}
+                    <FormHelperText className={classes.error}>
+                      {this.state.formErrors.confirmPassword}
+                      {/* {error && error.response && error.response.error.name} */}
                     </FormHelperText>
                   </FormControl>
                 </CardContent>
@@ -174,7 +223,7 @@ class Register extends Component {
                     <Button
                       raised
                       color="primary"
-                      // onClick={this._submit}
+                      onClick={this._submit}
                       className={classes.buttonSend}
                     >
                       Sign Up

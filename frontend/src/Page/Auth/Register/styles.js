@@ -100,4 +100,8 @@ export default ({ palette, breakpoints }) => ({
   listText: {
     paddingLeft: 20,
   },
+  error: {
+    color: palette.red['700'],
+    fontSize: 'bold',
+  },
 });
