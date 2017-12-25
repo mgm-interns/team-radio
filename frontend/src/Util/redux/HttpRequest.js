@@ -94,14 +94,15 @@ class HttpRequest {
       switch (action.type) {
         case this.getTypeRequest():
           return {
-            ...state,
+            data: this.initialData,
+            error: null,
             loading: true,
           };
         case this.getTypeSuccess():
           return {
+            ...state,
             data: action.payload.data,
             loading: false,
-            error: null,
           };
         case this.getTypeFailure():
           return {

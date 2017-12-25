@@ -9,8 +9,9 @@ const METHOD_GET = 'GET';
 const METHOD_POST = 'POST';
 
 class SocketRequest {
-  constructor({ type }) {
+  constructor({ type, method }) {
     this.type = type;
+    this.method = method;
 
     this.getAction = this.getAction.bind(this);
     this.getReducer = this.getReducer.bind(this);
@@ -28,7 +29,15 @@ class SocketRequest {
     return `${SERVER_PREFIX}${this.type}${FAILURE_POSTFIX}`;
   }
 
-  getAction() {}
+  getAction() {
+    // switch (this.type) {
+    //   case METHOD_GET:
+    //     return () => ({
+    //     })
+    //   default:
+    //     break;
+    // }
+  }
 
   getReducer() {}
 }
