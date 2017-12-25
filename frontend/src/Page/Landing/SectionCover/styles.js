@@ -10,7 +10,6 @@ export default ({ palette, breakpoints }) => ({
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
-      height: '60vh',
     },
   },
   textContent: {

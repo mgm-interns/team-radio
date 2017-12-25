@@ -48,11 +48,9 @@ class NavBar extends Component {
   }
 
   handleScroll(event) {
-    const { scrollTop } = event.srcElement.body;
-    const itemTranslate = Math.min(0, scrollTop / 3 - 60);
-    console.log(itemTranslate);
+    const { scrollTop } = event.srcElement.documentElement;
     this.setState({
-      transform: itemTranslate,
+      transform: scrollTop,
     });
   }
 

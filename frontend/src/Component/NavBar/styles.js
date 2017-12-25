@@ -2,14 +2,12 @@ export default ({ breakpoints }) => ({
   container: {
     margin: 'auto',
     zIndex: '10',
-    height: '8vh',
     width: '100%',
     position: 'fixed',
     fontFamily: 'Lato',
     transition: 'all 0.3s',
     [breakpoints.down('md')]: {
       background: 'rgba(0,0,0,0.2)',
-      height: 'auto',
     },
   },
   wrapper: {
@@ -24,7 +22,7 @@ export default ({ breakpoints }) => ({
     justifyContent: 'flex-start',
   },
   img: {
-    height: '2em',
+    height: '3em',
   },
   logoName: {
     fontSize: '1.5rem',

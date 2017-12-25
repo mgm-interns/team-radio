@@ -34,7 +34,7 @@ export default ({ palette, breakpoints }) => ({
     cursor: 'default',
     color: 'white',
     fontSize: '3em',
-    [breakpoints.up('sm')]: {
+    [breakpoints.up('md')]: {
       fontSize: '7em',
     },
   },
@@ -45,10 +45,7 @@ export default ({ palette, breakpoints }) => ({
     color: 'white',
     textAlign: 'center',
     zIndex: 2,
-    [breakpoints.up('md')]: {
-      fontSize: '2.5rem',
-    },
-    [breakpoints.up('lg')]: {
+    [breakpoints.up('sm')]: {
       fontSize: '2.5rem',
     },
   },
