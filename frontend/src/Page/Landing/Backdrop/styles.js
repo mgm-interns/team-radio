@@ -5,6 +5,7 @@ export default ({ palette, breakpoints }) => ({
     background: palette.darkGreen['500'],
   },
   foreground: {
+    minHeight: 550,
     height: '100vh',
     width: '100%',
     zIndex: 0,
@@ -31,10 +32,13 @@ export default ({ palette, breakpoints }) => ({
     objectFit: 'cover',
   },
   sloganText: {
-    fontSize: '2.5rem',
+    fontSize: '1.8rem',
     color: 'white',
     textAlign: 'center',
     zIndex: 2,
+    [breakpoints.up('md')]: {
+      fontSize: '2.5rem',
+    },
     [breakpoints.up('lg')]: {
       fontSize: '3rem',
     },
@@ -82,6 +86,12 @@ export default ({ palette, breakpoints }) => ({
     [breakpoints.up('sm')]: {
       marginTop: '10em',
       width: '40vh',
+    },
+  },
+  buttonSend: {
+    '&[disabled]': {
+      backgroundColor: 'rgba(224,106,78,.25)',
+      color: 'rgba(255,255,255,.25)',
     },
   },
   sendIcon: {

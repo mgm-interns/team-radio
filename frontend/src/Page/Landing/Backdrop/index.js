@@ -48,7 +48,7 @@ class Backdrop extends Component {
               <InputLabel htmlFor="station-name">Your team station</InputLabel>
               <Input
                 id="station-name"
-                placeholder="Name your team station"
+                placeholder="e.g. Awesome Station"
                 margin="normal"
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
@@ -66,6 +66,7 @@ class Backdrop extends Component {
                 color="primary"
                 onClick={this._submit}
                 className={classes.buttonSend}
+                disabled={!this.state.stationName}
               >
                 Create <Icon className={classes.sendIcon}>send</Icon>
               </Button>
