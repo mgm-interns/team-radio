@@ -1,28 +1,25 @@
 import stationController from '../Controllers/StationController';
 import userController from '../Controllers/UserController';
+import {
+  SERVER_CREATE_STATION_SUCESS,
+  SERVER_JOINED_STATION_SUCESS,
+  SERVER_NEW_USER_JOINED,
+  SERVER_UPDATE_PLAYLIST,
+} from '../../../lib/actions';
 
 /* eslint-disable import/no-named-as-default-member */
 export default (socket, io) => {
-  // auto emit new data to client
-  setInterval(() => {
-    io.sockets.emit('action', {
-      type: 'SERVER:UPDATE_NOW_PLAYING',
-      payload: {
-        playlist: [],
-      },
-    });
-  }, 60000); // setInterval match song duration
-
   // handle redux action
   socket.on('action', action => {
     switch (action.type) {
       case 'CLIENT:CREATE_STATION':
-        stationController.addStation(
-          action.payload.stationName,
-          action.payload.userId,
-        );
+        // stationController.addStation(
+        //   action.payload.stationName,
+        //   action.payload.userId,
+        // );
+        stationController.addStation(action.payload.stationName);
         socket.emit('action', {
-          type: 'SERVER:CREATE_STATION_SUCESS',
+          type: SERVER_CREATE_STATION_SUCESS,
           payload: {
             station: stationController.getStationByName(
               action.payload.stationName,
@@ -37,13 +34,13 @@ export default (socket, io) => {
           action.payload.stationId,
         );
         socket.emit('action', {
-          type: 'SERVER:JOINED_STATION',
+          type: SERVER_JOINED_STATION_SUCESS,
           payload: {
             station: stationController.getStationById(action.payload.stationId),
           },
         });
         socket.broadcast.emit('action', {
-          type: 'SERVER:NEW_USER_JOINED',
+          type: SERVER_NEW_USER_JOINED,
           payload: {
             user: userController.getUserById(action.payload.userId),
           },
@@ -57,7 +54,7 @@ export default (socket, io) => {
           action.payload.userId,
         );
         io.sockets.emit('action', {
-          type: 'SERVER:UPDATE_PLAYLIST',
+          type: SERVER_UPDATE_PLAYLIST,
           payload: {
             playlist: stationController.getPlaylist(action.payload.stationId),
           },
@@ -71,7 +68,7 @@ export default (socket, io) => {
           action.payload.userId,
         );
         io.sockets.emit('action', {
-          type: 'SERVER:UPDATE_PLAYLIST',
+          type: SERVER_UPDATE_PLAYLIST,
           payload: {
             playlist: stationController.getPlaylist(action.payload.stationId),
           },
@@ -85,7 +82,7 @@ export default (socket, io) => {
           action.payload.userId,
         );
         io.sockets.emit('action', {
-          type: 'SERVER:UPDATE_PLAYLIST',
+          type: SERVER_UPDATE_PLAYLIST,
           payload: {
             playlist: stationController.getPlaylist(action.payload.stationId),
           },
