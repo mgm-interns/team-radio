@@ -1,0 +1,14 @@
+{
+  "extends": ["plugin:react/recommended"],
+  "plugins": ["react"],
+  "rules": {
+    "react/display-name": ["off"],
+    "class-methods-use-this": ["off"],
+    "global-require": ["off"],
+    "no-console": ["off"],
+    "react/prop-types": ["warn"]
+  },
+  "env": {
+    "browser": true
+  }
+}
