@@ -10,6 +10,13 @@ const PERMISSION_TYPE_GRANTED = 'granted';
 
 class BrowserNotification {
   constructor() {
+    // Check if Browser is support notification or not
+    if (!Notification) {
+      this.permission = PERMISSION_TYPE_DENIED;
+      return;
+    }
+
+    // If supported bind it
     this.permission = Notification.permission;
 
     switch (this.permission) {
