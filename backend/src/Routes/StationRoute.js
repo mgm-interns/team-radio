@@ -35,4 +35,8 @@ export default router => {
   router.put('/stations/:_id', function(req, res) {
     station.addSong(req, res);
   });
+  router.put('/stations/get/:_id', function(req, res) {
+    console.log("router");
+    station.setNowPlayingSong(req, res);
+  });
 };

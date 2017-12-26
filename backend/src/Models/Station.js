@@ -95,6 +95,19 @@ module.exports.addSong = function (stationName, song, callback) {
     callback,
   );
 };
+// The function update a field in db
+module.exports.updateFieldOfStationById = function (stationId, fieldNeedUpdate, valueNeedUpdate, callback) {
+  console.log('stationId : '+stationId);
+  var query = { _id: stationId };
+  Station.update({
+    $set: {
+      station_name: valueNeedUpdate
+    }
+  },
+    callback
+  );
+
+}
 // add song to playlist of id
 module.exports.addSongByStationId = function (stationId, song, callback) {
   var query = { _id: stationId };
@@ -125,4 +138,5 @@ module.exports.getPlaylistOfStationById = function (stationId, callback) {
   var query = { _id: stationId };
   Station.findOne(query, { playlist: true, _id: false }, callback);
 }
+// get a song of playlist in station with station id and song id
 

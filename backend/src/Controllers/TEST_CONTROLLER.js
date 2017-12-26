@@ -43,3 +43,10 @@ station.addSong = function (req, res) {
     res.json(allInfo);
   });
 };
+station.setNowPlayingSong = function(req,res)
+{
+  console.log("station");
+  stationController.setNowPlayingSong(req.params._id,'b','c',function(station){
+    res.json(station);
+  })
+}

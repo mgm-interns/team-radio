@@ -7,7 +7,8 @@ var Song = require('./SongController');
 var stationController = {};
 module.exports = stationController;
 // add a station
-stationController.addStation = async function (stationName, callback) {
+stationController.addStation = async function (currentStationName, callback) {
+  var stationName = currentStationName.toLowerCase();
   if (!stationName) {
     callback(null);
   } else {
@@ -102,7 +103,7 @@ stationController.getListSong = function (stationName, callback) {
 };
 
 // add the information the song in db
-stationController.addSong = async function (stationId, songUrl, callback) {
+stationController.addSong = async function (stationName, songUrl, callback) {
   // check url has empty
   if (!songUrl) {
     callback(null);
@@ -113,19 +114,22 @@ stationController.addSong = async function (stationId, songUrl, callback) {
       callback(null);
     } else {
       // get playlist of station
-      Station.getPlaylistOfStationById(stationId, function (err, currentStation) {
+      Station.getPlaylistOfStation(stationName, function (err, currentStation) {
         if (err) throw err;
 
         console.log("currentStation : "+currentStation);
         var currentPlaylist = currentStation.playlist;
         // if have not id in playlist
         if (validateDuplicatedSong(song._id, currentPlaylist)) {
-          Station.addSongByStationId(stationId, { song_id: song._id }, function (err, object) {
+          Station.addSong(stationName, { song_id: song._id }, function (err, object) {
             if (err) throw err;
 
+<<<<<<< Updated upstream
             console.log('object  ' + JSON.stringify(object));
+=======
+>>>>>>> Stashed changes
             // object have not list song of station
-            Station.getPlaylistOfStationById(stationId, function (err, currentListSong) {
+            Station.getPlaylistOfStation(stationName, function (err, currentListSong) {
               if (err) throw err;
               getAllInfoPlaylist(currentListSong.playlist, function (err, currentListSong) {
                 if (err) throw err;
@@ -141,6 +145,19 @@ stationController.addSong = async function (stationId, songUrl, callback) {
     }
   }
 };
+// 
+stationController.setNowPlayingSong = function (stationId, nextPlayingSong, currentPlayingSong, callback) {
+  if (currentPlayingSong) {
+    Station.updateFieldOfStationById(stationId, 'station_name', "mgm 112005", function (err, station) {
+      if (err) throw err;
+
+      console.log(JSON.stringify(station) + ' <-->');
+      callback(station);
+    });
+  }
+}
+
+
 /**
  * The function help covert string to url of station
  * */
