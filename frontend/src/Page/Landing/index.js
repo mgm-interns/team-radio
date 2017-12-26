@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
-
 import { NavBar, Footer, withNotification } from 'Component';
 
 import Backdrop from './Backdrop';
@@ -25,13 +24,23 @@ class Landing extends Component {
   // }
 
   componentDidMount() {
+    const { notification: { app, browser } } = this.props;
     let count = 0;
+    const duration = 2000;
+    // Call notification 3 times
     const interval = setInterval(async () => {
-      const result = await this.props.notification.success({
+      await app.success({
         message: 'Authentication is fucking failed!',
+        duration,
       });
+      const result = await browser.notify({
+        title: 'Authentication Error',
+        message: 'Authentication is fucking failed!',
+        duration,
+      });
+      console.log(result);
       count += 1;
-      if (count > 10) {
+      if (count > 3) {
         clearInterval(interval);
       }
     }, 300);
