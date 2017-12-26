@@ -21,7 +21,12 @@ export default (socket, io) => {
   socket.on('action', action => {
     switch (action.type) {
       case CLIENT_CREATE_STATION:
-        _onCreateStation(io, socket, action.payload.stationName);
+        _onCreateStation(
+          io,
+          socket,
+          action.payload.stationName,
+          action.payload.userId,
+        );
         break;
 
       case CLIENT_JOIN_STATION:
@@ -98,8 +103,8 @@ function _emitAll(io, type, payload) {
   });
 }
 
-function _onCreateStation(io, socket, stationName) {
-  stationController.addStation(stationName, (err, station) => {
+function _onCreateStation(io, socket, stationName, userId) {
+  stationController.addStation(stationName, userId, (err, station) => {
     _emit(socket, SERVER_CREATE_STATION_SUCCESS, {
       station: station,
     });
@@ -138,7 +143,7 @@ function _onLeaveStation(io, socket, userId, stationName) {
 }
 
 function _onAddLinkVideo(io, socket, stationName, songUrl, userId) {
-  stationController.addSong(stationName, songUrl, playlist => {
+  stationController.addSong(stationName, songUrl, userId, playlist => {
     _emitStation(io, stationName, SERVER_UPDATE_PLAYLIST, {
       playlist: playlist,
     });
