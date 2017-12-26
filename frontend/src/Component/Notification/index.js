@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { levels } from 'react-notification-system/src/constants';
 import AppNotification from './AppNotification';
 import BrowserNotification from './BrowserNotification';
 
 export const NOTIFICATION_DURATION = 5000;
+export const LEVELS = levels;
 
 /**
  * HOC to pass a appNotification prop to its child
@@ -36,6 +38,10 @@ export const withAppNotification = ChildComponent =>
  *
  * Available function in browserNotification:
  * - notify
+ * - info
+ * - success
+ * - warning
+ * - error
  */
 const browserNotification = new BrowserNotification();
 export const withBrowserNotification = ChildComponent =>
@@ -50,6 +56,15 @@ export const withBrowserNotification = ChildComponent =>
     }
   };
 
+/**
+ *
+ * HOC to pass a notification prop to its child
+ * @param ChildComponent
+ *
+ * Available props in notification:
+ * - app: refer to withAppNotification
+ * - browser: refer to withBrowserNotification
+ */
 export const withNotification = ChildComponent =>
   class extends Component {
     render() {

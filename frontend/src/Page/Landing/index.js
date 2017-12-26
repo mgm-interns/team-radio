@@ -33,12 +33,10 @@ class Landing extends Component {
         message: 'Authentication is fucking failed!',
         duration,
       });
-      const result = await browser.notify({
-        title: 'Authentication Error',
+      await browser.info({
         message: 'Authentication is fucking failed!',
         duration,
       });
-      console.log(result);
       count += 1;
       if (count > 3) {
         clearInterval(interval);

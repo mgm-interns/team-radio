@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import NotificationSystem from 'react-notification-system';
-import { levels } from 'react-notification-system/src/constants';
 import withTheme from 'material-ui/styles/withTheme';
 import { capitalizeFirstLetter } from 'material-ui/utils/helpers';
 import sleep from 'Util/sleep';
-import { NOTIFICATION_DURATION } from '.';
+import { NOTIFICATION_DURATION, LEVELS } from '.';
 import getStyles from './styles';
 
 const DEFAULT_NOTIFICATION = {
@@ -49,8 +48,8 @@ class AppNotification extends Component {
       },
     };
     /* eslint-disable array-callback-return */
-    Object.keys(levels).map(key => {
-      const level = levels[key];
+    Object.keys(LEVELS).map(key => {
+      const level = LEVELS[key];
       const title = capitalizeFirstLetter(`${level} !`);
       instance[level] = notification =>
         instance.add({ level, title, ...notification });

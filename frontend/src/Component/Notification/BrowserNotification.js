@@ -1,5 +1,6 @@
 import Images from 'Theme/Images';
-import { NOTIFICATION_DURATION } from '.';
+import { capitalizeFirstLetter } from 'material-ui/utils/helpers';
+import { NOTIFICATION_DURATION, LEVELS } from '.';
 
 /* eslint-disable */
 const PERMISSION_TYPE_DENIED = 'denied';
@@ -10,6 +11,7 @@ const PERMISSION_TYPE_GRANTED = 'granted';
 class BrowserNotification {
   constructor() {
     this.permission = Notification.permission;
+
     switch (this.permission) {
       case PERMISSION_TYPE_DENIED:
         break;
@@ -19,9 +21,23 @@ class BrowserNotification {
       default:
         break;
     }
+    /**
+     * Apply notification levels:
+     * - info
+     * - success
+     * - warning
+     * - error
+     */
+    /* eslint-disable array-callback-return */
+    Object.keys(LEVELS).map(key => {
+      const level = LEVELS[key];
+      const title = capitalizeFirstLetter(`${level} !`);
+      this[level] = notification => this.notify({ title, ...notification });
+    });
   }
 
   notify({ title, message, duration, ...others } = {}) {
+    // Ignore when permission is not GRANTED
     if (this.permission === PERMISSION_TYPE_DENIED) {
       return undefined;
     }
@@ -40,7 +56,5 @@ class BrowserNotification {
     return notification;
   }
 }
-
-BrowserNotification.propTypes = {};
 
 export default BrowserNotification;
