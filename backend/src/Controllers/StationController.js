@@ -96,7 +96,6 @@ stationController.getStations = function (callback) {
 stationController.getListSong = function (stationName, callback) {
   Station.findSongIdOfPlaylist(stationName, function (err, listSongs) {
     if (err) throw err;
-
     callback(listSongs);
   });
 };
@@ -119,9 +118,11 @@ stationController.addSong = async function (stationId, songUrl, callback) {
         var currentPlaylist = currentStation.playlist;
         // if have not id in playlist
         if (validateDuplicatedSong(song._id, currentPlaylist)) {
-          Station.addSongByStationId(stationId, { song_id: song._id }, function (err, object) {
+          Station.addSongByStationId(stationId, {
+            song_id: song._id
+          }, function (err, object) {
             if (err) throw err;
-            
+
             // object have not list song of station
             Station.getPlaylistOfStationById(stationId, function (err, currentListSong) {
               if (err) throw err;
@@ -148,6 +149,7 @@ function stringToUrl(str) {
     .replace(/ /g, '-')
     .replace(/[^a-z0-9\-]/g, '');
 }
+
 function createStationUrl(stationName, callback) {
   var url = stringToUrl(stationName);
   var newUrl = url;
