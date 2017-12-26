@@ -52,7 +52,6 @@ class Backdrop extends Component {
               <Input
                 id="station-name"
                 placeholder={fixture.input.placeholder}
-                margin="normal"
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
                 value={this.state.station_name}
