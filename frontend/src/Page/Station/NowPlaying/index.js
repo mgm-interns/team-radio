@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
-import { Player } from '../../../Component';
+import { Player } from 'Component';
 
 class NowPlaying extends Component {
   static propTypes = {

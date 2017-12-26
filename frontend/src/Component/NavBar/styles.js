@@ -1,15 +1,13 @@
 export default ({ breakpoints }) => ({
   container: {
     margin: 'auto',
-    zIndex: '3',
-    height: '8vh',
+    zIndex: '10',
     width: '100%',
     position: 'fixed',
     fontFamily: 'Lato',
     transition: 'all 0.3s',
     [breakpoints.down('md')]: {
       background: 'rgba(0,0,0,0.2)',
-      height: 'auto',
     },
   },
   wrapper: {
@@ -24,10 +22,11 @@ export default ({ breakpoints }) => ({
     justifyContent: 'flex-start',
   },
   img: {
-    height: '2em',
+    height: '3em',
   },
   logoName: {
-    fontSize: '1rem',
+    fontSize: '1.5rem',
+    fontFamily: 'Pacifico',
     color: 'white',
     textDecoration: 'none',
   },

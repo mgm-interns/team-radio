@@ -9,8 +9,8 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles } from 'material-ui/styles';
-import fixture from '../../../Fixture/landing';
-import { addStation } from '../../../Redux/api/stations/actions';
+import fixture from 'Fixture/landing';
+import { addStation } from 'Redux/api/stations';
 import styles from './styles';
 
 class Backdrop extends Component {
@@ -18,7 +18,7 @@ class Backdrop extends Component {
     super(props);
 
     this.state = {
-      stationName: '',
+      station_name: '',
     };
 
     this._handleStationNameChanged = this._handleStationNameChanged.bind(this);
@@ -26,12 +26,12 @@ class Backdrop extends Component {
   }
 
   _handleStationNameChanged(e) {
-    this.setState({ stationName: e.target.value });
+    this.setState({ station_name: e.target.value });
   }
 
   _submit() {
     this.props.addStation({
-      stationName: this.state.stationName,
+      station_name: this.state.station_name,
     });
   }
 
@@ -42,17 +42,20 @@ class Backdrop extends Component {
         <Grid container className={classes.foreground}>
           <Grid item xs sm={10} lg={8} className={classes.formInput}>
             <div className={classes.sloganContainer}>
+              <h1 className={classes.mainLine}>{fixture.name}</h1>
               <span className={classes.sloganText}>{fixture.slogan}</span>
             </div>
             <FormControl className={classes.textField} error={!!error}>
-              <InputLabel htmlFor="station-name">Your team station</InputLabel>
+              <InputLabel htmlFor="station-name">
+                {fixture.input.label}
+              </InputLabel>
               <Input
                 id="station-name"
-                placeholder="e.g. Awesome Station"
+                placeholder={fixture.input.placeholder}
                 margin="normal"
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
-                value={this.state.stationName}
+                value={this.state.station_name}
               />
               <FormHelperText>
                 {error && error.response && error.response.error.name}
@@ -63,19 +66,20 @@ class Backdrop extends Component {
             ) : (
               <Button
                 raised
-                color="primary"
+                color={fixture.button.color}
                 onClick={this._submit}
                 className={classes.buttonSend}
-                disabled={!this.state.stationName}
+                disabled={!this.state.station_name}
               >
-                Create <Icon className={classes.sendIcon}>send</Icon>
+                {fixture.button.name}
+                <Icon className={classes.sendIcon}>send</Icon>
               </Button>
             )}
           </Grid>
           <Grid item xs className={classes.backgroundImg}>
             <img
-              src="https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-483328.jpg"
-              alt="Team Radio - Cover"
+              src={fixture.background.src}
+              alt={fixture.background.alt}
               className={classes.backgroundImg}
             />
           </Grid>
@@ -92,9 +96,9 @@ Backdrop.propTypes = {
   addStation: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-  loading: state.api.stations.loading,
-  error: state.api.stations.error,
+const mapStateToProps = ({ api: { stations } }) => ({
+  loading: stations.add.loading,
+  error: stations.add.error,
 });
 
 const mapDispatchToProps = dispatch => ({

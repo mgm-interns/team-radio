@@ -6,9 +6,9 @@ import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
 import { CircularProgress } from 'material-ui/Progress';
 import Slider from 'react-slick';
-import { fetchStations } from '../../Redux/api/stations/actions';
-import { transformNumber } from '../../Transformer';
-import Images from '../../Theme/Images';
+import { fetchStations } from 'Redux/api/stations';
+import { transformNumber } from 'Transformer';
+import Images from 'Theme/Images';
 import styles from './styles';
 
 const { avatar1, avatar2, avatar3, avatar4, avatar5 } = Images.fixture;
@@ -58,7 +58,7 @@ class StationSwitcher extends Component {
   }
 
   _goToStationPage(station) {
-    this.props.history.push(`station/${station.stationName}`);
+    this.props.history.push(`station/${station.station_name}`);
   }
 
   _renderSwitcher() {
@@ -73,9 +73,12 @@ class StationSwitcher extends Component {
       swipeToSlide: true,
       infinite: false,
     };
-    stations.map(station => {
-      station.avatar = AVATARS_DEFAULT[transformNumber.random(1, 5)].avatar;
-    });
+
+    // Demo
+    const customStations = stations.map(station => ({
+      ...station,
+      avatar: AVATARS_DEFAULT[transformNumber.random(1, 5)].avatar,
+    }));
 
     return (
       <div
@@ -85,7 +88,7 @@ class StationSwitcher extends Component {
         }}
       >
         <Slider {...settings}>
-          {stations.map((station, index) => (
+          {customStations.map((station, index) => (
             <div
               key={index}
               className={[
@@ -97,7 +100,7 @@ class StationSwitcher extends Component {
               <img src={station.avatar} className={classes.station_avatar} />
               <div className={classes.station_info}>
                 <span className={classes.station_title}>
-                  {station.stationName}
+                  {station.station_name}
                 </span>
                 {/*
                 <span className={classes.station_subtitle}>
@@ -148,7 +151,7 @@ class StationSwitcher extends Component {
 }
 
 const mapStateToProps = ({ api: { stations } }) => ({
-  stations: stations.data.data,
+  stations: stations.fetch.data,
 });
 
 const mapDispatchToProps = dispatch => ({
