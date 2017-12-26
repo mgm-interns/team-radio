@@ -4,7 +4,7 @@ import {
   CLIENT_UPVOTE_VIDEO,
   CLIENT_UN_UPVOTE_VIDEO,
   CLIENT_ADD_LINK_VIDEO,
-} from '../../../../../lib/actions';
+} from '../../../../lib/actions';
 
 // Client action creator
 

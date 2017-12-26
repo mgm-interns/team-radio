@@ -5,7 +5,7 @@ import {
   SERVER_JOINED_STATION_SUCESS,
   SERVER_NEW_USER_JOINED,
   SERVER_UPDATE_PLAYLIST,
-} from '../../../lib/actions';
+} from '../lib/actions';
 
 /* eslint-disable import/no-named-as-default-member */
 export default (socket, io) => {
@@ -33,6 +33,7 @@ export default (socket, io) => {
           action.payload.userId,
           action.payload.stationId,
         );
+        socket.join(action.payload.stationId);
         socket.emit('action', {
           type: SERVER_JOINED_STATION_SUCESS,
           payload: {
