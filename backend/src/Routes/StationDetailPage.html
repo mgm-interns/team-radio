@@ -6,51 +6,29 @@
    <script src = "/socket.io/socket.io.js"></script>
    
    <script>
-     var beginUrl = 'teststations/';
-     var stationUrl = window.location.href.substr(window.location.href.search(beginUrl) + beginUrl.length);
-      var socket = io('/station');
-      var stationName = stationUrl; // In the moment, get station name in url
-      socket.emit('join-station', stationName);
-      socket.on('message', function(stationName){
-        document.getElementById('event').innerHTML = 'message';
-        document.getElementById('data').innerHTML = stationName;
-        console.log(stationName);
-      });
+    var beginUrl = 'teststations/';
+    var stationUrl = window.location.href.substr(window.location.href.search(beginUrl) + beginUrl.length);
+    var socket = io('/station');
+    socket.emit('action', {type: 'CLIENT:JOIN_STATION_REQUEST', payload: {station_url: stationUrl}});
+    socket.emit('CLIENT:JOIN_STATION_REQUEST', stationName);
 
-      socket.on('join-station-failure', function(stationName){
-        document.getElementById('event').innerHTML = 'join-station-failure';
-        document.getElementById('data').innerHTML = stationName;
-      });
+    // Received action from the server
+    socket.on('action', function(data){
+      document.getElementById('event').innerHTML = data.type;
+      document.getElementById('data').innerHTML = data.payload;
+      console.log(data);
+    });
 
-      // Received play list from server
-      socket.on('play-list', function(playList){
-        document.getElementById('event').innerHTML = 'play-list';
-        document.getElementById('data').innerHTML = playList;
-        console.log(playList);
-      });
+    // Add new song to the station
+    function addNewSong(songUrl){
+      socket.emit('action', {type: 'CLIENT:ADD_SONG_REQUEST', payload: {song_url: songUrl}});
+    }
 
-      // Received now playing song from server
-      socket.on('now-playing', function(nowPlaying){
-        document.getElementById('event').innerHTML = 'now-playing';
-        document.getElementById('data').innerHTML = nowPlaying;
-      })
-
-      // Received new song from server
-      socket.on('add-new-song', function(newSong){
-        document.getElementById('event').innerHTML = 'add-new-song';
-        document.getElementById('data').innerHTML = newSong;
-      })
-
-      // Add new song to the station
-      function addNewSong(songUrl){
-        socket.emit('add-new-song', songUrl);
-      }
-
-      // testing function
-      function sendToServer(){
-        var input = document.getElementById('input').value;
-        addNewSong(input);
-      }
+    // Test
+    function sendToServer(){
+      var input = document.getElementById('input').value;
+      addNewSong(input);
+    }
    </script>
    <body>
      Input: <input type="text" id="input">
