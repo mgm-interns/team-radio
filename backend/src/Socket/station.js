@@ -144,7 +144,8 @@ function _onLeaveStation(io, socket, userId, stationName) {
 }
 
 function _onAddLinkVideo(io, socket, stationName, songUrl, userId) {
-  stationController.addSong(stationName, songUrl, userId, playlist => {
+  // stationController.addSong(stationName, songUrl, userId, playlist => {
+  stationController.addSong(stationName, songUrl, playlist => {
     _emitStation(io, stationName, SERVER_UPDATE_PLAYLIST, {
       playlist: playlist,
     });
