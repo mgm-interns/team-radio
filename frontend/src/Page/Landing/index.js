@@ -19,8 +19,8 @@ class Landing extends Component {
   //   const nextStationId =
   //     nextProps.currentStation.station && nextProps.currentStation.station._id;
   //   if (currentStationId !== nextStationId) {
-  //     const { stationName } = nextProps.currentStation.station;
-  //     history.push(`/station/${stationName}`);
+  //     const { station_name } = nextProps.currentStation.station;
+  //     history.push(`/station/${station_name}`);
   //   }
   // }
 

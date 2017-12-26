@@ -58,7 +58,7 @@ class StationSwitcher extends Component {
   }
 
   _goToStationPage(station) {
-    this.props.history.push(`station/${station.stationName}`);
+    this.props.history.push(`station/${station.station_name}`);
   }
 
   _renderSwitcher() {
@@ -73,9 +73,12 @@ class StationSwitcher extends Component {
       swipeToSlide: true,
       infinite: false,
     };
-    stations.map(station => {
-      station.avatar = AVATARS_DEFAULT[transformNumber.random(1, 5)].avatar;
-    });
+
+    // Demo
+    const customStations = stations.map(station => ({
+      ...station,
+      avatar: AVATARS_DEFAULT[transformNumber.random(1, 5)].avatar,
+    }));
 
     return (
       <div
@@ -85,7 +88,7 @@ class StationSwitcher extends Component {
         }}
       >
         <Slider {...settings}>
-          {stations.map((station, index) => (
+          {customStations.map((station, index) => (
             <div
               key={index}
               className={[
@@ -97,7 +100,7 @@ class StationSwitcher extends Component {
               <img src={station.avatar} className={classes.station_avatar} />
               <div className={classes.station_info}>
                 <span className={classes.station_title}>
-                  {station.stationName}
+                  {station.station_name}
                 </span>
                 {/*
                 <span className={classes.station_subtitle}>
