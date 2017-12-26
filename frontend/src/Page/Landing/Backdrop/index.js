@@ -72,7 +72,7 @@ class Backdrop extends Component {
                 disabled={!this.state.station_name}
               >
                 {fixture.button.name}
-                <Icon className={classes.sendIcon}>send</Icon>
+                <Icon className={classes.sendIcon}>radio</Icon>
               </Button>
             )}
           </Grid>

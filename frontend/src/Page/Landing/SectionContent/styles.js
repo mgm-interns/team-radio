@@ -10,6 +10,7 @@ export default ({ palette, breakpoints }) => ({
       minWidth: 1024,
       maxWidth: 1280,
     },
+    margin: 0,
   },
   textContent: {
     paddingTop: '2em',
