@@ -25,15 +25,13 @@ class Landing extends Component {
   // }
 
   render() {
-    return (
-      <div>
-        <NavBar />
-        <Backdrop />
-        <SectionCover />
-        <SectionContent />
-        <Footer />
-      </div>
-    );
+    return [
+      <NavBar key={1} />,
+      <Backdrop key={2} />,
+      <SectionCover key={3} />,
+      <SectionContent key={4} />,
+      <Footer key={5} />,
+    ];
   }
 }
 
