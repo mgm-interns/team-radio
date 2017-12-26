@@ -116,14 +116,12 @@ stationController.addSong = async function (stationId, songUrl, callback) {
       Station.getPlaylistOfStationById(stationId, function (err, currentStation) {
         if (err) throw err;
 
-        console.log("currentStation : "+currentStation);
         var currentPlaylist = currentStation.playlist;
         // if have not id in playlist
         if (validateDuplicatedSong(song._id, currentPlaylist)) {
           Station.addSongByStationId(stationId, { song_id: song._id }, function (err, object) {
             if (err) throw err;
-
-            console.log('object  ' + JSON.stringify(object));
+            
             // object have not list song of station
             Station.getPlaylistOfStationById(stationId, function (err, currentListSong) {
               if (err) throw err;
