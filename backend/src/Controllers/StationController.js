@@ -18,7 +18,7 @@ stationController.addStation = async function(stationName, callback) {
       if (!currentStation) {
         // Create a new station
         var currentUrl;
-        createStationUrl(stationName, function(err, url) {
+        createStationUrl(stationName, function(url) {
           currentUrl = url;
         });
         var station = {
