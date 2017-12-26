@@ -33,5 +33,9 @@ export default function initRedux(initialState = {}) {
   if (!store) {
     store = create(initialState);
   }
+  // Export store to be a global variable in development evironment
+  if (process.env.NODE_ENV === 'development') {
+    window.store = store;
+  }
   return store;
 }

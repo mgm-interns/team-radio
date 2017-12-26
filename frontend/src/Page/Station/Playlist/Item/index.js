@@ -5,9 +5,12 @@ import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { upVoteVideo, unUpVoteVideo } from 'Redux/api/currentStation/actions';
 import styles from './styles';
-import { upVoteVideo, unUpVoteVideo } from '../../../../Redux/api/currentStation/actions';
 
+/* eslint-disable no-return-assign */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-shadow */
 class PlaylistItem extends Component {
   render() {
     const {
@@ -23,26 +26,35 @@ class PlaylistItem extends Component {
       id,
     } = this.props;
     return (
-      <Grid container className={[classes.container, playing && 'playing']}>
+      <Grid
+        container
+        className={[classes.container, playing ? 'playing' : ''].reduce(
+          (classesName, className) => (classesName += ` ${className}`),
+        )}
+      >
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} alt="" />
         </Grid>
         <Grid item xs={7} className={classes.info}>
-          <Grid className={classes.name}>{name}</Grid>
-          <Grid className={classes.singer}>{singer}</Grid>
-          <Grid className={classes.uploader}>Added by {uploader}</Grid>
+          <div className={classes.name}>{name}</div>
+          <div className={classes.singer}>{singer}</div>
+          <div className={classes.uploader}>Added by {uploader}</div>
         </Grid>
         <Grid item xs={2} className={classes.actions}>
           <IconButton
             onClick={() => upVoteVideo(id)}
             className={classes.action}
-            color={isUpvoted ? 'primary' : 'secondary'}
+            color={isUpvoted ? 'primary' : 'default'}
           >
             star
           </IconButton>
-          <Grid className={[classes.score, isUpvoted && 'active']}>
+          <div
+            className={[classes.score, isUpvoted ? 'active' : ''].reduce(
+              (classesName, className) => (classesName += ` ${className}`),
+            )}
+          >
             {score}
-          </Grid>
+          </div>
         </Grid>
       </Grid>
     );
@@ -55,6 +67,7 @@ PlaylistItem.propTypes = {
   score: PropTypes.number,
   singer: PropTypes.string,
   uploader: PropTypes.string,
+  id: PropTypes.string,
   isUpvoted: PropTypes.bool,
   playing: PropTypes.bool,
   theme: PropTypes.any,

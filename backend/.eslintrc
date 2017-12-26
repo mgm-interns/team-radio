@@ -6,6 +6,9 @@
     "prefer-template": ["off"],
     "no-use-before-define":"warn",
     "prefer-arrow-callback": ["off"],
-    "object-shorthand":"off"
+    "object-shorthand":"off",
+    "no-var":"off",
+    "vars-on-top": "off",
+    "no-param-reassign": "warn"
   }
 }

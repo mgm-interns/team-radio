@@ -1,10 +1,8 @@
-import { Schema, model } from 'mongoose';
-
 /* eslint-disable */
 var mongoose = require('mongoose');
 //const ObjectId = mongoose.Schema.Types.ObjectId;
 var stationSchema = mongoose.Schema({
-  stationName: {
+  station_name: {
     type: String,
     require: true,
   },
@@ -12,36 +10,53 @@ var stationSchema = mongoose.Schema({
     type: String,
     require: true,
   },
-  owner: {
-    type: String,
-    default: 'unknown',
+  owner_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: null,
+  },
+  now_playing: {
+    song_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      require: true,
+    },
+    description: {},
+    started_time: {
+      type: Number,
+      require: true,
+    },
+    default: '',
   },
   playlist: [
     {
-      songId: {
+      song_id: {
         type: mongoose.Schema.Types.ObjectId,
         require: true,
-        ref: 'songs',
+        //  ref : "songs"
       },
-      addId: {
+      visible: {
+        type: Boolean,
+        default: true,
+      },
+      description: {},
+      creator_id: {
         type: String,
       },
-      upVote: [
+      up_vote: [
         String, // userID
       ],
-      downVote: [
+      down_vote: [
         String,
         // userID
       ],
-      create_day: {
-        type: Date,
-        default: Date.now,
+      created_day: {
+        type: Number,
+        default: new Date().getTime(),
       },
     },
   ],
-  create_day: {
-    type: Date,
-    default: Date.now,
+  created_day: {
+    type: Number,
+    default: new Date().getTime(),
   },
 });
 
@@ -57,27 +72,56 @@ module.exports.getStations = function(callback, limit) {
 };
 // get station from name
 module.exports.getStationByName = function(stationNameToFind, callback) {
-  Station.findOne({ stationName: stationNameToFind }, callback);
+  Station.findOne({ station_name: stationNameToFind }, callback);
 };
-// get station by station url
-module.exports.getStationByUrl = function(stationUrlToFind) {
-  Station.findOne({ stationUrl: stationUrlToFind });
+// get station from url
+module.exports.getStationByUrl = function(urlToFind, callback) {
+  Station.findOne({ url: urlToFind }, callback);
 };
-// update playlist of station
-module.exports.addVideo = function(stationName, video, callback) {
-  var query = { stationName: stationName };
-  var videoToAdd = {
-    $addToSet: {
-      playlist: video,
+//get station from id
+module.exports.getStationById = function(stationID, callback) {
+  Station.findOne({ _id: stationID }, callback);
+};
+// add song to playlist of station
+module.exports.addSong = function(stationName, song, callback) {
+  var query = { station_name: stationName };
+  Station.update(
+    query,
+    {
+      $addToSet: {
+        playlist: song,
+      },
     },
-  };
-  Station.update(query, videoToAdd, callback);
+    callback,
+  );
 };
-
+// add song to playlist of id
+module.exports.addSongByStationId = function(stationId, song, callback) {
+  var query = { _id: stationId };
+  Station.update(
+    query,
+    {
+      $addToSet: {
+        playlist: song,
+      },
+    },
+    callback,
+  );
+};
 //get playlist of station
 module.exports.findSongIdOfPlaylist = function(stationName, callback) {
   console.log('1*******\n');
   var query = { stationName: stationName };
   Station.find(query).toArray(callback);
   console.log('2****\n');
+};
+//get playlist of station
+module.exports.getPlaylistOfStation = function(stationName, callback) {
+  var query = { station_name: stationName };
+  Station.findOne(query, { playlist: true, _id: false }, callback);
+};
+//get playlist of station by station id
+module.exports.getPlaylistOfStationById = function(stationId, callback) {
+  var query = { _id: stationId };
+  Station.findOne(query, { playlist: true, _id: false }, callback);
 };

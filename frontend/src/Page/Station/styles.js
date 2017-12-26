@@ -1,12 +1,18 @@
 export default theme => ({
+  containerWrapper: {
+    width: '100%',
+    margin: 0,
+    paddingBottom: 50, // Footer height
+  },
   container: {
     margin: 'auto',
-    paddingTop: `12px !important`,
-    width: '100%',
+    // width: '100%',
     [theme.breakpoints.up('lg')]: {
-      paddingTop: `36px !important`,
       minWidth: 1024,
       maxWidth: 1280,
+    },
+    '& h1': {
+      fontWeight: 'normal',
     },
   },
   switcherContainer: {

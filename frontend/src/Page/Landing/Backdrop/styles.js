@@ -1,18 +1,20 @@
 export default ({ palette, breakpoints }) => ({
   container: {
     margin: 'auto',
-    width: '100vw',
-    background: palette.darkGreen['500'],
+    width: '100%',
+    background: palette.secondary['500'],
   },
   foreground: {
-    minHeight: 550,
-    height: '100vh',
+    height: '80vh',
     width: '100%',
     zIndex: 0,
     margin: 'auto',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
+    },
+    [breakpoints.down('sm')]: {
+      height: '100vh',
     },
   },
   sloganContainer: {
@@ -22,25 +24,35 @@ export default ({ palette, breakpoints }) => ({
   },
   backgroundImg: {
     position: 'absolute',
-    width: '100vw',
-    height: '100vh',
+    width: '100%',
+    height: '80vh',
     top: 0,
     left: 0,
     margin: 'auto',
-    filter: 'opacity(0.6)',
+    filter: 'opacity(0.7)',
     zIndex: -1,
     objectFit: 'cover',
+    [breakpoints.down('sm')]: {
+      height: '100vh',
+    },
+  },
+  mainLine: {
+    cursor: 'default',
+    color: 'white',
+    fontSize: '3em',
+    [breakpoints.up('md')]: {
+      fontSize: '7em',
+    },
   },
   sloganText: {
-    fontSize: '1.8rem',
+    cursor: 'default',
+    fontSize: '2rem',
+    fontWeight: '200',
     color: 'white',
     textAlign: 'center',
     zIndex: 2,
-    [breakpoints.up('md')]: {
+    [breakpoints.up('sm')]: {
       fontSize: '2.5rem',
-    },
-    [breakpoints.up('lg')]: {
-      fontSize: '3rem',
     },
   },
   formInput: {
@@ -84,8 +96,8 @@ export default ({ palette, breakpoints }) => ({
       paddingBottom: '1em',
     },
     [breakpoints.up('sm')]: {
-      marginTop: '10em',
-      width: '40vh',
+      marginTop: '7em',
+      width: '30vh',
     },
   },
   buttonSend: {
