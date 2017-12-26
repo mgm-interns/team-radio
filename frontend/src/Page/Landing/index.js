@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
 
-import { NavBar, Footer } from 'Component';
+import { NavBar, Footer, withNotification } from 'Component';
 
 import Backdrop from './Backdrop';
 import SectionCover from './SectionCover';
@@ -24,6 +24,20 @@ class Landing extends Component {
   //   }
   // }
 
+  componentDidMount() {
+    let count = 0;
+    const interval = setInterval(async () => {
+      const result = await this.props.notification.success({
+        message: 'Authentication is fucking failed!',
+      });
+      count += 1;
+      if (count > 10) {
+        clearInterval(interval);
+      }
+      console.log(result);
+    }, 300);
+  }
+
   render() {
     return (
       <div>
@@ -38,6 +52,7 @@ class Landing extends Component {
 }
 
 Landing.propTypes = {
+  notification: PropTypes.object,
   currentStation: PropTypes.object,
   history: PropTypes.object,
 };
@@ -46,4 +61,6 @@ const mapStateToProps = state => ({
   currentStation: state.api.currentStation,
 });
 
-export default compose(connect(mapStateToProps), withRouter)(Landing);
+export default compose(connect(mapStateToProps), withRouter, withNotification)(
+  Landing,
+);

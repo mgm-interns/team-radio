@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
+import { Notification } from 'Component';
 import Router from './Router';
 import { initRedux } from '../Config';
 import styles from './styles';
@@ -12,5 +13,6 @@ export default withStyles(styles)(({ classes }) => (
     <Provider store={store}>
       <Router />
     </Provider>
+    <Notification />
   </div>
 ));
