@@ -124,10 +124,6 @@ stationController.addSong = async function (stationName, songUrl, callback) {
           Station.addSong(stationName, { song_id: song._id }, function (err, object) {
             if (err) throw err;
 
-<<<<<<< Updated upstream
-            console.log('object  ' + JSON.stringify(object));
-=======
->>>>>>> Stashed changes
             // object have not list song of station
             Station.getPlaylistOfStation(stationName, function (err, currentListSong) {
               if (err) throw err;
