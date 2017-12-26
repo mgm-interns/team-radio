@@ -7,12 +7,7 @@ const stationController = require('./Controllers/StationController');
 const io = require('socket.io')();
 const stationNsp = io.of('/station');
 
-io.on('connection', function(socket) {
-  console.log('#THANG: Socket connected: ' + socket.id);
-});
-
 stationNsp.on('connection', async function(socket) {
-  console.log('#THANG NSP: Socket connected: ' + socket.id);
   socket.on('action', function(data) {
     switch (data.type) {
       // Client join to a station
@@ -43,7 +38,6 @@ stationNsp.on('connection', async function(socket) {
 });
 
 async function joinStation(socket, payload) {
-  console.log('Payload: ' + payload);
   // Verify payload and ayload.station_url
   if (payload === undefined || (payload.station_url + '').length < 1) {
     socket.emit('action', responeModel('SERVER:JOIN_STATION_FAILURE', payload));
@@ -51,8 +45,6 @@ async function joinStation(socket, payload) {
     var stationUrl = payload.station_url + ''; // Make use that stationUrl is a string
     // Only use the getStationByName2 at the moment => change to getStationByUrl
     stationController.getStationByUrl(stationUrl, function(stationDetail) {
-      console.log('Station detail: ' + stationUrl);
-      console.log(stationDetail);
       // Verify the station url
       if (stationDetail == null) {
         // The station is not existed
@@ -68,7 +60,6 @@ async function joinStation(socket, payload) {
         );
         // Set station id for the client socket
         socket.stationId = stationDetail._id;
-        socket.stationId = stationDetail.station_name; // for run temp StationController
         // Client join to the station
         socket.join(socket.stationId);
         // Warn to orther clients if it is necssesary
