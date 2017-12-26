@@ -7,8 +7,6 @@ import { capitalizeFirstLetter } from 'material-ui/utils/helpers';
 import sleep from 'Util/sleep';
 import getStyles from './styles';
 
-console.log(levels);
-
 const DEFAULT_NOTIFICATION = {
   position: 'br',
   autoDismiss: 0,

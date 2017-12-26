@@ -34,7 +34,6 @@ class Landing extends Component {
       if (count > 10) {
         clearInterval(interval);
       }
-      console.log(result);
     }, 300);
   }
 
