@@ -78,9 +78,26 @@ module.exports.getStationByName = function (stationNameToFind, callback) {
 module.exports.getStationByUrl = function (urlToFind, callback) {
   Station.findOne({ url: urlToFind }, callback);
 };
+//get station from id
+module.exports.getStationById = function (stationID, callback) {
+  Station.findOne({ _id: stationID }, callback);
+}
 // add song to playlist of station
 module.exports.addSong = function (stationName, song, callback) {
   var query = { station_name: stationName };
+  Station.update(
+    query,
+    {
+      $addToSet: {
+        playlist: song,
+      },
+    },
+    callback,
+  );
+};
+// add song to playlist of id
+module.exports.addSongByStationId = function (stationId, song, callback) {
+  var query = { _id: stationId };
   Station.update(
     query,
     {
@@ -103,3 +120,9 @@ module.exports.getPlaylistOfStation = function (stationName, callback) {
   var query = { station_name: stationName };
   Station.findOne(query, { playlist: true, _id: false }, callback);
 }
+//get playlist of station by station id
+module.exports.getPlaylistOfStationById = function (stationId, callback) {
+  var query = { _id: stationId };
+  Station.findOne(query, { playlist: true, _id: false }, callback);
+}
+

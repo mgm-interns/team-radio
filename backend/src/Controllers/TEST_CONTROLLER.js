@@ -25,6 +25,12 @@ station.getStationByUrl = function (req, res) {
     res.json(station);
   });
 };
+station.getStationById = function (req, res) {
+  stationController.getStationById(req.params.id, function (station) {
+    
+    res.json(station);
+  });
+};
 station.getStations = function (req, res) {
   stationController.getStations(function (stations) {
     
@@ -32,7 +38,7 @@ station.getStations = function (req, res) {
   });
 };
 station.addSong = function (req, res) {
-  stationController.addSong(req.params.stationName, req.body.url, function (allInfo) {
+  stationController.addSong(req.params._id, req.body.url, function (allInfo) {
     
     res.json(allInfo);
   });

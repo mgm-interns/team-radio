@@ -7,25 +7,25 @@ var Song = require('./SongController');
 var stationController = {};
 module.exports = stationController;
 // add a station
-stationController.addStation = async function(stationName, callback) {
+stationController.addStation = async function (stationName, callback) {
   if (!stationName) {
     callback(null);
   } else {
     // Check if station is available
-    Station.getStationByName(stationName, function(err, currentStation) {
+    Station.getStationByName(stationName, function (err, currentStation) {
       if (err) throw err;
 
       if (!currentStation) {
         // Create a new station
         var currentUrl;
-        createStationUrl(stationName, function(url) {
+        createStationUrl(stationName, function (url) {
           currentUrl = url;
         });
         var station = {
           station_name: stationName,
           url: currentUrl,
         };
-        Station.addStation(station, function(err, station) {
+        Station.addStation(station, function (err, station) {
           if (err) throw err;
 
           callback(station);
@@ -38,14 +38,14 @@ stationController.addStation = async function(stationName, callback) {
   }
 };
 // get a station by name
-stationController.getStationByName = function(stationName, callback) {
-  Station.getStationByName(stationName, function(err, currentStation) {
+stationController.getStationByName = function (stationName, callback) {
+  Station.getStationByName(stationName, function (err, currentStation) {
     if (err) throw err;
 
     if (!currentStation) {
       callback(null);
     } else {
-      getAllInfoPlaylist(currentStation.playlist, function(err, playlist) {
+      getAllInfoPlaylist(currentStation.playlist, function (err, playlist) {
         currentStation.playlist = playlist;
         callback(currentStation);
       });
@@ -53,14 +53,30 @@ stationController.getStationByName = function(stationName, callback) {
   });
 };
 // get a station by url
-stationController.getStationByUrl = function(urlOfStation, callback) {
-  Station.getStationByUrl(urlOfStation, function(err, currentStation) {
+stationController.getStationByUrl = function (urlOfStation, callback) {
+  Station.getStationByUrl(urlOfStation, function (err, currentStation) {
     if (err) throw err;
 
     if (!currentStation) {
       callback(null);
     } else {
-      getAllInfoPlaylist(currentStation.playlist, function(err, playlist) {
+      getAllInfoPlaylist(currentStation.playlist, function (err, playlist) {
+        currentStation.playlist = playlist;
+        callback(currentStation);
+      });
+    }
+  });
+};
+// get a station by id
+stationController.getStationById = function (stationId, callback) {
+  Station.getStationById(stationId, function (err, currentStation) {
+    if (err) throw err;
+
+    console.log('currentStation : ' + currentStation);
+    if (!currentStation) {
+      callback(null);
+    } else {
+      getAllInfoPlaylist(currentStation.playlist, function (err, playlist) {
         currentStation.playlist = playlist;
         callback(currentStation);
       });
@@ -68,8 +84,8 @@ stationController.getStationByUrl = function(urlOfStation, callback) {
   });
 };
 // get list station but can limit if need
-stationController.getStations = function(callback) {
-  Station.getStations(function(err, stations) {
+stationController.getStations = function (callback) {
+  Station.getStations(function (err, stations) {
     if (err) throw err;
 
     callback(stations);
@@ -77,8 +93,8 @@ stationController.getStations = function(callback) {
 };
 
 // get play list
-stationController.getListSong = function(stationName, callback) {
-  Station.findSongIdOfPlaylist(stationName, function(err, listSongs) {
+stationController.getListSong = function (stationName, callback) {
+  Station.findSongIdOfPlaylist(stationName, function (err, listSongs) {
     if (err) throw err;
 
     callback(listSongs);
@@ -86,7 +102,7 @@ stationController.getListSong = function(stationName, callback) {
 };
 
 // add the information the song in db
-stationController.addSong = async function(stationName, songUrl, callback) {
+stationController.addSong = async function (stationId, songUrl, callback) {
   // check url has empty
   if (!songUrl) {
     callback(null);
@@ -97,29 +113,21 @@ stationController.addSong = async function(stationName, songUrl, callback) {
       callback(null);
     } else {
       // get playlist of station
-      Station.getPlaylistOfStation(stationName, function(err, currentStation) {
+      Station.getPlaylistOfStationById(stationId, function (err, currentStation) {
         if (err) throw err;
 
+        console.log("currentStation : "+currentStation);
         var currentPlaylist = currentStation.playlist;
         // if have not id in playlist
         if (validateDuplicatedSong(song._id, currentPlaylist)) {
-          Station.addSong(stationName, { song_id: song._id }, function(
-            err,
-            object,
-          ) {
+          Station.addSongByStationId(stationId, { song_id: song._id }, function (err, object) {
             if (err) throw err;
 
             console.log('object  ' + JSON.stringify(object));
             // object have not list song of station
-            Station.getPlaylistOfStation(stationName, function(
-              err,
-              currentListSong,
-            ) {
+            Station.getPlaylistOfStationById(stationId, function (err, currentListSong) {
               if (err) throw err;
-              getAllInfoPlaylist(currentListSong.playlist, function(
-                err,
-                currentListSong,
-              ) {
+              getAllInfoPlaylist(currentListSong.playlist, function (err, currentListSong) {
                 if (err) throw err;
                 // return currentListSong;
                 callback(currentListSong);
@@ -146,7 +154,7 @@ function createStationUrl(stationName, callback) {
   var url = stringToUrl(stationName);
   var newUrl = url;
   var i = 1;
-  Station.getStationByUrl(newUrl, function(err, currentUrl) {
+  Station.getStationByUrl(newUrl, function (err, currentUrl) {
     if (err) throw err;
 
     if (!currentUrl) {
