@@ -67,6 +67,22 @@ stationController.getStationByUrl = function(urlOfStation, callback) {
     }
   });
 };
+// get a station by id
+stationController.getStationById = function(stationId, callback) {
+  Station.getStationById(stationId, function(err, currentStation) {
+    if (err) throw err;
+
+    console.log('currentStation : ' + currentStation);
+    if (!currentStation) {
+      callback(null);
+    } else {
+      getAllInfoPlaylist(currentStation.playlist, function(err, playlist) {
+        currentStation.playlist = playlist;
+        callback(currentStation);
+      });
+    }
+  });
+};
 // get list station but can limit if need
 stationController.getStations = function(callback) {
   Station.getStations(function(err, stations) {
@@ -86,7 +102,7 @@ stationController.getListSong = function(stationName, callback) {
 };
 
 // add the information the song in db
-stationController.addSong = async function(stationName, songUrl, callback) {
+stationController.addSong = async function(stationId, songUrl, callback) {
   // check url has empty
   if (!songUrl) {
     callback(null);
@@ -97,21 +113,23 @@ stationController.addSong = async function(stationName, songUrl, callback) {
       callback(null);
     } else {
       // get playlist of station
-      Station.getPlaylistOfStation(stationName, function(err, currentStation) {
+      Station.getPlaylistOfStationById(stationId, function(
+        err,
+        currentStation,
+      ) {
         if (err) throw err;
 
         var currentPlaylist = currentStation.playlist;
         // if have not id in playlist
         if (validateDuplicatedSong(song._id, currentPlaylist)) {
-          Station.addSong(stationName, { song_id: song._id }, function(
+          Station.addSongByStationId(stationId, { song_id: song._id }, function(
             err,
             object,
           ) {
             if (err) throw err;
 
-            console.log('object  ' + JSON.stringify(object));
             // object have not list song of station
-            Station.getPlaylistOfStation(stationName, function(
+            Station.getPlaylistOfStationById(stationId, function(
               err,
               currentListSong,
             ) {
