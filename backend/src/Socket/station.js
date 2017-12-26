@@ -104,7 +104,8 @@ function _emitAll(io, type, payload) {
 }
 
 function _onCreateStation(io, socket, stationName, userId) {
-  stationController.addStation(stationName, userId, (err, station) => {
+  // stationController.addStation(stationName, userId, (err, station) => {
+  stationController.addStation(stationName, station => {
     _emit(socket, SERVER_CREATE_STATION_SUCCESS, {
       station: station,
     });
