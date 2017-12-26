@@ -13,6 +13,9 @@ export default ({ palette, breakpoints }) => ({
       minWidth: 1024,
       maxWidth: 1280,
     },
+    [breakpoints.down('sm')]: {
+      height: '100vh',
+    },
   },
   sloganContainer: {
     [breakpoints.down('sm')]: {
@@ -29,6 +32,9 @@ export default ({ palette, breakpoints }) => ({
     filter: 'opacity(0.7)',
     zIndex: -1,
     objectFit: 'cover',
+    [breakpoints.down('sm')]: {
+      height: '100vh',
+    },
   },
   mainLine: {
     cursor: 'default',
