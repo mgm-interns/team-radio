@@ -8,7 +8,8 @@ const handlers = [
   // Declare api handlers
   require('./SongRoute'),
   require('./StationRoute'),
-  require('./SocketRoute'),
+  require('./UserRoute'),
+  require('./SocketRoute')
 ];
 
 // Register handlers
