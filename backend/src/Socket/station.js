@@ -1,9 +1,17 @@
 import stationController from '../Controllers/StationController';
 import userController from '../Controllers/UserController';
 import {
-  SERVER_CREATE_STATION_SUCESS,
-  SERVER_JOINED_STATION_SUCESS,
+  CLIENT_CREATE_STATION,
+  CLIENT_JOIN_STATION,
+  CLIENT_LEAVE_STATION,
+  CLIENT_ADD_LINK_VIDEO,
+  CLIENT_UPVOTE_VIDEO,
+  CLIENT_DOWNVOTE_VIDEO,
+  SERVER_CREATE_STATION_SUCCESS,
+  SERVER_JOINED_STATION_SUCCESS,
   SERVER_NEW_USER_JOINED,
+  SERVER_LEFT_STATION_SUCCESS,
+  SERVER_USER_LEFT,
   SERVER_UPDATE_PLAYLIST,
 } from '../lib/actions';
 
@@ -12,85 +20,143 @@ export default (socket, io) => {
   // handle redux action
   socket.on('action', action => {
     switch (action.type) {
-      case 'CLIENT:CREATE_STATION':
-        // stationController.addStation(
-        //   action.payload.stationName,
-        //   action.payload.userId,
-        // );
-        stationController.addStation(action.payload.stationName);
-        socket.emit('action', {
-          type: SERVER_CREATE_STATION_SUCESS,
-          payload: {
-            station: stationController.getStationByName(
-              action.payload.stationName,
-            ),
-          },
-        });
+      case CLIENT_CREATE_STATION:
+        _onCreateStation(io, socket, action.payload.stationName);
         break;
 
-      case 'CLIENT:JOIN_STATION':
-        stationController.joinStation(
+      case CLIENT_JOIN_STATION:
+        _onJoinStation(
+          io,
+          socket,
           action.payload.userId,
-          action.payload.stationId,
+          action.payload.stationName,
         );
-        socket.join(action.payload.stationId);
-        socket.emit('action', {
-          type: SERVER_JOINED_STATION_SUCESS,
-          payload: {
-            station: stationController.getStationById(action.payload.stationId),
-          },
-        });
-        socket.broadcast.emit('action', {
-          type: SERVER_NEW_USER_JOINED,
-          payload: {
-            user: userController.getUserById(action.payload.userId),
-          },
-        });
         break;
 
-      case 'CLIENT:ADD_LINK_VIDEO':
-        stationController.addVideo(
-          action.payload.stationId,
-          action.payload.videoUrl,
+      case CLIENT_LEAVE_STATION:
+        _onLeaveStation(
+          io,
+          socket,
+          action.payload.userId,
+          action.payload.stationName,
+        );
+        break;
+
+      case CLIENT_ADD_LINK_VIDEO:
+        _onAddLinkVideo(
+          io,
+          socket,
+          action.payload.stationName,
+          action.payload.songUrl,
           action.payload.userId,
         );
-        io.sockets.emit('action', {
-          type: SERVER_UPDATE_PLAYLIST,
-          payload: {
-            playlist: stationController.getPlaylist(action.payload.stationId),
-          },
-        });
         break;
 
-      case 'CLIENT:UPVOTE_VIDEO':
-        stationController.upVoteVideo(
-          action.payload.stationId,
+      case CLIENT_UPVOTE_VIDEO:
+        _onClientUpvote(
+          io,
+          socket,
+          action.payload.stationName,
           action.payload.videoId,
           action.payload.userId,
         );
-        io.sockets.emit('action', {
-          type: SERVER_UPDATE_PLAYLIST,
-          payload: {
-            playlist: stationController.getPlaylist(action.payload.stationId),
-          },
-        });
         break;
 
-      case 'CLIENT:UN_UPVOTE_VIDEO':
-        stationController.unUpVoteVideo(
-          action.payload.stationId,
+      case CLIENT_DOWNVOTE_VIDEO:
+        _onClientDownVote(
+          io,
+          socket,
+          action.payload.stationName,
           action.payload.videoId,
           action.payload.userId,
         );
-        io.sockets.emit('action', {
-          type: SERVER_UPDATE_PLAYLIST,
-          payload: {
-            playlist: stationController.getPlaylist(action.payload.stationId),
-          },
-        });
         break;
       default:
         break;
     }
   });
 };
+
+function _emit(socket, type, payload) {
+  socket.emit('action', {
+    type: type,
+    payload: payload,
+  });
+}
+
+function _emitStation(io, stationName, type, payload) {
+  io.to(stationName).emit('action', {
+    type: type,
+    payload: payload,
+  });
+}
+
+function _emitAll(io, type, payload) {
+  io.emit('action', {
+    type: type,
+    payload: payload,
+  });
+}
+
+function _onCreateStation(io, socket, stationName) {
+  stationController.addStation(stationName, (err, station) => {
+    _emit(socket, SERVER_CREATE_STATION_SUCCESS, {
+      station: station,
+    });
+    _emitAll(io, SERVER_CREATE_STATION_SUCCESS, {
+      stations: [],
+    });
+  });
+}
+
+function _onJoinStation(io, socket, userId, stationName) {
+  stationController.joinStation(userId, stationName, station => {
+    // leave all stations then join to the new station
+    socket.join(stationName);
+    _emit(socket, SERVER_JOINED_STATION_SUCCESS, {
+      station: station,
+    });
+    userController.getUserById(userId, user => {
+      _emitStation(io, stationName, SERVER_NEW_USER_JOINED, {
+        user: user,
+      });
+    });
+  });
+}
+
+function _onLeaveStation(io, socket, userId, stationName) {
+  stationController.leaveStation(userId, stationName, () => {
+    // leave all stations then join to the new station
+    socket.leave(stationName);
+    _emit(socket, SERVER_LEFT_STATION_SUCCESS, {});
+    userController.getUserById(userId, user => {
+      _emitStation(io, stationName, SERVER_USER_LEFT, {
+        user: user,
+      });
+    });
+  });
+}
+
+function _onAddLinkVideo(io, socket, stationName, songUrl, userId) {
+  stationController.addSong(stationName, songUrl, playlist => {
+    _emitStation(io, stationName, SERVER_UPDATE_PLAYLIST, {
+      playlist: playlist,
+    });
+  });
+}
+
+function _onClientUpvote(io, socket, stationName, videoId, userId) {
+  stationController.upVoteVideo(stationName, videoId, userId, playlist => {
+    _emitStation(io, stationName, SERVER_UPDATE_PLAYLIST, {
+      playlist: playlist,
+    });
+  });
+}
+
+function _onClientDownVote(io, socket, stationName, videoId, userId) {
+  stationController.downVoteVideo(stationName, videoId, userId, playlist => {
+    _emitStation(io, stationName, SERVER_UPDATE_PLAYLIST, {
+      playlist: playlist,
+    });
+  });
+}
