@@ -6,19 +6,37 @@ const responeModel = require('./Models/ResponeModel');
 const stationModel = require('./Models/Station');
 const io = require('socket.io')();
 const stationNsp = io.of('/station');
+
 io.on('connection', function(socket) {
   console.log('#THANG: Socket connected: ' + socket.id);
 });
 
 stationNsp.on('connection', async function(socket) {
+  console.log('#THANG NSP: Socket connected: ' + socket.id);
   socket.on('action', function(data) {
+    console.log('#action: ' + data);
     switch (data.type) {
+      // Client join to a station
       case 'CLIENT:JOIN_STATION_REQUEST':
         joinStation(socket, data.payload);
         break;
+      // The station owner add a song to the playlist
       case 'CLIENT:ADD_SONG_REQUEST':
         addNewSong(socket, data.payload);
         break;
+      // The station owner delete a song from the playlist
+      case 'CLIENT:DELETE_SONG_REQUEST':
+        addNewSong(socket, data.payload);
+        break;
+      // The station owner delete a song from the playlist
+      case 'CLIENT:UPVOTE_REQUEST':
+        addNewSong(socket, data.payload);
+        break;
+      // The station owner delete a song from the playlist
+      case 'CLIENT:DOWNVOTE_REQUEST':
+        addNewSong(socket, data.payload);
+        break;
+
       default:
         console.log(data);
     }

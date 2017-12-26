@@ -8,9 +8,10 @@
    <script>
     var beginUrl = 'teststations/';
     var stationUrl = window.location.href.substr(window.location.href.search(beginUrl) + beginUrl.length);
+    
     var socket = io('/station');
     socket.emit('action', {type: 'CLIENT:JOIN_STATION_REQUEST', payload: {station_url: stationUrl}});
-    socket.emit('CLIENT:JOIN_STATION_REQUEST', stationName);
+    socket.emit('CLIENT:JOIN_STATION_REQUEST', stationUrl);
 
     // Received action from the server
     socket.on('action', function(data){
