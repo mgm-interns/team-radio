@@ -13,7 +13,7 @@ export default router => {
 
       //if username is already exist
       if (user) {
-        res.json({ message: 'Email is not available' });
+        res.status(400).json({ email: 'This email has already been taken.' });
       } else {
         console.log('EMAIL : ');
         console.log(req.body.email);
@@ -34,8 +34,10 @@ export default router => {
             expiresIn: 1440 * 7, //expires in 24 hours *****************************
           });
           res.json({
-            message: 'signup success',
-            token: token,
+            data: {
+              message: 'signup success',
+              token: token,
+            },
           });
         });
       }
@@ -92,7 +94,7 @@ export default router => {
     res.json({ message: 'Welcome to the coolest API on earth!' });
   });
 
-  router.get('/User', function(req, res) {
+  router.get('/users', function(req, res, next) {
     User.find({}, function(err, users) {
       res.json(users);
     });

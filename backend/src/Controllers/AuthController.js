@@ -26,7 +26,7 @@ module.exports = function tokenVerify(req, res, next) {
       } else {
         req.decoded = decoded;
         console.log(decoded.username);
-        next();
+        // next();
       }
     });
   } else {
