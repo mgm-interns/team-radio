@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import Autosuggest from 'react-autosuggest';
+import match from 'autosuggest-highlight/match';
+import parse from 'autosuggest-highlight/parse';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 import Card from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import Paper from 'material-ui/Paper';
+import { MenuItem } from 'material-ui/Menu';
 import { CircularProgress } from 'material-ui/Progress';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
@@ -27,11 +32,19 @@ class AddLink extends Component {
       video: {},
       videoId: '',
       searchText: '',
+      suggestions: [],
       isDisableButton: true,
       isAddLinkProgress: false,
     };
     this._onChange = this._onChange.bind(this);
     this._onSendClick = this._onSendClick.bind(this);
+    this._onSuggestionsFetchRequested = this._onSuggestionsFetchRequested.bind(
+      this,
+    );
+    this._onSuggestionsClearRequested = this._onSuggestionsClearRequested.bind(
+      this,
+    );
+    this._onSuggestionSelected = this._onSuggestionSelected.bind(this);
     this._renderLinkBoxSection = this._renderLinkBoxSection.bind(this);
     this._renderPreviewSection = this._renderPreviewSection.bind(this);
   }
@@ -40,6 +53,7 @@ class AddLink extends Component {
     const p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
     const matches = url.match(p);
     if (matches) {
+      // return video_id if url is valid
       return matches[1];
     }
     return false;
@@ -59,51 +73,135 @@ class AddLink extends Component {
     return items;
   }
 
-  // _debounce(func, wait) {
-  //   let timeout;
-  //   return (...args) => {
-  //     const context = this;
-  //     clearTimeout(timeout);
-  //     timeout = setTimeout(() => func.apply(context, args), wait);
-  //   };
-  // }
+  async _getSearchResult(value) {
+    const { data: { items } } = await axios.get(
+      `${process.env.REACT_APP_YOUTUBE_API_URL}/search`,
+      {
+        params: {
+          key: process.env.REACT_APP_YOUTUBE_API_KEY,
+          q: value,
+          part: 'snippet',
+          safeSearch: 'strict',
+          type: 'video',
+          maxResults: 5,
+          videoDefinition: 'any',
+          relevanceLanguage: 'en',
+        },
+      },
+    );
+    return items;
+  }
 
-  async _onChange(value) {
+  /** AutoComplete Search */
+  _renderInput(inputProps) {
+    const { classes, value, ref, ...other } = inputProps;
+
+    return (
+      <TextField
+        autoComplete="search-input"
+        id="search-input"
+        name="search-input"
+        className={classes.textField}
+        value={value}
+        inputRef={ref}
+        InputProps={{
+          classes: {
+            input: classes.input,
+          },
+          ...other,
+        }}
+      />
+    );
+  }
+
+  _renderSuggestion(suggestion, { query, isHighlighted }) {
+    const matches = match(suggestion.snippet.title, query);
+    const parts = parse(suggestion.snippet.title, matches);
+
+    return (
+      <MenuItem selected={isHighlighted} component="div">
+        <div>
+          {parts.map((part, index) => <span key={index}>{part.text}</span>)}
+        </div>
+      </MenuItem>
+    );
+  }
+
+  _renderSuggestionsContainer(options) {
+    const { containerProps, children } = options;
+
+    return (
+      <Paper {...containerProps} square>
+        {children}
+      </Paper>
+    );
+  }
+
+  _getSuggestionValue(suggestion) {
+    return suggestion.snippet.title;
+  }
+
+  _timeoutSearchFunc;
+  _onSuggestionsFetchRequested({ value }) {
     this.setState({ isAddLinkProgress: true });
     try {
-      if (value !== '') {
-        if (!this._checkValidUrl(value)) {
-          this.setState({ video: {}, isDisableButton: true });
-
-          // const data = await axios.get(`${API_URL}search`, {
-          //   params: {
-          //     key: API_KEY,
-          //     q: 'chrismas',
-          //     part: 'snippet',
-          //     safeSearch: 'strict',
-          //     type: 'video',
-          //     relevanceLanguage: 'en',
-          //   },
-          // });
-          // console.log(data.data.items);
-        } else {
-          this.setState({ isDisableButton: false });
+      clearTimeout(this._timeoutSearchFunc);
+      this._timeoutSearchFunc = setTimeout(async () => {
+        // value is a video link
+        if (value !== '' && this._checkValidUrl(value)) {
           const id = this._checkValidUrl(value);
           const data = await this._getVideoInfo(id);
           this.setState({
+            isDisableButton: false,
             video: { ...data[0] },
             videoId: id,
+            suggestions: [],
+          });
+        } else {
+          // value is not a link will be searched
+          const data = await this._getSearchResult(value);
+          this.setState({
+            isDisableButton: true,
+            video: {},
+            videoId: '',
+            suggestions: data,
           });
         }
-      } else {
-        this.setState({ video: {}, isDisableButton: true });
-      }
+      }, 300);
     } catch (error) {
       console.log(error);
     } finally {
       setTimeout(() => {
         this.setState({ isAddLinkProgress: false });
       }, 600);
+    }
+  }
+
+  _onSuggestionsClearRequested() {
+    this.setState({
+      suggestions: [],
+    });
+  }
+
+  _onSuggestionSelected(e, { suggestion }) {
+    this.setState({
+      isDisableButton: false,
+      searchText: suggestion.snippet.title,
+      video: { ...suggestion },
+      videoId: suggestion.id.videoId,
+    });
+  }
+  /** End of autoComplete search  */
+
+  _onChange(e) {
+    const result = e.target.value;
+    this.setState({ searchText: result });
+    if (result === '') {
+      this.setState({
+        isDisableButton: true,
+        video: {},
+        videoId: '',
+      });
     }
   }
 
@@ -154,15 +252,26 @@ class AddLink extends Component {
           justify="space-between"
         >
           <Grid item xs={12}>
-            <TextField
-              className={classes.linkInput}
-              id="search"
-              name="search"
-              placeholder="Add your link..."
-              autoComplete="search"
-              fullWidth
-              onChange={e => {
-                this._onChange(e.target.value);
+            <Autosuggest
+              theme={{
+                container: classes.autoSearchContainer,
+                suggestionsContainerOpen: classes.suggestionsContainerOpen,
+                suggestionsList: classes.suggestionsList,
+                suggestion: classes.suggestion,
+              }}
+              renderInputComponent={this._renderInput}
+              suggestions={this.state.suggestions}
+              onSuggestionsFetchRequested={this._onSuggestionsFetchRequested}
+              onSuggestionsClearRequested={this._onSuggestionsClearRequested}
+              onSuggestionSelected={this._onSuggestionSelected}
+              renderSuggestionsContainer={this._renderSuggestionsContainer}
+              getSuggestionValue={this._getSuggestionValue}
+              renderSuggestion={this._renderSuggestion}
+              inputProps={{
+                classes,
+                placeholder: 'Add your link or search by keyword...',
+                value: this.state.searchText,
+                onChange: this._onChange,
               }}
             />
           </Grid>
@@ -174,7 +283,7 @@ class AddLink extends Component {
               disabled={isDisableButton}
               onClick={this._onSendClick}
             >
-              Send <Icon className={classes.sendIcon}>send</Icon>
+              Add <Icon className={classes.sendIcon}>send</Icon>
             </Button>
           </Grid>
         </Grid>
@@ -223,12 +332,9 @@ class AddLink extends Component {
       <Grid container className={classes.addLinkContainer}>
         <Grid item xs={12} className={classes.linkTitle}>
           <div>
-            <h1 className={classes.primaryTitle}>
-              ADD TO STATION {STATION_DEFAULT.number}
-            </h1>
+            <h1 className={classes.primaryTitle}>Request more songs</h1>
             <span className={classes.secondaryTitle}>
-              {' '}
-              - {STATION_DEFAULT.name}
+              {' - '} {STATION_DEFAULT.name}
             </span>
           </div>
         </Grid>

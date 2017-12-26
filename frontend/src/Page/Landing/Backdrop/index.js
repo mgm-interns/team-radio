@@ -9,8 +9,8 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles } from 'material-ui/styles';
-import fixture from '../../../Fixture/landing';
-import { addStation } from '../../../Redux/api/stations/actions';
+import fixture from 'Fixture/landing';
+import { addStation } from 'Redux/api/stations';
 import styles from './styles';
 
 class Backdrop extends Component {
@@ -18,7 +18,7 @@ class Backdrop extends Component {
     super(props);
 
     this.state = {
-      stationName: '',
+      station_name: '',
     };
 
     this._handleStationNameChanged = this._handleStationNameChanged.bind(this);
@@ -26,33 +26,36 @@ class Backdrop extends Component {
   }
 
   _handleStationNameChanged(e) {
-    this.setState({ stationName: e.target.value });
+    this.setState({ station_name: e.target.value });
   }
 
   _submit() {
     this.props.addStation({
-      stationName: this.state.stationName,
+      station_name: this.state.station_name,
     });
   }
 
   render() {
     const { classes, loading, error } = this.props;
     return (
-      <Grid container className={classes.backdropContainer}>
-        <Grid container className={classes.backdropForeground}>
-          <Grid item lg={12} className={classes.backdropSloganContainer}>
-            <span className={classes.backdropSlogan}>{fixture.slogan}</span>
-          </Grid>
-          <Grid item xs lg={12} className={classes.formInput}>
+      <Grid container className={classes.container}>
+        <Grid container className={classes.foreground}>
+          <Grid item xs sm={10} lg={8} className={classes.formInput}>
+            <div className={classes.sloganContainer}>
+              <h1 className={classes.mainLine}>{fixture.name}</h1>
+              <span className={classes.sloganText}>{fixture.slogan}</span>
+            </div>
             <FormControl className={classes.textField} error={!!error}>
-              <InputLabel htmlFor="station-name">Name your station</InputLabel>
+              <InputLabel htmlFor="station-name">
+                {fixture.input.label}
+              </InputLabel>
               <Input
                 id="station-name"
-                placeholder="Name your station"
+                placeholder={fixture.input.placeholder}
                 margin="normal"
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
-                value={this.state.stationName}
+                value={this.state.station_name}
               />
               <FormHelperText>
                 {error && error.response && error.response.error.name}
@@ -63,19 +66,21 @@ class Backdrop extends Component {
             ) : (
               <Button
                 raised
-                color="primary"
+                color={fixture.button.color}
                 onClick={this._submit}
                 className={classes.buttonSend}
+                disabled={!this.state.station_name}
               >
-                New Station <Icon className={classes.sendIcon}>send</Icon>
+                {fixture.button.name}
+                <Icon className={classes.sendIcon}>send</Icon>
               </Button>
             )}
           </Grid>
-          <Grid item xs={12} className={classes.backdropImg}>
+          <Grid item xs className={classes.backgroundImg}>
             <img
-              src="https://avante.biz/wp-content/uploads/Music-Wallpaper/Music-Wallpaper-001.jpg"
-              alt="Team Radio - Cover"
-              className={classes.backdropImg}
+              src={fixture.background.src}
+              alt={fixture.background.alt}
+              className={classes.backgroundImg}
             />
           </Grid>
         </Grid>
@@ -91,9 +96,9 @@ Backdrop.propTypes = {
   addStation: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-  loading: state.api.stations.loading,
-  error: state.api.stations.error,
+const mapStateToProps = ({ api: { stations } }) => ({
+  loading: stations.add.loading,
+  error: stations.add.error,
 });
 
 const mapDispatchToProps = dispatch => ({

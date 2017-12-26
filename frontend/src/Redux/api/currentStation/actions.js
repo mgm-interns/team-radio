@@ -13,6 +13,7 @@ export const createNewStation = ({ stationName, userId }) => ({
   payload: { stationName, userId },
 });
 
+<<<<<<< HEAD
 export const joinStation = ({ stationId, userId }) => ({
   type: CLIENT_JOIN_STATION,
   payload: { stationId, userId },
@@ -21,6 +22,12 @@ export const joinStation = ({ stationId, userId }) => ({
 export const addLinkVideo = ({ stationId, videoUrl, userId }) => ({
   type: CLIENT_ADD_LINK_VIDEO,
   payload: { stationId, videoUrl, userId },
+=======
+// Client action creator
+export const joinStation = station_name => ({
+  type: CLIENT_JOIN_STATION,
+  payload: { station_name },
+>>>>>>> dev
 });
 
 export const upVoteVideo = ({ stationId, videoId, userId }) => ({

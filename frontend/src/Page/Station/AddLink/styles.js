@@ -86,5 +86,31 @@ export default theme => {
       height: '100%',
       minHeight: 158,
     },
+
+    /* Search */
+    autoSearchContainer: {
+      flexGrow: 1,
+      position: 'relative',
+    },
+    suggestionsContainerOpen: {
+      position: 'absolute',
+      marginTop: theme.spacing.unit,
+      marginBottom: theme.spacing.unit * 3,
+      left: 0,
+      right: 0,
+      zIndex: 9999,
+    },
+    suggestion: {
+      display: 'block',
+    },
+    suggestionsList: {
+      margin: 0,
+      padding: 0,
+      listStyleType: 'none',
+    },
+    textField: {
+      width: '100%',
+    },
+    /* End search */
   };
 };

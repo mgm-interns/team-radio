@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+import { SERVER_JOINED_STATION, SERVER_UPDATE_STATION } from './actions';
+import { addRequest } from '../stations';
+
+>>>>>>> dev
 import playlist from './fixtures';
 import {
   SERVER_JOINED_STATION_SUCESS,
@@ -32,7 +38,11 @@ export default (state = INITIAL_STATE, action) => {
         nowPlaying: action.payload.nowplaying,
       };
     // For Friday demo
+<<<<<<< HEAD
     case SERVER_CREATE_STATION_SUCESS:
+=======
+    case addRequest.getTypeSuccess():
+>>>>>>> dev
       return {
         ...state,
         station: action.payload.data,
