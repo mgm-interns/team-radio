@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
-import Hidden from 'material-ui/Hidden';
 
 import { withStyles } from 'material-ui/styles';
-import fixture from '../../Fixture/landing';
+import fixture from 'Fixture/landing';
 import styles from './styles';
 
 const MENUS = {
@@ -31,6 +30,29 @@ const setColor = {
 };
 
 class NavBar extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      transform: 0,
+    };
+    this.handleScroll = this.handleScroll.bind(this);
+  }
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll(event) {
+    const { scrollTop } = event.srcElement.documentElement;
+    this.setState({
+      transform: scrollTop,
+    });
+  }
+
   render() {
     const { classes, color } = this.props;
     const menusLength = Object.keys(MENUS).length;
@@ -40,9 +62,9 @@ class NavBar extends Component {
         justify="center"
         className={classes.container}
         style={
-          color === 'primary'
-            ? { backgroundColor: setColor.primary }
-            : { backgroundColor: setColor.default }
+          color === undefined && this.state.transform !== 0
+            ? { filter: 'opacity(0.8)', backgroundColor: setColor.primary }
+            : { backgroundColor: setColor[color] }
         }
       >
         <Grid
@@ -54,17 +76,14 @@ class NavBar extends Component {
           <Grid item xs={4}>
             <Grid container className={classes.logo}>
               <Grid item xs={0}>
-                <img
-                  src={fixture.logo}
-                  alt="Team Radio"
-                  className={classes.img}
-                />
-              </Grid>
-              <Hidden smDown>
-                <Link to={'/'} className={classes.logoName}>
-                  {fixture.name}
+                <Link to="/">
+                  <img
+                    src={fixture.logo}
+                    alt="Team Radio"
+                    className={classes.img}
+                  />
                 </Link>
-              </Hidden>
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs={8}>

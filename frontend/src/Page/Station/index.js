@@ -6,13 +6,12 @@ import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
+import { StationSwitcher, NavBar, Footer } from 'Component';
+import { joinStation } from 'Redux/api/currentStation/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
-import { StationSwitcher, NavBar, Footer } from '../../Component';
-// import fixture from '../../Fixture/landing';
 import styles from './styles';
-import { joinStation } from '../../Redux/api/currentStation/actions';
 
 class StationPage extends Component {
   static propTypes = {
@@ -22,11 +21,9 @@ class StationPage extends Component {
   componentWillMount() {
     // Get station id from react-router
     const { match: { params: { stationName } }, history } = this.props;
-    console.log(this.props.match.params.stationName);
     if (stationName) {
       this.props.joinStation(stationName);
     } else {
-      console.log('go to landing page');
       history.push(`/`);
     }
   }
@@ -47,7 +44,7 @@ class StationPage extends Component {
                   <Grid item xs={12}>
                     <h1>{station && station.stationName}</h1>
                   </Grid>
-                  <NowPlaying className={classes.content} />
+                  <NowPlaying className={classes.content} autoplay={true} />
                 </Grid>
               </Grid>
               <Grid item xs={12} md={5} xl={4}>
