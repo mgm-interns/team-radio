@@ -47,7 +47,8 @@ class NavBar extends Component {
   }
 
   handleScroll(event) {
-    const { scrollTop } = event.srcElement.documentElement;
+    const element = event.target || event.srcElement;
+    const { scrollTop } = element.documentElement;
     this.setState({
       transform: scrollTop,
     });
@@ -75,7 +76,11 @@ class NavBar extends Component {
         >
           <Grid item xs={4}>
             <Grid container className={classes.logo}>
+<<<<<<< HEAD
               <Grid item xs={0}>
+=======
+              <Grid item xs>
+>>>>>>> dev
                 <Link to="/">
                   <img
                     src={fixture.logo}

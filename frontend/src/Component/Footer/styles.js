@@ -5,6 +5,8 @@ export default ({ breakpoints, palette }) => ({
     fontFamily: 'Lato',
     height: '50px',
     background: palette.primary['500'],
+    position: 'absolute',
+    bottom: 0,
   },
   wrapper: {
     margin: 'auto',

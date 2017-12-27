@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Hello world</title>
+   </head>
+   <script src = "/socket.io/socket.io.js"></script>
+   
+   <script>
+    var beginUrl = 'teststations/';
+    var stationUrl = window.location.href.substr(window.location.href.search(beginUrl) + beginUrl.length);
+    
+    var socket = io('/station');
+    socket.emit('action', {type: 'CLIENT:JOIN_STATION_REQUEST', payload: {station_url: stationUrl}});
+    socket.emit('CLIENT:JOIN_STATION_REQUEST', stationUrl);
+
+    // Received action from the server
+    socket.on('action', function(data){
+      document.getElementById('event').innerHTML = data.type;
+      document.getElementById('data').innerHTML = data.payload;
+      console.log(data);
+    });
+
+    // Add new song to the station
+    function addNewSong(songUrl){
+      socket.emit('action', {type: 'CLIENT:ADD_SONG_REQUEST', payload: {song_url: songUrl}});
+    }
+
+    // Test
+    function sendToServer(){
+      var input = document.getElementById('input').value;
+      addNewSong(input);
+    }
+   </script>
+   <body>
+     Input: <input type="text" id="input">
+     <input onclick="sendToServer()" type="button" value="send"><br>
+    <p id='event' style="background-color: yellow;"></p><br>
+    <p id='data' style="background-color: green;"></p>
+
+   </body>
+</html>

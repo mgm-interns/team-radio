@@ -2,6 +2,7 @@
   "extends": ["plugin:react/recommended"],
   "plugins": ["react"],
   "rules": {
+    "camelcase": ["warn"],
     "react/display-name": ["off"],
     "class-methods-use-this": ["off"],
     "global-require": ["off"],

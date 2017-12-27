@@ -1,7 +1,6 @@
 /* eslint-disable */
 
 const mongoose = require('mongoose');
-
 const getVideoId = require('get-video-id');
 const request = require('request-promise');
 const cheerio = require('cheerio');
@@ -43,10 +42,12 @@ module.exports.addSong = async function(inputUrl) {
       thumbnail: videoInfo.thumbnailUrl,
       duration: videoInfo.duration,
     });
+    /*
     // Need review: can i return inner the statement?
     newSong.validate(function(err) {
       console.log('THONG BAO LOI: ' + err);
     });
+    */
     newSong.save();
     return newSong;
   }

@@ -18,7 +18,7 @@ class Backdrop extends Component {
     super(props);
 
     this.state = {
-      stationName: '',
+      station_name: '',
     };
 
     this._handleStationNameChanged = this._handleStationNameChanged.bind(this);
@@ -26,12 +26,12 @@ class Backdrop extends Component {
   }
 
   _handleStationNameChanged(e) {
-    this.setState({ stationName: e.target.value });
+    this.setState({ station_name: e.target.value });
   }
 
   _submit() {
     this.props.addStation({
-      stationName: this.state.stationName,
+      station_name: this.state.station_name,
     });
   }
 
@@ -52,10 +52,9 @@ class Backdrop extends Component {
               <Input
                 id="station-name"
                 placeholder={fixture.input.placeholder}
-                margin="normal"
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
-                value={this.state.stationName}
+                value={this.state.station_name}
               />
               <FormHelperText>
                 {error && error.response && error.response.error.name}
@@ -69,10 +68,10 @@ class Backdrop extends Component {
                 color={fixture.button.color}
                 onClick={this._submit}
                 className={classes.buttonSend}
-                disabled={!this.state.stationName}
+                disabled={!this.state.station_name}
               >
                 {fixture.button.name}
-                <Icon className={classes.sendIcon}>send</Icon>
+                <Icon className={classes.sendIcon}>radio</Icon>
               </Button>
             )}
           </Grid>
