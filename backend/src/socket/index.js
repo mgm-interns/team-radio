@@ -38,8 +38,8 @@ io.on('connection', async function(socket) {
       case EVENTS.CLIENT_CREATE_STATION:
         eventHandlers.createStationHandler(
           createEmitter(socket),
-          action.payload.stationName,
           action.payload.userId,
+          action.payload.stationName,
         );
         break;
 
@@ -48,8 +48,8 @@ io.on('connection', async function(socket) {
         try {
           eventHandlers.joinStationHandler(
             createEmitter(socket),
-            action.payload.stationId,
             action.payload.userId,
+            action.payload.stationId,
           );
         } catch (err) {
           console.log(err);
@@ -61,17 +61,17 @@ io.on('connection', async function(socket) {
         socket.leaveAll();
         eventHandlers.leaveStationHandler(
           createEmitter(socket),
-          userId,
-          stationId,
+          action.payload.userId,
+          action.payload.stationId,
         );
         break;
 
       case EVENTS.CLIENT_ADD_SONG:
         eventHandlers.addSongHandler(
           createEmitter(socket),
+          action.payload.userId,
           action.payload.stationId,
           action.payload.songUrl,
-          action.payload.userId,
         );
         break;
 
@@ -80,9 +80,9 @@ io.on('connection', async function(socket) {
         eventHandlers.voteSongHandler(
           createEmitter(socket),
           1,
+          action.payload.userId,
           action.payload.stationId,
           action.payload.songId,
-          action.payload.userId,
         );
         break;
 
@@ -91,9 +91,9 @@ io.on('connection', async function(socket) {
         eventHandlers.voteSongHandler(
           createEmitter(socket),
           -1,
+          action.payload.userId,
           action.payload.stationId,
           action.payload.songId,
-          action.payload.userId,
         );
         break;
       default:
@@ -120,7 +120,7 @@ const _leaveRoom = (socket, room) => {
   return new Promise(function (resolve, reject) {
 		socket.leave(room, resolve);
 	});
-}
+};
 
 players.attachWebSocket(io);
 

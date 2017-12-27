@@ -4,7 +4,7 @@ import * as EVENTS from '../../const/actions';
 
 import players from '../../players';
 
-export default async (emitter, stationId, userId) => {
+export default async (emitter, userId, stationId) => {
   let station;
   try {
     station = await stationController.getStation(stationId);
@@ -20,12 +20,14 @@ export default async (emitter, stationId, userId) => {
   }
 
   if (station) {
-    let player = await players.getPlayer(stationId);
-    let nowPlaying = await player.getNowPlaying();
-    emitter.emit(EVENTS.SERVER_NOW_PLAYING, nowPlaying);
+    const player = await players.getPlayer(stationId);
+    const nowPlaying = await player.getNowPlaying();
+    emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, {
+      nowPlaying: nowPlaying,
+    });
 
     try {
-      let user = await userController.getUser(userId);
+      const user = await userController.getUser(userId);
       emitter.emitToStation(stationId, EVENTS.SERVER_NEW_USER_JOINED, {
         user: user,
       });

@@ -1,17 +1,17 @@
 // TODO: WIP
-export default (emitter, score, stationId, songId, userId) => {
+export default (emitter, score, userId, stationId, songId) => {
   // TODO
   if (score === 1) {
-    _upVoteSong(emitter, stationId, songId, userId);
+    _upVoteSong(emitter, userId, stationId, songId);
   } else if (score === -1) {
-    _downVoteSong(emitter, stationId, songId, userId);
+    _downVoteSong(emitter, userId, stationId, songId);
   } else console.log('Score unknow!');
 };
 
-const _upVoteSong = (emitter, stationId, songId, userId) => {
+const _upVoteSong = (emitter, userId, stationId, songId) => {
     console.log('Up vote feature is coming soon!');
 };
 
-const _downVoteSong = (emitter, stationId, songId, userId) => {
+const _downVoteSong = (emitter, userId, stationId, songId) => {
     console.log('Down vote feature is coming soon!');
 };

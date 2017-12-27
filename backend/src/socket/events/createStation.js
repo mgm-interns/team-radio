@@ -1,7 +1,7 @@
 import * as stationController from '../../controllers/station';
 import * as EVENTS from '../../const/actions';
 
-export default async (emitter, stationName, userId) => {
+export default async (emitter, userId, stationName) => {
   let station;
   try {
     station = await stationController.addStation(stationName, userId);
@@ -17,7 +17,7 @@ export default async (emitter, stationName, userId) => {
 
   if (station) {
     try {
-      let stations = await stationController.getAllAvailableStations();
+      const stations = await stationController.getAllAvailableStations();
       emitter.emitAll(EVENTS.SERVER_UPDATE_STATIONS, {
         stations: stations,
       });
