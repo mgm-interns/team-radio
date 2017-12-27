@@ -85,11 +85,7 @@ export default router => {
     });
   });
 
-  router.use(function(req, res, next) {
-    console.log('MIDDLEWARE IS INVOKED');
-    AuthController(req, res, next);
-    next();
-  });
+  router.use(AuthController);
 
   //test function *************************************
   router.get('/', function(req, res, next) {

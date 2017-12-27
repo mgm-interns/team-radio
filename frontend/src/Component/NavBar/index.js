@@ -76,11 +76,7 @@ class NavBar extends Component {
         >
           <Grid item xs={4}>
             <Grid container className={classes.logo}>
-<<<<<<< HEAD
-              <Grid item xs={0}>
-=======
               <Grid item xs>
->>>>>>> dev
                 <Link to="/">
                   <img
                     src={fixture.logo}
