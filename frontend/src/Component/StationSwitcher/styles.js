@@ -1,11 +1,11 @@
 export default ({ breakpoints, spacing }) => ({
   container: {
     margin: 'auto',
-    paddingTop: '8vh',
+    paddingTop: 80,
     paddingLeft: 20,
     paddingRight: 20,
     '& .slick-track': {
-      height: 140,
+      // height: 140,
     },
     '& .slick-dots': {
       position: 'relative',

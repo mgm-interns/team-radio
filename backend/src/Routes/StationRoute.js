@@ -11,7 +11,7 @@ export default router => {
   });
 
   //// get a station by name
- /* router.get('/stations/:stationName', function(req, res) {
+  /* router.get('/stations/:stationName', function(req, res) {
     station.getStationByName(req, res);
   });
   */
@@ -20,7 +20,7 @@ export default router => {
     station.getStationByUrl(req, res);
   });
   */
- 
+
   router.get('/stations/:id', function(req, res) {
     station.getStationById(req, res);
   });

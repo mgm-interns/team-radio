@@ -2,6 +2,7 @@ export default ({ palette, breakpoints }) => ({
   container: {
     zIndex: 10,
     width: '100%',
+    paddingBottom: '50px',
   },
   wrapper: {
     display: 'flex',
@@ -10,6 +11,7 @@ export default ({ palette, breakpoints }) => ({
       minWidth: 1024,
       maxWidth: 1280,
     },
+    margin: 0,
   },
   textContent: {
     paddingTop: '2em',
