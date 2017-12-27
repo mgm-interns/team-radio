@@ -49,16 +49,16 @@ export default router => {
       if (err) throw err;
 
       if (!user) {
-        res.json({
+        res.status(401).json({
           success: false,
-          message: 'Authenticate failed. User not Found.',
+          message: 'Sorry, we could not find an account with that email.',
         });
       } else if (user) {
         //check if password correct
         if (!user.validPassword(req.body.password)) {
-          res.json({
+          res.status(401).json({
             success: false,
-            message: 'Authenticate failed. Wrong password.',
+            message: 'The password is incorrect.',
           });
         } else {
           //if user is found and password is right
@@ -74,9 +74,11 @@ export default router => {
           });
 
           res.json({
-            success: true,
-            message: 'Enjoy your token!',
-            token: token,
+            data: {
+              success: true,
+              message: 'Enjoy your token!',
+              token: token,
+            }
           });
         }
       }

@@ -14,23 +14,26 @@ import styles from './styles';
 import { NavBar } from '../../../Component';
 import { error } from 'util';
 
+import { fetchUser } from 'Redux/api/user';
+import { connect } from 'react-redux';
+
 class Login extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      userName: '',
+      email: '',
       password: '',
       formErrors: {},
     };
-    this._handleUserNameChanged = this._handleUserNameChanged.bind(this);
+    this._handleEmailChanged = this._handleEmailChanged.bind(this);
     this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
 
     this._submit = this._submit.bind(this);
   }
 
-  _handleUserNameChanged(e) {
-    this.setState({ userName: e.target.value });
+  _handleEmailChanged(e) {
+    this.setState({ email: e.target.value });
   }
 
   _handlePasswordChanged(e) {
@@ -39,27 +42,55 @@ class Login extends Component {
 
   _submit() {
     if (this._validate()) {
-      console.log('submit');
+      // console.log('submit');
+      let {email, password} = this.state;
+      this.props.login({email, password});
     }
   }
 
   _validate() {
-    const { userName, password, formErrors } = this.state;
+    const { email, password, formErrors } = this.state;
     let newFormErrors = {};
+    let isValid = true;
 
-    if (!userName) {
-      newFormErrors.userName = 'Username is required';
+    if (!email) {
+      newFormErrors.email = 'Email is required';
+      isValid = false;
+    }
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+      newFormErrors.email = 'Invalid email address';
+      isValid = false;
     }
 
     if (!password) {
       newFormErrors.password = 'Password is required';
+      isValid = false;
     }
 
     this.setState({
       formErrors: newFormErrors,
     });
 
-    console.log(newFormErrors);
+    return isValid;
+    // console.log(newFormErrors);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const response = nextProps.fetchUserResponse;
+    const { error } = response;
+    if(response.error != null) {
+      this.setState((prevState) => {
+        return {
+          formErrors: {
+            message: error.response.message
+          }
+        }
+      })
+    }
+    else if(!response.loading) {
+      localStorage.setItem('token', response.data.token);
+      this.props.history.push('/');
+    }
   }
 
   render() {
@@ -83,20 +114,20 @@ class Login extends Component {
                   </Grid>
 
                   <FormControl className={classes.textField} error={!!error}>
-                    <InputLabel htmlFor="user-name" required>
-                      Username
+                    <InputLabel htmlFor="email" required>
+                      Email
                     </InputLabel>
                     <Input
                       required
-                      id="user-name"
-                      placeholder="Enter your username"
+                      id="email"
+                      placeholder="Enter your email"
                       margin="normal"
                       autoFocus={true}
-                      onChange={this._handleUserNameChanged}
-                      value={this.state.userName}
+                      onChange={this._handleEmailChanged}
+                      value={this.state.email}
                     />
                     <FormHelperText className={classes.error}>
-                      {this.state.formErrors.userName}
+                      {this.state.formErrors.email}
 
                       {/* {error && error.response && error.response.error.name} */}
                     </FormHelperText>
@@ -118,6 +149,10 @@ class Login extends Component {
                       {/* {error && error.response && error.response.error.name} */}
                     </FormHelperText>
                   </FormControl>
+
+                  <FormHelperText className={classes.error}>
+                      {this.state.formErrors.message}
+                    </FormHelperText>
                 </CardContent>
                 <CardActions className={classes.cardButton}>
                   {loading ? (
@@ -157,4 +192,21 @@ Login.propTypes = {
   addStation: PropTypes.func,
 };
 
-export default withStyles(styles)(Login);
+const mapDispatchToProps = (dispatch, ownProps)  => ({
+  login: (user) => {
+    dispatch(fetchUser(user));
+  }
+});
+
+const mapStateToProps = (state) => {
+  // console.log(state.api.user.fetch);
+  return {
+    fetchUserResponse: state.api.user.fetch
+  }
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Login));
+

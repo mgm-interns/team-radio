@@ -14,13 +14,15 @@ import styles from './styles';
 
 import { NavBar } from '../../../Component';
 import { error } from 'util';
+import { addUser } from 'Redux/api/user';
+import { connect } from 'react-redux';
 
 class Register extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      userName: '',
+      username: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -32,7 +34,7 @@ class Register extends Component {
         'See some information of the past activities',
       ],
     };
-    this._handleUserNameChanged = this._handleUserNameChanged.bind(this);
+    this._handleusernameChanged = this._handleusernameChanged.bind(this);
     this._handleEmailChanged = this._handleEmailChanged.bind(this);
     this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
     this._handleConfirmPasswordChanged = this._handleConfirmPasswordChanged.bind(
@@ -41,8 +43,8 @@ class Register extends Component {
     this._submit = this._submit.bind(this);
   }
 
-  _handleUserNameChanged(e) {
-    this.setState({ userName: e.target.value });
+  _handleusernameChanged(e) {
+    this.setState({ username: e.target.value });
   }
   _handleEmailChanged(e) {
     this.setState({ email: e.target.value });
@@ -57,52 +59,82 @@ class Register extends Component {
   }
 
   _submit() {
+    
     if (this._validate()) {
-      console.log('submit');
+      let {username, email, password} = this.state;
+      this.props.signUp({username, email, password});
     }
   }
 
   _validate() {
     const {
-      userName,
+      username,
       email,
       password,
       confirmPassword,
       formErrors,
     } = this.state;
+    let isValid = true;
+
     let newFormErrors = {};
-    if (!userName) {
-      newFormErrors.userName = 'Username is required';
+    if (!username) {
+      newFormErrors.username = 'username is required';
+      isValid = false;
     }
 
     if (email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
       newFormErrors.email = 'Invalid email address';
+      isValid = false;
     }
 
     if (!password) {
       newFormErrors.password = 'Password is required';
+      isValid = false;
     } else if (password.length < 6) {
       newFormErrors.password = 'Password must be at least 6 characters';
+      isValid = false;
     } else if (confirmPassword && password != confirmPassword) {
       newFormErrors.confirmPassword =
         'Password and confirm password does not match';
+      isValid = false;
     }
 
     if (!confirmPassword) {
       newFormErrors.confirmPassword = 'Confirm Password is required';
+      isValid = false;
     }
 
     this.setState({
       formErrors: newFormErrors,
     });
 
-    console.log(newFormErrors);
+    return isValid;
   }
+
+  componentWillReceiveProps(nextProps) {
+    const response = nextProps.addUserResponse;
+    const {error} = response;
+    if(response.error != null) {
+      this.setState((prevState) => {
+        return {
+          formErrors: {
+            email: error.response.email
+          }
+        }
+      })
+    }
+    else if(!response.loading) {
+      localStorage.setItem('token', response.data.token);
+      this.props.history.push('/');
+    }
+  }
+
 
   render() {
     const { classes, loading, error } = this.props;
     const { benefits } = this.state;
 
+    // const { addUserResponse } = this.props;
     return (
       <div>
         <NavBar />
@@ -156,11 +188,11 @@ class Register extends Component {
                       placeholder="Choose a username"
                       margin="normal"
                       autoFocus={true}
-                      onChange={this._handleUserNameChanged}
-                      value={this.state.userName}
+                      onChange={this._handleusernameChanged}
+                      value={this.state.username}
                     />
                     <FormHelperText className={classes.error}>
-                      {this.state.formErrors.userName}
+                      {this.state.formErrors.username}
 
                       {/* {error && error.response && error.response.error.name} */}
                     </FormHelperText>
@@ -256,4 +288,20 @@ Register.propTypes = {
   addStation: PropTypes.func,
 };
 
-export default withStyles(styles)(Register);
+const mapDispatchToProps = (dispatch, ownProps)  => ({
+  signUp: (newUser) => {
+    dispatch(addUser(newUser));
+  }
+});
+
+const mapStateToProps = (state) => {
+  // console.log(state.api.user.add);
+  return {
+    addUserResponse: state.api.user.add
+  }
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Register));
