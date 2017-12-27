@@ -37,7 +37,8 @@ class NowPlaying extends Component {
         <Player
           url={nowPlaying.url}
           // ref={this._getRefPlayer}
-          playing={false}
+          playing={autoplay}
+          seektime={756}
         />
       </Grid>
     );

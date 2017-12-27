@@ -121,8 +121,6 @@ class AddLink extends Component {
     const matches = match(suggestion.snippet.title, query);
     const parts = parse(suggestion.snippet.title, matches);
 
-    console.log(suggestion);
-
     return (
       <MenuItem selected={isHighlighted} component="div">
         <img
