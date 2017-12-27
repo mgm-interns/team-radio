@@ -21,7 +21,7 @@ mongoose.connection.on('open', () => {
 });
 
 const app = express();
-
+app.set('superSecret',"iloveteamradio");
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(
