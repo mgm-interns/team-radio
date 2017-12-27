@@ -14,14 +14,14 @@ export default async (emitter, stationId, userId) => {
   } catch (err) {
     console.error(err);
     emitter.emit(EVENTS.SERVER_JOINED_STATION_FAILURE, {
-      message: EVENTS.SERVER_JOINED_STATION_FAILURE,
+      message: err,
     });
     throw err;
   }
 
   if (station) {
-    let player = players.getPlayer(stationId);
-    let nowPlaying = player.getNowPlaying();
+    let player = await players.getPlayer(stationId);
+    let nowPlaying = await player.getNowPlaying();
     emitter.emit(EVENTS.SERVER_NOW_PLAYING, nowPlaying);
 
     try {

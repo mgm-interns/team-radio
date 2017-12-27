@@ -44,15 +44,12 @@ io.on('connection', async function(socket) {
         break;
 
       case EVENTS.CLIENT_JOIN_STATION:
-        // handler socket join station
-        socket.leaveAll();
-        socket.join(action.payload.stationId);
-
+        _leaveAllAndJoinRoom(socket, action.payload.stationId);
         try {
           eventHandlers.joinStationHandler(
             createEmitter(socket),
-            action.payload.userId,
             action.payload.stationId,
+            action.payload.userId,
           );
         } catch (err) {
           console.log(err);
@@ -62,7 +59,11 @@ io.on('connection', async function(socket) {
 
       case EVENTS.CLIENT_LEAVE_STATION:
         socket.leaveAll();
-        eventHandlers.leaveStationHandler(createEmitter(socket), userId);
+        eventHandlers.leaveStationHandler(
+          createEmitter(socket),
+          userId,
+          stationId,
+        );
         break;
 
       case EVENTS.CLIENT_ADD_SONG:
@@ -100,6 +101,26 @@ io.on('connection', async function(socket) {
     }
   });
 });
+
+const _leaveAllAndJoinRoom = (socket, stationId) => {
+  const allRooms = Object.keys(socket.rooms).slice(1);
+  const leaveRoomPromises = [];
+
+  allRooms.forEach(room => {
+    leaveRoomPromises.push(_leaveRoom(socket, room));
+  });
+
+  Promise.all(leaveRoomPromises).then(() => {
+    socket.join(stationId);
+  });
+
+};
+
+const _leaveRoom = (socket, room) => {
+  return new Promise(function (resolve, reject) {
+		socket.leave(room, resolve);
+	});
+}
 
 players.attachWebSocket(io);
 

@@ -9,9 +9,9 @@ export default async (emitter, stationName, userId) => {
       station: station,
     });
   } catch (err) {
-    console.error(err);
+    console.log(err);
     emitter.emit(EVENTS.SERVER_CREATE_STATION_FAILURE, {
-      message: EVENTS.SERVER_CREATE_STATION_FAILURE,
+      message: err,
     });
   }
 
