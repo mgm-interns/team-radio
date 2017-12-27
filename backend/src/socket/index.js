@@ -9,12 +9,26 @@ import * as EVENTS from '../const/actions';
 
 const io = SocketIO();
 
-// TODO: WIP
 const createEmitter = socket => {
   return {
-    emit: (eventName, payload) => {},
-    emitToStation: (stationId, eventName, payload) => {},
-    emitAll: (eventName, payload) => {},
+    emit: (eventName, payload) => {
+      socket.emit('action', {
+        type: eventName,
+        payload: payload,
+      });
+    },
+    emitToStation: (stationId, eventName, payload) => {
+      io.to(stationId).emit('action', {
+        type: eventName,
+        payload: payload,
+      });
+    },
+    emitAll: (eventName, payload) => {
+      io.emit('action', {
+        type: eventName,
+        payload: payload,
+      });
+    },
   };
 };
 
