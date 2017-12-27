@@ -12,6 +12,7 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import { MenuItem } from 'material-ui/Menu';
 import { CircularProgress } from 'material-ui/Progress';
+import { Images } from '../../../Theme';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
@@ -237,11 +238,11 @@ class AddLink extends Component {
     return (
       <Grid
         container
-        className={classes.loadingContainer}
+        className={classes.emptyCollection}
         justify="center"
         alignItems="center"
       >
-        <span>Not found</span>
+        <img src={Images.notFound} className={classes.emptyImg} />
       </Grid>
     );
   }

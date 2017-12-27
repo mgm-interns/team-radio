@@ -24,7 +24,8 @@ export default theme => {
 
     addLinkBox: {
       backgroundColor: '#fafafa !important',
-      marginHorizontal: smallMargin,
+      marginLeft: baseMargin,
+      marginRight: baseMargin,
       marginTop: 0,
       marginBottom: doubleBaseMargin * 3,
       width: '100%',
@@ -85,6 +86,17 @@ export default theme => {
     loadingContainer: {
       height: '100%',
       minHeight: 158,
+    },
+
+    emptyCollection: {
+      width: 200,
+      margin: 'auto',
+    },
+
+    emptyImg: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
     },
 
     /* Search */
