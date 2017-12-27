@@ -47,7 +47,8 @@ class NavBar extends Component {
   }
 
   handleScroll(event) {
-    const { scrollTop } = event.srcElement.documentElement;
+    const element = event.target || event.srcElement;
+    const { scrollTop } = element.documentElement;
     this.setState({
       transform: scrollTop,
     });
