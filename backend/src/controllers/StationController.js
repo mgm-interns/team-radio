@@ -1,6 +1,6 @@
 /* eslint-disable */
 var mongoose = require('mongoose');
-var Station = require('./../Models/Station');
+var Station = require('../models/Station');
 var Song = require('./SongController');
 
 // create a station
@@ -119,6 +119,7 @@ stationController.addSong = async function(stationId, songUrl, callback) {
       ) {
         if (err) throw err;
 
+        console.log('currentStation : ' + currentStation);
         var currentPlaylist = currentStation.playlist;
         // if have not id in playlist
         if (validateDuplicatedSong(song._id, currentPlaylist)) {
@@ -151,6 +152,28 @@ stationController.addSong = async function(stationId, songUrl, callback) {
     }
   }
 };
+//
+stationController.setNowPlayingSong = function(
+  stationId,
+  nextPlayingSong,
+  currentPlayingSong,
+  callback,
+) {
+  if (currentPlayingSong) {
+    Station.updateFieldOfStationById(
+      stationId,
+      'station_name',
+      'mgm 112005',
+      function(err, station) {
+        if (err) throw err;
+
+        console.log(JSON.stringify(station) + ' <-->');
+        callback(station);
+      },
+    );
+  }
+};
+
 /**
  * The function help covert string to url of station
  * */
