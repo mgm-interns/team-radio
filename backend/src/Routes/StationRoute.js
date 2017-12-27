@@ -1,5 +1,6 @@
 /* eslint-disable */
-var station = require('../Controllers/StationController');
+//var station = require('../Controllers/StationController');
+var station = require('../Controllers/TEST_CONTROLLER');
 
 export default router => {
   // create a station
@@ -10,18 +11,28 @@ export default router => {
   });
 
   //// get a station by name
-  router.get('/stations/:stationName', function(req, res) {
+  /* router.get('/stations/:stationName', function(req, res) {
     station.getStationByName(req, res);
   });
+  */
+  /*
+  router.get('/stations/:url', function(req, res) {
+    station.getStationByUrl(req, res);
+  });
+  */
+
+  router.get('/stations/:id', function(req, res) {
+    station.getStationById(req, res);
+  });
+
   //// get list station but can limit if need
   router.get('/stations', function(req, res) {
     station.getStations(req, res);
-    // stationController.getListVideo(req,res);
+    //  stationController.getListVideo(req,res);
   });
   // add a new video
-  /*
-  router.put('/stations/:stationName',function(req,res){
-      station.addVideo(req,res);
-  })
-  */
+
+  router.put('/stations/:_id', function(req, res) {
+    station.addSong(req, res);
+  });
 };

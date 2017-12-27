@@ -2,6 +2,7 @@ export default theme => ({
   containerWrapper: {
     width: '100%',
     margin: 0,
+    paddingBottom: 50, // Footer height
   },
   container: {
     margin: 'auto',

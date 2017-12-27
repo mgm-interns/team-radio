@@ -52,7 +52,6 @@ class Backdrop extends Component {
               <Input
                 id="station-name"
                 placeholder={fixture.input.placeholder}
-                margin="normal"
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
                 value={this.state.station_name}
@@ -72,7 +71,7 @@ class Backdrop extends Component {
                 disabled={!this.state.station_name}
               >
                 {fixture.button.name}
-                <Icon className={classes.sendIcon}>send</Icon>
+                <Icon className={classes.sendIcon}>radio</Icon>
               </Button>
             )}
           </Grid>

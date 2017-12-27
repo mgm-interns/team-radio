@@ -30,40 +30,43 @@ class StationPage extends Component {
 
   render() {
     const { classes, currentStation: { station } } = this.props;
-    return (
-      <div>
-        <NavBar color="primary" />
-        <Grid direction="row" container className={classes.containerWrapper}>
-          <Grid item xs={12} className={classes.switcherContainer}>
-            <StationSwitcher />
-          </Grid>
-          <Grid item xs={12} className={classes.container}>
-            <Grid container>
-              <Grid item xs={12} md={7} xl={8}>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <h1>{station && station.station_name}</h1>
-                  </Grid>
-                  <NowPlaying className={classes.content} autoplay={true} />
+    return [
+      <NavBar key={1} color="primary" />,
+      <Grid
+        key={2}
+        direction="row"
+        container
+        className={classes.containerWrapper}
+      >
+        <Grid item xs={12} className={classes.switcherContainer}>
+          <StationSwitcher />
+        </Grid>
+        <Grid item xs={12} className={classes.container}>
+          <Grid container>
+            <Grid item xs={12} md={7} xl={8}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <h1>{station && station.station_name}</h1>
                 </Grid>
+                <NowPlaying className={classes.content} autoplay={true} />
               </Grid>
-              <Grid item xs={12} md={5} xl={4}>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <h1>Now Playing</h1>
-                  </Grid>
-                  <Playlist className={classes.content} />
+            </Grid>
+            <Grid item xs={12} md={5} xl={4}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <h1>Now Playing</h1>
                 </Grid>
+                <Playlist className={classes.content} />
               </Grid>
-              <Grid item xs={12}>
-                <AddLink />
-              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <AddLink />
             </Grid>
           </Grid>
         </Grid>
-        <Footer />
-      </div>
-    );
+      </Grid>,
+      <Footer key={3} />,
+    ];
   }
 }
 
