@@ -78,10 +78,7 @@ export default router => {
     }
   });
 
-  router.use((req, res, next) => {
-    authController(req, res, next);
-    next();
-  });
+  router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

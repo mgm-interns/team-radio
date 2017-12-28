@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true }));
 
-module.exports = function tokenVerify(req, res) {
+module.exports = function tokenVerify(req, res, next) {
   // get token
   const token = req.headers['access-token'];
 
@@ -15,15 +15,16 @@ module.exports = function tokenVerify(req, res) {
     // verifies secret and checks exp
     jwt.verify(token, req.app.get('superSecret'), function(err, decoded) {
       if (err) {
-        res.json({
+        return res.json({
           success: false,
           message: 'Failed to authenticate token.',
         });
       }
       req.decoded = decoded;
+      next();
     });
   } else {
-    res.status(403).send({
+      return res.status(403).send({
       success: false,
       message: 'No token provided.',
     });
