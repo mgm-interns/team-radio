@@ -4,7 +4,6 @@
 import SocketIO from 'socket.io';
 import eventHandlers from './events';
 import * as players from '../players';
-
 import * as EVENTS from '../const/actions';
 
 const io = SocketIO();
