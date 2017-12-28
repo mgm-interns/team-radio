@@ -1,8 +1,7 @@
 import * as stationController from '../../controllers/station';
 import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
-
-import players from '../../players';
+import * as players from '../../players';
 
 export default async (emitter, userId, stationId) => {
   let station;

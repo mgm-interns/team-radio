@@ -3,34 +3,31 @@
  */
 import SocketIO from 'socket.io';
 import eventHandlers from './events';
-import players from '../players';
-
+import * as players from '../players';
 import * as EVENTS from '../const/actions';
 
 const io = SocketIO();
 
-const createEmitter = socket => {
-  return {
-    emit: (eventName, payload) => {
-      socket.emit('action', {
-        type: eventName,
-        payload: payload,
-      });
-    },
-    emitToStation: (stationId, eventName, payload) => {
-      io.to(stationId).emit('action', {
-        type: eventName,
-        payload: payload,
-      });
-    },
-    emitAll: (eventName, payload) => {
-      io.emit('action', {
-        type: eventName,
-        payload: payload,
-      });
-    },
-  };
-};
+const createEmitter = socket => ({
+  emit: (eventName, payload) => {
+    socket.emit('action', {
+      type: eventName,
+      payload: payload,
+    });
+  },
+  emitToStation: (stationId, eventName, payload) => {
+    io.to(stationId).emit('action', {
+      type: eventName,
+      payload: payload,
+    });
+  },
+  emitAll: (eventName, payload) => {
+    io.emit('action', {
+      type: eventName,
+      payload: payload,
+    });
+  },
+});
 
 io.on('connection', async function(socket) {
   socket.on('action', action => {
@@ -113,14 +110,12 @@ const _leaveAllAndJoinRoom = (socket, stationId) => {
   Promise.all(leaveRoomPromises).then(() => {
     socket.join(stationId);
   });
-
 };
 
-const _leaveRoom = (socket, room) => {
-  return new Promise(function (resolve, reject) {
-		socket.leave(room, resolve);
-	});
-};
+const _leaveRoom = (socket, room) =>
+  new Promise(function(resolve, reject) {
+    socket.leave(room, resolve);
+  });
 
 players.attachWebSocket(io);
 

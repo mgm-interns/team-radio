@@ -1,12 +1,12 @@
+import * as songController from './song';
+import * as players from '../players';
+
 let station = {
   id: '',
   name: '',
   playlist: [],
   startTime: null,
 };
-
-import * as songController from './song';
-import players from '../players';
 
 export const addStation = async (stationName, userId) => {
   // TODO: convert stationName to stationId

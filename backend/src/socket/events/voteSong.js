@@ -9,9 +9,9 @@ export default (emitter, score, userId, stationId, songId) => {
 };
 
 const _upVoteSong = (emitter, userId, stationId, songId) => {
-    console.log('Up vote feature is coming soon!');
+  console.log('Up vote feature is coming soon!');
 };
 
 const _downVoteSong = (emitter, userId, stationId, songId) => {
-    console.log('Down vote feature is coming soon!');
+  console.log('Down vote feature is coming soon!');
 };
