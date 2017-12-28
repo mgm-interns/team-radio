@@ -57,6 +57,5 @@ app.use((err, req, res, next) => {
   res.json(err);
 });
 
-players.init();
 
 export default app;
