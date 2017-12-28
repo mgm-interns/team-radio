@@ -3,7 +3,7 @@
  */
 import SocketIO from 'socket.io';
 import eventHandlers from './events';
-import players from '../players';
+import * as players from '../players';
 
 import * as EVENTS from '../const/actions';
 

@@ -8,7 +8,7 @@ import path from 'path';
 const mongoose = require('mongoose');
 
 import Routes from './routes';
-import players from './players';
+import * as players from './players';
 // import mongoose from 'mongoose'
 const mongodbConnectionString =
   process.env.MONGODB ||

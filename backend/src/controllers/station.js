@@ -6,7 +6,7 @@ let station = {
 };
 
 import * as songController from './song';
-import players from '../players';
+import * as players from '../players';
 
 export const addStation = async (stationName, userId) => {
   // TODO: convert stationName to stationId
