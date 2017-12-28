@@ -5,7 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { upVoteSong } from 'Redux/api/currentStation/actions';
+import { upVoteSong, downVoteSong } from 'Redux/api/currentStation/actions';
 import styles from './styles';
 
 /* eslint-disable no-return-assign */
@@ -23,6 +23,7 @@ class PlaylistItem extends Component {
       playing,
       classes,
       upVoteSong,
+      downVoteSong,
       id,
     } = this.props;
     return (
@@ -56,7 +57,7 @@ class PlaylistItem extends Component {
             {score}
           </div>
           <IconButton
-            onClick={() => upVoteVideo(id)}
+            onClick={() => downVoteSong(id)}
             className={classes.action}
             color={isUpvoted ? 'primary' : 'default'}
           >
@@ -80,10 +81,12 @@ PlaylistItem.propTypes = {
   theme: PropTypes.any,
   classes: PropTypes.any,
   upVoteSong: PropTypes.func,
+  downVoteSong: PropTypes.func,
 };
 
 const mapDispatchToProps = dispatch => ({
-  upVoteSong: videoId => dispatch(upVoteSong({ videoId })),
+  upVoteSong: songId => dispatch(upVoteSong({ songId })),
+  downVoteSong: songId => dispatch(downVoteSong({ songId })),
 });
 
 export default compose(
