@@ -1,23 +1,33 @@
 import {
+  CLIENT_ADD_SONG,
   CLIENT_UPVOTE_SONG,
   CLIENT_JOIN_STATION,
   CLIENT_DOWNVOTE_SONG,
-  SERVER_JOINED_STATION_SUCCESS,
-  SERVER_JOINED_STATION_FAILURE,
+  CLIENT_LEAVE_STATION,
 } from 'Redux/actions';
 
 // Client action creator
-export const joinStation = station_name => ({
+export const joinStation = stationId => ({
   type: CLIENT_JOIN_STATION,
-  payload: { station_name },
+  payload: { userId: 0, stationId },
 });
 
-export const upVoteSong = ({ stationId, videoId }) => ({
+export const leaveStation = stationId => ({
+  type: CLIENT_LEAVE_STATION,
+  payload: { userId: 0, stationId },
+});
+
+export const addSong = ({ stationId, songUrl }) => ({
+  type: CLIENT_ADD_SONG,
+  payload: { userId: 0, stationId, songUrl },
+});
+
+export const upVoteSong = ({ stationId, songId }) => ({
   type: CLIENT_UPVOTE_SONG,
-  payload: { stationId, videoId },
+  payload: { useId: 0, stationId, songId },
 });
 
-export const downVoteSong = ({ stationId, videoId }) => ({
+export const downVoteSong = ({ stationId, songId }) => ({
   type: CLIENT_DOWNVOTE_SONG,
-  payload: { stationId, videoId },
+  payload: { useId: 0, stationId, songId },
 });
