@@ -17,8 +17,8 @@ const MENUS = {
     url: '/station',
   },
   login: {
-    title: 'Login',
-    url: '/auth/login',
+    title: 'Register',
+    url: '/auth/register',
   },
 };
 
