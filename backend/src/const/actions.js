@@ -10,12 +10,10 @@ export const SERVER_CREATE_STATION_SUCCESS = 'SERVER:CREATE_STATION_SUCCESS';
 // response payload: { station }
 
 export const SERVER_CREATE_STATION_FAILURE = 'SERVER:CREATE_STATION_FAILURE ';
-// response payload: { message } 
+// response payload: { message }
 // message is error msg: (Ex: 'Station name is already exists!')
 
-
-
-/*******************************************************************************/
+/* ***************************************************************************** */
 // SERVER NOTIFY
 export const SERVER_UPDATE_STATIONS = 'SERVER:UPDATE_STATIONS';
 // response payload: { stations }
@@ -38,9 +36,7 @@ export const SERVER_USER_LEFT = 'SERVER:USER_LEFT';
 // response payload: { user }
 // excute when someone leaves station
 
-
-
-/*******************************************************************************/
+/* ***************************************************************************** */
 // CLIENT REQUESTS
 export const CLIENT_JOIN_STATION = 'CLIENT:JOIN_STATION_REQUEST';
 // request payload { userId, stationId }
