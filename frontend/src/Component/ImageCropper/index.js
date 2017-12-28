@@ -6,9 +6,11 @@ import Button from 'material-ui/Button';
 import { CircularProgress } from 'material-ui/Progress';
 import Grid from 'material-ui/Grid/Grid';
 import Icon from 'material-ui/Icon/Icon';
+import withStyles from 'material-ui/styles/withStyles';
 import Cropper from 'react-cropper';
 import toBase64 from 'Util/toBase64';
 import sleep from 'Util/sleep';
+import styles from './styles';
 
 class ImageCropper extends Component {
   constructor(props) {
@@ -154,6 +156,30 @@ class ImageCropper extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+    const actionButtons = [
+      {
+        text: 'Preview',
+        icon: 'remove_red_eye',
+        onClick: this.onPressPreview,
+      },
+      {
+        text: 'Rotate',
+        icon: 'crop_rotate',
+        onClick: this.onPressRotate,
+      },
+      {
+        text: 'Crop',
+        icon: 'crop',
+        onClick: this.onPressCrop,
+      },
+      {
+        text: 'Cancel',
+        icon: 'close',
+        onClick: this.onPressCancel,
+        color: 'default',
+      },
+    ];
     return [
       this.props.buttonComponent ? (
         <div key={1} onClick={this._openFilePickerDialog}>
@@ -180,9 +206,10 @@ class ImageCropper extends Component {
         onChange={this._onImagePicked}
       />,
       <Modal key={3} onClose={this._closeDialog} show={this.state.isOpen}>
-        <Card style={{ margin: 'auto', minWidth: 768, maxWidth: 1024 }}>
-          <CardContent style={{ position: 'relative' }}>
+        <Card className={classes.modalContainer}>
+          <CardContent className={classes.modalContent}>
             <Grid container direction="row">
+              {/* Left Container */}
               <Grid item xs={8}>
                 <Grid container>
                   <Grid item xs={12}>
@@ -193,17 +220,12 @@ class ImageCropper extends Component {
                       ref={ref => {
                         this.cropper = ref;
                       }}
-                      src={this.state.originData}
-                      style={{
-                        minWidth: 512,
-                        maxWidth: 768,
-                        minHeight: 312,
-                        maxHeight: 512,
-                      }}
-                      ready={this._onCropperReady}
+                      className={classes.cropper}
                       // Cropper.js options
+                      src={this.state.originData}
+                      ready={this._onCropperReady}
                       aspectRatio={this.props.aspectRatio}
-                      // DO NOT allow the crop box go out side of the image
+                      // Prevent the crop box go out side of the image
                       viewMode={1}
                       rotateTo={this.state.rotation}
                       {...this.props.cropperOptions}
@@ -211,6 +233,7 @@ class ImageCropper extends Component {
                   </Grid>
                 </Grid>
               </Grid>
+              {/* Right Container */}
               <Grid item xs={4}>
                 <Grid container>
                   <Grid item xs={12}>
@@ -218,74 +241,33 @@ class ImageCropper extends Component {
                   </Grid>
                   <Grid item xs={12}>
                     <img
-                      style={{ width: '100%' }}
+                      className={classes.rightContainerImage}
                       src={this.state.croppedData}
-                      alt=""
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      style={{ width: '100%' }}
-                      raised
-                      color={'primary'}
-                      onClick={this.onPressPreview}
-                    >
-                      <Icon style={{ marginRight: 8 }}>remove_red_eye</Icon>
-                      Preview
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      style={{ width: '100%' }}
-                      raised
-                      color={'primary'}
-                      onClick={this.onPressRotate}
-                    >
-                      <Icon style={{ marginRight: 8 }}>crop_rotate</Icon>
-                      Rotate
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      style={{ width: '100%' }}
-                      raised
-                      color={'primary'}
-                      onClick={this.onPressCrop}
-                    >
-                      <Icon style={{ marginRight: 8 }}>crop</Icon>
-                      Crop
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      style={{ width: '100%' }}
-                      raised
-                      color={'default'}
-                      onClick={this.onPressCancel}
-                    >
-                      <Icon style={{ marginRight: 8 }}>close</Icon>
-                      Cancel
-                    </Button>
-                  </Grid>
+                  {actionButtons.map(
+                    ({ color, onClick, icon, text }, index) => (
+                      <Grid key={index} item xs={12}>
+                        <Button
+                          className={classes.button}
+                          raised
+                          color={color || 'primary'}
+                          onClick={onClick}
+                        >
+                          <Icon className={classes.buttonIcon}>{icon}</Icon>
+                          {text}
+                        </Button>
+                      </Grid>
+                    ),
+                  )}
                 </Grid>
               </Grid>
             </Grid>
             <div
-              style={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                top: 0,
-                left: 0,
-                display: this.state.ready ? 'none' : 'flex',
-                background: 'rgba(0,0,0,0.9)',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              className={classes.loadingBackdrop}
+              style={{ display: this.state.ready && 'none' }}
             >
-              <CircularProgress
-                style={{ color: 'white', width: 100, height: 100 }}
-              />
+              <CircularProgress className={classes.loadingIcon} />
             </div>
           </CardContent>
         </Card>
@@ -310,4 +292,4 @@ ImageCropper.defaultProps = {
   aspectRatio: 1 / 1,
 };
 
-export default ImageCropper;
+export default withStyles(styles)(ImageCropper);
