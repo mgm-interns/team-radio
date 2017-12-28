@@ -46,7 +46,7 @@ class PlaylistItem extends Component {
             className={classes.action}
             color={isUpvoted ? 'primary' : 'default'}
           >
-            star
+            arrow_drop_up
           </IconButton>
           <div
             className={[classes.score, isUpvoted ? 'active' : ''].reduce(
@@ -55,6 +55,13 @@ class PlaylistItem extends Component {
           >
             {score}
           </div>
+          <IconButton
+            onClick={() => upVoteVideo(id)}
+            className={classes.action}
+            color={isUpvoted ? 'primary' : 'default'}
+          >
+            arrow_drop_down
+          </IconButton>
         </Grid>
       </Grid>
     );

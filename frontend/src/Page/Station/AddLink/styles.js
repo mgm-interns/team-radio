@@ -1,5 +1,5 @@
 export default theme => {
-  // console.log(theme.typography.title);
+  // console.log(theme);
   const {
     spacing: { smallMargin, baseMargin, doubleBaseMargin },
     palette: { lightGrey },
@@ -24,7 +24,8 @@ export default theme => {
 
     addLinkBox: {
       backgroundColor: '#fafafa !important',
-      marginHorizontal: smallMargin,
+      marginLeft: baseMargin,
+      marginRight: baseMargin,
       marginTop: 0,
       marginBottom: doubleBaseMargin * 3,
       width: '100%',
@@ -87,6 +88,17 @@ export default theme => {
       minHeight: 158,
     },
 
+    emptyCollection: {
+      width: 200,
+      margin: 'auto',
+    },
+
+    emptyImg: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+    },
+
     /* Search */
     autoSearchContainer: {
       flexGrow: 1,
@@ -110,6 +122,10 @@ export default theme => {
     },
     textField: {
       width: '100%',
+    },
+    searchItemImg: {
+      height: '100%',
+      marginRight: baseMargin,
     },
     /* End search */
   };
