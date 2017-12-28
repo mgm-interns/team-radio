@@ -14,6 +14,9 @@ const DEFAULT_NOTIFICATION = {
 
 let notificationRef = null;
 
+/**
+ * DO NOT import this Component
+ */
 class AppNotification extends Component {
   /**
    * Get the instance of notification
@@ -77,4 +80,8 @@ AppNotification.propTypes = {
   theme: PropTypes.object,
 };
 
-export default withTheme()(AppNotification);
+const NotificationWrapper = withTheme()(AppNotification);
+
+NotificationWrapper.instance = AppNotification.instance;
+
+export default NotificationWrapper;
