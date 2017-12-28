@@ -13,3 +13,4 @@ export {
   withBrowserNotification,
   withNotification,
 } from './Notification';
+export { default as ImageCropper } from './ImageCropper';

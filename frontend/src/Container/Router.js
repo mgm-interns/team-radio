@@ -6,6 +6,7 @@ import Station from '../Page/Station';
 import Auth from '../Page/Auth/';
 import Login from '../Page/Auth/Login/';
 import Register from '../Page/Auth/Register/';
+import ImageCropper from '../Page/Demo/ImageCropper';
 
 // then our route config
 const routes = [
@@ -31,6 +32,10 @@ const routes = [
         component: Register,
       },
     ],
+  },
+  {
+    path: '/demo/image-cropper',
+    component: ImageCropper,
   },
 ];
 
