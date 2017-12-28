@@ -25,4 +25,7 @@ export default theme => ({
       height: 600,
     },
   },
+  nowPlaying: {
+    padding: '0 0 0 8px !important',
+  },
 });

@@ -12,6 +12,7 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import { MenuItem } from 'material-ui/Menu';
 import { CircularProgress } from 'material-ui/Progress';
+import { Images } from '../../../Theme';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
@@ -47,6 +48,7 @@ class AddLink extends Component {
     this._onSuggestionSelected = this._onSuggestionSelected.bind(this);
     this._renderLinkBoxSection = this._renderLinkBoxSection.bind(this);
     this._renderPreviewSection = this._renderPreviewSection.bind(this);
+    this._renderSuggestion = this._renderSuggestion.bind(this);
   }
 
   _checkValidUrl(url) {
@@ -115,14 +117,20 @@ class AddLink extends Component {
   }
 
   _renderSuggestion(suggestion, { query, isHighlighted }) {
+    const { classes } = this.props;
+
     const matches = match(suggestion.snippet.title, query);
     const parts = parse(suggestion.snippet.title, matches);
 
     return (
       <MenuItem selected={isHighlighted} component="div">
-        <div>
+        <img
+          src={suggestion.snippet.thumbnails.default.url}
+          className={classes.searchItemImg}
+        />
+        <span>
           {parts.map((part, index) => <span key={index}>{part.text}</span>)}
-        </div>
+        </span>
       </MenuItem>
     );
   }
@@ -230,11 +238,11 @@ class AddLink extends Component {
     return (
       <Grid
         container
-        className={classes.loadingContainer}
+        className={classes.emptyCollection}
         justify="center"
         alignItems="center"
       >
-        <span>Not found</span>
+        <img src={Images.notFound} className={classes.emptyImg} />
       </Grid>
     );
   }

@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createSocketIoMiddleware from 'redux-socket.io';
 import { apiMiddleware } from 'redux-api-middleware';
-import webSocket from '../Config/webSocket';
+import { webSocket } from 'Config';
 import reducers from './reducers';
 
 let store = null;
@@ -25,7 +25,7 @@ const create = (initialState = {}) => {
     compose(
       applyMiddleware(thunk, apiMiddleware, socketIoMiddleware),
       devtools,
-    ), // Compose redux devtools
+    ), // Compose redux dev tools
   );
 };
 
@@ -33,7 +33,7 @@ export default function initRedux(initialState = {}) {
   if (!store) {
     store = create(initialState);
   }
-  // Export store to be a global variable in development evironment
+  // Export store to be a global variable in development environment
   if (process.env.NODE_ENV === 'development') {
     window.store = store;
   }
