@@ -8,6 +8,7 @@ const images = {
     avatar5: require('../Images/station-avatar/5.jpg'),
   },
   drummer: require('../Images/drummer.png'),
+  notFound: require('../Images/not_found.png'),
   landing: require('../Images/logo/landing.png'),
   windows: {
     stations: require('../Images/windows/stations.png'),

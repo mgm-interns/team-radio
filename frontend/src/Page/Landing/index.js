@@ -23,25 +23,25 @@ class Landing extends Component {
   //   }
   // }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { notification: { app, browser } } = this.props;
     let count = 0;
     const duration = 2000;
-    // Call notification 3 times
-    // const interval = setInterval(async () => {
-    //   await app.success({
-    //     message: 'Authentication is fucking failed!',
-    //     duration,
-    //   });
-    //   await browser.info({
-    //     message: 'Authentication is fucking failed!',
-    //     duration,
-    //   });
-    //   count += 1;
-    //   if (count > 3) {
-    //     clearInterval(interval);
-    //   }
-    // }, 300);
+    // // Call notification 3 times
+    const interval = setInterval(async () => {
+      await app.success({
+        message: 'Authentication is fucking failed!',
+        duration,
+      });
+      await browser.info({
+        message: 'Authentication is fucking failed!',
+        duration,
+      });
+      count += 1;
+      if (count > 3) {
+        clearInterval(interval);
+      }
+    }, 300);
   }
 
   render() {
@@ -65,6 +65,4 @@ const mapStateToProps = state => ({
   currentStation: state.api.currentStation,
 });
 
-export default compose(connect(mapStateToProps), withRouter, withNotification)(
-  Landing,
-);
+export default compose(connect(mapStateToProps), withRouter)(Landing);
