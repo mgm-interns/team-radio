@@ -6,7 +6,7 @@ const router = express.Router();
 
 const handlers = [
   // Declare api handlers
-  require('./UserRoute'),
+  require('./user'),
 ];
 
 // Register handlers

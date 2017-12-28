@@ -7,7 +7,7 @@ export default router => {
     try {
       const user = await User.findOne({ email: req.body.email });
       if (user) {
-        res.json({ message: 'Email is not available' });
+        res.status(400).json({ email: 'This email has already been taken.' });
       } else {
         const newUser = new User();
         newUser.email = req.body.email;
@@ -25,8 +25,10 @@ export default router => {
             expiresIn: 1440 * 7, // expires in 24 hours
           });
           res.json({
-            message: 'signup success',
-            token: token,
+            data: {
+              message: 'signup success',
+              token: token,
+            },
           });
         });
       }
@@ -39,15 +41,15 @@ export default router => {
     try {
       const user = await User.findOne({ email: req.body.email });
       if (!user) {
-        res.json({
+        res.status(401).json({
           success: false,
-          message: 'Authenticate failed. User not Found.',
+          message: 'Sorry, we could not find an account with that email.',
         });
       } else if (user) {
         if (!user.validPassword(req.body.password)) {
-          res.json({
-            message: 'Authenticate failed. Wrong password.',
+          res.status(401).json({
             success: false,
+            message: 'The password is incorrect.',
           });
         } else {
           // if user is found and password is right
@@ -63,9 +65,11 @@ export default router => {
           });
 
           res.json({
-            success: true,
-            message: 'Enjoy your token!',
-            token: token,
+            data: {
+              success: true,
+              message: 'Enjoy your token!',
+              token: token,
+            },
           });
         }
       }
