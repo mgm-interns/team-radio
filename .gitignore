@@ -10,13 +10,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 debug.log
-package-lock.json
 
 # Enviroment
 .env
 
 # Editor
+.vscode/
+.idea/
 .editorconfig
-.vscode
-.idea
 .DS_Store
