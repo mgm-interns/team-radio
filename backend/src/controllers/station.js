@@ -27,7 +27,7 @@ export const addSong = async (stationId, songUrl, userId) => {
   return Promise.resolve(station.playlist);
 };
 
-export const updateStartTime = async (stationId, time) => {};
+export const updateStartingTime = async (stationId, time) => {};
 
 export const setPlayedSongs = async (stationId, songIds) => {
   // return playlist
