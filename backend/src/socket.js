@@ -8,6 +8,7 @@ const io = require('socket.io')();
 const stationNsp = io.of('/station');
 
 stationNsp.on('connection', async function(socket) {
+  socketHandlers.map(handler => handler(socket, io));
   socket.on('action', function(data) {
     switch (data.type) {
       // Client join to a station

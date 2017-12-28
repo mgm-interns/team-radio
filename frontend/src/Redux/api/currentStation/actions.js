@@ -1,28 +1,43 @@
-// server action types
-export const SERVER_JOINED_STATION = 'SERVER:JOINED_STATION';
-export const SERVER_UPDATE_STATION = 'SERVER:UPDATE_STATION';
+import {
+  CLIENT_JOIN_STATION,
+  CLIENT_CREATE_STATION,
+  CLIENT_UPVOTE_VIDEO,
+  CLIENT_UN_UPVOTE_VIDEO,
+  CLIENT_ADD_LINK_VIDEO,
+} from '../../../../lib/actions';
 
-// Server action creator
+// Client action creator
 
-// Client action types
-export const CLIENT_JOIN_STATION = 'CLIENT:JOIN_STATION';
-export const CLIENT_UPVOTE_VIDEO = 'CLIENT:UPVOTE_VIDEO';
-export const CLIENT_UN_UPVOTE_VIDEO = 'CLIENT:UN_UPVOTE_VIDEO';
+export const createNewStation = ({ stationName, userId }) => ({
+  type: CLIENT_CREATE_STATION,
+  payload: { stationName, userId },
+});
 
+<<<<<<< HEAD
+export const joinStation = ({ stationId, userId }) => ({
+  type: CLIENT_JOIN_STATION,
+  payload: { stationId, userId },
+});
+
+export const addLinkVideo = ({ stationId, videoUrl, userId }) => ({
+  type: CLIENT_ADD_LINK_VIDEO,
+  payload: { stationId, videoUrl, userId },
+=======
 // Client action creator
 export const joinStation = station_name => ({
   type: CLIENT_JOIN_STATION,
   payload: { station_name },
+>>>>>>> dev
 });
 
-export const upVoteVideo = ({ stationId, videoId }) => ({
+export const upVoteVideo = ({ stationId, videoId, userId }) => ({
   type: CLIENT_UPVOTE_VIDEO,
-  payload: { stationId, videoId },
+  payload: { stationId, videoId, userId },
 });
 
-export const unUpVoteVideo = ({ stationId, videoId }) => ({
+export const unUpVoteVideo = ({ stationId, videoId, userId }) => ({
   type: CLIENT_UN_UPVOTE_VIDEO,
-  payload: { stationId, videoId },
+  payload: { stationId, videoId, userId },
 });
 
 // Friday demo action

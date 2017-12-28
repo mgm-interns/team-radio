@@ -180,6 +180,24 @@ export const unUpVoteVideo = videoId => {
   });
 };
 
+export const addLinkVideo = (videoUrl, stationId) => {
+  // let newSong = addNewSong(videoUrl);
+  const newSong = {
+    id: '3Wv-JIpAjks',
+    name: 'We Wish you a Merry Christmas',
+    singer: 'Christmas Carol',
+    duration: 50000,
+    uploader: 'ntnhac',
+    score: 1,
+    isUpvoted: false,
+    url: 'https://www.youtube.com/watch?v=3Wv-JIpAjks',
+    thumbnail:
+      'https://yt3.ggpht.com/-Ymp7v1ycCBA/AAAAAAAAAAI/AAAAAAAAAAA/-R7WfWSAkag/s88-c-k-no-mo-rj-c0xffffff/photo.jpg',
+    playing: false,
+  };
+  playlist.push(newSong);
+};
+
 export default {
   playlist,
   getPlaylist,
@@ -187,4 +205,5 @@ export default {
   nextNowplaying,
   upVoteVideo,
   unUpVoteVideo,
+  addLinkVideo,
 };
