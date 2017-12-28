@@ -79,7 +79,7 @@ export default router => {
   });
 
   router.use((req, res, next) => {
-    authController(req, res, next);
+    authController(req, res);
     next();
   });
 

@@ -15,7 +15,7 @@ module.exports = function tokenVerify(req, res) {
     // verifies secret and checks exp
     jwt.verify(token, req.app.get('superSecret'), function(err, decoded) {
       if (err) {
-        res.json({
+        return res.json({
           success: false,
           message: 'Failed to authenticate token.',
         });
@@ -23,7 +23,7 @@ module.exports = function tokenVerify(req, res) {
       req.decoded = decoded;
     });
   } else {
-    res.status(403).send({
+      return res.status(403).send({
       success: false,
       message: 'No token provided.',
     });
