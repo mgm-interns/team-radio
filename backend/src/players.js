@@ -18,12 +18,10 @@ class Player {
     this.updatePlaylist(station);
   }
 
-  getNowPlaying = () => {
-    return {
-      url: this.nowPlaying.url,
-      starting_time: Date.now() - this.nowPlaying.starting_time,
-    };
-  };
+  getNowPlaying = () => ({
+    url: this.nowPlaying.url,
+    starting_time: Date.now() - this.nowPlaying.starting_time,
+  });
 
   updatePlaylist = async (station = null) => {
     if (this.nowPlaying.url) {
@@ -72,34 +70,32 @@ class Player {
 
   _nextSongByTimeout = timeout => {
     setTimeout(async () => {
-      let playlist = await stationController.setPlayedSongs(this.stationId, [
+      const playlist = await stationController.setPlayedSongs(this.stationId, [
         this.nowPlaying.song_id,
       ]);
-      let song = this._setPlayableSong(playlist);
+      const song = this._setPlayableSong(playlist);
     }, timeout);
   };
   // TODO: [start server, add new song to empty station, next song nomarly]
   _setPlayableSong = async (station = null) => {
     /*
-          get nextSong
-          get list of songs will be change is_played to true
-          update this.nowPlaying
-         */
+      get nextSong
+      get list of songs will be change is_played to true
+      update this.nowPlaying
+    */
     if (!station) {
       // Get the station if it is not available
       station = await stationController.getStation(this.stationId);
     }
-    let playlist = station.playlist;
+    const playlist = station.playlist;
     // Filter songs wasn't played and is not the current playing song
-    let filteredPlaylist = _.sortBy(playlist, [
-      song => {
-        return !song.is_played && song.song_id != this.nowPlaying.song_id;
-      },
+    const filteredPlaylist = _.sortBy(playlist, [
+      song => !song.is_played && song.song_id !== this.nowPlaying.song_id,
     ]);
 
     // Sort the filteredPlaylist by time (current the song_id is the song added time)
-    let sortedPlaylist = _.sortBy(filteredPlaylist, ['song_id']);
-    let currentTime = Date().now();
+    const sortedPlaylist = _.sortBy(filteredPlaylist, ['song_id']);
+    const currentTime = Date().now();
     let preStartingTime = station.starting_time;
 
     // TODO: explain clearly in comments
@@ -112,7 +108,7 @@ class Player {
       if (song.added_time + song.duration > currentTime) {
         // The song is available to play
         // Update is_played of the pre songs to true
-        let playedSongs = sortedPlaylist.slice(0, i);
+        const playedSongs = sortedPlaylist.slice(0, i);
         // When the current nowPlaying song is available
         if (this.nowPlaying.song_id) {
           playedSongs.push(this.nowPlaying.song_id);
@@ -128,7 +124,7 @@ class Player {
       } else if (preStartingTime + song.duration > currentTime) {
         // The song is available to play
         // Update is_played of the pre songs to true
-        let playedSongs = sortedPlaylist.slice(0, i);
+        const playedSongs = sortedPlaylist.slice(0, i);
         // When the current nowPlaying song is available
         if (this.nowPlaying.song_id) {
           playedSongs.push(this.nowPlaying.song_id);
@@ -142,10 +138,9 @@ class Player {
         // play the song
         this._startSong(song);
         return;
-      } else {
-        // Move the song to next song for checking
-        preStartingTime = preStartingTime + song.duration;
       }
+      // Move the song to next song for checking
+      preStartingTime += song.duration;
     }
 
     // The available song is not existed
@@ -165,17 +160,17 @@ class Player {
 const players = {
   attachWebSocket: _io => {
     io = _io;
-    init();
+    this.init();
   },
   init: async () => {
-    let stations = await stationController.getAllAvailableStations();
+    const stations = await stationController.getAllAvailableStations();
     stations.forEach(station => {
       _players[station.id] = new Player(station);
     });
   },
   getPlayer: async stationId => {
     if (!_players[stationId]) {
-      let station = await stationController.getStation(stationId);
+      const station = await stationController.getStation(stationId);
       // check the stationdId is available or not
       if (!station) {
         throw 'Station ID is not available';
