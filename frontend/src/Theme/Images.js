@@ -1,6 +1,6 @@
 const images = {
   logo: require('../Images/logo/logo.png'),
-  drink: require('../Images/drink-2.jpg'),
+  drink: require('../Images/drink.jpg'),
   fixture: {
     avatar1: require('../Images/station-avatar/1.jpg'),
     avatar2: require('../Images/station-avatar/2.jpg'),
