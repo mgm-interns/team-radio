@@ -1,5 +1,9 @@
-import { SERVER_JOINED_STATION, SERVER_UPDATE_STATION } from './actions';
-import { addRequest } from '../stations';
+import {
+  SERVER_JOINED_STATION_SUCCESS,
+  // SERVER_JOINED_STATION_FAILURE,
+  SERVER_UPDATE_PLAYLIST,
+  SERVER_UPDATE_NOW_PLAYING,
+} from 'Redux/actions';
 
 import playlist from './fixtures';
 
@@ -15,7 +19,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     // For websocket
-    case SERVER_JOINED_STATION:
+    case SERVER_JOINED_STATION_SUCCESS:
       return {
         ...state,
         station: action.payload.station,
@@ -23,17 +27,16 @@ export default (state = INITIAL_STATE, action) => {
         nowPlaying: action.payload.nowplaying,
       };
 
-    case SERVER_UPDATE_STATION:
+    case SERVER_UPDATE_PLAYLIST:
       return {
         ...state,
         playlist: action.payload.playlist,
-        nowPlaying: action.payload.nowplaying,
       };
-    // For Friday demo
-    case addRequest.getTypeSuccess():
+
+    case SERVER_UPDATE_NOW_PLAYING:
       return {
         ...state,
-        station: action.payload.data,
+        nowPlaying: action.payload.nowplaying,
       };
     default:
       return state;

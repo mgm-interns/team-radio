@@ -1,5 +1,5 @@
-const convertNumberToTime = (number = 0) => {
-  let seconds = Math.floor(number);
+const numberToTime = (duration = 0) => {
+  let seconds = Math.floor(duration);
   let hours = Math.floor(seconds / 3600);
   seconds -= hours * 3600;
   let minutes = Math.floor(seconds / 60);
@@ -15,6 +15,6 @@ const convertNumberToTime = (number = 0) => {
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 export default {
-  convertNumberToTime,
+  numberToTime,
   random,
 };

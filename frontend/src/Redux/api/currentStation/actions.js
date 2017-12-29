@@ -1,34 +1,35 @@
-// server action types
-export const SERVER_JOINED_STATION = 'SERVER:JOINED_STATION';
-export const SERVER_UPDATE_STATION = 'SERVER:UPDATE_STATION';
+import {
+  CLIENT_ADD_SONG,
+  CLIENT_UPVOTE_SONG,
+  CLIENT_JOIN_STATION,
+  CLIENT_DOWNVOTE_SONG,
+  CLIENT_LEAVE_STATION,
+} from 'Redux/actions';
 
-// Server action creator
-
-// Client action types
-export const CLIENT_JOIN_STATION = 'CLIENT:JOIN_STATION';
-export const CLIENT_UPVOTE_VIDEO = 'CLIENT:UPVOTE_VIDEO';
-export const CLIENT_UN_UPVOTE_VIDEO = 'CLIENT:UN_UPVOTE_VIDEO';
+const DEFAULT_STATION_ID = '5a43122f01a6072810aadcb4';
 
 // Client action creator
-export const joinStation = station_name => ({
+export const joinStation = (stationId = DEFAULT_STATION_ID) => ({
   type: CLIENT_JOIN_STATION,
-  payload: { station_name },
+  payload: { userId: 0, stationId },
 });
 
-export const upVoteVideo = ({ stationId, videoId }) => ({
-  type: CLIENT_UPVOTE_VIDEO,
-  payload: { stationId, videoId },
+export const leaveStation = (stationId = DEFAULT_STATION_ID) => ({
+  type: CLIENT_LEAVE_STATION,
+  payload: { userId: 0, stationId },
 });
 
-export const unUpVoteVideo = ({ stationId, videoId }) => ({
-  type: CLIENT_UN_UPVOTE_VIDEO,
-  payload: { stationId, videoId },
+export const addSong = ({ stationId, songUrl }) => ({
+  type: CLIENT_ADD_SONG,
+  payload: { userId: 0, stationId: stationId || DEFAULT_STATION_ID, songUrl },
 });
 
-// Friday demo action
-export const SET_CURRENT_STATION = 'SET_CURRENT_STATION';
+export const upVoteSong = ({ stationId, songId }) => ({
+  type: CLIENT_UPVOTE_SONG,
+  payload: { useId: 0, stationId: stationId || DEFAULT_STATION_ID, songId },
+});
 
-export const setCurrentStation = station => ({
-  type: SET_CURRENT_STATION,
-  payload: { station },
+export const downVoteSong = ({ stationId, songId }) => ({
+  type: CLIENT_DOWNVOTE_SONG,
+  payload: { useId: 0, stationId: stationId || DEFAULT_STATION_ID, songId },
 });

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { levels } from 'react-notification-system/src/constants';
-import AppNotification from './AppNotification';
+import AppNotification, {appNotificationInstance} from './AppNotification';
 import BrowserNotification from './BrowserNotification';
 
 export const NOTIFICATION_DURATION = 5000;
@@ -25,7 +25,7 @@ export const withAppNotification = ChildComponent =>
     render() {
       return (
         <ChildComponent
-          appNotification={AppNotification.instance}
+          appNotification={appNotificationInstance}
           {...this.props}
         />
       );
@@ -71,7 +71,7 @@ export const withNotification = ChildComponent =>
       return (
         <ChildComponent
           notification={{
-            app: AppNotification.instance,
+            app: appNotificationInstance,
             browser: browserNotification,
           }}
           {...this.props}

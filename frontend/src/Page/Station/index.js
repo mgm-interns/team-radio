@@ -13,19 +13,23 @@ import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
 import styles from './styles';
 
+const STATION_NAME_DEFAULT = 'Station Name';
+
 class StationPage extends Component {
   static propTypes = {
     classes: PropTypes.any,
     joinStation: PropTypes.any,
+    currentStation: PropTypes.object,
   };
   componentWillMount() {
     // Get station id from react-router
-    const { match: { params: { station_name } }, history } = this.props;
-    if (station_name) {
-      this.props.joinStation(station_name);
-    } else {
-      history.push(`/`);
-    }
+    const { match: { params: { stationName } }, history } = this.props;
+    // if (stationName) {
+    // console.log(this.props.joinStation());
+    this.props.joinStation();
+    // } else {
+    //   history.push(`/`);
+    // }
   }
 
   render() {
@@ -46,9 +50,14 @@ class StationPage extends Component {
             <Grid item xs={12} md={7} xl={8}>
               <Grid container>
                 <Grid item xs={12}>
-                  <h1>{station && station.station_name}</h1>
+                  <h1>
+                    {station ? station.station_name : STATION_NAME_DEFAULT}
+                  </h1>
                 </Grid>
-                <NowPlaying className={classes.content} autoplay={true} />
+                <NowPlaying
+                  className={`${classes.content} ${classes.nowPlaying}`}
+                  autoplay={true}
+                />
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>
