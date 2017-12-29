@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes, { string } from 'prop-types';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -209,6 +209,7 @@ class AddLink extends Component {
 
   _onChange(e) {
     const result = e.target.value;
+    console.log(result);
     this.setState({ searchText: result });
     if (result === '') {
       this.setState({
@@ -227,6 +228,7 @@ class AddLink extends Component {
         : PRE_URL + video.id.videoId;
 
     this.props.addSong(songUrl);
+    this.setState({ searchText: '', video: {} });
   }
 
   _renderLoading() {

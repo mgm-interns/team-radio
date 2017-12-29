@@ -33,7 +33,7 @@ class StationPage extends Component {
 
   componentWillMount() {
     // Get station id from react-router
-    const { match: { params: { stationName } }, history } = this.props;
+    // const { match: { params: { stationName } }, history } = this.props;
     // if (stationName) {
     // console.log(this.props.joinStation());
     this.props.joinStation();
