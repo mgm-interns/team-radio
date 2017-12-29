@@ -1,190 +1,149 @@
-let playlist = [
+import * as songController from '../src/controllers/song';
+
+let stations = [
   {
-    id: 'LjhCEhWiKXk',
-    name: 'Bruno Mars - Just The Way You Are [OFFICIAL VIDEO]',
-    singer: 'Bruno Mars',
-    duration: 50000,
-    uploader: 'pvtri96',
-    score: 30,
-    isUpvoted: true,
-    url: 'https://www.youtube.com/watch?v=LjhCEhWiKXk',
-    thumbnail:
-      'https://yt3.ggpht.com/-Ymp7v1ycCBA/AAAAAAAAAAI/AAAAAAAAAAA/-R7WfWSAkag/s88-c-k-no-mo-rj-c0xffffff/photo.jpg',
-    playing: true,
+    id: '5a43122f01a6072810aadcb4',
+    stationName: 'mgm Internship 2017',
+    ownerId: 'userId',
+    nowPlaying: {
+      index: -1,
+      songId: null,
+      songUrl: null,
+      startedTime: null,
+    },
+    playlist: [],
+    createdDay: Date.now(),
   },
   {
-    id: 'ekzHIouo8Q4',
-    name: 'Bruno Mars - When I Was Your Man [Official Video]',
-    singer: 'Bruno Mars',
-    duration: 150000,
-    uploader: 'pvtri96',
-    score: 6,
-    isUpvoted: false,
-    url: 'https://www.youtube.com/watch?v=ekzHIouo8Q4',
-    thumbnail:
-      'https://i.ytimg.com/vi/ekzHIouo8Q4/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLD8LkYflJBQvDH4IsAJZyW8KPxcEg',
-  },
-  {
-    id: 'IumYMCllMsM',
-    name:
-      'Machine Gun Kelly, X Ambassadors & Bebe Rexha - Home (from Bright: The Album) [Music Video]',
-    singer: 'Atlantic Records',
-    duration: 50000,
-    uploader: 'lybaokhanh',
-    score: 5,
-    isUpvoted: true,
-    url: 'https://www.youtube.com/watch?v=IumYMCllMsM',
-    thumbnail:
-      'https://i.ytimg.com/vi/IumYMCllMsM/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLCrV8CgDYwlsMgC0VFdROESFvubdQ',
-  },
-  {
-    id: 'Io0fBr1XBUA',
-    name: "The Chainsmokers - Don't Let Me Down ft. Daya",
-    singer: 'The Chainsmokers',
-    duration: 50000,
-    uploader: 'lybaokhanh',
-    score: 3,
-    isUpvoted: false,
-    url: 'https://www.youtube.com/watch?v=Io0fBr1XBUA',
-    thumbnail:
-      'https://i.ytimg.com/vi/Io0fBr1XBUA/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLB5o4_eyhXNTWQc0ePYZRcnFaSTjw',
-  },
-  {
-    id: '2vjPBrBU-TM',
-    name: 'Sia - Chandelier (Official Video)',
-    singer: 'Sia',
-    duration: 50000,
-    uploader: 'pvtri96',
-    score: 1,
-    isUpvoted: false,
-    url: 'https://www.youtube.com/watch?v=2vjPBrBU-TM',
-    thumbnail:
-      'https://i.ytimg.com/an_webp/2vjPBrBU-TM/mqdefault_6s.webp?du=3000&sqp=CMq77dEF&rs=AOn4CLDy8fYNy_Bq1mLdWY9sqCUpScMxoA',
-  },
-  {
-    id: 'hT_nvWreIhg',
-    name: 'OneRepublic - Counting Stars',
-    singer: 'Ali Connors',
-    duration: 50000,
-    uploader: 'lybaokhanh',
-    score: 1,
-    isUpvoted: false,
-    url: 'https://www.youtube.com/watch?v=hT_nvWreIhg',
-    thumbnail:
-      'https://i.ytimg.com/vi/hT_nvWreIhg/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLASfQgh61rq4R3vrI0j8gkUl7pijw',
-  },
-  {
-    id: 'OPf0YbXqDm0',
-    name: 'Mark Ronson - Uptown Funk ft. Bruno Mars',
-    singer: 'Mark Ronson',
-    duration: 50000,
-    uploader: 'lybaokhanh',
-    score: 1,
-    isUpvoted: false,
-    url: 'https://www.youtube.com/watch?v=OPf0YbXqDm0',
-    thumbnail:
-      'https://i.ytimg.com/vi/OPf0YbXqDm0/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBV3hmf6FWUk_Dl2crEIG-hfBl5Ig',
-  },
-  {
-    id: 'BQ0mxQXmLsk',
-    name: 'Camila Cabello - Havana ft. Young Thug',
-    singer: 'Ali Connors',
-    duration: 50000,
-    uploader: 'lybaokhanh',
-    score: 1,
-    isUpvoted: false,
-    url: 'https://www.youtube.com/watch?v=BQ0mxQXmLsk',
-    thumbnail:
-      'https://i.ytimg.com/vi/HCjNJDNzw8Y/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLDZV8RdyxV6k63CMgaJmahXV3pjmw',
-  },
-  {
-    id: 'JGwWNGJdvx8',
-    name: 'Ed Sheeran - Shape of You [Official Video]',
-    singer: 'Ali Connors',
-    duration: 50000,
-    uploader: 'lybaokhanh',
-    score: 1,
-    isUpvoted: false,
-    url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8',
-    thumbnail:
-      'https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLDYtAYSs_kTmttEquUptJXJFAcM9A',
-  },
-  {
-    id: '3tmd-ClpJxA',
-    name: 'Taylor Swift - Look What You Made Me Do',
-    singer: 'Ali Connors',
-    duration: 50000,
-    uploader: 'lybaokhanh',
-    score: 1,
-    isUpvoted: false,
-    url: 'https://www.youtube.com/watch?v=3tmd-ClpJxA',
-    thumbnail:
-      'https://i.ytimg.com/vi/3tmd-ClpJxA/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLCh-ggcGnKyoQ-4f-pjnjfzDHqlSw',
+    id: 'mgm interns',
+    stationName: 'English class 2017',
+    ownerId: 'userId',
+    nowPlaying: {
+      index: -1,
+      songId: null,
+      songUrl: null,
+      startedTime: null,
+    },
+    playlist: [],
+    createdDay: Date.now(),
   },
 ];
 
-let nowplaying = {
-  id: 'LjhCEhWiKXk',
-  name: 'Bruno Mars - Just The Way You Are [OFFICIAL VIDEO]',
-  singer: 'Bruno Mars',
-  duration: 50000,
-  uploader: 'pvtri96',
-  score: 30,
-  isUpvoted: true,
-  url: 'https://www.youtube.com/watch?v=LjhCEhWiKXk',
-  thumbnail:
-    'https://yt3.ggpht.com/-Ymp7v1ycCBA/AAAAAAAAAAI/AAAAAAAAAAA/-R7WfWSAkag/s88-c-k-no-mo-rj-c0xffffff/photo.jpg',
-  playing: true,
+export const getStations = () => stations;
+
+export const addStation = async (userId, stationName) =>
+  _doAddStation(userId, stationName);
+
+export const getPlaylist = async stationId =>
+  Promise.resolve(stations.find(st => st.id === stationId).playlist);
+
+export const getNowplaying = async stationId => {
+  const nowPlaying = stations.filter(st => st.id === stationId)[0].nowplaying;
+  console.log('Now Playing:' + nowPlaying);
+  return Promise.resolve(nowPlaying);
 };
 
-let index = 0;
+export const nextNowplaying = async stationId => {
+  const nowPlaying = stations.find(st => st.id === stationId).nowplaying;
+  const playlist = stations.find(st => st.id === stationId).playlist;
 
-export const getPlaylist = () => playlist;
-export const getNowplaying = () => nowplaying;
-export const nextNowplaying = () => {
-  playlist[index].playing = false;
-  if (index === playlist.length - 1) {
-    index = 0;
+  if (nowPlaying.index === playlist.length - 1) {
+    nowPlaying.index = 0;
+    const playingSong = playlist[nowPlaying.index];
+    _applyNowPlaying(nowPlaying, playingSong);
   } else {
-    index += 1;
+    nowPlaying.index += 1;
+    const playingSong = playlist[nowPlaying.index];
+    _applyNowPlaying(nowPlaying, playingSong);
   }
-  playlist[index].playing = true;
-  nowplaying = {
-    ...playlist[index],
-    start: new Date(),
+  return Promise.resolve(nowPlaying);
+};
+
+export const addSong = async (stationId, songUrl, userId) =>
+  _doAddSong(stationId, songUrl, userId);
+
+export const upVoteSong = async (userId, stationId, songId) => {
+  const playlist = stations.find(st => st.id === stationId);
+  playlist.map(song => {
+    if (song.id === songId) {
+      return {
+        ...song,
+        score: song.score + 1,
+      };
+    }
+    return song;
+  });
+  return Promise.resolve(playlist);
+};
+
+export const downVoteSong = async (userId, stationId, songId) => {
+  const playlist = stations.find(st => st.id === stationId);
+  playlist.map(song => {
+    if (song.id === songId) {
+      return {
+        ...song,
+        score: song.score - 1,
+      };
+    }
+    return song;
+  });
+  return Promise.resolve(playlist);
+};
+
+const _applyNowPlaying = (nowPlaying, playingSong) => {
+  nowPlaying.songId = playingSong.songId;
+  nowPlaying.songUrl = playingSong.songUrl;
+  nowPlaying.startedTime = Date.now();
+};
+
+const _doAddStation = async (userId, stationName) => {
+  const station = {
+    id: stationName.toLowerCase().replace(/ /g, '-'),
+    stationName: stationName,
+    ownerId: userId,
+    nowPlaying: {
+      index: -1,
+      songId: null,
+      songUrl: null,
+      startedTime: null,
+    },
+    playlist: [],
+    createdDay: Date.now(),
   };
-  return nowplaying;
+  stations.push(station);
+  return Promise.resolve(station);
 };
 
-export const upVoteVideo = videoId => {
-  playlist = playlist.map(video => {
-    if (video.id === videoId) {
-      return {
-        ...video,
-        score: video.score + 1,
+const _doAddSong = async (stationId, songUrl, userId) => {
+  // const playlist = stations.find(st => st.id === stationId).playlist;
+  // playlist.push({
+  //   id: songUrl.substr(32, 11), // Get videoID from youtube link
+  //   songUrl: songUrl,
+  //   duration: 120000, // ms
+  //   score: 0,
+  //   creatorId: userId,
+  // });
+  let playlist = [];
+  const song = songController.getSongDetails(songUrl);
+  stations = stations.map(station => {
+    if (station.id === stationId) {
+      station = {
+        ...station,
+        playlist: [
+          ...station.playlist,
+          {
+            id: songUrl.substr(32, 11), // Get videoID from youtube link
+            songUrl: songUrl,
+            title: song.title,
+            duration: song.duration, // ms
+            score: 1,
+            creatorId: userId,
+          },
+        ],
       };
+      playlist = station.playlist;
     }
-    return video;
+    return station;
   });
-};
-
-export const unUpVoteVideo = videoId => {
-  playlist = playlist.map(video => {
-    if (video.id === videoId) {
-      return {
-        ...video,
-        score: video.score - 1,
-      };
-    }
-    return video;
-  });
-};
-
-export default {
-  playlist,
-  getPlaylist,
-  getNowplaying,
-  nextNowplaying,
-  upVoteVideo,
-  unUpVoteVideo,
+  return Promise.resolve(playlist);
 };
