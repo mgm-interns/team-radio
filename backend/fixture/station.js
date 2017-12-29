@@ -1,3 +1,5 @@
+import * as songController from '../src/controllers/song';
+
 let stations = [
   {
     id: '5a43122f01a6072810aadcb4',
@@ -122,7 +124,7 @@ const _doAddSong = async (stationId, songUrl, userId) => {
   //   creatorId: userId,
   // });
   let playlist = [];
-
+  const song = songController.getSongDetails(songUrl);
   stations = stations.map(station => {
     if (station.id === stationId) {
       station = {
@@ -132,8 +134,9 @@ const _doAddSong = async (stationId, songUrl, userId) => {
           {
             id: songUrl.substr(32, 11), // Get videoID from youtube link
             songUrl: songUrl,
-            duration: 120000, // ms
-            score: 0,
+            title: song.title,
+            duration: song.duration, // ms
+            score: 1,
             creatorId: userId,
           },
         ],
