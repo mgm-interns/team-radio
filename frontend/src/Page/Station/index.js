@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import stations from 'Fixture/stations';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
@@ -21,6 +22,15 @@ class StationPage extends Component {
     joinStation: PropTypes.any,
     currentStation: PropTypes.object,
   };
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      currentStation: { ...stations[0] },
+    };
+  }
+
   componentWillMount() {
     // Get station id from react-router
     const { match: { params: { stationName } }, history } = this.props;
@@ -33,7 +43,8 @@ class StationPage extends Component {
   }
 
   render() {
-    const { classes, currentStation: { station } } = this.props;
+    const { classes } = this.props;
+    const { currentStation } = this.state;
     return [
       <NavBar key={1} color="primary" />,
       <Grid
@@ -51,7 +62,9 @@ class StationPage extends Component {
               <Grid container>
                 <Grid item xs={12}>
                   <h1>
-                    {station ? station.station_name : STATION_NAME_DEFAULT}
+                    {currentStation
+                      ? currentStation.station_name
+                      : STATION_NAME_DEFAULT}
                   </h1>
                 </Grid>
                 <NowPlaying
