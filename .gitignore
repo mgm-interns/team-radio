@@ -19,3 +19,4 @@ debug.log
 .idea/
 .editorconfig
 .DS_Store
+.dist/
