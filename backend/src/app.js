@@ -7,7 +7,7 @@ import logger from 'morgan';
 import path from 'path';
 const mongoose = require('mongoose');
 
-import Routes from './routes';
+// import Routes from './routes';
 import * as players from './players';
 // import mongoose from 'mongoose'
 const mongodbConnectionString =
@@ -34,7 +34,7 @@ app.use(cookieParser());
 
 // Serve api router
 // app.use('/api', api)
-app.use('/api', cors(['http://localhost:3000']), Routes);
+// app.use('/api', cors(['http://localhost:3000']), Routes);
 
 // Serve static assets
 app.use(express.static(path.resolve(__dirname, '../..', 'frontend', 'build')));

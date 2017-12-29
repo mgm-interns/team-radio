@@ -14,6 +14,6 @@ const _upVoteSong = async (emitter, userId, stationId, songId) => {
   console.log('Up vote feature is coming soon!');
 };
 
-const _downVoteSong = (emitter, userId, stationId, songId) => {
+const _downVoteSong = async (emitter, userId, stationId, songId) => {
   console.log('Down vote feature is coming soon!');
 };

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { addSong } from 'Redux/api/currentStation/actions';
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
@@ -12,6 +15,7 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import { MenuItem } from 'material-ui/Menu';
 import { CircularProgress } from 'material-ui/Progress';
+import { Images } from 'Theme';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
@@ -20,9 +24,12 @@ const STATION_DEFAULT = {
   name: 'mgm internship 2017',
 };
 
+const PRE_URL = 'https://www.youtube.com/watch?v=';
+
 class AddLink extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    addSong: PropTypes.func,
   };
 
   constructor(props) {
@@ -37,7 +44,7 @@ class AddLink extends Component {
       isAddLinkProgress: false,
     };
     this._onChange = this._onChange.bind(this);
-    this._onSendClick = this._onSendClick.bind(this);
+    this._onAddClick = this._onAddClick.bind(this);
     this._onSuggestionsFetchRequested = this._onSuggestionsFetchRequested.bind(
       this,
     );
@@ -47,6 +54,7 @@ class AddLink extends Component {
     this._onSuggestionSelected = this._onSuggestionSelected.bind(this);
     this._renderLinkBoxSection = this._renderLinkBoxSection.bind(this);
     this._renderPreviewSection = this._renderPreviewSection.bind(this);
+    this._renderSuggestion = this._renderSuggestion.bind(this);
   }
 
   _checkValidUrl(url) {
@@ -115,14 +123,20 @@ class AddLink extends Component {
   }
 
   _renderSuggestion(suggestion, { query, isHighlighted }) {
+    const { classes } = this.props;
+
     const matches = match(suggestion.snippet.title, query);
     const parts = parse(suggestion.snippet.title, matches);
 
     return (
       <MenuItem selected={isHighlighted} component="div">
-        <div>
+        <img
+          src={suggestion.snippet.thumbnails.default.url}
+          className={classes.searchItemImg}
+        />
+        <span>
           {parts.map((part, index) => <span key={index}>{part.text}</span>)}
-        </div>
+        </span>
       </MenuItem>
     );
   }
@@ -205,8 +219,14 @@ class AddLink extends Component {
     }
   }
 
-  _onSendClick() {
-    console.log(this.state.videoId);
+  _onAddClick() {
+    const { video } = this.state;
+    const songUrl =
+      typeof video.id === 'string'
+        ? PRE_URL + video.id
+        : PRE_URL + video.id.videoId;
+
+    this.props.addSong(songUrl);
   }
 
   _renderLoading() {
@@ -230,11 +250,11 @@ class AddLink extends Component {
     return (
       <Grid
         container
-        className={classes.loadingContainer}
+        className={classes.emptyCollection}
         justify="center"
         alignItems="center"
       >
-        <span>Not found</span>
+        <img src={Images.notFound} className={classes.emptyImg} />
       </Grid>
     );
   }
@@ -281,7 +301,7 @@ class AddLink extends Component {
               raised
               color="primary"
               disabled={isDisableButton}
-              onClick={this._onSendClick}
+              onClick={this._onAddClick}
             >
               Add <Icon className={classes.sendIcon}>send</Icon>
             </Button>
@@ -351,4 +371,11 @@ class AddLink extends Component {
   }
 }
 
-export default withStyles(styles)(AddLink);
+const mapDispatchToProps = dispatch => ({
+  addSong: songUrl => dispatch(addSong({ songUrl })),
+});
+
+export default compose(
+  withStyles(styles),
+  connect(undefined, mapDispatchToProps),
+)(AddLink);

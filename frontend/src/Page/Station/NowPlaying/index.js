@@ -35,9 +35,10 @@ class NowPlaying extends Component {
     return (
       <Grid item xs={12} className={className}>
         <Player
-          url={nowPlaying.url}
+          url={nowPlaying ? nowPlaying.url : ''}
           // ref={this._getRefPlayer}
           playing={autoplay}
+          seektime={756}
         />
       </Grid>
     );

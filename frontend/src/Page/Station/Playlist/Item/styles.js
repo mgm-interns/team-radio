@@ -17,28 +17,34 @@ export default ({ spacing, palette, typography }) => ({
   },
   name: {
     ...typography.body2,
-    fontSize: '0.75em',
+    fontSize: '1em',
     fontWeight: 'bold',
   },
   singer: {
     ...typography.body2,
-    fontSize: '0.70em',
+    fontSize: '0.8em',
     fontWeight: 'bold',
   },
   uploader: {
     ...typography.caption,
-    fontSize: '0.65em',
+    fontSize: '0.8em',
   },
   actions: {
     textAlign: 'center',
     alignSelf: 'center',
   },
   action: {
-    width: spacing.unit * 3,
-    height: spacing.unit * 3,
+    width: spacing.unit * 5,
+    height: spacing.unit * 5,
+    '& .material-icons': {
+      fontSize: spacing.unit * 5,
+    },
   },
   score: {
     ...typography.body2,
+    margin: 'auto',
+    width: spacing.unit * 5,
+    fontSize: 20,
     color: palette.secondary['500'],
     '&.active': {
       color: palette.primary['500'],

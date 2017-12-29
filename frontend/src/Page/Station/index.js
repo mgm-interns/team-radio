@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import stations from 'Fixture/stations';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
@@ -13,23 +14,37 @@ import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
 import styles from './styles';
 
+const STATION_NAME_DEFAULT = 'Station Name';
+
 class StationPage extends Component {
   static propTypes = {
     classes: PropTypes.any,
     joinStation: PropTypes.any,
+    currentStation: PropTypes.object,
   };
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      currentStation: { ...stations[0] },
+    };
+  }
+
   componentWillMount() {
     // Get station id from react-router
-    const { match: { params: { station_name } }, history } = this.props;
-    if (station_name) {
-      this.props.joinStation(station_name);
-    } else {
-      history.push(`/`);
-    }
+    const { match: { params: { stationName } }, history } = this.props;
+    // if (stationName) {
+    // console.log(this.props.joinStation());
+    this.props.joinStation();
+    // } else {
+    //   history.push(`/`);
+    // }
   }
 
   render() {
-    const { classes, currentStation: { station } } = this.props;
+    const { classes } = this.props;
+    const { currentStation } = this.state;
     return [
       <NavBar key={1} color="primary" />,
       <Grid
@@ -46,9 +61,16 @@ class StationPage extends Component {
             <Grid item xs={12} md={7} xl={8}>
               <Grid container>
                 <Grid item xs={12}>
-                  <h1>{station && station.station_name}</h1>
+                  <h1>
+                    {currentStation
+                      ? currentStation.station_name
+                      : STATION_NAME_DEFAULT}
+                  </h1>
                 </Grid>
-                <NowPlaying className={classes.content} autoplay={true} />
+                <NowPlaying
+                  className={`${classes.content} ${classes.nowPlaying}`}
+                  autoplay={true}
+                />
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>
