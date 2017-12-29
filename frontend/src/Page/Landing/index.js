@@ -44,4 +44,6 @@ const mapStateToProps = state => ({
   currentStation: state.api.currentStation,
 });
 
-export default compose(connect(mapStateToProps), withRouter)(Landing);
+export default compose(connect(mapStateToProps), withRouter, withNotification)(
+  Landing,
+);

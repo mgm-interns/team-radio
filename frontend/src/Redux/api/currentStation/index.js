@@ -20,7 +20,7 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     // For websocket
     case SERVER_JOINED_STATION_SUCCESS:
-      console.log( action.payload);
+      console.log(action.payload);
       return {
         ...state,
         station: action.payload.station,
