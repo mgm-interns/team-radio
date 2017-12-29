@@ -124,7 +124,7 @@ const _doAddSong = async (stationId, songUrl, userId) => {
   //   creatorId: userId,
   // });
   let playlist = [];
-  const song = songController.getSongDetails(songUrl);
+  const song = await songController.getSongDetails(songUrl);
   stations = stations.map(station => {
     if (station.id === stationId) {
       station = {
