@@ -22,7 +22,7 @@ class Register extends Component {
     super(props);
 
     this.state = {
-      username: '',
+      name: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -34,7 +34,7 @@ class Register extends Component {
         'See some information of the past activities',
       ],
     };
-    this._handleusernameChanged = this._handleusernameChanged.bind(this);
+    this._handlenameChanged = this._handlenameChanged.bind(this);
     this._handleEmailChanged = this._handleEmailChanged.bind(this);
     this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
     this._handleConfirmPasswordChanged = this._handleConfirmPasswordChanged.bind(
@@ -43,8 +43,8 @@ class Register extends Component {
     this._submit = this._submit.bind(this);
   }
 
-  _handleusernameChanged(e) {
-    this.setState({ username: e.target.value });
+  _handlenameChanged(e) {
+    this.setState({ name: e.target.value });
   }
   _handleEmailChanged(e) {
     this.setState({ email: e.target.value });
@@ -61,14 +61,14 @@ class Register extends Component {
   _submit(e) {
     e.preventDefault();
     if (this._validate()) {
-      let { username, email, password } = this.state;
-      this.props.signUp({ username, email, password });
+      let { name, email, password } = this.state;
+      this.props.signUp({ name, email, password });
     }
   }
 
   _validate() {
     const {
-      username,
+      name,
       email,
       password,
       confirmPassword,
@@ -77,8 +77,8 @@ class Register extends Component {
     let isValid = true;
 
     let newFormErrors = {};
-    if (!username) {
-      newFormErrors.username = 'username is required';
+    if (!name) {
+      newFormErrors.name = 'Name is required';
       isValid = false;
     }
 
@@ -178,20 +178,20 @@ class Register extends Component {
                     </Grid>
 
                     <FormControl className={classes.textField} error={!!error}>
-                      <InputLabel htmlFor="user-name" required>
-                        Username
+                      <InputLabel htmlFor="name" required>
+                        Name
                       </InputLabel>
                       <Input
                         required
-                        id="user-name"
-                        placeholder="Choose a username"
+                        id="name"
+                        placeholder="Choose a name"
                         margin="normal"
                         autoFocus={true}
-                        onChange={this._handleusernameChanged}
-                        value={this.state.username}
+                        onChange={this._handlenameChanged}
+                        value={this.state.name}
                       />
                       <FormHelperText className={classes.error}>
-                        {this.state.formErrors.username}
+                        {this.state.formErrors.name}
 
                         {/* {error && error.response && error.response.error.name} */}
                       </FormHelperText>
