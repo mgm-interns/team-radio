@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { addSong } from 'Redux/api/currentStation/actions';
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
@@ -21,9 +24,12 @@ const STATION_DEFAULT = {
   name: 'mgm internship 2017',
 };
 
+const PRE_URL = 'https://www.youtube.com/watch?v=';
+
 class AddLink extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    addSong: PropTypes.func,
   };
 
   constructor(props) {
@@ -38,7 +44,7 @@ class AddLink extends Component {
       isAddLinkProgress: false,
     };
     this._onChange = this._onChange.bind(this);
-    this._onSendClick = this._onSendClick.bind(this);
+    this._onAddClick = this._onAddClick.bind(this);
     this._onSuggestionsFetchRequested = this._onSuggestionsFetchRequested.bind(
       this,
     );
@@ -213,8 +219,10 @@ class AddLink extends Component {
     }
   }
 
-  _onSendClick() {
-    console.log(this.state.videoId);
+  _onAddClick() {
+    const { video } = this.state;
+    const songUrl = PRE_URL + video.id.videoId;
+    this.props.addSong(songUrl);
   }
 
   _renderLoading() {
@@ -289,7 +297,7 @@ class AddLink extends Component {
               raised
               color="primary"
               disabled={isDisableButton}
-              onClick={this._onSendClick}
+              onClick={this._onAddClick}
             >
               Add <Icon className={classes.sendIcon}>send</Icon>
             </Button>
@@ -359,4 +367,11 @@ class AddLink extends Component {
   }
 }
 
-export default withStyles(styles)(AddLink);
+const mapDispatchToProps = dispatch => ({
+  addSong: songUrl => dispatch(addSong({ songUrl })),
+});
+
+export default compose(
+  withStyles(styles),
+  connect(undefined, mapDispatchToProps),
+)(AddLink);

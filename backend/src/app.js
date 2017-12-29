@@ -5,11 +5,11 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
 import path from 'path';
-
-import api from './api';
-import Routes from './Routes';
-// import mongoose from 'mongoose'
 const mongoose = require('mongoose');
+
+import Routes from './routes';
+import * as players from './players';
+// import mongoose from 'mongoose'
 const mongodbConnectionString =
   process.env.MONGODB ||
   'mongodb://mgm:mgm123@ds013564.mlab.com:13564/mgm-radio';
@@ -21,7 +21,7 @@ mongoose.connection.on('open', () => {
 });
 
 const app = express();
-app.set('superSecret',"iloveteamradio");
+app.set('superSecret', 'iloveteamradio');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(
@@ -56,5 +56,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json(err);
 });
+
+players.init();
 
 export default app;

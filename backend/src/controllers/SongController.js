@@ -4,14 +4,10 @@ const mongoose = require('mongoose');
 const getVideoId = require('get-video-id');
 const request = require('request-promise');
 const cheerio = require('cheerio');
-const SongModel = require('../Models/Song.js');
+const SongModel = require('../models/Song.js');
 // let videoInfo = require('./lib/youtube-video-info')
 
-module.exports.getSongInformation = function(songId) {
-  return SongModel.findOne({
-    _id: songId,
-  });
-};
+module.exports.getSongInformation = getSongInformation;
 
 module.exports.addSong = async function(inputUrl) {
   // return null if the url is invalid
@@ -154,6 +150,12 @@ function parseVideoInfo(body, videoId) {
     views: views,
     regionsAllowed: regionsAllowed,
   };
+}
+
+function getSongInformation(songId) {
+  return SongModel.findOne({
+    _id: songId,
+  });
 }
 
 function extractValue($, attribute) {

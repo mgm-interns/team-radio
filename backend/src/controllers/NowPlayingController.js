@@ -1,6 +1,6 @@
 import { TIMEOUT } from 'dns';
 
-const stationModel = require('../Models/Station');
+const stationModel = require('../models/Station');
 
 module.exports.start = function() {
   // Get information about nowplaying song in stations

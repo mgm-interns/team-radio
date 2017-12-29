@@ -23,11 +23,12 @@
     "express": "^4.15.4",
     "get-video-id": "^2.1.7",
     "jsonwebtoken": "^8.1.0",
+    "lodash": "^4.17.4",
     "mongoose": "^4.13.7",
     "morgan": "^1.8.2",
+    "promise": "^8.0.1",
     "request-promise": "^4.2.2",
-    "socket.io": "^2.0.4",
-    "promise": "^8.0.1"
+    "socket.io": "^2.0.4"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

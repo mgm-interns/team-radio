@@ -15,73 +15,67 @@ const DEFAULT_NOTIFICATION = {
 let notificationRef = null;
 
 /**
- * DO NOT import this Component
+ * All methods have to sleep because notificationRef only get assigned
+ * until AppNotification finish rendering
+ *
+ * @type {{add: function({duration?: *, others: *}), remove: function({others: *}), edit: function({others: *}), clear: function()}}
  */
-class AppNotification extends Component {
-  /**
-   * Get the instance of notification
-   */
-  static get instance() {
-    const instance = {
-      add: async ({ duration, ...others }) => {
-        await sleep();
-        return notificationRef.addNotification({
-          autoDismiss: duration,
-          ...DEFAULT_NOTIFICATION,
-          ...others,
-        });
-      },
-      remove: async ({ ...others }) => {
-        await sleep();
-        return notificationRef.removeNotification({
-          ...DEFAULT_NOTIFICATION,
-          ...others,
-        });
-      },
-      edit: async ({ ...others }) => {
-        await sleep();
-        return notificationRef.editNotification({
-          ...DEFAULT_NOTIFICATION,
-          ...others,
-        });
-      },
-      clear: async () => {
-        await sleep();
-        return notificationRef.clearNotifications();
-      },
-    };
-    /* eslint-disable array-callback-return */
-    Object.keys(LEVELS).map(key => {
-      const level = LEVELS[key];
-      const title = capitalizeFirstLetter(`${level} !`);
-      instance[level] = notification =>
-        instance.add({ level, title, ...notification });
+const instance = {
+  add: async ({ duration, ...others }) => {
+    await sleep();
+    return notificationRef.addNotification({
+      autoDismiss: duration,
+      ...DEFAULT_NOTIFICATION,
+      ...others,
     });
-    return instance;
-  }
+  },
+  remove: async ({ ...others }) => {
+    await sleep();
+    return notificationRef.removeNotification({
+      ...DEFAULT_NOTIFICATION,
+      ...others,
+    });
+  },
+  edit: async ({ ...others }) => {
+    await sleep();
+    return notificationRef.editNotification({
+      ...DEFAULT_NOTIFICATION,
+      ...others,
+    });
+  },
+  clear: async () => {
+    await sleep();
+    return notificationRef.clearNotifications();
+  },
+};
+/* eslint-disable array-callback-return */
+Object.keys(LEVELS).map(key => {
+  const level = LEVELS[key];
+  const title = capitalizeFirstLetter(`${level} !`);
+  instance[level] = notification =>
+    instance.add({ level, title, ...notification });
+});
 
-  /**
-   * Render third-party NotificationSystem
-   */
-  render() {
-    const { theme } = this.props;
-    return (
-      <NotificationSystem
-        ref={ref => {
-          notificationRef = ref;
-        }}
-        style={getStyles(theme)}
-      />
-    );
-  }
-}
+/**
+ * Export the instance method of App Notification
+ */
+export const appNotificationInstance = instance;
+
+/**
+ * DO NOT import this Component
+ * this Component only need to import once in root wrapper
+ */
+const AppNotification = ({ theme }) => (
+  <NotificationSystem
+    ref={ref => {
+      notificationRef = ref;
+    }}
+    style={getStyles(theme)}
+  />
+);
 
 AppNotification.propTypes = {
   theme: PropTypes.object,
 };
 
-const NotificationWrapper = withTheme()(AppNotification);
-
-NotificationWrapper.instance = AppNotification.instance;
-
-export default NotificationWrapper;
+export default withTheme()(AppNotification);

@@ -1,9 +1,9 @@
 var express = require('express');
 var app = express();
 var apiRoutes = express.Router();
-var User = require('../Models/User');
+var User = require('../models/User');
 var jwt = require('jsonwebtoken');
-var AuthController = require('../Controllers/AuthController');
+var AuthController = require('../controllers/AuthController');
 
 export default router => {
   router.post('/signup', function(req, res, done) {

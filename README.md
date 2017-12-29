@@ -5,7 +5,7 @@ A playlist for teams that can be edited collaboratively by all users
 
 ## Demo
 
-- *Reserved*
+- Our Page is live at: [https://teamradio.herokuapp.com](https://teamradio.herokuapp.com)
 
 ## Installation Guide
 
@@ -17,48 +17,50 @@ A playlist for teams that can be edited collaboratively by all users
 
 * MongoDB - [Guide](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#configure-a-windows-service-for-mongodb-community-edition)
 
-### Production
+### Production & Deployment
 
 * Clone this project
 
 * Install dependencies
-```
-npm install
-```
+  ```
+  npm install
+  ```
 
 * Start the server
-```
-npm start
-```
+  ```
+  npm start
+  ```
 
 ### Development
 
 * Clone this project
 
 * Install dependencies
-```
-npm install
-```
+  ```
+  npm install
+  ```
+
+  The environment variables are always copied from `env.production` by default. Remember to check your `.env` after running `npm install`.
 
 * Generate environment variables
 
-After install dependencies, the environment variables will be generated from env.production by default. You can add `--no-scripts` to skip that. (Example: `npm install --no-scripts`)
+  After install dependencies, the environment variables will be generated from env.production by default. You can add `--ignore-scripts` to skip that. (Example: `npm install --ignore-scripts`)
 
-_Note_: Feel free to change these variables if you want to.
+  _Note_: Feel free to change these variables if you want to.
 
 * Start packager
-```
-npm run dev
-```
-This script will start the packager for both backend & frontend
+  ```
+  npm run dev
+  ```
+  This script will start the packager for both backend & frontend
 
 * If you just want to work on backend or frontend. There are 2 scripts that will be helpful for you:
-```
-npm run dev:backend
-```
-```
-npm run dev:frontend
-```
+  ```
+  npm run dev:backend
+  ```
+  ```
+  npm run dev:frontend
+  ```
 
 ## CORS issue
 
