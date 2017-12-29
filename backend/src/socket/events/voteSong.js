@@ -1,4 +1,6 @@
-// TODO: WIP
+import * as stationController from '../../controllers/station';
+import * as EVENTS from '../../const/actions';
+
 export default (emitter, score, userId, stationId, songId) => {
   // TODO
   if (score === 1) {
@@ -8,7 +10,7 @@ export default (emitter, score, userId, stationId, songId) => {
   } else console.log('Score unknow!');
 };
 
-const _upVoteSong = (emitter, userId, stationId, songId) => {
+const _upVoteSong = async (emitter, userId, stationId, songId) => {
   console.log('Up vote feature is coming soon!');
 };
 
