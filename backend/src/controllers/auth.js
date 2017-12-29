@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true }));
 
-module.exports = function tokenVerify(req, res) {
+module.exports = function tokenVerify(req, res, next) {
   // get token
   const token = req.headers['access-token'];
 
@@ -21,6 +21,7 @@ module.exports = function tokenVerify(req, res) {
         });
       }
       req.decoded = decoded;
+      next();
     });
   } else {
       return res.status(403).send({
@@ -29,3 +30,5 @@ module.exports = function tokenVerify(req, res) {
     });
   }
 };
+
+
