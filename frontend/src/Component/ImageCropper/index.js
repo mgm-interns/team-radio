@@ -151,8 +151,8 @@ class ImageCropper extends Component {
   /**
    * Trigger when Cancel button is pressed
    */
-  onPressCancel() {
-    this._closeDialog();
+  async onPressCancel() {
+    await this._closeDialog();
   }
 
   render() {
@@ -190,6 +190,7 @@ class ImageCropper extends Component {
           key={1}
           color={'primary'}
           raised
+          style={{ width: '100%' }}
           {...this.props.buttonProps}
           onClick={this._openFilePickerDialog}
         >
