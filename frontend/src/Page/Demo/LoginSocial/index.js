@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { GoogleLogin, GoogleLogout } from 'Component/GoogleForm';
+import Grid from 'material-ui/Grid';
 
 class LoginSocialDemo extends Component {
   constructor(props) {
@@ -36,22 +37,27 @@ class LoginSocialDemo extends Component {
   render() {
     console.log(this.state.isSignedIn);
     return (
-      <div>
-        <GoogleLogin
-          onSuccess={this.success}
-          onFailure={this.error}
-          onRequest={this.loading}
-          offline={false}
-          responseType="id_token"
-          isSignedIn
-          disabled={this.state.isSignedIn}
-          prompt="consent"
-        />
-        <GoogleLogout
-          onLogoutSuccess={this.logout}
-          disabled={!this.state.isSignedIn}
-        />
-      </div>
+      <Grid container style={{ margin: 0, width: '100%' }}>
+        <Grid item xs={12}>
+          <h1>Login Social Google Demo</h1>
+        </Grid>
+        <Grid item xs={12}>
+          <GoogleLogin
+            onSuccess={this.success}
+            onFailure={this.error}
+            onRequest={this.loading}
+            offline={false}
+            responseType="id_token"
+            isSignedIn={true}
+            disabled={this.state.isSignedIn}
+            prompt="consent"
+          />
+          <GoogleLogout
+            onLogoutSuccess={this.logout}
+            disabled={!this.state.isSignedIn}
+          />
+        </Grid>
+      </Grid>
     );
   }
 }
