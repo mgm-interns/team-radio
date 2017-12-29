@@ -11,12 +11,21 @@ class NotificationDemo extends Component {
   constructor(props) {
     super(props);
     this.callAppNotification = this.callAppNotification.bind(this);
+    this.callAppNotificationSuccess = this.callAppNotificationSuccess.bind(
+      this,
+    );
+    this.callAppNotificationInfo = this.callAppNotificationInfo.bind(this);
+    this.callAppNotificationWarning = this.callAppNotificationWarning.bind(
+      this,
+    );
+    this.callAppNotificationError = this.callAppNotificationError.bind(this);
     this.callBrowserNotification = this.callBrowserNotification.bind(this);
     this.callBothNotification = this.callBothNotification.bind(this);
   }
-  async callAppNotification() {
+
+  async callAppNotificationSuccess() {
     const { notification: { app, browser } } = this.props;
-    let count = 0;
+    // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
     const interval = setInterval(async () => {
@@ -24,10 +33,71 @@ class NotificationDemo extends Component {
         message: 'Hello, this is app notification!',
         duration,
       });
-      count += 1;
-      if (count > 3) {
-        clearInterval(interval);
-      }
+      clearInterval(interval);
+    }, 300);
+  }
+
+  async callAppNotificationInfo() {
+    const { notification: { app, browser } } = this.props;
+    // let count = 0;
+    const duration = 2000;
+    // // Call notification 3 times
+    const interval = setInterval(async () => {
+      await app.info({
+        message: 'Hello, this is app notification!',
+        duration,
+      });
+      clearInterval(interval);
+    }, 300);
+  }
+
+  async callAppNotificationWarning() {
+    const { notification: { app, browser } } = this.props;
+    // let count = 0;
+    const duration = 2000;
+    // // Call notification 3 times
+    const interval = setInterval(async () => {
+      await app.warning({
+        message: 'Hello, this is app notification!',
+        duration,
+      });
+      clearInterval(interval);
+    }, 300);
+  }
+
+  async callAppNotificationError() {
+    const { notification: { app, browser } } = this.props;
+    // let count = 0;
+    const duration = 2000;
+    // // Call notification 3 times
+    const interval = setInterval(async () => {
+      await app.error({
+        message: 'Hello, this is app notification!',
+        duration,
+      });
+      clearInterval(interval);
+    }, 300);
+  }
+
+  async callAppNotification() {
+    const { notification: { app, browser } } = this.props;
+    // let count = 0;
+    const duration = 2000;
+    // // Call notification 3 times
+    const interval = setInterval(async () => {
+      await app.success({
+        message: 'Hello, this is app notification!',
+        duration,
+      });
+      await app.info({
+        message: 'Hello, this is app notification!',
+        duration,
+      });
+      await app.error({
+        message: 'Hello, this is app notification!',
+        duration,
+      });
+      clearInterval(interval);
     }, 300);
   }
 
@@ -37,7 +107,7 @@ class NotificationDemo extends Component {
     const duration = 2000;
     // // Call notification 3 times
     const interval = setInterval(async () => {
-      await browser.info({
+      await browser.success({
         message: 'Hello, this is browser notification',
         duration,
       });
@@ -76,10 +146,44 @@ class NotificationDemo extends Component {
           <h1>Notification Demo</h1>
         </Grid>
         <Grid item xs={12}>
-          <Button raised color="primary" onClick={this.callAppNotification}>
-            <span>App Notification</span>
-          </Button>
+          <Grid item xs={4}>
+            <Button
+              raised
+              color="primary"
+              onClick={this.callAppNotificationSuccess}
+            >
+              <span>App Notification Success</span>
+            </Button>
+          </Grid>
+          <Grid item xs={4}>
+            <Button
+              raised
+              color="secondary"
+              onClick={this.callAppNotificationInfo}
+            >
+              <span>App Notification Info</span>
+            </Button>
+          </Grid>
+          <Grid item xs={4}>
+            <Button
+              raised
+              color="secondary"
+              onClick={this.callAppNotificationWarning}
+            >
+              <span>App Notification Warning</span>
+            </Button>
+          </Grid>
+          <Grid item xs={4}>
+            <Button
+              raised
+              color="default"
+              onClick={this.callAppNotificationError}
+            >
+              <span>App Notification Error</span>
+            </Button>
+          </Grid>
         </Grid>
+
         <Grid item xs={12}>
           <Button raised color="primary" onClick={this.callBrowserNotification}>
             <span>Browser Notification</span>
