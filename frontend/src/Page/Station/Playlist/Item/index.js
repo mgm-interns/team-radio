@@ -15,7 +15,7 @@ class PlaylistItem extends Component {
   render() {
     const {
       thumbnail,
-      name,
+      title,
       score,
       singer,
       uploader,
@@ -37,7 +37,7 @@ class PlaylistItem extends Component {
           <img className={classes.img} src={thumbnail} alt="" />
         </Grid>
         <Grid item xs={7} className={classes.info}>
-          <div className={classes.name}>{name}</div>
+          <div className={classes.name}>{title}</div>
           <div className={classes.singer}>{singer}</div>
           <div className={classes.uploader}>Added by {uploader}</div>
         </Grid>

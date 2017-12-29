@@ -25,7 +25,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         station: action.payload.station,
         playlist: action.payload.station.playlist,
-        nowPlaying: action.payload.station.nowplaying,
+        // nowPlaying: action.payload.station.nowplaying,
       };
 
     case SERVER_UPDATE_PLAYLIST:
@@ -37,7 +37,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_UPDATE_NOW_PLAYING:
       return {
         ...state,
-        nowPlaying: action.payload.nowplaying,
+        // nowPlaying: action.payload.nowplaying,
       };
     default:
       return state;
