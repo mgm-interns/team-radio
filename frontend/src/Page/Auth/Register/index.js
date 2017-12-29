@@ -58,7 +58,8 @@ class Register extends Component {
     this.setState({ confirmPassword: e.target.value });
   }
 
-  _submit() {
+  _submit(e) {
+    e.preventDefault();
     if (this._validate()) {
       let { username, email, password } = this.state;
       this.props.signUp({ username, email, password });
@@ -165,102 +166,105 @@ class Register extends Component {
             </Grid>
             <Grid item xs={11} sm={5} className={classes.cardWrapper}>
               <Card raised className={classes.cardForm}>
-                <CardContent>
-                  <Grid style={{ paddingBottom: '2em' }}>
-                    <Typography type="headline" component="h2">
-                      Sign Up
-                    </Typography>
-                    <Typography component="p">
-                      to get the most out of Team Radio
-                    </Typography>
-                  </Grid>
+                <form  onSubmit={this._submit}>
+                  <CardContent>
+                    <Grid style={{ paddingBottom: '2em' }}>
+                      <Typography type="headline" component="h2">
+                        Sign Up
+                      </Typography>
+                      <Typography component="p">
+                        to get the most out of Team Radio
+                      </Typography>
+                    </Grid>
 
-                  <FormControl className={classes.textField} error={!!error}>
-                    <InputLabel htmlFor="user-name" required>
-                      Username
-                    </InputLabel>
-                    <Input
-                      required
-                      id="user-name"
-                      placeholder="Choose a username"
-                      margin="normal"
-                      autoFocus={true}
-                      onChange={this._handleusernameChanged}
-                      value={this.state.username}
-                    />
-                    <FormHelperText className={classes.error}>
-                      {this.state.formErrors.username}
+                    <FormControl className={classes.textField} error={!!error}>
+                      <InputLabel htmlFor="user-name" required>
+                        Username
+                      </InputLabel>
+                      <Input
+                        required
+                        id="user-name"
+                        placeholder="Choose a username"
+                        margin="normal"
+                        autoFocus={true}
+                        onChange={this._handleusernameChanged}
+                        value={this.state.username}
+                      />
+                      <FormHelperText className={classes.error}>
+                        {this.state.formErrors.username}
 
-                      {/* {error && error.response && error.response.error.name} */}
-                    </FormHelperText>
-                  </FormControl>
+                        {/* {error && error.response && error.response.error.name} */}
+                      </FormHelperText>
+                    </FormControl>
 
-                  <FormControl className={classes.textField} error={!!error}>
-                    <InputLabel htmlFor="email">Email</InputLabel>
-                    <Input
-                      id="email"
-                      placeholder="hello@example.com"
-                      margin="normal"
-                      onChange={this._handleEmailChanged}
-                      value={this.state.email}
-                    />
-                    <FormHelperText className={classes.error}>
-                      {this.state.formErrors.email}
-                      {/* {error && error.response && error.response.error.name} */}
-                    </FormHelperText>
-                  </FormControl>
+                    <FormControl className={classes.textField} error={!!error}>
+                      <InputLabel htmlFor="email">Email</InputLabel>
+                      <Input
+                        id="email"
+                        placeholder="hello@example.com"
+                        margin="normal"
+                        onChange={this._handleEmailChanged}
+                        value={this.state.email}
+                      />
+                      <FormHelperText className={classes.error}>
+                        {this.state.formErrors.email}
+                        {/* {error && error.response && error.response.error.name} */}
+                      </FormHelperText>
+                    </FormControl>
 
-                  <FormControl className={classes.textField} error={!!error}>
-                    <InputLabel htmlFor="password">Password</InputLabel>
-                    <Input
-                      required
-                      id="password"
-                      placeholder="Must be at least 6 characters"
-                      type="password"
-                      margin="normal"
-                      onChange={this._handlePasswordChanged}
-                      value={this.state.password}
-                    />
-                    <FormHelperText className={classes.error}>
-                      {this.state.formErrors.password}
-                      {/* {error && error.response && error.response.error.name} */}
-                    </FormHelperText>
-                  </FormControl>
+                    <FormControl className={classes.textField} error={!!error}>
+                      <InputLabel htmlFor="password">Password</InputLabel>
+                      <Input
+                        required
+                        id="password"
+                        placeholder="Must be at least 6 characters"
+                        type="password"
+                        margin="normal"
+                        onChange={this._handlePasswordChanged}
+                        value={this.state.password}
+                      />
+                      <FormHelperText className={classes.error}>
+                        {this.state.formErrors.password}
+                        {/* {error && error.response && error.response.error.name} */}
+                      </FormHelperText>
+                    </FormControl>
 
-                  <FormControl className={classes.textField} error={!!error}>
-                    <InputLabel htmlFor="confirm-password">
-                      Confirm Password
-                    </InputLabel>
-                    <Input
-                      placeholder="Re-enter your password"
-                      type="password"
-                      margin="normal"
-                      onChange={this._handleConfirmPasswordChanged}
-                      value={this.state.confirmPassword}
-                    />
-                    <FormHelperText className={classes.error}>
-                      {this.state.formErrors.confirmPassword}
-                      {/* {error && error.response && error.response.error.name} */}
-                    </FormHelperText>
-                  </FormControl>
-                </CardContent>
-                <CardActions
-                  className={classes.cardButton}
-                  style={{ justifyContent: 'flex-end' }}
-                >
-                  {loading ? (
-                    <CircularProgress />
-                  ) : (
-                    <Button
-                      raised
-                      color="primary"
-                      onClick={this._submit}
-                      className={classes.buttonSend}
-                    >
-                      Sign Up
-                    </Button>
-                  )}
-                </CardActions>
+                    <FormControl className={classes.textField} error={!!error}>
+                      <InputLabel htmlFor="confirm-password">
+                        Confirm Password
+                      </InputLabel>
+                      <Input
+                        placeholder="Re-enter your password"
+                        type="password"
+                        margin="normal"
+                        onChange={this._handleConfirmPasswordChanged}
+                        value={this.state.confirmPassword}
+                      />
+                      <FormHelperText className={classes.error}>
+                        {this.state.formErrors.confirmPassword}
+                        {/* {error && error.response && error.response.error.name} */}
+                      </FormHelperText>
+                    </FormControl>
+                  </CardContent>
+                  <CardActions
+                    className={classes.cardButton}
+                    style={{ justifyContent: 'flex-end' }}
+                  >
+                    {loading ? (
+                      <CircularProgress />
+                    ) : (
+                      <Button
+                        raised
+                        color="primary"
+                        type="submit"
+                        className={classes.buttonSend}
+                      >
+                        Sign Up
+                      </Button>
+                    )}
+                  </CardActions>
+                </form>
+                
               </Card>
             </Grid>
 

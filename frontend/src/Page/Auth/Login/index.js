@@ -40,7 +40,8 @@ class Login extends Component {
     this.setState({ password: e.target.value });
   }
 
-  _submit() {
+  _submit(e) {
+    e.preventDefault();
     if (this._validate()) {
       // console.log('submit');
       let { email, password } = this.state;
@@ -101,6 +102,7 @@ class Login extends Component {
           <Grid container className={classes.foreground}>
             <Grid item xs={11} sm={5} className={classes.cardWrapper}>
               <Card raised className={classes.cardForm}>
+              <form  onSubmit={this._submit}>
                 <CardContent>
                   <Grid style={{ paddingBottom: '2em' }}>
                     <Typography type="headline" component="h2">
@@ -159,13 +161,17 @@ class Login extends Component {
                     <Button
                       raised
                       color="primary"
-                      onClick={this._submit}
+                      type="submit"
+
                       className={classes.buttonSend}
                     >
                       Log in
                     </Button>
                   )}
                 </CardActions>
+
+              </form>
+                
               </Card>
             </Grid>
 
