@@ -136,6 +136,7 @@ const _doAddSong = async (stationId, songUrl, userId) => {
             songUrl: songUrl,
             title: song.title,
             duration: song.duration, // ms
+            thumbnail: song.thumbnail,
             score: 1,
             creatorId: userId,
           },
