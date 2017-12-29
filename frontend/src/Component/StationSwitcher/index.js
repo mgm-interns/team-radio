@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
+import stations from 'Fixture/stations';
 import { CircularProgress } from 'material-ui/Progress';
 import Slider from 'react-slick';
-import { fetchStations } from 'Redux/api/stations';
+// import { fetchStations } from 'Redux/api/stations';
 import { transformNumber } from 'Transformer';
 import Images from 'Theme/Images';
 import styles from './styles';
@@ -25,7 +26,7 @@ class StationSwitcher extends Component {
     classes: PropTypes.any,
     stationList: PropTypes.array,
     fetchStations: PropTypes.func,
-    stations: PropTypes.array,
+    // stations: PropTypes.array,
     history: PropTypes.object,
   };
   constructor(props) {
@@ -44,7 +45,7 @@ class StationSwitcher extends Component {
 
   componentDidMount() {
     this._handleWindowSizeChange();
-    this.props.fetchStations();
+    // this.props.fetchStations();
   }
 
   _handleWindowSizeChange = () => {
@@ -62,7 +63,7 @@ class StationSwitcher extends Component {
   }
 
   _renderSwitcher() {
-    const { classes, stations } = this.props;
+    const { classes } = this.props;
     const { width } = this.state;
     const isMobile = width <= 568;
     const slidesToShow = this._slidesToShow(width, isMobile);
@@ -136,7 +137,7 @@ class StationSwitcher extends Component {
   }
 
   render() {
-    const { stations } = this.props;
+    // const { stations } = this.props;
     let view = null;
     if (stations === undefined) {
       view = this._renderLoading();
@@ -150,16 +151,16 @@ class StationSwitcher extends Component {
   }
 }
 
-const mapStateToProps = ({ api: { stations } }) => ({
-  stations: stations.fetch.data,
-});
+// const mapStateToProps = ({ api: { stations } }) => ({
+//   stations: stations.fetch.data,
+// });
 
-const mapDispatchToProps = dispatch => ({
-  fetchStations: () => dispatch(fetchStations()),
-});
+// const mapDispatchToProps = dispatch => ({
+//   fetchStations: () => dispatch(fetchStations()),
+// });
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps),
+  // connect(mapStateToProps, mapDispatchToProps),
   withRouter,
 )(StationSwitcher);
