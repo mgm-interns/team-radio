@@ -14,7 +14,6 @@ class Player {
   };
 
   constructor(station) {
-    console.log('Begin player: ' + station);
     this.stationId = station.id;
     this.updatePlaylist(station);
   }
@@ -96,7 +95,7 @@ class Player {
 
     // Sort the filteredPlaylist by time (current the song_id is the song added time)
     const sortedPlaylist = _.sortBy(filteredPlaylist, ['song_id']);
-    const currentTime = Date().now();
+    const currentTime = Date.now();
     let preStartingTime = station.starting_time;
 
     // TODO: explain clearly in comments
@@ -183,5 +182,9 @@ export const getPlayer = async stationId => {
 };
 
 export const updatePlaylist = async stationId => {
-  getPlayer(stationId).updatePlaylist();
+  try {
+    getPlayer(stationId).updatePlaylist();
+  } catch (err) {
+    throw err;
+  }
 };
