@@ -16,6 +16,7 @@ import { error } from 'util';
 
 import { fetchUser } from 'Redux/api/user';
 import { connect } from 'react-redux';
+import { GoogleLogin, GoogleLogout } from 'Component/GoogleForm';
 
 class Login extends Component {
   constructor(props) {
@@ -102,76 +103,73 @@ class Login extends Component {
           <Grid container className={classes.foreground}>
             <Grid item xs={11} sm={5} className={classes.cardWrapper}>
               <Card raised className={classes.cardForm}>
-              <form  onSubmit={this._submit}>
-                <CardContent>
-                  <Grid style={{ paddingBottom: '2em' }}>
-                    <Typography type="headline" component="h2">
-                      Log in
-                    </Typography>
-                    <Typography component="p">
-                      for listening and sharing music
-                    </Typography>
-                  </Grid>
+                <form onSubmit={this._submit}>
+                  <CardContent>
+                    <Grid style={{ paddingBottom: '2em' }}>
+                      <Typography type="headline" component="h2">
+                        Log in
+                      </Typography>
+                      <Typography component="p">
+                        for listening and sharing music
+                      </Typography>
+                    </Grid>
 
-                  <FormControl className={classes.textField} error={!!error}>
-                    <InputLabel htmlFor="email" required>
-                      Email
-                    </InputLabel>
-                    <Input
-                      required
-                      id="email"
-                      placeholder="Enter your email"
-                      margin="normal"
-                      autoFocus={true}
-                      onChange={this._handleEmailChanged}
-                      value={this.state.email}
-                    />
+                    <FormControl className={classes.textField} error={!!error}>
+                      <InputLabel htmlFor="email" required>
+                        Email
+                      </InputLabel>
+                      <Input
+                        required
+                        id="email"
+                        placeholder="Enter your email"
+                        margin="normal"
+                        autoFocus={true}
+                        onChange={this._handleEmailChanged}
+                        value={this.state.email}
+                      />
+                      <FormHelperText className={classes.error}>
+                        {this.state.formErrors.email}
+
+                        {/* {error && error.response && error.response.error.name} */}
+                      </FormHelperText>
+                    </FormControl>
+
+                    <FormControl className={classes.textField} error={!!error}>
+                      <InputLabel htmlFor="password">Password</InputLabel>
+                      <Input
+                        required
+                        id="password"
+                        placeholder="Enter your password"
+                        type="password"
+                        margin="normal"
+                        onChange={this._handlePasswordChanged}
+                        value={this.state.password}
+                      />
+                      <FormHelperText className={classes.error}>
+                        {this.state.formErrors.password}
+                        {/* {error && error.response && error.response.error.name} */}
+                      </FormHelperText>
+                    </FormControl>
+
                     <FormHelperText className={classes.error}>
-                      {this.state.formErrors.email}
-
-                      {/* {error && error.response && error.response.error.name} */}
+                      {this.state.formErrors.message}
                     </FormHelperText>
-                  </FormControl>
-
-                  <FormControl className={classes.textField} error={!!error}>
-                    <InputLabel htmlFor="password">Password</InputLabel>
-                    <Input
-                      required
-                      id="password"
-                      placeholder="Enter your password"
-                      type="password"
-                      margin="normal"
-                      onChange={this._handlePasswordChanged}
-                      value={this.state.password}
-                    />
-                    <FormHelperText className={classes.error}>
-                      {this.state.formErrors.password}
-                      {/* {error && error.response && error.response.error.name} */}
-                    </FormHelperText>
-                  </FormControl>
-
-                  <FormHelperText className={classes.error}>
-                    {this.state.formErrors.message}
-                  </FormHelperText>
-                </CardContent>
-                <CardActions className={classes.cardButton}>
-                  {loading ? (
-                    <CircularProgress />
-                  ) : (
-                    <Button
-                      raised
-                      color="primary"
-                      type="submit"
-
-                      className={classes.buttonSend}
-                    >
-                      Log in
-                    </Button>
-                  )}
-                </CardActions>
-
-              </form>
-                
+                  </CardContent>
+                  <CardActions className={classes.cardButton}>
+                    {loading ? (
+                      <CircularProgress />
+                    ) : (
+                      <Button
+                        raised
+                        color="primary"
+                        type="submit"
+                        className={classes.buttonSend}
+                      >
+                        Log in
+                      </Button>
+                    )}
+                  </CardActions>
+                </form>
               </Card>
             </Grid>
 

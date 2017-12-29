@@ -101,7 +101,7 @@ class HttpRequest {
         case this.getTypeSuccess():
           return {
             ...state,
-            data: action.payload.data,
+            data: action.payload,
             loading: false,
           };
         case this.getTypeFailure():

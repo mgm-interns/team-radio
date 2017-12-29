@@ -1,4 +1,6 @@
 // TODO: WIP
+import * as controller from '../../../fixture/station';
+
 export default (emitter, score, userId, stationId, songId) => {
   // TODO
   if (score === 1) {
@@ -8,10 +10,10 @@ export default (emitter, score, userId, stationId, songId) => {
   } else console.log('Score unknow!');
 };
 
-const _upVoteSong = (emitter, userId, stationId, songId) => {
-  console.log('Up vote feature is coming soon!');
+const _upVoteSong = async (emitter, userId, stationId, songId) => {
+  const playlist = await controller.upVoteSong(userId, stationId, songId);
 };
 
-const _downVoteSong = (emitter, userId, stationId, songId) => {
-  console.log('Down vote feature is coming soon!');
+const _downVoteSong = async (emitter, userId, stationId, songId) => {
+  const playlist = await controller.downVoteSong(userId, stationId, songId);
 };

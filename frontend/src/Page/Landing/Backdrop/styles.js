@@ -5,16 +5,14 @@ export default ({ palette, breakpoints }) => ({
     background: palette.secondary['500'],
   },
   foreground: {
-    height: '80vh',
+    height: '100vh',
     width: '100%',
     zIndex: 0,
     margin: 'auto',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
-    },
-    [breakpoints.down('sm')]: {
-      height: '100vh',
+      height: '90vh',
     },
   },
   sloganContainer: {
@@ -25,15 +23,15 @@ export default ({ palette, breakpoints }) => ({
   backgroundImg: {
     position: 'absolute',
     width: '100%',
-    height: '80vh',
+    height: '100vh',
     top: 0,
     left: 0,
     margin: 'auto',
     filter: 'opacity(0.7)',
     zIndex: -1,
     objectFit: 'cover',
-    [breakpoints.down('sm')]: {
-      height: '100vh',
+    [breakpoints.up('lg')]: {
+      height: '90vh',
     },
   },
   mainLine: {

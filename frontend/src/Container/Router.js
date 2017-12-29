@@ -6,6 +6,10 @@ import Station from '../Page/Station';
 import Auth from '../Page/Auth/';
 import Login from '../Page/Auth/Login/';
 import Register from '../Page/Auth/Register/';
+import ImageCropper from '../Page/Demo/ImageCropper';
+import LoginSocial from '../Page/Demo/LoginSocial';
+import Notification from '../Page/Demo/Notification';
+import Demo from '../Page/Demo';
 
 // then our route config
 const routes = [
@@ -39,6 +43,22 @@ const routes = [
     //     component: Register,
     //   },
     // ],
+  },
+  {
+    path: '/demo/image-cropper',
+    component: ImageCropper,
+  },
+  {
+    path: '/demo/login-social',
+    component: LoginSocial,
+  },
+  {
+    path: '/demo/notification',
+    component: Notification,
+  },
+  {
+    path: '/demo/',
+    component: Demo,
   },
 ];
 
