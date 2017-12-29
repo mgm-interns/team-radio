@@ -1,4 +1,33 @@
-export const stations = [];
+let stations = [
+  {
+    id: '5a43122f01a6072810aadcb4',
+    stationName: 'mgm Internship 2017',
+    ownerId: 'userId',
+    nowPlaying: {
+      index: -1,
+      songId: null,
+      songUrl: null,
+      startedTime: null,
+    },
+    playlist: [],
+    createdDay: Date.now(),
+  },
+  {
+    id: 'mgm interns',
+    stationName: 'English class 2017',
+    ownerId: 'userId',
+    nowPlaying: {
+      index: -1,
+      songId: null,
+      songUrl: null,
+      startedTime: null,
+    },
+    playlist: [],
+    createdDay: Date.now(),
+  },
+];
+
+export const getStations = () => stations;
 
 export const addStation = async (userId, stationName) =>
   _doAddStation(userId, stationName);
@@ -6,8 +35,11 @@ export const addStation = async (userId, stationName) =>
 export const getPlaylist = async stationId =>
   Promise.resolve(stations.find(st => st.id === stationId).playlist);
 
-export const getNowplaying = async stationId =>
-  Promise.resolve(stations.find(st => st.id === stationId).nowplaying);
+export const getNowplaying = async stationId => {
+  const nowPlaying = stations.filter(st => st.id === stationId)[0].nowplaying;
+  console.log('Now Playing:' + nowPlaying);
+  return Promise.resolve(nowPlaying);
+};
 
 export const nextNowplaying = async stationId => {
   const nowPlaying = stations.find(st => st.id === stationId).nowplaying;
@@ -81,13 +113,34 @@ const _doAddStation = async (userId, stationName) => {
 };
 
 const _doAddSong = async (stationId, songUrl, userId) => {
-  const playlist = stations.find(st => st.id === stationId).playlist;
-  playlist.push({
-    id: songUrl.substr(32, 11), // Get videoID from youtube link
-    songUrl: songUrl,
-    duration: 120000, // ms
-    score: 0,
-    creatorId: userId,
+  // const playlist = stations.find(st => st.id === stationId).playlist;
+  // playlist.push({
+  //   id: songUrl.substr(32, 11), // Get videoID from youtube link
+  //   songUrl: songUrl,
+  //   duration: 120000, // ms
+  //   score: 0,
+  //   creatorId: userId,
+  // });
+  let playlist = [];
+
+  stations = stations.map(station => {
+    if (station.id === stationId) {
+      station = {
+        ...station,
+        playlist: [
+          ...station.playlist,
+          {
+            id: songUrl.substr(32, 11), // Get videoID from youtube link
+            songUrl: songUrl,
+            duration: 120000, // ms
+            score: 0,
+            creatorId: userId,
+          },
+        ],
+      };
+      playlist = station.playlist;
+    }
+    return station;
   });
   return Promise.resolve(playlist);
 };

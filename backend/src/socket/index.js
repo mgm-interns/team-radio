@@ -14,26 +14,32 @@ const createEmitter = socket => ({
       type: eventName,
       payload: payload,
     });
+    console.log(
+      'Emit to: ' + socket.id + ' type: ' + eventName + ' payload: ' + payload,
+    );
   },
   emitToStation: (stationId, eventName, payload) => {
     io.to(stationId).emit('action', {
       type: eventName,
       payload: payload,
     });
+    console.log('Emit to station: ' + stationId + ' payload: ' + payload);
   },
   emitAll: (eventName, payload) => {
     io.emit('action', {
       type: eventName,
       payload: payload,
     });
+    console.log('Emit to all, payload: ' + payload);
   },
 });
 
 io.on('connection', async function(socket) {
+  console.log('Connected with ' + socket.id);
   socket.on('action', action => {
     switch (action.type) {
       case EVENTS.CLIENT_CREATE_STATION:
-        console.log(EVENTS.CLIENT_CREATE_STATION);
+        console.log('Action: ' + EVENTS.CLIENT_CREATE_STATION);
         eventHandlers.createStationHandler(
           createEmitter(socket),
           action.payload.userId,
@@ -42,7 +48,7 @@ io.on('connection', async function(socket) {
         break;
 
       case EVENTS.CLIENT_JOIN_STATION:
-        console.log(EVENTS.CLIENT_JOIN_STATION);
+        console.log('Action: ' + EVENTS.CLIENT_JOIN_STATION);
         _leaveAllAndJoinRoom(socket, action.payload.stationId);
         try {
           eventHandlers.joinStationHandler(
@@ -57,7 +63,7 @@ io.on('connection', async function(socket) {
         break;
 
       case EVENTS.CLIENT_LEAVE_STATION:
-        console.log(EVENTS.CLIENT_LEAVE_STATION);
+        console.log('Action: ' + EVENTS.CLIENT_LEAVE_STATION);
         socket.leaveAll();
         eventHandlers.leaveStationHandler(
           createEmitter(socket),
@@ -67,7 +73,7 @@ io.on('connection', async function(socket) {
         break;
 
       case EVENTS.CLIENT_ADD_SONG:
-        console.log(EVENTS.CLIENT_ADD_SONG);
+        console.log('Action: ' + EVENTS.CLIENT_ADD_SONG);
         eventHandlers.addSongHandler(
           createEmitter(socket),
           action.payload.userId,
@@ -78,7 +84,7 @@ io.on('connection', async function(socket) {
 
       case EVENTS.CLIENT_UPVOTE_SONG:
         // TODO: WIP
-        console.log(EVENTS.CLIENT_UPVOTE_SONG);
+        console.log('Action: ' + EVENTS.CLIENT_UPVOTE_SONG);
         eventHandlers.voteSongHandler(
           createEmitter(socket),
           1,
@@ -90,7 +96,7 @@ io.on('connection', async function(socket) {
 
       case EVENTS.CLIENT_DOWNVOTE_SONG:
         // TODO: WIP
-        console.log(EVENTS.CLIENT_DOWNVOTE_SONG);
+        console.log('Action: ' + EVENTS.CLIENT_DOWNVOTE_SONG);
         eventHandlers.voteSongHandler(
           createEmitter(socket),
           -1,
@@ -115,6 +121,7 @@ const _leaveAllAndJoinRoom = (socket, stationId) => {
 
   Promise.all(leaveRoomPromises).then(() => {
     socket.join(stationId);
+    console.log('Join accept: ' + socket.id + ' join to ' + stationId);
   });
 };
 

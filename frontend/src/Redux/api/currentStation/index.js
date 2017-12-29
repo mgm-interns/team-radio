@@ -20,11 +20,12 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     // For websocket
     case SERVER_JOINED_STATION_SUCCESS:
+      console.log( action.payload);
       return {
         ...state,
         station: action.payload.station,
-        playlist: action.payload.playlist,
-        nowPlaying: action.payload.nowplaying,
+        playlist: action.payload.station.playlist,
+        nowPlaying: action.payload.station.nowplaying,
       };
 
     case SERVER_UPDATE_PLAYLIST:
