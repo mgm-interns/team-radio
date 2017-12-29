@@ -1,4 +1,4 @@
-const stations = [];
+export const stations = [];
 
 export const addStation = async (userId, stationName) =>
   _doAddStation(userId, stationName);
