@@ -21,7 +21,6 @@ class Landing extends Component {
       const { station_name } = nextProps.currentStation.station;
       history.push(`/station/${station_name}`);
     }
-  }
 
   // async componentDidMount() {
   //   const { notification: { app, browser } } = this.props;

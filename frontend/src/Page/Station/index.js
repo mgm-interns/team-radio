@@ -19,12 +19,14 @@ class StationPage extends Component {
   static propTypes = {
     classes: PropTypes.any,
     joinStation: PropTypes.any,
+    currentStation: PropTypes.object,
   };
   componentWillMount() {
     // Get station id from react-router
     const { match: { params: { stationName } }, history } = this.props;
     // if (stationName) {
-    this.props.joinStation(stationName);
+    // console.log(this.props.joinStation());
+    this.props.joinStation();
     // } else {
     //   history.push(`/`);
     // }
