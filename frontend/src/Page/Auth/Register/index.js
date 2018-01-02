@@ -1,44 +1,44 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Grid from 'material-ui/Grid';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import Icon from 'material-ui/Icon';
-import CircularProgress from 'material-ui/Progress/CircularProgress';
-import { withStyles } from 'material-ui/styles';
-import styles from './styles';
-import { NavBar } from '../../../Component';
-import { addUser } from 'Redux/api/user';
-import { connect } from 'react-redux';
-import { Field, SubmissionError, reduxForm } from 'redux-form';
-import TextView from './TextView';
-import { FormHelperText } from 'material-ui/Form';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Grid from "material-ui/Grid";
+import Card, { CardActions, CardContent } from "material-ui/Card";
+import Button from "material-ui/Button";
+import Typography from "material-ui/Typography";
+import Icon from "material-ui/Icon";
+import CircularProgress from "material-ui/Progress/CircularProgress";
+import { withStyles } from "material-ui/styles";
+import styles from "./styles";
+import { NavBar } from "../../../Component";
+import { addUser } from "Redux/api/user";
+import { connect } from "react-redux";
+import { Field, reduxForm } from "redux-form";
+import TextView from "../TextView";
+import { FormHelperText } from "material-ui/Form";
 
 const validate = values => {
   const errors = {};
   if (!values.name) {
-    errors.name = 'Name is required';
+    errors.name = "Name is required";
   } else if (values.name.length > 15) {
-    errors.name = 'Must be 15 characters or less';
+    errors.name = "Must be 15 characters or less";
   }
 
   if (!values.email) {
-    errors.email = 'Email is required';
+    errors.email = "Email is required";
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address';
+    errors.email = "Invalid email address";
   }
 
   if (!values.password) {
-    errors.password = 'Password is required';
+    errors.password = "Password is required";
   } else if (values.password.length < 6) {
-    errors.password = 'Must be at least 6 characters';
+    errors.password = "Must be at least 6 characters";
   }
 
   if (!values.confirmPassword) {
-    errors.confirmPassword = 'Confirm Password is required';
+    errors.confirmPassword = "Confirm Password is required";
   } else if (values.password != values.confirmPassword) {
-    errors.confirmPassword = 'Password and confirm password does not match';
+    errors.confirmPassword = "Password and confirm password does not match";
   }
 
   return errors;
@@ -49,13 +49,13 @@ class Register extends Component {
     super(props);
 
     this.state = {
-      asyncError: '',
+      asyncError: "",
       benefits: [
-        'Edit profile',
-        'Be rewarded',
-        'Play more songs than these anonymous freaks',
-        'See some information of the past activities',
-      ],
+        "Edit profile",
+        "Be rewarded",
+        "Play more songs than these anonymous freaks",
+        "See some information of the past activities"
+      ]
     };
   }
 
@@ -65,12 +65,12 @@ class Register extends Component {
     if (error != null) {
       this.setState(prevState => {
         return {
-          asyncError: error.response.message,
+          asyncError: error.response.message
         };
       });
     } else if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      this.props.history.push('/');
+      localStorage.setItem("token", response.data.token);
+      this.props.history.push("/");
     }
   }
 
@@ -112,7 +112,7 @@ class Register extends Component {
               <Card raised className={classes.cardForm}>
                 <form onSubmit={handleSubmit}>
                   <CardContent>
-                    <Grid style={{ paddingBottom: '2em' }}>
+                    <Grid style={{ paddingBottom: "2em" }}>
                       <Typography type="headline" component="h2">
                         Sign Up
                       </Typography>
@@ -159,7 +159,7 @@ class Register extends Component {
                   </CardContent>
                   <CardActions
                     className={classes.cardButton}
-                    style={{ justifyContent: 'flex-end' }}
+                    style={{ justifyContent: "flex-end" }}
                   >
                     {loading ? (
                       <CircularProgress />
@@ -196,18 +196,18 @@ class Register extends Component {
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmit: values => {
     dispatch(addUser(values));
-  },
+  }
 });
 
 const mapStateToProps = state => {
   return {
-    addUserResponse: state.api.user.add,
+    addUserResponse: state.api.user.add
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({
-    form: 'registerForm',
-    validate,
-  })(withStyles(styles)(Register)),
+    form: "registerForm",
+    validate
+  })(withStyles(styles)(Register))
 );

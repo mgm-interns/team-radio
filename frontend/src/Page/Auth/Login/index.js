@@ -1,100 +1,75 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Grid from 'material-ui/Grid';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import Input, { InputLabel } from 'material-ui/Input';
-import CircularProgress from 'material-ui/Progress/CircularProgress';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Grid from "material-ui/Grid";
+import Card, { CardActions, CardContent } from "material-ui/Card";
+import Button from "material-ui/Button";
+import Typography from "material-ui/Typography";
+import { FormControl, FormHelperText } from "material-ui/Form";
+import Input, { InputLabel } from "material-ui/Input";
+import CircularProgress from "material-ui/Progress/CircularProgress";
+import { withStyles } from "material-ui/styles";
+import { Field, reduxForm } from "redux-form";
+import styles from "./styles";
+import { NavBar } from "../../../Component";
+import { fetchUser } from "Redux/api/user";
+import { connect } from "react-redux";
+import { GoogleLogin, GoogleLogout } from "Component/GoogleForm";
+import TextView from "../TextView";
 
-import { withStyles } from 'material-ui/styles';
-import styles from './styles';
+const validate = values => {
+  const errors = {};
 
-import { NavBar } from '../../../Component';
-import { error } from 'util';
+  if (!values.email) {
+    errors.email = "Email is required";
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = "Invalid email address";
+  }
 
-import { fetchUser } from 'Redux/api/user';
-import { connect } from 'react-redux';
-import { GoogleLogin, GoogleLogout } from 'Component/GoogleForm';
+  if (!values.password) {
+    errors.password = "Password is required";
+  }
+
+  return errors;
+};
 
 class Login extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      email: '',
-      password: '',
-      formErrors: {},
+      formErrors: {}
     };
-    this._handleEmailChanged = this._handleEmailChanged.bind(this);
-    this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
-
-    this._submit = this._submit.bind(this);
   }
 
-  _handleEmailChanged(e) {
-    this.setState({ email: e.target.value });
-  }
-
-  _handlePasswordChanged(e) {
-    this.setState({ password: e.target.value });
-  }
-
-  _submit(e) {
-    e.preventDefault();
-    if (this._validate()) {
-      // console.log('submit');
-      let { email, password } = this.state;
-      this.props.login({ email, password });
-    }
-  }
-
-  _validate() {
-    const { email, password, formErrors } = this.state;
-    let newFormErrors = {};
-    let isValid = true;
-
-    if (!email) {
-      newFormErrors.email = 'Email is required';
-      isValid = false;
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-      newFormErrors.email = 'Invalid email address';
-      isValid = false;
-    }
-
-    if (!password) {
-      newFormErrors.password = 'Password is required';
-      isValid = false;
-    }
-
-    this.setState({
-      formErrors: newFormErrors,
-    });
-
-    return isValid;
-    // console.log(newFormErrors);
-  }
+  // _submit(e) {
+  //   e.preventDefault();
+  //   if (this._validate()) {
+  //     // console.log('submit');
+  //     let { email, password } = this.state;
+  //     this.props.login({ email, password });
+  //   }
+  // }
 
   componentWillReceiveProps(nextProps) {
     const response = nextProps.fetchUserResponse;
     const { error } = response;
+    console.log(response);
     if (response.error != null) {
       this.setState(prevState => {
         return {
           formErrors: {
-            message: error.response.message,
-          },
+            message: error.response.message
+          }
         };
       });
-    } else if (!response.loading) {
-      localStorage.setItem('token', response.data.token);
-      this.props.history.push('/');
+    } else if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+      this.props.history.push("/");
     }
   }
 
   render() {
-    const { classes, loading, error } = this.props;
+    const { classes, loading, handleSubmit, submitting } = this.props;
 
     return (
       <div>
@@ -103,9 +78,9 @@ class Login extends Component {
           <Grid container className={classes.foreground}>
             <Grid item xs={11} sm={5} className={classes.cardWrapper}>
               <Card raised className={classes.cardForm}>
-                <form onSubmit={this._submit}>
+                <form onSubmit={handleSubmit}>
                   <CardContent>
-                    <Grid style={{ paddingBottom: '2em' }}>
+                    <Grid style={{ paddingBottom: "2em" }}>
                       <Typography type="headline" component="h2">
                         Log in
                       </Typography>
@@ -114,42 +89,21 @@ class Login extends Component {
                       </Typography>
                     </Grid>
 
-                    <FormControl className={classes.textField} error={!!error}>
-                      <InputLabel htmlFor="email" required>
-                        Email
-                      </InputLabel>
-                      <Input
-                        required
-                        id="email"
-                        placeholder="Enter your email"
-                        margin="normal"
-                        autoFocus={true}
-                        onChange={this._handleEmailChanged}
-                        value={this.state.email}
-                      />
-                      <FormHelperText className={classes.error}>
-                        {this.state.formErrors.email}
+                    <Field
+                      name="email"
+                      placeholde="Email"
+                      type="text"
+                      component={TextView}
+                      label="Email"
+                    />
 
-                        {/* {error && error.response && error.response.error.name} */}
-                      </FormHelperText>
-                    </FormControl>
-
-                    <FormControl className={classes.textField} error={!!error}>
-                      <InputLabel htmlFor="password">Password</InputLabel>
-                      <Input
-                        required
-                        id="password"
-                        placeholder="Enter your password"
-                        type="password"
-                        margin="normal"
-                        onChange={this._handlePasswordChanged}
-                        value={this.state.password}
-                      />
-                      <FormHelperText className={classes.error}>
-                        {this.state.formErrors.password}
-                        {/* {error && error.response && error.response.error.name} */}
-                      </FormHelperText>
-                    </FormControl>
+                    <Field
+                      name="password"
+                      placeholder="Password"
+                      type="password"
+                      component={TextView}
+                      label="Password"
+                    />
 
                     <FormHelperText className={classes.error}>
                       {this.state.formErrors.message}
@@ -187,26 +141,22 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
-  classes: PropTypes.any,
-  loading: PropTypes.any,
-  error: PropTypes.any,
-  addStation: PropTypes.func,
-};
-
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  login: user => {
+  onSubmit: user => {
     dispatch(fetchUser(user));
-  },
+  }
 });
 
 const mapStateToProps = state => {
   // console.log(state.api.user.fetch);
   return {
-    fetchUserResponse: state.api.user.fetch,
+    fetchUserResponse: state.api.user.fetch
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(Login),
+  reduxForm({
+    form: "loginForm",
+    validate
+  })(withStyles(styles)(Login))
 );

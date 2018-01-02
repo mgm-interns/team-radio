@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import TextField from 'material-ui/TextField';
+import React, { Component } from "react";
+import TextField from "material-ui/TextField";
 
 class TextView extends Component {
   render() {
     const { input, label, type, placeholder } = this.props;
-    const { touched, error, warning } = this.props.meta;
+    const { touched, error } = this.props.meta;
     return (
       <TextField
         fullWidth
@@ -15,7 +15,7 @@ class TextView extends Component {
         error={!!(touched && error)}
         helperText={touched && error}
         {...input}
-        style={{ marginBottom: '20px' }}
+        style={{ marginBottom: "20px" }}
       />
     );
   }
