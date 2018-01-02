@@ -54,6 +54,7 @@ io.on('connection', async function(socket) {
     },
   });
 
+  // Listening for action request
   socket.on('action', action => {
     switch (action.type) {
       case EVENTS.CLIENT_CREATE_STATION:
@@ -67,13 +68,13 @@ io.on('connection', async function(socket) {
 
       case EVENTS.CLIENT_JOIN_STATION:
         console.log('Action: ' + EVENTS.CLIENT_JOIN_STATION);
-        _leaveAllAndJoinRoom(socket, action.payload.stationId);
         try {
           eventHandlers.joinStationHandler(
             createEmitter(socket),
             action.payload.userId,
             action.payload.stationId,
           );
+          _leaveAllAndJoinRoom(socket, action.payload.stationId);
         } catch (err) {
           console.log(err);
           socket.leaveAll();
@@ -101,7 +102,6 @@ io.on('connection', async function(socket) {
         break;
 
       case EVENTS.CLIENT_UPVOTE_SONG:
-        // TODO: WIP
         console.log('Action: ' + EVENTS.CLIENT_UPVOTE_SONG);
         eventHandlers.voteSongHandler(
           createEmitter(socket),
@@ -113,7 +113,6 @@ io.on('connection', async function(socket) {
         break;
 
       case EVENTS.CLIENT_DOWNVOTE_SONG:
-        // TODO: WIP
         console.log('Action: ' + EVENTS.CLIENT_DOWNVOTE_SONG);
         eventHandlers.voteSongHandler(
           createEmitter(socket),
@@ -126,6 +125,10 @@ io.on('connection', async function(socket) {
       default:
         break;
     }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Disconnect with ' + socket.id);
   });
 });
 

@@ -102,20 +102,21 @@ export const addSong = async (stationId, songUrl, userId = null) => {
 export const updateStartingTime = async (stationId, time) => {
   return await stationModels.updateTimeStartingOfStation(stationId, time);
 };
+
 // To stationId and set songIds from false to true
 export const setPlayedSongs = async (stationId, songIds) => {
-  let currentPlaylist = (await stationModels.getStationById(stationId))
-    .playlist;
+  const currentPlaylist = await getListSong(stationId);
+  // console.log(currentPlaylist);
   if (currentPlaylist) {
     for (let i = 0; i < songIds.length; i++) {
       for (let j = 0; j < currentPlaylist.length; j++) {
-        if (songIds[i]) {
+        if (currentPlaylist[j].song_id === songIds[i]) {
           currentPlaylist[j].is_played = true;
         }
       }
     }
   }
-  let playlist = await stationModels.updatePlaylistOfStation(
+  const playlist = await stationModels.updatePlaylistOfStation(
     stationId,
     currentPlaylist,
   );
