@@ -188,3 +188,11 @@ export const updatePlaylist = async stationId => {
     throw err;
   }
 };
+
+export const getNowPlaying = async stationId => {
+  try {
+    return getPlayer(stationId).getNowPlaying();
+  } catch (err) {
+    throw err;
+  }
+};
