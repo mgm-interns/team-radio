@@ -11,7 +11,6 @@ import styles from './styles';
 class Playlist extends Component {
   render() {
     const { playlist, className, style } = this.props;
-    console.log(playlist);
     return (
       <Grid
         item

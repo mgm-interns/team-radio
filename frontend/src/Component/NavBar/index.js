@@ -16,11 +16,15 @@ const MENUS = {
     title: 'My Station',
     url: '/station',
   },
-  login: {
-    title: 'Login',
-    url: '/auth/login',
-  },
+  // login: {
+  //   title: 'Login',
+  //   url: '/auth/login',
+  // },
 };
+
+// const function isLogin(params) {
+//   ret
+// }
 
 // const defaultColor = 'rgba(10, 55, 58, 0.4) !important';
 
@@ -32,7 +36,7 @@ const setColor = {
 class NavBar extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       transform: 0,
     };
@@ -94,10 +98,13 @@ class NavBar extends Component {
                   const { title } = MENUS[key];
                   return (
                     <Link key={index} to={MENUS[key].url}>
-                      {index === menusLength - 1 ? title : `${title} - `}
+                      {/* {index === menusLength - 1 ? title : `${title} - `} */}
+                      {title + " - "}
                     </Link>
                   );
                 })}
+        
+                <AuthLink />
               </Grid>
             </Grid>
           </Grid>
@@ -106,6 +113,51 @@ class NavBar extends Component {
     );
   }
 }
+
+class AuthLink extends Component {
+  constructor(props) {
+    super(props);
+    console.log(props.match)
+    this.state = {
+      item: {
+        
+      },
+    };
+  }
+
+  _getItem() {
+    if(localStorage.getItem('token')) {
+      return (
+        <a onClick={this._logout.bind(this)}>Logout</a>
+      )
+    }
+    else {
+      return (
+        <Link to='auth/login'>Login</Link>
+      )
+    }
+  }
+
+  _logout() {
+    localStorage.removeItem('token');
+    this.forceUpdate();
+  }
+
+  componentWillMount() {
+    this.setState(() => {
+      return {
+        item: this._getItem()
+      };
+    })
+  }
+
+  render() {
+    return (
+      this._getItem.bind(this)()
+    )
+  }
+}
+
 
 NavBar.propTypes = {
   classes: PropTypes.any,
