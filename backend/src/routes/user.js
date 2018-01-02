@@ -7,7 +7,7 @@ export default router => {
     try {
       const user = await User.findOne({ email: req.body.email });
       if (user) {
-        res.status(400).json({ email: 'This email has already been taken.' });
+        res.status(400).json({ message: 'This email has already been taken.' });
       } else {
         const newUser = new User();
         newUser.email = req.body.email;
@@ -20,15 +20,13 @@ export default router => {
             email: newUser.email,
             name: newUser.name,
           };
-          
+
           const token = jwt.sign(payload, req.app.get('superSecret'), {
             expiresIn: 1440 * 7, // expires in 24 hours
           });
           res.json({
-            data: {
-              message: 'signup success',
-              token: token,
-            },
+            message: 'signup success',
+            token: token,
           });
         });
       }
@@ -59,7 +57,7 @@ export default router => {
             email: user.email,
             name: user.name,
           };
-          
+
           const token = jwt.sign(payload, req.app.get('superSecret'), {
             expiresIn: 1440, // expires in 24 hours *****************************
           });
