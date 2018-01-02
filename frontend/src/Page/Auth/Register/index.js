@@ -11,9 +11,10 @@ import { addUser } from 'Redux/api/user';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { FormHelperText } from 'material-ui/Form';
+import { NavBar } from 'Component';
+import { saveAuthenticationState } from 'Config';
 
 import styles from './styles';
-import { NavBar } from '../../../Component';
 import TextView from '../TextView';
 
 const validate = values => {
@@ -68,7 +69,7 @@ class Register extends Component {
         asyncError: error.response.message,
       });
     } else if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
+      saveAuthenticationState(response.data);
       this.props.history.push('/');
     }
   }

@@ -5,6 +5,8 @@ import Grid from 'material-ui/Grid';
 
 import { withStyles } from 'material-ui/styles';
 import fixture from 'Fixture/landing';
+import { loadAuthenticationState, removeAuthenticationState } from 'Config';
+
 import styles from './styles';
 
 const MENUS = {
@@ -124,14 +126,14 @@ class AuthLink extends Component {
   }
 
   _getItem() {
-    if (localStorage.getItem('token')) {
+    if (loadAuthenticationState()) {
       return <a onClick={this._logout.bind(this)}>Logout</a>;
     }
     return <Link to="auth/login">Login</Link>;
   }
 
   _logout() {
-    localStorage.removeItem('token');
+    removeAuthenticationState();
     this.forceUpdate();
   }
 

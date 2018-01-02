@@ -10,6 +10,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
 import { NavBar } from 'Component';
+import { saveAuthenticationState } from 'Config';
 import { fetchUser } from 'Redux/api/user';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -60,7 +61,8 @@ class Login extends Component {
         },
       });
     } else if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
+      // localStorage.setItem('token', response.data.token);
+      saveAuthenticationState(response.data);
       this.props.history.push('/');
     }
   }
