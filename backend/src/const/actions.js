@@ -13,6 +13,10 @@ export const SERVER_CREATE_STATION_FAILURE = 'SERVER:CREATE_STATION_FAILURE ';
 // response payload: { message }
 // message is error msg: (Ex: 'Station name is already exists!')
 
+export const SERVER_ADD_SONG_FAILURE = 'SERVER:ADD_SONG_FAILURE';
+// response payload: { message }
+// message is error msg: (Ex: 'The song url is not available!')
+
 /* ***************************************************************************** */
 // SERVER NOTIFY
 export const SERVER_UPDATE_STATIONS = 'SERVER:UPDATE_STATIONS';
@@ -53,5 +57,5 @@ export const CLIENT_UPVOTE_SONG = 'CLIENT:UPVOTE_SONG_REQUEST';
 export const CLIENT_DOWNVOTE_SONG = 'CLIENT:DOWNVOTE_SONG_REQUEST';
 // request payload { useId, stationId, songId }
 
-export const CLIENT_ADD_SONG = 'CLIENT:CLIENT_ADD_SONG_REQUEST';
+export const CLIENT_ADD_SONG = 'CLIENT:ADD_SONG_REQUEST';
 // request payload { userId, stationId, songUrl }
