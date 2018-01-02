@@ -4,7 +4,7 @@ import * as players from '../players';
 import * as stationModels from './../models/station';
 import { statSync } from 'fs';
 
-const MAX_SONG_UNREGISTED_USER_CAN_ADD = 2;
+const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 
 export const addStation = async (stationName, userId) => {
   console.log('station name : ' + stationName);
@@ -59,7 +59,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
   if (!userId) {
     let numOfSongsAddedByUnregistedUsers = 0;
     station.playlist.forEach((song, index) => {
-      if (!song.creator_id) {
+      if (!song.creator_id && song.is_played == false) {
         numOfSongsAddedByUnregistedUsers++;
         if (
           numOfSongsAddedByUnregistedUsers === MAX_SONG_UNREGISTED_USER_CAN_ADD
@@ -75,7 +75,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
 
   let songDetail = await songController.getSongDetails(songUrl);
   if (!songDetail) {
-    throw 'The song url is not available !';
+    throw new Error('The song url is not available !');
   }
   try {
     // TODO: test => song_id: new Date().getTime()
@@ -95,6 +95,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
     // return Promise.resolve(station.playlist);
   } catch (err) {
     console.log('Error of add song : ' + err);
+    throw err;
   }
 };
 
