@@ -41,15 +41,12 @@ const stationSchema = mongoose.Schema({
       thumbnail: {
         type: String,
       },
-      owner: {
-        type: String,
-      },
       duration: {
         type: Number,
         min: 0,
       },
       creator_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
       },
       up_vote: [
         String, // userID
