@@ -36,7 +36,7 @@ const setColor = {
 class NavBar extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       transform: 0,
     };
@@ -99,11 +99,11 @@ class NavBar extends Component {
                   return (
                     <Link key={index} to={MENUS[key].url}>
                       {/* {index === menusLength - 1 ? title : `${title} - `} */}
-                      {title + " - "}
+                      {`${title} - `}
                     </Link>
                   );
                 })}
-        
+
                 <AuthLink />
               </Grid>
             </Grid>
@@ -117,25 +117,17 @@ class NavBar extends Component {
 class AuthLink extends Component {
   constructor(props) {
     super(props);
-    console.log(props.match)
+    // console.log(props.match);
     this.state = {
-      item: {
-        
-      },
+      item: {},
     };
   }
 
   _getItem() {
-    if(localStorage.getItem('token')) {
-      return (
-        <a onClick={this._logout.bind(this)}>Logout</a>
-      )
+    if (localStorage.getItem('token')) {
+      return <a onClick={this._logout.bind(this)}>Logout</a>;
     }
-    else {
-      return (
-        <Link to='auth/login'>Login</Link>
-      )
-    }
+    return <Link to="auth/login">Login</Link>;
   }
 
   _logout() {
@@ -144,20 +136,15 @@ class AuthLink extends Component {
   }
 
   componentWillMount() {
-    this.setState(() => {
-      return {
-        item: this._getItem()
-      };
-    })
+    this.setState(() => ({
+      item: this._getItem(),
+    }));
   }
 
   render() {
-    return (
-      this._getItem.bind(this)()
-    )
+    return this._getItem.bind(this)();
   }
 }
-
 
 NavBar.propTypes = {
   classes: PropTypes.any,
