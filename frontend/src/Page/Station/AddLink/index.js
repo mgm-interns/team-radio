@@ -15,6 +15,7 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import { MenuItem } from 'material-ui/Menu';
 import { CircularProgress } from 'material-ui/Progress';
+import { Player } from 'Component';
 import { Images } from 'Theme';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
@@ -24,7 +25,7 @@ const STATION_DEFAULT = {
   name: 'mgm internship 2017',
 };
 
-const PRE_URL = 'https://www.youtube.com/watch?v=';
+// const PRE_URL = 'https://www.youtube.com/watch?v=';
 
 class AddLink extends Component {
   static propTypes = {
@@ -65,6 +66,13 @@ class AddLink extends Component {
       return matches[1];
     }
     return false;
+  }
+
+  _getVideoUrl(video) {
+    console.log('video: ', video);
+    return typeof video.id === 'string'
+      ? process.env.REACT_APP_YOUTUBE_URL + video.id
+      : process.env.REACT_APP_YOUTUBE_URL + video.id.videoId;
   }
 
   async _getVideoInfo(id) {
@@ -198,7 +206,6 @@ class AddLink extends Component {
   }
 
   _onSuggestionSelected(e, { suggestion }) {
-    console.log(e);
     this.setState({
       isDisableButton: false,
       searchText: suggestion.snippet.title,
@@ -210,7 +217,6 @@ class AddLink extends Component {
 
   _onChange(e) {
     const result = e.target.value;
-    console.log('result: ', result);
     this.setState({ searchText: result });
     if (result === '') {
       this.setState({
@@ -223,12 +229,7 @@ class AddLink extends Component {
 
   _onAddClick() {
     const { video } = this.state;
-    const songUrl =
-      typeof video.id === 'string'
-        ? PRE_URL + video.id
-        : PRE_URL + video.id.videoId;
-
-    this.props.addSong(songUrl);
+    this.props.addSong(this._getVideoUrl(video));
     this.setState({ searchText: '', video: {} });
   }
 
@@ -317,7 +318,6 @@ class AddLink extends Component {
   _renderPreviewSection() {
     const { classes } = this.props;
     const { video, isAddLinkProgress } = this.state;
-
     let view = null;
     if (video.id === undefined) {
       view = this._renderEmptyComponent();
@@ -327,9 +327,10 @@ class AddLink extends Component {
       view = (
         <Grid container className={classes.content}>
           <Grid item sm={4} xs={12} className={classes.previewImg}>
-            <img
-              src={video.snippet.thumbnails.medium.url}
-              className={classes.previewImg}
+            <Player
+              url={this._getVideoUrl(video)}
+              muted={true}
+              playing={true}
             />
           </Grid>
           <Grid item sm={8} xs={12}>

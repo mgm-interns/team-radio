@@ -1,7 +1,7 @@
 export default theme => {
   // console.log(theme);
   const {
-    spacing: { smallMargin, baseMargin, doubleBaseMargin },
+    spacing: { baseMargin, doubleBaseMargin },
     palette: { lightGrey },
     typography,
     breakpoints,
@@ -59,21 +59,6 @@ export default theme => {
       marginBottom: baseMargin,
       [breakpoints.down('sm')]: {
         fontSize: '1rem',
-      },
-    },
-
-    previewImg: {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      padding: '0 4px 0 0',
-      [breakpoints.down('md')]: {
-        paddingLeft: '0 !important',
-      },
-      [breakpoints.down('sm')]: {
-        width: 'initial',
-        height: 'initial',
-        objectFit: 'contain',
       },
     },
 

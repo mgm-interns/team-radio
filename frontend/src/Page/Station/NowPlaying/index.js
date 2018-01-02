@@ -39,6 +39,7 @@ class NowPlaying extends Component {
           // ref={this._getRefPlayer}
           playing={autoplay}
           seektime={756}
+          muted={true}
         />
       </Grid>
     );
