@@ -4,6 +4,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { addSong } from 'Redux/api/currentStation/actions';
+import { setPreviewVideo } from 'Redux/page/station/actions';
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
@@ -25,19 +26,19 @@ const STATION_DEFAULT = {
   name: 'mgm internship 2017',
 };
 
-// const PRE_URL = 'https://www.youtube.com/watch?v=';
-
+/* eslint-disable no-shadow */
 class AddLink extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     addSong: PropTypes.func,
+    setPreviewVideo: PropTypes.func,
+    preview: PropTypes.object,
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      video: {},
       videoId: '',
       searchText: '',
       suggestions: [],
@@ -56,6 +57,8 @@ class AddLink extends Component {
     this._renderLinkBoxSection = this._renderLinkBoxSection.bind(this);
     this._renderPreviewSection = this._renderPreviewSection.bind(this);
     this._renderSuggestion = this._renderSuggestion.bind(this);
+
+    this._renderInput = this._renderInput.bind(this);
   }
 
   _checkValidUrl(url) {
@@ -69,7 +72,6 @@ class AddLink extends Component {
   }
 
   _getVideoUrl(video) {
-    console.log('video: ', video);
     return typeof video.id === 'string'
       ? process.env.REACT_APP_YOUTUBE_URL + video.id
       : process.env.REACT_APP_YOUTUBE_URL + video.id.videoId;
@@ -165,6 +167,7 @@ class AddLink extends Component {
 
   _timeoutSearchFunc;
   _onSuggestionsFetchRequested({ value }) {
+    const { setPreviewVideo } = this.props;
     this.setState({ isAddLinkProgress: true });
     try {
       clearTimeout(this._timeoutSearchFunc);
@@ -173,18 +176,18 @@ class AddLink extends Component {
         if (value !== '' && this._checkValidUrl(value)) {
           const id = this._checkValidUrl(value);
           const data = await this._getVideoInfo(id);
+          setPreviewVideo(data[0]);
           this.setState({
             isDisableButton: false,
-            video: { ...data[0] },
             videoId: id,
             suggestions: [],
           });
         } else {
           // value is not a link will be searched
+          setPreviewVideo();
           const data = await this._getSearchResult(value);
           this.setState({
             isDisableButton: true,
-            video: {},
             videoId: '',
             suggestions: data,
           });
@@ -206,31 +209,33 @@ class AddLink extends Component {
   }
 
   _onSuggestionSelected(e, { suggestion }) {
+    this.props.setPreviewVideo(suggestion);
     this.setState({
       isDisableButton: false,
       searchText: suggestion.snippet.title,
-      video: { ...suggestion },
       videoId: suggestion.id.videoId,
     });
   }
   /** End of autoComplete search  */
 
   _onChange(e) {
+    const { setPreviewVideo } = this.props;
     const result = e.target.value;
     this.setState({ searchText: result });
     if (result === '') {
+      setPreviewVideo();
       this.setState({
         isDisableButton: true,
-        video: {},
         videoId: '',
       });
     }
   }
 
   _onAddClick() {
-    const { video } = this.state;
-    this.props.addSong(this._getVideoUrl(video));
-    this.setState({ searchText: '', video: {} });
+    const { preview, addSong, setPreviewVideo } = this.props;
+    setPreviewVideo();
+    addSong(this._getVideoUrl(preview));
+    this.setState({ searchText: '' });
   }
 
   _renderLoading() {
@@ -283,6 +288,7 @@ class AddLink extends Component {
                 suggestionsList: classes.suggestionsList,
                 suggestion: classes.suggestion,
               }}
+              alwaysRenderSuggestions={false}
               renderInputComponent={this._renderInput}
               suggestions={this.state.suggestions}
               onSuggestionsFetchRequested={this._onSuggestionsFetchRequested}
@@ -316,10 +322,11 @@ class AddLink extends Component {
   }
 
   _renderPreviewSection() {
-    const { classes } = this.props;
-    const { video, isAddLinkProgress } = this.state;
+    const { classes, preview } = this.props;
+    const { isAddLinkProgress } = this.state;
     let view = null;
-    if (video.id === undefined) {
+
+    if (preview === null) {
       view = this._renderEmptyComponent();
     } else if (isAddLinkProgress) {
       view = this._renderLoading();
@@ -328,20 +335,21 @@ class AddLink extends Component {
         <Grid container className={classes.content}>
           <Grid item sm={4} xs={12} className={classes.previewImg}>
             <Player
-              url={this._getVideoUrl(video)}
+              url={this._getVideoUrl(preview)}
               muted={true}
               playing={true}
             />
           </Grid>
           <Grid item sm={8} xs={12}>
-            <p className={classes.previewTitle}>{video.snippet.title}</p>
+            <p className={classes.previewTitle}>{preview.snippet.title}</p>
             <p className={classes.secondaryTitle}>
-              Channel: {video.snippet.channelTitle}
+              Channel: {preview.snippet.channelTitle}
             </p>
           </Grid>
         </Grid>
       );
     }
+
     return (
       <Grid item md={7} xs={12} className={classes.addLinkBoxRight}>
         {view}
@@ -375,11 +383,16 @@ class AddLink extends Component {
   }
 }
 
+const mapStateToProps = ({ page }) => ({
+  preview: page.station.preview,
+});
+
 const mapDispatchToProps = dispatch => ({
   addSong: songUrl => dispatch(addSong({ songUrl })),
+  setPreviewVideo: video => dispatch(setPreviewVideo(video)),
 });
 
 export default compose(
   withStyles(styles),
-  connect(undefined, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
 )(AddLink);
