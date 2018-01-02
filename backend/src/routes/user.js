@@ -1,13 +1,13 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User';
-import authController from '../controllers/auth';
+import jwt from "jsonwebtoken";
+import User from "../models/User";
+import authController from "../controllers/auth";
 
 export default router => {
-  router.post('/signup', async (req, res) => {
+  router.post("/signup", async (req, res) => {
     try {
       const user = await User.findOne({ email: req.body.email });
       if (user) {
-        res.status(400).json({ email: 'This email has already been taken.' });
+        res.status(400).json({ message: "This email has already been taken." });
       } else {
         const newUser = new User();
         newUser.email = req.body.email;
@@ -18,17 +18,15 @@ export default router => {
           if (err) throw err;
           const payload = {
             email: newUser.email,
-            name: newUser.name,
+            name: newUser.name
           };
-          
-          const token = jwt.sign(payload, req.app.get('superSecret'), {
-            expiresIn: 1440 * 7, // expires in 24 hours
+
+          const token = jwt.sign(payload, req.app.get("superSecret"), {
+            expiresIn: 1440 * 7 // expires in 24 hours
           });
           res.json({
-            data: {
-              message: 'signup success',
-              token: token,
-            },
+            message: "signup success",
+            token: token
           });
         });
       }
@@ -37,19 +35,19 @@ export default router => {
     }
   });
 
-  router.post('/login', async (req, res) => {
+  router.post("/login", async (req, res) => {
     try {
       const user = await User.findOne({ email: req.body.email });
       if (!user) {
         res.status(401).json({
           success: false,
-          message: 'Sorry, we could not find an account with that email.',
+          message: "Incorrect email or password"
         });
       } else if (user) {
         if (!user.validPassword(req.body.password)) {
           res.status(401).json({
             success: false,
-            message: 'The password is incorrect.',
+            message: "Incorrect email or password"
           });
         } else {
           // if user is found and password is right
@@ -57,19 +55,17 @@ export default router => {
           // we don't want to pass in the entrie user since that has the password=
           const payload = {
             email: user.email,
-            name: user.name,
+            name: user.name
           };
-          
-          const token = jwt.sign(payload, req.app.get('superSecret'), {
-            expiresIn: 1440, // expires in 24 hours *****************************
+
+          const token = jwt.sign(payload, req.app.get("superSecret"), {
+            expiresIn: 1440 // expires in 24 hours *****************************
           });
 
           res.json({
-            data: {
-              success: true,
-              message: 'Enjoy your token!',
-              token: token,
-            },
+            success: true,
+            message: "Enjoy your token!",
+            token: token
           });
         }
       }
@@ -81,11 +77,11 @@ export default router => {
   router.use(authController);
 
   // test function *************************************
-  router.get('/', (req, res) => {
-    res.json({ message: 'Welcome to the coolest API on earth!' });
+  router.get("/", (req, res) => {
+    res.json({ message: "Welcome to the coolest API on earth!" });
   });
 
-  router.get('/User', (req, res) => {
+  router.get("/User", (req, res) => {
     User.find({}, function(err, users) {
       res.json(users);
     });
