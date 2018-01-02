@@ -149,7 +149,8 @@ class NotificationDemo extends Component {
           <Grid item xs={4}>
             <Button
               raised
-              color="primary"
+              // color="primary"
+              style={{ background: '#2ecc71', color: 'white' }}
               onClick={this.callAppNotificationSuccess}
             >
               <span>App Notification Success</span>
@@ -167,7 +168,8 @@ class NotificationDemo extends Component {
           <Grid item xs={4}>
             <Button
               raised
-              color="secondary"
+              color="warning"
+              style={{ background: '#f1c40f', color: 'white' }}
               onClick={this.callAppNotificationWarning}
             >
               <span>App Notification Warning</span>
@@ -176,7 +178,8 @@ class NotificationDemo extends Component {
           <Grid item xs={4}>
             <Button
               raised
-              color="default"
+              color="error"
+              style={{ background: '#e74c3c', color: 'white' }}
               onClick={this.callAppNotificationError}
             >
               <span>App Notification Error</span>
