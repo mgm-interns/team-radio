@@ -17,7 +17,6 @@
     "lint:frontend": "eslint frontend/src/**/*.js",
     "lint": "run-s lint:*",
     "lint-staged": "lint-staged",
-    "precommit": "run-s lint-staged lint",
     "actions:frontend": "cpx lib/actions.js backend/src/const",
     "actions:backend": "cpx lib/actions.js frontend/src/Redux",
     "actions": "run-p actions:frontend actions:backend",
