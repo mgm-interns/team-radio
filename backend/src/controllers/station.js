@@ -84,7 +84,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
     };
     await stationModels.addSong(stationId, song);
     station = await stationModels.getStationById(stationId);
-    players.updatePlaylist(station);
+    players.updatePlaylist(stationId);
     return station.playlist;
     // return Promise.resolve(station.playlist);
   } catch (err) {
