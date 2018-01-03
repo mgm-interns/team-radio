@@ -60,7 +60,7 @@ class StationSwitcher extends Component {
   };
 
   _slidesToShow(width, isMobile) {
-    return isMobile ? Math.floor(width / 110) : Math.floor(width / 180);
+    return isMobile ? Math.floor(width / 110) : Math.floor(width / 220);
   }
 
   _goToStationPage(station) {

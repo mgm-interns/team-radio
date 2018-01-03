@@ -12,20 +12,18 @@ const INITIAL_STATE = {
   playlist,
   nowPlaying: {
     url: 'https://www.youtube.com/watch?v=igSCSQ9fg14',
-    start: new Date(),
+    starting_time: 0,
   },
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    // For websocket
+    // For web socket
     case SERVER_JOINED_STATION_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         station: action.payload.station,
         playlist: action.payload.station.playlist,
-        // nowPlaying: action.payload.station.nowplaying,
       };
 
     case SERVER_UPDATE_PLAYLIST:
@@ -37,7 +35,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_UPDATE_NOW_PLAYING:
       return {
         ...state,
-        // nowPlaying: action.payload.nowplaying,
+        nowPlaying: action.payload,
       };
     default:
       return state;
