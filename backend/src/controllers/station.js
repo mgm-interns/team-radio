@@ -6,7 +6,7 @@ const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 
 export const addStation = async (stationName, userId) => {
   if (!stationName) {
-    throw new Error('The station name is empty !');
+    throw new Error('The station name can not be empty!');
   } else {
     try {
       const availableStation = await stationModels.getStationByName(
@@ -21,7 +21,6 @@ export const addStation = async (stationName, userId) => {
         });
         return currentStation;
       }
-
       throw new Error('The station name is available');
     } catch (err) {
       console.log(err);
@@ -30,16 +29,16 @@ export const addStation = async (stationName, userId) => {
   }
 };
 
-// get a statio by id
+// get a station by id
 export const getStation = async stationId => {
   const station = await stationModels.getStationById(stationId);
   if (!station) {
-    throw new Error('Have not station !');
+    throw new Error(`Station id ${stationId} is not available!`);
   } else {
     return station;
   }
 };
-// add a son of station
+// add a song of station
 
 export const addSong = async (stationId, songUrl, userId = null) => {
   let station;
