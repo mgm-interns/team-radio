@@ -28,6 +28,7 @@ station.getListSong = async function (req, res) {
 
 };
 station.getStations = async function (req, res) {
+    console.log("getStations")
     //  var station = await stationController.addStation(req.body.station_name);
     let station = await stationController.getAllAvailableStations();
     console.log('resolve : '+station)

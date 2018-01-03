@@ -80,8 +80,8 @@ module.exports.addStation = station => {
 };
 
 // get all station
-module.exports.getStations = limit => {
-  return Station.find().limit(limit);
+module.exports.getStations = (limit) => {
+  return Station.find({}, { station_name: 1, created_day  : 1 , id: 1,_id:0}).limit(limit);
 };
 
 // get station from name
@@ -124,24 +124,24 @@ module.exports.addSong = (stationId, song) => {
 };
 
 //Get a song in station
-module.exports.getAsongInStation = (stationId, songId) => {
+module.exports.getAsongInStation = async (stationId, songId) => {
   let query = {
     id: stationId,
   };
-  return Station.findOne(query, {
+  return (await Station.findOne(query, {
     playlist: {
       $elemMatch: {
         song_id: songId,
       },
     },
-  });
+  })).playlist;
 };
 // Update a field of up vote in a song
 module.exports.updateValueOfUpvote = (stationId, songId, valueNeedUpdate) => {
   //let query = { id: stationId };
   return Station.update(
     { id: stationId, 'playlist.song_id': songId },
-    { $set: { 'playlist.$.duration': valueNeedUpdate } },
+    { $set: { 'playlist.$.up_vote': valueNeedUpdate } },
   );
 };
 /**

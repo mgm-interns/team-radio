@@ -24,6 +24,7 @@ export default router => {
     station.setPlayedSongs(req, res);
   });
   router.get('/stations', function(req, res) {
+    console.log("getStations")
     station.getStations(req, res);
   });
   router.get('/stations/playlist/:id', function(req, res) {
