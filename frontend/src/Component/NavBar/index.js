@@ -6,6 +6,8 @@ import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import fixture from 'Fixture/landing';
 import { loadAuthenticationState, removeAuthenticationState } from 'Config';
+import { logout } from 'Redux/api/user/actions';
+import { connect } from 'react-redux';
 import { GoogleLogout } from 'Component';
 
 import styles from './styles';
@@ -62,8 +64,8 @@ class NavBar extends Component {
   }
 
   render() {
-    const { classes, color } = this.props;
-    const menusLength = Object.keys(MENUS).length;
+    const { classes, color, dispatch } = this.props;
+
     return (
       <Grid
         container
@@ -100,14 +102,17 @@ class NavBar extends Component {
                 {Object.keys(MENUS).map((key, index) => {
                   const { title } = MENUS[key];
                   return (
-                    <Link key={index} to={MENUS[key].url}>
-                      {/* {index === menusLength - 1 ? title : `${title} - `} */}
-                      {`${title} - `}
+                    <Link
+                      key={index}
+                      to={MENUS[key].url}
+                      className={classes.navItem}
+                    >
+                      {title}
                     </Link>
                   );
                 })}
 
-                <AuthLink />
+                <AuthLink dispatch={dispatch} />
               </Grid>
             </Grid>
           </Grid>
@@ -118,50 +123,31 @@ class NavBar extends Component {
 }
 
 class AuthLink extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      item: {},
-      isLoggedIn: false,
-    };
-    this._logout = this._logout.bind(this);
-    this._getItem = this._getItem.bind(this);
-  }
-
-  componentWillMount() {
-    this.setState(() => ({
-      item: this._getItem(),
-    }));
-  }
-
-  componentDidMount() {
-    if (loadAuthenticationState()) {
-      this.setState(() => ({ isLoggedIn: true }));
-    }
-  }
-
-  _getItem() {
-    if (this.state.isLoggedIn) {
-      return (
-        <GoogleLogout
-          onLogoutSuccess={this._logout}
-          disabled={!this.state.isLoggedIn}
-        >
-          Logout
-        </GoogleLogout>
-      );
-    }
-    return <Link to="auth/login">Login</Link>;
-  }
-
   _logout() {
-    this.setState({ isLoggedIn: false });
+    // localStorage.removeItem('token');
     removeAuthenticationState();
+    this.props.dispatch(logout());
     this.forceUpdate();
   }
 
   render() {
-    return this._getItem();
+    return (
+      <div>
+        {!loadAuthenticationState() && (
+          <React.Fragment>
+            <Link to="/auth/login" style={{ marginLeft: 16 }}>
+              Login
+            </Link>
+            <Link to="/auth/register" style={{ marginLeft: 16 }}>
+              Register
+            </Link>
+          </React.Fragment>
+        )}
+        {loadAuthenticationState() && (
+          <a onClick={this._logout.bind(this)}>Logout</a>
+        )}
+      </div>
+    );
   }
 }
 
@@ -171,4 +157,8 @@ NavBar.propTypes = {
   color: PropTypes.string,
 };
 
-export default withStyles(styles)(NavBar);
+AuthLink.propTypes = {
+  dispatch: PropTypes.any,
+};
+
+export default connect(null, null)(withStyles(styles)(NavBar));

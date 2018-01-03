@@ -89,17 +89,17 @@ class Player {
     }
     const { playlist } = station;
     // Filter songs wasn't played and is not the current playing song
-    const filteredPlaylist = _.sortBy(playlist, [
-      song => !song.is_played && song.song_id !== this.nowPlaying.song_id,
-    ]);
-
+    let filteredPlaylist = _.filter(playlist, { is_played: false });
+    // TODO: remove nowPlaying.url
     // Sort the filteredPlaylist by time (current the song_id is the song added time)
     const sortedPlaylist = _.sortBy(filteredPlaylist, ['song_id']);
     const currentTime = Date.now();
     let preStartingTime = station.starting_time;
 
     // TODO: explain clearly in comments
-    sortedPlaylist.forEach(async (song, i) => {
+    // DO NOT use foreach (can't be stop)
+    for(let i = 0; i<sortedPlaylist.length; i++){
+      const song = sortedPlaylist[i];
       // current the song_id is song added time
       song.added_time = song.song_id;
       // Check the song is new or not
@@ -115,7 +115,7 @@ class Player {
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
-        this.nowPlaying.starting_time = song.starting_time;
+        this.nowPlaying.starting_time = song.added_time;
         // play the song
         this._startSong(song);
         return;
@@ -139,7 +139,7 @@ class Player {
       }
       // Move the song to next song for checking
       preStartingTime += song.duration;
-    });
+    };
 
     // The available song is not existed
     // Update is_played of the song in the sortedPlaylist to true
@@ -168,7 +168,7 @@ export const attachWebSocket = _io => {
   init();
 };
 
-export const getPlayer = async stationId => {
+export const getPlayer = async function getPlayer(stationId) {
   if (!_players[stationId]) {
     const station = await stationController.getStation(stationId);
     // check the stationdId is available or not
@@ -183,7 +183,7 @@ export const getPlayer = async stationId => {
 
 export const updatePlaylist = async stationId => {
   try {
-    getPlayer(stationId).updatePlaylist();
+    (await getPlayer(stationId)).updatePlaylist();
   } catch (err) {
     throw err;
   }

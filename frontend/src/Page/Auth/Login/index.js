@@ -11,8 +11,8 @@ import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
 import { NavBar, GoogleLogin, FacebookLogin } from 'Component';
 import { saveAuthenticationState, loadAuthenticationState } from 'Config';
-import { fetchUser } from 'Redux/api/user';
-// import { login } from 'Redux/page/user/actions';
+import { fetchUser } from 'Redux/api/user/actions';
+
 import { connect } from 'react-redux';
 import styles from './styles';
 import TextView from '../TextView';
@@ -64,28 +64,6 @@ class Login extends Component {
 
   loading() {
     console.log('loading');
-  }
-
-  // logout() {
-  //   console.log('logout');
-  //   this.setState({ isLoggedIn: false });
-  //   removeAuthenticationState();
-  // }
-
-  // _submit(e) {
-  //   e.preventDefault();
-  //   if (this._validate()) {
-  //     // console.log('submit');
-  //     let { email, password } = this.state;
-  //     this.props.login({ email, password });
-  //   }
-  // }
-
-  componentDidMount() {
-    if (loadAuthenticationState()) {
-      this.setState(() => ({ isLoggedIn: true }));
-      console.log('Auth - Login', this.state.isLoggedIn);
-    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -217,7 +195,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  fetchUserResponse: state.api.user.fetch,
+  fetchUserResponse: state.api.user,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(
