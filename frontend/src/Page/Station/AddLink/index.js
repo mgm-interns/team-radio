@@ -14,12 +14,13 @@ import Icon from 'material-ui/Icon';
 import Card from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
+import { withStyles } from 'material-ui/styles';
+import withRouter from 'react-router-dom/withRouter';
 import { MenuItem } from 'material-ui/Menu';
 import { CircularProgress } from 'material-ui/Progress';
 import { Player } from 'Component';
 import { Images } from 'Theme';
 import { checkValidYoutubeUrl } from 'Transformer/transformText';
-import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
 const STATION_DEFAULT = {
@@ -211,9 +212,14 @@ class AddLink extends Component {
   }
 
   _onAddClick() {
-    const { preview, addSong, setPreviewVideo } = this.props;
+    const {
+      preview,
+      addSong,
+      setPreviewVideo,
+      match: { params: { stationId } },
+    } = this.props;
     setPreviewVideo();
-    addSong(this._getVideoUrl(preview));
+    addSong(this._getVideoUrl(preview), stationId);
     this.setState({ searchText: '', isDisableButton: true });
   }
   /* End of handle add link events */
@@ -367,11 +373,12 @@ const mapStateToProps = ({ page }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addSong: songUrl => dispatch(addSong({ songUrl })),
+  addSong: (songUrl, stationId) => dispatch(addSong({ songUrl, stationId })),
   setPreviewVideo: video => dispatch(setPreviewVideo(video)),
 });
 
 export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
 )(AddLink);

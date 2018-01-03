@@ -6,7 +6,7 @@ import {
   CLIENT_LEAVE_STATION,
 } from 'Redux/actions';
 
-const DEFAULT_STATION_ID = '5a43122f01a6072810aadcb4';
+const DEFAULT_STATION_ID = 'default_station';
 
 // Client action creator
 export const joinStation = (stationId = DEFAULT_STATION_ID) => ({
@@ -21,15 +21,15 @@ export const leaveStation = (stationId = DEFAULT_STATION_ID) => ({
 
 export const addSong = ({ stationId, songUrl }) => ({
   type: CLIENT_ADD_SONG,
-  payload: { userId: 0, stationId: stationId || DEFAULT_STATION_ID, songUrl },
+  payload: { userId: 0, stationId, songUrl },
 });
 
 export const upVoteSong = ({ stationId, songId }) => ({
   type: CLIENT_UPVOTE_SONG,
-  payload: { useId: 0, stationId: stationId || DEFAULT_STATION_ID, songId },
+  payload: { useId: 0, stationId, songId },
 });
 
 export const downVoteSong = ({ stationId, songId }) => ({
   type: CLIENT_DOWNVOTE_SONG,
-  payload: { useId: 0, stationId: stationId || DEFAULT_STATION_ID, songId },
+  payload: { useId: 0, stationId, songId },
 });
