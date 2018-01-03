@@ -15,3 +15,4 @@ export {
 } from './Notification';
 export { default as ImageCropper } from './ImageCropper';
 export { GoogleLogin, GoogleLogout } from './GoogleForm';
+export { default as FacebookLogin } from './FacebookForm';

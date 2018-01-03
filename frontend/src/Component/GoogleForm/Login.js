@@ -4,6 +4,18 @@ import PropTypes from 'prop-types';
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_API_CLIENT_ID;
 const platformSrc = '//apis.google.com/js/client:platform.js';
 
+// https://www.w3.org/TR/html5/disabled-elements.html#disabled-elements
+const _shouldAddDisabledProp = tag =>
+  [
+    'button',
+    'input',
+    'select',
+    'textarea',
+    'optgroup',
+    'option',
+    'fieldset',
+  ].indexOf(`${tag}`.toLowerCase()) >= 0;
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -131,7 +143,7 @@ class Login extends Component {
     this.props.onSuccess(res);
   }
 
-  render() {
+  renderOwnButton() {
     const {
       tag,
       type,
@@ -141,7 +153,15 @@ class Login extends Component {
       buttonText,
       children,
     } = this.props;
+
+    // verify disabled
     const disabled = this.state.disabled || this.props.disabled;
+    const optionalProps = {};
+    if (disabled && _shouldAddDisabledProp(this.props.tag)) {
+      optionalProps.disabled = true;
+    }
+
+    // init style
     const initialStyle = {
       display: 'inline-block',
       background: '#d14836',
@@ -166,18 +186,30 @@ class Login extends Component {
       }
       return styleProp;
     })();
-    const googleLoginButton = React.createElement(
-      tag,
-      {
-        onClick: this.signIn,
-        style: defaultStyle,
-        type,
-        disabled,
-        className,
-      },
-      children || buttonText,
+
+    return (
+      <span>
+        <this.props.tag
+          type={type}
+          className={className}
+          style={defaultStyle}
+          onClick={this.signIn}
+          {...optionalProps}
+        >
+          {buttonText}
+        </this.props.tag>
+      </span>
     );
-    return googleLoginButton;
+  }
+
+  render() {
+    const { children } = this.props;
+
+    return children ? (
+      <span onClick={this.signIn}>{children}</span>
+    ) : (
+      this.renderOwnButton()
+    );
   }
 }
 

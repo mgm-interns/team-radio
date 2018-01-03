@@ -9,7 +9,7 @@ import { FormHelperText } from 'material-ui/Form';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
-import { NavBar, GoogleLogin } from 'Component';
+import { NavBar, GoogleLogin, FacebookLogin } from 'Component';
 import { saveAuthenticationState, loadAuthenticationState } from 'Config';
 import { fetchUser } from 'Redux/api/user';
 // import { login } from 'Redux/page/user/actions';
@@ -43,13 +43,13 @@ class Login extends Component {
       // loading: false,
     };
 
-    this.success = this.success.bind(this);
     this.error = this.error.bind(this);
     this.loading = this.loading.bind(this);
-    // this.logout = this.logout.bind(this);
+    this.responseGoogle = this.responseGoogle.bind(this);
+    this.responseFacebook = this.responseFacebook.bind(this);
   }
 
-  success(response) {
+  responseGoogle(response) {
     if (response) {
       this.setState({ isLoggedIn: true });
       const { googleId, accessToken, tokenId } = response;
@@ -103,6 +103,10 @@ class Login extends Component {
     }
   }
 
+  responseFacebook(response) {
+    console.log(response);
+  }
+
   render() {
     const { classes, loading, handleSubmit } = this.props;
 
@@ -125,8 +129,14 @@ class Login extends Component {
                     </Grid>
 
                     <Grid style={{ paddingBottom: '2em' }}>
+                      <FacebookLogin
+                        appId="138193143563601"
+                        autoLoad
+                        onSuccess={this.responseFacebook}
+                        icon="fa-facebook"
+                      />
                       <GoogleLogin
-                        onSuccess={this.success}
+                        onSuccess={this.responseGoogle}
                         onFailure={this.error}
                         // onRequest={this.loading}
                         offline={false}
