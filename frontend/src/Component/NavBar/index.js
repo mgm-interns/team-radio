@@ -8,6 +8,8 @@ import fixture from 'Fixture/landing';
 import { loadAuthenticationState, removeAuthenticationState } from 'Config';
 import { logout } from 'Redux/api/user/actions';
 import { connect } from 'react-redux';
+import { GoogleLogout } from 'Component';
+
 import styles from './styles';
 
 const MENUS = {

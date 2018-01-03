@@ -5,6 +5,7 @@ import SocketIO from 'socket.io';
 import eventHandlers from './events';
 import * as players from '../players';
 import * as EVENTS from '../const/actions';
+import * as stationController from '../controllers/station';
 
 const io = SocketIO();
 
@@ -23,19 +24,36 @@ const createEmitter = socket => ({
       type: eventName,
       payload: payload,
     });
-    console.log('Emit to station: ' + stationId + ' payload: ' + payload);
+    console.log(
+      'Emit to station: ' +
+        stationId +
+        ', type: ' +
+        eventName +
+        ', payload: ' +
+        payload,
+    );
   },
   emitAll: (eventName, payload) => {
     io.emit('action', {
       type: eventName,
       payload: payload,
     });
-    console.log('Emit to all, payload: ' + payload);
+    console.log('Emit to all, type: ' + eventName + ' payload: ' + payload);
   },
 });
 
 io.on('connection', async function(socket) {
   console.log('Connected with ' + socket.id);
+  // Emit all stations when user connect
+  const allStations = await stationController.getAllAvailableStations();
+  console.log('Emit to ' + socket.id + ' all stations');
+  socket.emit('action', {
+    type: EVENTS.SERVER_UPDATE_STATIONS,
+    payload: {
+      stations: allStations,
+    },
+  });
+
   socket.on('action', action => {
     switch (action.type) {
       case EVENTS.CLIENT_CREATE_STATION:

@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles } from 'material-ui/styles';
 import fixture from 'Fixture/landing';
-import { addStation } from 'Redux/api/stations';
+import { createStation } from 'Redux/api/stations/actions';
 import styles from './styles';
 
 class Backdrop extends Component {
@@ -18,7 +18,7 @@ class Backdrop extends Component {
     super(props);
 
     this.state = {
-      station_name: '',
+      stationName: '',
     };
 
     this._handleStationNameChanged = this._handleStationNameChanged.bind(this);
@@ -26,13 +26,11 @@ class Backdrop extends Component {
   }
 
   _handleStationNameChanged(e) {
-    this.setState({ station_name: e.target.value });
+    this.setState({ stationName: e.target.value });
   }
 
   _submit() {
-    this.props.addStation({
-      station_name: this.state.station_name,
-    });
+    this.props.createStation(this.state.stationName);
   }
 
   render() {
@@ -54,7 +52,7 @@ class Backdrop extends Component {
                 placeholder={fixture.input.placeholder}
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
-                value={this.state.station_name}
+                value={this.state.stationName}
               />
               <FormHelperText>
                 {error && error.response && error.response.error.name}
@@ -68,7 +66,7 @@ class Backdrop extends Component {
                 color={fixture.button.color}
                 onClick={this._submit}
                 className={classes.buttonSend}
-                disabled={!this.state.station_name}
+                disabled={!this.state.stationName}
               >
                 {fixture.button.name}
                 <Icon className={classes.sendIcon}>radio</Icon>
@@ -90,21 +88,21 @@ class Backdrop extends Component {
 
 Backdrop.propTypes = {
   classes: PropTypes.any,
-  loading: PropTypes.any,
-  error: PropTypes.any,
-  addStation: PropTypes.func,
+  // loading: PropTypes.any,
+  // error: PropTypes.any,
+  createStation: PropTypes.func,
 };
 
-const mapStateToProps = ({ api: { stations } }) => ({
-  loading: stations.add.loading,
-  error: stations.add.error,
-});
+// const mapStateToProps = ({ api: { stations } }) => ({
+//   loading: stations.add.loading,
+//   error: stations.add.error,
+// });
 
 const mapDispatchToProps = dispatch => ({
-  addStation: station => dispatch(addStation(station)),
+  createStation: stationName => dispatch(createStation({ stationName })),
 });
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(undefined, mapDispatchToProps),
 )(Backdrop);

@@ -1,4 +1,7 @@
+import sleep from 'Util/sleep';
+
 export const loadAuthenticationState = () => {
+  sleep();
   try {
     const serializedState = localStorage.getItem('authentication');
     if (serializedState === null) {
@@ -11,6 +14,7 @@ export const loadAuthenticationState = () => {
 };
 
 export const saveAuthenticationState = state => {
+  sleep();
   try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem('authentication', serializedState);
@@ -20,6 +24,7 @@ export const saveAuthenticationState = state => {
 };
 
 export const removeAuthenticationState = () => {
+  sleep();
   try {
     localStorage.removeItem('authentication');
   } catch (error) {
