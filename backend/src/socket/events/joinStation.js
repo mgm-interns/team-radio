@@ -1,9 +1,11 @@
 import * as EVENTS from '../../const/actions';
-import * as controller from '../../../fixture/station';
+import * as stationController from '../../controllers/station';
+import * as players from '../../players';
 
 export default async (emitter, userId, stationId) => {
-  const station = controller.getStations().find(st => st.id === stationId);
+  let station;
   try {
+    station = await stationController.getStation(stationId);
     emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
       station: station,
     });
@@ -12,17 +14,14 @@ export default async (emitter, userId, stationId) => {
     emitter.emit(EVENTS.SERVER_JOINED_STATION_FAILURE, {
       message: err,
     });
-    throw err;
   }
 
   if (station) {
-    const nowPlaying = await controller.getNowplaying(stationId);
+    const nowPlaying = await players.getNowPlaying(stationId);
     emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, {
       nowPlaying: nowPlaying,
-      // nowPlaying { index, songId, playingTime }
+      // nowPlaying { url, starting_time }
     });
-
-    console.log('Emit nowplaying: ' + nowPlaying);
 
     try {
       emitter.emitToStation(stationId, EVENTS.SERVER_NEW_USER_JOINED, {

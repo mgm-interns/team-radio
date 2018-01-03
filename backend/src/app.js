@@ -12,7 +12,7 @@ import * as players from './players';
 // import mongoose from 'mongoose'
 const mongodbConnectionString =
   process.env.MONGODB ||
-  'mongodb://mgm:mgm123@ds013564.mlab.com:13564/mgm-radio';
+  'mongodb://radioteam:radioteam@ds133547.mlab.com:33547/backendradio';
 
 const Schema = mongoose.Schema;
 mongoose.connect(mongodbConnectionString);
@@ -56,7 +56,5 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json(err);
 });
-
-players.init();
 
 export default app;
