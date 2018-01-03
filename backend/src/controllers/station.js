@@ -1,51 +1,46 @@
-/* eslint-disable */
 import * as songController from './song';
 import * as players from '../players';
 import * as stationModels from './../models/station';
-import { statSync } from 'fs';
 
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 
 export const addStation = async (stationName, userId) => {
-  console.log('station name : ' + stationName);
   if (!stationName) {
-    throw 'The station name is empty !';
+    throw new Error('The station name is empty !');
   } else {
     try {
-      let availableStation = await stationModels.getStationByName(stationName);
+      const availableStation = await stationModels.getStationByName(
+        stationName,
+      );
       if (!availableStation) {
-        let stationId = await _createStationId(stationName);
-        let currentStation = await stationModels.addStation({
+        const stationId = await _createStationId(stationName);
+        const currentStation = await stationModels.addStation({
           station_name: stationName,
           id: stationId,
+          owner_id: userId,
         });
         return currentStation;
-      } else {
-        throw 'The station name is available';
       }
+
+      throw new Error('The station name is available');
     } catch (err) {
       console.log(err);
+      throw err;
     }
   }
 };
 
 // get a statio by id
 export const getStation = async stationId => {
-  let station = await stationModels.getStationById(stationId);
+  const station = await stationModels.getStationById(stationId);
   if (!station) {
-    throw 'Have not station !';
+    throw new Error('Have not station !');
   } else {
     return station;
   }
 };
 // add a son of station
-/** 
- * station.playlist.push({
-    id: Date.now() + '',
-    url: song.url,
-    duration: song.duration,
-  });
-*/
+
 export const addSong = async (stationId, songUrl, userId = null) => {
   let station;
   try {
@@ -59,8 +54,8 @@ export const addSong = async (stationId, songUrl, userId = null) => {
   if (!userId) {
     let numOfSongsAddedByUnregistedUsers = 0;
     station.playlist.forEach((song, index) => {
-      if (!song.creator_id && song.is_played == false) {
-        numOfSongsAddedByUnregistedUsers++;
+      if (!song.creator_id && song.is_played === false) {
+        numOfSongsAddedByUnregistedUsers += 1;
         if (
           numOfSongsAddedByUnregistedUsers === MAX_SONG_UNREGISTED_USER_CAN_ADD
         ) {
@@ -73,14 +68,13 @@ export const addSong = async (stationId, songUrl, userId = null) => {
     });
   }
 
-  let songDetail = await songController.getSongDetails(songUrl);
+  const songDetail = await songController.getSongDetails(songUrl);
   if (!songDetail) {
     throw new Error('The song url is not available !');
   }
   try {
-    // TODO: test => song_id: new Date().getTime()
-    let song = {
-      //  song_id: new Date().getTime(),
+    const song = {
+      song_id: new Date().getTime(),
       is_played: false,
       url: songDetail.url,
       title: songDetail.title,
@@ -100,7 +94,11 @@ export const addSong = async (stationId, songUrl, userId = null) => {
 };
 
 export const updateStartingTime = async (stationId, time) => {
-  return await stationModels.updateTimeStartingOfStation(stationId, time);
+  const available = await stationModels.updateTimeStartingOfStation(
+    stationId,
+    time,
+  );
+  return available;
 };
 
 // To stationId and set songIds from false to true
@@ -124,28 +122,44 @@ export const setPlayedSongs = async (stationId, songIds) => {
 };
 
 export const getAllAvailableStations = async () => {
-  return await stationModels.getStations();
+  const stations = await stationModels.getStations();
+  return stations;
+};
+
+export const getListSong = async stationId => {
+  const playList = (await stationModels.getPlaylistOfStation(stationId))
+    .playlist;
+  return playList;
+};
+
+export const upVote = async (stationId, songId, userId) => {
+  // TO DO :
+  const result = await stationModels.updateValueOfUpvote(
+    stationId,
+    songId,
+    userId,
+  );
+  return result;
 };
 
 function _stringToId(str) {
   return str
     .toLowerCase()
     .replace(/ /g, '-')
-    .replace(/[^a-z0-9\-]/g, '');
+    .replace(/[^a-z0-9-]/g, '');
 }
-//
+
 async function _createStationId(stationName) {
-  let currentId = _stringToId(stationName);
-  let id = currentId;
+  const id = _stringToId(stationName);
+  let currentId = id;
   let i = 1;
-  let nowId = await stationModels.getStationById(id);
-  if (!nowId) {
-    i = i + 1;
-    id = currentId + i;
-  } else {
-    _createStationId(nowId);
+  let station = await stationModels.getStationById(currentId);
+  while (station) {
+    i += 1;
+    currentId = id + i;
+    station = await stationModels.getStationById(currentId);
   }
-  return id;
+  return currentId;
 }
 /**
  * check song id has playlist

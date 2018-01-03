@@ -1,5 +1,6 @@
 /* eslint-disable */
 import mongoose from 'mongoose';
+import station from '../routes/station';
 mongoose.Promise = require('bluebird');
 //const ObjectId = mongoose.Schema.Types.ObjectId;
 const stationSchema = mongoose.Schema({
@@ -24,12 +25,9 @@ const stationSchema = mongoose.Schema({
       song_id: {
         type: Number,
         require: true,
-        default: new Date().getTime(),
-        //  ref : "songs"
       },
       is_played: {
         type: Boolean,
-        default: false,
       },
       url: {
         type: String,
@@ -68,6 +66,10 @@ const stationSchema = mongoose.Schema({
 });
 
 var Station = (module.exports = mongoose.model('Stations', stationSchema));
+/**
+ * Station
+ */
+
 // add station
 module.exports.addStation = station => {
   try {
@@ -76,36 +78,22 @@ module.exports.addStation = station => {
     console.log('err : ' + err);
   }
 };
+
 // get all station
 module.exports.getStations = limit => {
   return Station.find().limit(limit);
 };
+
 // get station from name
-module.exports.getStationByName = function(stationNameToFind) {
+module.exports.getStationByName = stationNameToFind => {
   return Station.findOne({ station_name: stationNameToFind });
 };
+
 // get station from url
 module.exports.getStationById = idToFind => {
   return Station.findOne({ id: idToFind });
 };
-// add song to playlist of station
-module.exports.addSong = function(stationId, song) {
-  let query = { id: stationId };
-  return Station.update(query, {
-    $addToSet: {
-      playlist: song,
-    },
-  });
-};
-// The function update a field playlist in db
-module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
-  let query = { id: stationId };
-  return Station.update(query, {
-    $set: {
-      playlist: valueNeedUpdate,
-    },
-  });
-};
+
 // The function update a field in db
 module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
   try {
@@ -120,18 +108,58 @@ module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
     console.log('Err updateTimeStartingOfStation models : ' + err);
   }
 };
-//get playlist of station
-module.exports.findSongIdOfPlaylist = stationName => {
-  let query = { station_name: stationName };
-  return Station.find(query).toArray();
-};
-//get playlist of station
-module.exports.getPlaylistOfStation = stationName => {
-  let query = { station_name: stationName };
-  return Station.findOne(query, { playlist: true, _id: false });
-};
-//get playlist of station by station id
-module.exports.getPlaylistOfStationById = stationId => {
+
+/**
+ * A song
+ */
+
+// add song to playlist of station
+module.exports.addSong = (stationId, song) => {
   let query = { id: stationId };
-  return Station.findOne(query).playlist;
+  return Station.update(query, {
+    $addToSet: {
+      playlist: song,
+    },
+  });
+};
+
+//Get a song in station
+module.exports.getAsongInStation = (stationId, songId) => {
+  let query = {
+    id: stationId,
+  };
+  return Station.findOne(query, {
+    playlist: {
+      $elemMatch: {
+        song_id: songId,
+      },
+    },
+  });
+};
+// Update a field of up vote in a song
+module.exports.updateValueOfUpvote = (stationId, songId, valueNeedUpdate) => {
+  //let query = { id: stationId };
+  return Station.update(
+    { id: stationId, 'playlist.song_id': songId },
+    { $set: { 'playlist.$.duration': valueNeedUpdate } },
+  );
+};
+/**
+ * Playlist (songs)
+ */
+
+// The function update a field playlist in db
+module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
+  let query = { id: stationId };
+  return Station.update(query, {
+    $set: {
+      playlist: valueNeedUpdate,
+    },
+  });
+};
+
+//get playlist of station
+module.exports.getPlaylistOfStation = stationId => {
+  let query = { id: stationId };
+  return Station.findOne(query, { playlist: true, _id: false });
 };
