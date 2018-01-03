@@ -8,7 +8,7 @@
   "scripts": {
     "install:backend": "cd backend && npm install",
     "install:frontend": "cd frontend && npm install",
-    "postinstall": "run-s install:* actions:*",
+    "postinstall": "run-s actions:* install:*",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
     "dev": "run-p dev:*",
