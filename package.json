@@ -11,7 +11,7 @@
     "postinstall": "run-s actions:* install:*",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
-    "dev": "run-p dev:*",
+    "dev": "run-p actions:* dev:*",
     "start": "cd backend && npm start",
     "lint:backend": "eslint backend/src/**/*.js",
     "lint:frontend": "eslint frontend/src/**/*.js",
