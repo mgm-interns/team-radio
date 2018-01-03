@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles } from 'material-ui/styles';
 import fixture from 'Fixture/landing';
-import { addStation } from 'Redux/api/stations';
+import { createStation } from 'Redux/api/stations/actions';
 import styles from './styles';
 
 class Backdrop extends Component {
@@ -101,7 +101,7 @@ const mapStateToProps = ({ api: { stations } }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addStation: station => dispatch(addStation(station)),
+  addStation: station => dispatch(createStation(station)),
 });
 
 export default compose(
