@@ -121,7 +121,6 @@ class Register extends Component {
                         to get the most out of Team Radio
                       </Typography>
                     </Grid>
-
                     <Field
                       name="name"
                       placeholder="Enter your name"
@@ -129,7 +128,6 @@ class Register extends Component {
                       component={TextView}
                       label="Name"
                     />
-
                     <Field
                       name="email"
                       placeholde="hello@example.com"
@@ -137,7 +135,6 @@ class Register extends Component {
                       component={TextView}
                       label="Email"
                     />
-
                     <Field
                       name="password"
                       placeholder="Must be at least 6 characters"
@@ -145,7 +142,6 @@ class Register extends Component {
                       component={TextView}
                       label="Password"
                     />
-
                     <Field
                       name="confirmPassword"
                       placeholder="Re-enter your password"
@@ -153,7 +149,6 @@ class Register extends Component {
                       component={TextView}
                       label="Confirm Password"
                     />
-
                     <FormHelperText className={classes.error}>
                       {this.state.asyncError}
                     </FormHelperText>

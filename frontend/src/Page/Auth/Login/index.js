@@ -103,7 +103,7 @@ class Login extends Component {
               <Card raised className={classes.cardForm}>
                 <form onSubmit={handleSubmit}>
                   <CardContent>
-                    <Grid style={{ paddingBottom: '2em' }}>
+                    <Grid style={{ paddingBottom: '1em' }}>
                       <Typography type="headline" component="h2">
                         Log in
                       </Typography>
@@ -111,14 +111,31 @@ class Login extends Component {
                         for listening and sharing music
                       </Typography>
                     </Grid>
-
-                    <Grid style={{ paddingBottom: '2em' }}>
+                    <Field
+                      name="email"
+                      placeholde="Email"
+                      type="text"
+                      component={TextView}
+                      label="Email"
+                    />
+                    <Field
+                      name="password"
+                      placeholder="Password"
+                      type="password"
+                      component={TextView}
+                      label="Password"
+                    />
+                    <FormHelperText className={classes.error}>
+                      {this.state.formErrors.message}
+                    </FormHelperText>
+                    <Grid>
                       <FacebookLogin
                         appId="138193143563601"
                         autoLoad={false}
                         onSuccess={this.responseFacebook}
                         icon="fa-facebook"
                       />
+                      <div style={{ height: 16 }} />
                       <GoogleLogin
                         onSuccess={this.responseGoogle}
                         onFailure={this.error}
@@ -131,40 +148,24 @@ class Login extends Component {
                         buttonText="Login with Google"
                       />
                     </Grid>
-
-                    <Field
-                      name="email"
-                      placeholde="Email"
-                      type="text"
-                      component={TextView}
-                      label="Email"
-                    />
-
-                    <Field
-                      name="password"
-                      placeholder="Password"
-                      type="password"
-                      component={TextView}
-                      label="Password"
-                    />
-
-                    <FormHelperText className={classes.error}>
-                      {this.state.formErrors.message}
-                    </FormHelperText>
                   </CardContent>
                   <CardActions className={classes.cardButton}>
-                    {loading ? (
-                      <CircularProgress />
-                    ) : (
-                      <Button
-                        raised
-                        color="primary"
-                        type="submit"
-                        className={classes.buttonSend}
-                      >
-                        Log in
-                      </Button>
-                    )}
+                    <Grid container>
+                      <Grid item xs={12}>
+                        {loading ? (
+                          <CircularProgress />
+                        ) : (
+                          <Button
+                            raised
+                            color="primary"
+                            type="submit"
+                            className={classes.buttonSend}
+                          >
+                            Log in
+                          </Button>
+                        )}
+                      </Grid>
+                    </Grid>
                   </CardActions>
                 </form>
               </Card>
