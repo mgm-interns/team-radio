@@ -58,6 +58,16 @@ class Login extends Component {
     }
   }
 
+  responseFacebook(response) {
+    if (response) {
+      console.log(response);
+      this.setState({ isLoggedIn: true });
+      // const { id, accessToken, userId } = response;
+      saveAuthenticationState(response);
+      this.props.history.push('/');
+    }
+  }
+
   error(response) {
     console.error(response);
   }
@@ -79,10 +89,6 @@ class Login extends Component {
       saveAuthenticationState(response.data);
       this.props.history.push('/');
     }
-  }
-
-  responseFacebook(response) {
-    console.log(response);
   }
 
   render() {
@@ -109,7 +115,7 @@ class Login extends Component {
                     <Grid style={{ paddingBottom: '2em' }}>
                       <FacebookLogin
                         appId="138193143563601"
-                        autoLoad
+                        autoLoad={false}
                         onSuccess={this.responseFacebook}
                         icon="fa-facebook"
                       />
