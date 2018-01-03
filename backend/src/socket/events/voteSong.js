@@ -1,5 +1,5 @@
-// TODO: WIP
-import * as controller from '../../../fixture/station';
+import * as stationController from '../../controllers/station';
+import * as EVENTS from '../../const/actions';
 
 export default (emitter, score, userId, stationId, songId) => {
   // TODO
@@ -11,9 +11,9 @@ export default (emitter, score, userId, stationId, songId) => {
 };
 
 const _upVoteSong = async (emitter, userId, stationId, songId) => {
-  const playlist = await controller.upVoteSong(userId, stationId, songId);
+  console.log('Up vote feature is coming soon!');
 };
 
 const _downVoteSong = async (emitter, userId, stationId, songId) => {
-  const playlist = await controller.downVoteSong(userId, stationId, songId);
+  console.log('Down vote feature is coming soon!');
 };
