@@ -17,6 +17,8 @@ export default theme => ({
   },
   switcherContainer: {
     margin: 'auto',
+    padding: '0 !important',
+    marginTop: 85,
     background: theme.palette.lightGrey['500'],
   },
   content: {

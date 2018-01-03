@@ -1,4 +1,4 @@
-export default ({ breakpoints }) => ({
+export default ({ breakpoints, spacing }) => ({
   container: {
     margin: 'auto',
     zIndex: '10',
@@ -41,5 +41,8 @@ export default ({ breakpoints }) => ({
       color: 'white',
       fontSize: '1rem',
     },
+  },
+  navItem: {
+    marginLeft: spacing.doubleBaseMargin,
   },
 });

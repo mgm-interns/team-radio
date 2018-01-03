@@ -1,7 +1,8 @@
-import { CLIENT_CREATE_STATION } from 'Redux/actions';
+import { CLIENT_CREATE_STATION, SERVER_UPDATE_STATIONS } from 'Redux/actions';
 
 const INITIAL_STATE = {
   station: null,
+  data: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -11,7 +12,11 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         station: action.payload,
       };
-
+    case SERVER_UPDATE_STATIONS:
+      return {
+        ...state,
+        data: action.payload.stations,
+      };
     default:
       return state;
   }
