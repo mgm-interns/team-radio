@@ -20,7 +20,7 @@ export default router => {
             email: newUser.email,
             name: newUser.name,
           };
-          
+
           const token = jwt.sign(payload, req.app.get('superSecret'), {
             expiresIn: 1440 * 7, // expires in 24 hours
           });
@@ -59,7 +59,7 @@ export default router => {
             email: user.email,
             name: user.name,
           };
-          
+
           const token = jwt.sign(payload, req.app.get('superSecret'), {
             expiresIn: 1440, // expires in 24 hours *****************************
           });
@@ -78,7 +78,7 @@ export default router => {
     }
   });
 
-  router.use(authController);
+  // router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

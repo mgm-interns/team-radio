@@ -2,9 +2,9 @@ import * as stationController from '../../controllers/station';
 import * as EVENTS from '../../const/actions';
 
 export default async (emitter, userId, stationName) => {
-  const station = await stationController.addStation(stationName, userId);
+  let station;
   try {
-    // station = await stationController.addStation(stationName, userId);
+    station = await stationController.addStation(stationName, userId);
     emitter.emit(EVENTS.SERVER_CREATE_STATION_SUCCESS, {
       station: station,
     });
