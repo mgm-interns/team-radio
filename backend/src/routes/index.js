@@ -7,6 +7,7 @@ const router = express.Router();
 const handlers = [
   // Declare api handlers
   require('./user'),
+  require('./station'),
 ];
 
 // Register handlers

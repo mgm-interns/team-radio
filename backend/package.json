@@ -24,6 +24,7 @@
     "get-video-id": "^2.1.7",
     "jsonwebtoken": "^8.1.0",
     "lodash": "^4.17.4",
+    "mongodb": "^3.0.1",
     "mongoose": "^4.13.7",
     "morgan": "^1.8.2",
     "promise": "^8.0.1",
