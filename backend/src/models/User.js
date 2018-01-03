@@ -3,12 +3,37 @@ import bcrypt from 'bcrypt-nodejs';
 
 // define the schema for our user model
 const userSchema = mongoose.Schema({
-  email: String,
-  password: String,
-  name: String,
-  facebookID: String,
-  googleID: String,
-  twitterID: String,
+  email: {
+    type: String,
+    require: [true, 'Email can not be empty'],
+  },
+  password: {
+    type: String,
+  },
+  name: {
+    type: String,
+  },
+  avatar_Url: {
+    type: String,
+  },
+  reputation: {
+    type: Number,
+    default: 0,
+  },
+  level: {
+    type: String,
+    default: 'Little chick',
+    enum: ['Little chick'],
+  },
+  facebook_ID: {
+    type: String,
+  },
+  google_ID: {
+    type: String,
+  },
+  twitter_ID: {
+    type: String,
+  },
 });
 
 // generation a hash
@@ -22,4 +47,11 @@ userSchema.methods.validPassword = function(password) {
 };
 
 // create the model for users and expose it ti our app
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('users', userSchema);
+
+var user;
+
+module.exports.getUserByEmail = async email => {
+  const query = { email: email };
+  return user.findOne(query);
+};

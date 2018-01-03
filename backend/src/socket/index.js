@@ -122,6 +122,14 @@ io.on('connection', async function(socket) {
           action.payload.songId,
         );
         break;
+
+      case EVENTS.CLIENT_CHECK_EXISTS_EMAIL:
+        console.log('Action: ' + EVENTS.CLIENT_CHECK_EXISTS_EMAIL);
+        eventHandlers.checkExistUserHandler(
+          createEmitter(socket),
+          action.payload.email,
+        );
+        break;
       default:
         break;
     }
