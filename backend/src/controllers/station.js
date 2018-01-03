@@ -65,7 +65,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
         ) {
           throw new Error(
             `When a playlist contains three or more songs from unregistered users,` +
-            ` new songs can only be entered by logged in users`,
+              ` new songs can only be entered by logged in users`,
           );
         }
       }
