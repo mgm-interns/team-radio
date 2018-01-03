@@ -23,9 +23,6 @@ export default async (emitter, userId, stationId) => {
   if (station) {
     const player = await players.getPlayer(stationId);
     const nowPlaying = await player.getNowPlaying();
-    emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, {
-      nowPlaying: nowPlaying,
-      // nowPlaying { url, starting_time }
-    });
+    emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, nowPlaying);
   }
 };
