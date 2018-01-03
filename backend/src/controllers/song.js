@@ -24,7 +24,7 @@ export const getSongDetails = async function(songUrl) {
       url: videoInfo.url,
       title: videoInfo.title,
       thumbnail: videoInfo.thumbnailUrl,
-      duration: videoInfo.duration,
+      duration: videoInfo.duration * 1000,
     };
   }
   return null;
