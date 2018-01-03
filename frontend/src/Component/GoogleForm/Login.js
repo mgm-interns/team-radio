@@ -7,10 +7,11 @@ const platformSrc = '//apis.google.com/js/client:platform.js';
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.signIn = this.signIn.bind(this);
     this.state = {
       disabled: true,
     };
+    this.signIn = this.signIn.bind(this);
+    this.enableButton = this.enableButton.bind(this);
   }
   componentDidMount() {
     const {
@@ -54,9 +55,7 @@ class Login extends Component {
       }
 
       window.gapi.load('auth2', () => {
-        this.setState({
-          disabled: false,
-        });
+        this.enableButton();
         if (!window.gapi.auth2.getAuthInstance()) {
           window.gapi.auth2.init(params).then(
             res => {
@@ -73,6 +72,16 @@ class Login extends Component {
       });
     });
   }
+  componentWillUnmount() {
+    this.enableButton = () => {};
+  }
+
+  enableButton() {
+    this.setState({
+      disabled: false,
+    });
+  }
+
   signIn(e) {
     if (e) {
       e.preventDefault(); // to prevent submit if used within form
@@ -137,7 +146,7 @@ class Login extends Component {
       display: 'inline-block',
       background: '#d14836',
       color: '#fff',
-      width: 190,
+      width: '100%',
       paddingTop: 10,
       paddingBottom: 10,
       borderRadius: 2,

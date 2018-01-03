@@ -6,11 +6,12 @@ export { default as NavBar } from './NavBar';
 export { default as Footer } from './Footer';
 export { default as AppNotification } from './Notification/AppNotification';
 export {
-  default as BrowserNotification,
+  default as BrowserNotification
 } from './Notification/BrowserNotification';
 export {
   withAppNotification,
   withBrowserNotification,
-  withNotification,
+  withNotification
 } from './Notification';
 export { default as ImageCropper } from './ImageCropper';
+export { GoogleLogin, GoogleLogout } from './GoogleForm';

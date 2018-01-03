@@ -9,9 +9,10 @@ import { FormHelperText } from 'material-ui/Form';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
-import { NavBar } from 'Component';
-import { saveAuthenticationState } from 'Config';
+import { NavBar, GoogleLogin } from 'Component';
+import { saveAuthenticationState, loadAuthenticationState } from 'Config';
 import { fetchUser } from 'Redux/api/user';
+// import { login } from 'Redux/page/user/actions';
 import { connect } from 'react-redux';
 import styles from './styles';
 import TextView from '../TextView';
@@ -38,8 +39,38 @@ class Login extends Component {
 
     this.state = {
       formErrors: {},
+      isLoggedIn: false,
+      // loading: false,
     };
+
+    this.success = this.success.bind(this);
+    this.error = this.error.bind(this);
+    this.loading = this.loading.bind(this);
+    // this.logout = this.logout.bind(this);
   }
+
+  success(response) {
+    if (response) {
+      this.setState({ isLoggedIn: true });
+      const { googleId, accessToken, tokenId } = response;
+      saveAuthenticationState({ googleId, accessToken, tokenId });
+      this.props.history.push('/');
+    }
+  }
+
+  error(response) {
+    console.error(response);
+  }
+
+  loading() {
+    console.log('loading');
+  }
+
+  // logout() {
+  //   console.log('logout');
+  //   this.setState({ isLoggedIn: false });
+  //   removeAuthenticationState();
+  // }
 
   // _submit(e) {
   //   e.preventDefault();
@@ -50,10 +81,16 @@ class Login extends Component {
   //   }
   // }
 
+  componentDidMount() {
+    if (loadAuthenticationState()) {
+      this.setState(() => ({ isLoggedIn: true }));
+      console.log('Auth - Login', this.state.isLoggedIn);
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     const response = nextProps.fetchUserResponse;
     const { error } = response;
-    console.log(response);
     if (response.error != null) {
       this.setState({
         formErrors: {
@@ -61,7 +98,6 @@ class Login extends Component {
         },
       });
     } else if (response.data.token) {
-      // localStorage.setItem('token', response.data.token);
       saveAuthenticationState(response.data);
       this.props.history.push('/');
     }
@@ -86,6 +122,20 @@ class Login extends Component {
                       <Typography component="p">
                         for listening and sharing music
                       </Typography>
+                    </Grid>
+
+                    <Grid style={{ paddingBottom: '2em' }}>
+                      <GoogleLogin
+                        onSuccess={this.success}
+                        onFailure={this.error}
+                        // onRequest={this.loading}
+                        offline={false}
+                        responseType="id_token"
+                        isSignedIn
+                        disabled={this.state.isLoggedIn}
+                        prompt="consent"
+                        buttonText="Login with Google"
+                      />
                     </Grid>
 
                     <Field
@@ -147,6 +197,7 @@ Login.propTypes = {
   loading: PropTypes.bool,
   handleSubmit: PropTypes.any,
   submitting: PropTypes.any,
+  login: PropTypes.func,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -155,11 +206,9 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const mapStateToProps = state =>
-  // console.log(state.api.user.fetch);
-  ({
-    fetchUserResponse: state.api.user.fetch,
-  });
+const mapStateToProps = state => ({
+  fetchUserResponse: state.api.user.fetch,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({

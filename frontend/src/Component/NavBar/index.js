@@ -6,6 +6,7 @@ import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import fixture from 'Fixture/landing';
 import { loadAuthenticationState, removeAuthenticationState } from 'Config';
+import { GoogleLogout } from 'Component';
 
 import styles from './styles';
 
@@ -119,22 +120,12 @@ class NavBar extends Component {
 class AuthLink extends Component {
   constructor(props) {
     super(props);
-    // console.log(props.match);
     this.state = {
       item: {},
+      isLoggedIn: false,
     };
-  }
-
-  _getItem() {
-    if (loadAuthenticationState()) {
-      return <a onClick={this._logout.bind(this)}>Logout</a>;
-    }
-    return <Link to="auth/login">Login</Link>;
-  }
-
-  _logout() {
-    removeAuthenticationState();
-    this.forceUpdate();
+    this._logout = this._logout.bind(this);
+    this._getItem = this._getItem.bind(this);
   }
 
   componentWillMount() {
@@ -143,8 +134,34 @@ class AuthLink extends Component {
     }));
   }
 
+  componentDidMount() {
+    if (loadAuthenticationState()) {
+      this.setState(() => ({ isLoggedIn: true }));
+    }
+  }
+
+  _getItem() {
+    if (this.state.isLoggedIn) {
+      return (
+        <GoogleLogout
+          onLogoutSuccess={this._logout}
+          disabled={!this.state.isLoggedIn}
+        >
+          Logout
+        </GoogleLogout>
+      );
+    }
+    return <Link to="auth/login">Login</Link>;
+  }
+
+  _logout() {
+    this.setState({ isLoggedIn: false });
+    removeAuthenticationState();
+    this.forceUpdate();
+  }
+
   render() {
-    return this._getItem.bind(this)();
+    return this._getItem();
   }
 }
 
