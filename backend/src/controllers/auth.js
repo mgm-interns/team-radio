@@ -24,11 +24,9 @@ module.exports = function tokenVerify(req, res, next) {
       next();
     });
   } else {
-      return res.status(403).send({
+    return res.status(403).send({
       success: false,
       message: 'No token provided.',
     });
   }
 };
-
-
