@@ -113,7 +113,7 @@ export const setPlayedSongs = async (stationId, songIds) => {
     for (let i = 0; i < songIds.length; i++) {
       for (let j = 0; j < currentPlaylist.length; j++) {
         if (currentPlaylist[j].song_id === songIds[i]) {
-          currentPlaylist[j].is_played = false;
+          currentPlaylist[j].is_played = true;
         }
       }
     }
