@@ -10,8 +10,8 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
 import { NavBar } from 'Component';
-import { saveAuthenticationState } from 'Config';
-import { fetchUser } from 'Redux/api/user';
+import { saveAuthenticationState, loadAuthenticationState } from 'Config';
+import { fetchUser } from 'Redux/api/user/actions';
 import { connect } from 'react-redux';
 import styles from './styles';
 import TextView from '../TextView';
@@ -41,19 +41,9 @@ class Login extends Component {
     };
   }
 
-  // _submit(e) {
-  //   e.preventDefault();
-  //   if (this._validate()) {
-  //     // console.log('submit');
-  //     let { email, password } = this.state;
-  //     this.props.login({ email, password });
-  //   }
-  // }
-
   componentWillReceiveProps(nextProps) {
     const response = nextProps.fetchUserResponse;
     const { error } = response;
-    console.log(response);
     if (response.error != null) {
       this.setState({
         formErrors: {
@@ -61,7 +51,6 @@ class Login extends Component {
         },
       });
     } else if (response.data.token) {
-      // localStorage.setItem('token', response.data.token);
       saveAuthenticationState(response.data);
       this.props.history.push('/');
     }
@@ -155,11 +144,9 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const mapStateToProps = state =>
-  // console.log(state.api.user.fetch);
-  ({
-    fetchUserResponse: state.api.user.fetch,
-  });
+const mapStateToProps = state => ({
+  fetchUserResponse: state.api.user,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({

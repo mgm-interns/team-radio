@@ -6,7 +6,8 @@ import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import fixture from 'Fixture/landing';
 import { loadAuthenticationState, removeAuthenticationState } from 'Config';
-
+import { logout } from 'Redux/api/user/actions';
+import { connect } from 'react-redux';
 import styles from './styles';
 
 const MENUS = {
@@ -61,8 +62,8 @@ class NavBar extends Component {
   }
 
   render() {
-    const { classes, color } = this.props;
-    const menusLength = Object.keys(MENUS).length;
+    const { classes, color, dispatch } = this.props;
+
     return (
       <Grid
         container
@@ -106,7 +107,7 @@ class NavBar extends Component {
                   );
                 })}
 
-                <AuthLink />
+                <AuthLink dispatch={dispatch} />
               </Grid>
             </Grid>
           </Grid>
@@ -117,34 +118,27 @@ class NavBar extends Component {
 }
 
 class AuthLink extends Component {
-  constructor(props) {
-    super(props);
-    // console.log(props.match);
-    this.state = {
-      item: {},
-    };
-  }
-
-  _getItem() {
-    if (loadAuthenticationState()) {
-      return <a onClick={this._logout.bind(this)}>Logout</a>;
-    }
-    return <Link to="auth/login">Login</Link>;
-  }
-
   _logout() {
+    // localStorage.removeItem('token');
     removeAuthenticationState();
+    this.props.dispatch(logout());
     this.forceUpdate();
   }
 
-  componentWillMount() {
-    this.setState(() => ({
-      item: this._getItem(),
-    }));
-  }
-
   render() {
-    return this._getItem.bind(this)();
+    return (
+      <div>
+        {!loadAuthenticationState() && (
+          <React.Fragment>
+            <Link to="/auth/login">Login - </Link>
+            <Link to="/auth/register">Register</Link>
+          </React.Fragment>
+        )}
+        {loadAuthenticationState() && (
+          <a onClick={this._logout.bind(this)}>Logout</a>
+        )}
+      </div>
+    );
   }
 }
 
@@ -154,4 +148,8 @@ NavBar.propTypes = {
   color: PropTypes.string,
 };
 
-export default withStyles(styles)(NavBar);
+AuthLink.propTypes = {
+  dispatch: PropTypes.any,
+};
+
+export default connect(null, null)(withStyles(styles)(NavBar));

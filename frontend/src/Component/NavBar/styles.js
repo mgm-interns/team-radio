@@ -35,6 +35,7 @@ export default ({ breakpoints }) => ({
     justifyContent: 'flex-end',
   },
   navWrapper: {
+    display: 'flex',
     '& a': {
       textDecoration: 'none',
       color: 'white',
