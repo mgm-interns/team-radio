@@ -2,7 +2,6 @@ import { ObjectId } from 'mongodb';
 import * as songController from './song';
 import * as players from '../players';
 import * as stationModels from './../models/Station';
-import { ObjectId } from 'mongodb';
 
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 
