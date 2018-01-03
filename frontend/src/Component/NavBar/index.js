@@ -144,7 +144,9 @@ class AuthLink extends Component {
           </React.Fragment>
         )}
         {loadAuthenticationState() && (
-          <a onClick={this._logout.bind(this)}>Logout</a>
+          <a onClick={this._logout.bind(this)} style={{ marginLeft: 16 }}>
+            Logout
+          </a>
         )}
       </div>
     );
