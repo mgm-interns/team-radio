@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import { levels } from 'react-notification-system/src/constants';
-import AppNotification, {appNotificationInstance} from './AppNotification';
+import AppNotification, { appNotificationInstance } from './AppNotification';
 import BrowserNotification from './BrowserNotification';
-
-export const NOTIFICATION_DURATION = 5000;
-export const LEVELS = levels;
 
 /**
  * HOC to pass a appNotification prop to its child

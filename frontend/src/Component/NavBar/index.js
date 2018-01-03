@@ -102,9 +102,12 @@ class NavBar extends Component {
                 {Object.keys(MENUS).map((key, index) => {
                   const { title } = MENUS[key];
                   return (
-                    <Link key={index} to={MENUS[key].url}>
-                      {/* {index === menusLength - 1 ? title : `${title} - `} */}
-                      {`${title} - `}
+                    <Link
+                      key={index}
+                      to={MENUS[key].url}
+                      className={classes.navItem}
+                    >
+                      {title}
                     </Link>
                   );
                 })}
@@ -132,8 +135,12 @@ class AuthLink extends Component {
       <div>
         {!loadAuthenticationState() && (
           <React.Fragment>
-            <Link to="/auth/login">Login - </Link>
-            <Link to="/auth/register">Register</Link>
+            <Link to="/auth/login" style={{ marginLeft: 16 }}>
+              Login
+            </Link>
+            <Link to="/auth/register" style={{ marginLeft: 16 }}>
+              Register
+            </Link>
           </React.Fragment>
         )}
         {loadAuthenticationState() && (

@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 import NotificationSystem from 'react-notification-system';
 import withTheme from 'material-ui/styles/withTheme';
 import { capitalizeFirstLetter } from 'material-ui/utils/helpers';
 import sleep from 'Util/sleep';
-import { NOTIFICATION_DURATION, LEVELS } from '.';
+import { levels } from 'react-notification-system/src/constants';
 import getStyles from './styles';
 
 const DEFAULT_NOTIFICATION = {
   position: 'br',
-  autoDismiss: NOTIFICATION_DURATION / 1000,
+  autoDismiss: 5,
 };
 
 let notificationRef = null;
@@ -23,11 +23,14 @@ let notificationRef = null;
 const instance = {
   add: async ({ duration, ...others }) => {
     await sleep();
-    return notificationRef.addNotification({
-      autoDismiss: duration,
+    const option = {
       ...DEFAULT_NOTIFICATION,
       ...others,
-    });
+    };
+    if (duration) {
+      option.autoDismiss = duration / 1000;
+    }
+    return notificationRef.addNotification(option);
   },
   remove: async ({ ...others }) => {
     await sleep();
@@ -49,8 +52,8 @@ const instance = {
   },
 };
 /* eslint-disable array-callback-return */
-Object.keys(LEVELS).map(key => {
-  const level = LEVELS[key];
+Object.keys(levels).map(key => {
+  const level = levels[key];
   const title = capitalizeFirstLetter(`${level} !`);
   instance[level] = notification =>
     instance.add({ level, title, ...notification });

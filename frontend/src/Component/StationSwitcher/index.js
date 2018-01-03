@@ -1,34 +1,40 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
-import stations from 'Fixture/stations';
 import { CircularProgress } from 'material-ui/Progress';
+import Tooltip from 'material-ui/Tooltip';
 import Slider from 'react-slick';
-// import { fetchStations } from 'Redux/api/stations';
-import { transformNumber } from 'Transformer';
+import { joinStation } from 'Redux/api/currentStation/actions';
+import { transformNumber, transformText } from 'Transformer';
 import Images from 'Theme/Images';
+import { withNotification } from 'Component/Notification';
 import styles from './styles';
 
 const { avatar1, avatar2, avatar3, avatar4, avatar5 } = Images.fixture;
 const AVATARS_DEFAULT = {
-  1: { avatar: avatar1 },
-  2: { avatar: avatar2 },
-  3: { avatar: avatar3 },
-  4: { avatar: avatar4 },
-  5: { avatar: avatar5 },
+  '1': { avatar: avatar1 },
+  '2': { avatar: avatar2 },
+  '3': { avatar: avatar3 },
+  '4': { avatar: avatar4 },
+  '5': { avatar: avatar5 },
 };
 
 class StationSwitcher extends Component {
   static propTypes = {
     classes: PropTypes.any,
+    currentStation: PropTypes.object,
+    history: PropTypes.object,
+    joinStationRequest: PropTypes.func,
+    stations: PropTypes.any,
     stationList: PropTypes.array,
     fetchStations: PropTypes.func,
-    // stations: PropTypes.array,
-    history: PropTypes.object,
+    match: PropTypes.object,
+    notification: PropTypes.object,
   };
+
   constructor(props) {
     super(props);
 
@@ -45,7 +51,6 @@ class StationSwitcher extends Component {
 
   componentDidMount() {
     this._handleWindowSizeChange();
-    // this.props.fetchStations();
   }
 
   _handleWindowSizeChange = () => {
@@ -55,15 +60,28 @@ class StationSwitcher extends Component {
   };
 
   _slidesToShow(width, isMobile) {
-    return isMobile ? Math.floor(width / 110) : Math.floor(width / 150);
+    return isMobile ? Math.floor(width / 110) : Math.floor(width / 180);
   }
 
   _goToStationPage(station) {
-    this.props.history.push(`station/${station.station_name}`);
+    const {
+      match: { params: { stationId } },
+      history,
+      joinStationRequest,
+      notification,
+    } = this.props;
+    // Only change to new station if the id has changed
+    if (station.id !== stationId) {
+      history.replace(`/station/${station.id}`);
+      joinStationRequest(station.id);
+    }
+    notification.app.success({
+      message: `Switch to station ${station.station_name}`,
+    });
   }
 
   _renderSwitcher() {
-    const { classes } = this.props;
+    const { classes, stations, currentStation } = this.props;
     const { width } = this.state;
     const isMobile = width <= 568;
     const slidesToShow = this._slidesToShow(width, isMobile);
@@ -75,10 +93,11 @@ class StationSwitcher extends Component {
       infinite: false,
     };
 
-    // Demo
     const customStations = stations.map(station => ({
       ...station,
-      avatar: AVATARS_DEFAULT[transformNumber.random(1, 5)].avatar,
+      isActive:
+        (currentStation.station && currentStation.station.id) === station.id,
+      avatar: AVATARS_DEFAULT[transformNumber.random(1, 1)].avatar,
     }));
 
     return (
@@ -92,17 +111,21 @@ class StationSwitcher extends Component {
           {customStations.map((station, index) => (
             <div
               key={index}
-              className={[
-                classes.station_wrapper,
-                // station.isActive && classes.active_station,
-              ]}
+              className={`${classes.station_wrapper} ${station.isActive &&
+                classes.active_station}`}
               onClick={() => this._goToStationPage(station)}
             >
               <img src={station.avatar} className={classes.station_avatar} />
               <div className={classes.station_info}>
-                <span className={classes.station_title}>
-                  {station.station_name}
-                </span>
+                <Tooltip
+                  id={station.id}
+                  title={station.station_name}
+                  placement={'right'}
+                >
+                  <span className={classes.station_title}>
+                    {transformText.reduceByCharacters(station.station_name, 10)}
+                  </span>
+                </Tooltip>
                 {/*
                 <span className={classes.station_subtitle}>
                   {station.description}
@@ -137,7 +160,7 @@ class StationSwitcher extends Component {
   }
 
   render() {
-    // const { stations } = this.props;
+    const { stations } = this.props;
     let view = null;
     if (stations === undefined) {
       view = this._renderLoading();
@@ -151,16 +174,18 @@ class StationSwitcher extends Component {
   }
 }
 
-// const mapStateToProps = ({ api: { stations } }) => ({
-//   stations: stations.fetch.data,
-// });
+const mapStateToProps = ({ api }) => ({
+  stations: api.stations.data,
+  currentStation: api.currentStation,
+});
 
-// const mapDispatchToProps = dispatch => ({
-//   fetchStations: () => dispatch(fetchStations()),
-// });
+const mapDispatchToProps = dispatch => ({
+  joinStationRequest: stationId => dispatch(joinStation(stationId)),
+});
 
 export default compose(
   withStyles(styles),
-  // connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   withRouter,
+  withNotification,
 )(StationSwitcher);
