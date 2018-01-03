@@ -1,4 +1,4 @@
-import { CREATE_STATION } from './actions';
+import { CLIENT_CREATE_STATION } from 'Redux/actions';
 
 const INITIAL_STATE = {
   station: null,
@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case CREATE_STATION:
+    case CLIENT_CREATE_STATION:
       return {
         ...state,
         station: action.payload,
