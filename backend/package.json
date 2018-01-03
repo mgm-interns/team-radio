@@ -27,6 +27,7 @@
     "mongoose": "^4.13.7",
     "morgan": "^1.8.2",
     "promise": "^8.0.1",
+    "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "socket.io": "^2.0.4"
   },

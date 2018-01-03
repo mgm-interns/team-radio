@@ -281,7 +281,7 @@ class AddLink extends Component {
               renderSuggestion={this._renderSuggestion}
               inputProps={{
                 classes,
-                placeholder: 'Add your link or search by keyword...',
+                placeholder: 'Search...',
                 value: this.state.searchText,
                 onChange: this._onChange,
               }}

@@ -8,16 +8,21 @@
   "scripts": {
     "install:backend": "cd backend && npm install",
     "install:frontend": "cd frontend && npm install",
-    "postinstall": "run-s install:*",
+    "postinstall": "run-s actions:* install:*",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
-    "dev": "run-p dev:*",
+    "dev": "run-p actions:* dev:*",
     "start": "cd backend && npm start",
     "lint:backend": "eslint backend/src/**/*.js",
     "lint:frontend": "eslint frontend/src/**/*.js",
     "lint": "run-s lint:*",
     "lint-staged": "lint-staged",
-    "precommit": "run-s lint-staged lint"
+    "actions:frontend": "cpx lib/actions.js backend/src/const",
+    "actions:backend": "cpx lib/actions.js frontend/src/Redux",
+    "actions": "run-p actions:frontend actions:backend",
+    "watch:actions:frontend": "cpx lib/actions.js backend/src/const --watch",
+    "watch:actions:backend": "cpx lib/actions.js frontend/src/Redux --watch",
+    "watch:actions": "run-p watch:actions:*"
   },
   "lint-staged": {
     "backend/src/**/*.js": [
@@ -42,12 +47,8 @@
     "url": "https://github.com/mgm-interns/team-radio/issues"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
-    "get-video-id": "^2.1.7",
-    "mongoose": "^4.13.7",
     "npm-run-all": "^4.1.2",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "cpx": "^1.5.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.3",
