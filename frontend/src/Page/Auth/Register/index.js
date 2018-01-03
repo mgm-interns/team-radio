@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography';
 import Icon from 'material-ui/Icon';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
-import { addUser } from 'Redux/api/user';
+import { addUser } from 'Redux/api/user/actions';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { FormHelperText } from 'material-ui/Form';
@@ -63,6 +63,7 @@ class Register extends Component {
 
   componentWillReceiveProps(nextProps) {
     const response = nextProps.addUserResponse;
+    console.log(response);
     const { error } = response;
     if (error != null) {
       this.setState({
@@ -209,7 +210,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  addUserResponse: state.api.user.add,
+  addUserResponse: state.api.user,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(
