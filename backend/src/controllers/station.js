@@ -130,25 +130,31 @@ export const getAllAvailableStations = async () => {
   return stations;
 };
 
+export const getAllStationDetails = async () => {
+  const stations = await stationModels.getStationDetails();
+  return stations;
+};
+
 export const getListSong = async stationId => {
   const playList = (await stationModels.getPlaylistOfStation(stationId))
     .playlist;
   return playList;
 };
 
-// export const upVote = async (stationId, songId, userId) => {
-//   // TO DO :
-//   const currentSong = (await stationModels.getAsongInStation(
-//     stationId,
-//     songId,
-//   ))[0];
-//   let upVoteArray = currentSong.up_vote;
-//   if (upVoteArray.length > 0) {
-//   } else {
-//     await stationModels.
-//   }
-//   return currentSong;
-// };
+export const upVote = async (stationId, songId, userId) => {
+  // TO DO :
+  const currentSong = (await stationModels.getAsongInStation(
+    stationId,
+    songId,
+  ))[0];
+  let upVoteArray = currentSong.up_vote;
+  if (upVoteArray.length > 0) {
+  } else {
+    upVoteArray.push(_safeObjectId(userId));
+    await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
+  }
+  return currentSong;
+};
 
 function _stringToId(str) {
   return str
