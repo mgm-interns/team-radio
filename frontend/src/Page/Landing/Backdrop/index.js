@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Input, { InputLabel } from 'material-ui/Input';
@@ -8,35 +9,45 @@ import Icon from 'material-ui/Icon';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { redirectToStationPageRequest } from 'Redux/page/landing/actions';
 import { withStyles } from 'material-ui/styles';
 import fixture from 'Fixture/landing';
-import { addStation } from 'Redux/api/stations';
+import { createStation } from 'Redux/api/stations/actions';
 import styles from './styles';
 
+/* eslint-disable no-shadow */
 class Backdrop extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      station_name: '',
+      stationName: '',
     };
 
     this._handleStationNameChanged = this._handleStationNameChanged.bind(this);
     this._submit = this._submit.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { redirectToStationPageRequest } = this.props;
+    const { history } = this.props;
+    const { station } = nextProps;
+    history.replace(`station/${station.id}`);
+    redirectToStationPageRequest();
+  }
+
   _handleStationNameChanged(e) {
-    this.setState({ station_name: e.target.value });
+    this.setState({ stationName: e.target.value });
   }
 
   _submit() {
-    this.props.addStation({
-      station_name: this.state.station_name,
-    });
+    const { createStation, redirectToStationPageRequest } = this.props;
+    createStation(this.state.stationName);
+    redirectToStationPageRequest(true);
   }
 
   render() {
-    const { classes, loading, error } = this.props;
+    const { classes } = this.props;
     return (
       <Grid container className={classes.container}>
         <Grid container className={classes.foreground}>
@@ -45,7 +56,10 @@ class Backdrop extends Component {
               <h1 className={classes.mainLine}>{fixture.name}</h1>
               <span className={classes.sloganText}>{fixture.slogan}</span>
             </div>
-            <FormControl className={classes.textField} error={!!error}>
+            <FormControl
+              className={classes.textField}
+              // error={!!error}
+            >
               <InputLabel htmlFor="station-name">
                 {fixture.input.label}
               </InputLabel>
@@ -54,26 +68,24 @@ class Backdrop extends Component {
                 placeholder={fixture.input.placeholder}
                 autoFocus={true}
                 onChange={this._handleStationNameChanged}
-                value={this.state.station_name}
+                value={this.state.stationName}
               />
+              {/*
               <FormHelperText>
                 {error && error.response && error.response.error.name}
               </FormHelperText>
+              */}
             </FormControl>
-            {loading ? (
-              <CircularProgress />
-            ) : (
-              <Button
-                raised
-                color={fixture.button.color}
-                onClick={this._submit}
-                className={classes.buttonSend}
-                disabled={!this.state.station_name}
-              >
-                {fixture.button.name}
-                <Icon className={classes.sendIcon}>radio</Icon>
-              </Button>
-            )}
+            <Button
+              raised
+              color={fixture.button.color}
+              onClick={this._submit}
+              className={classes.buttonSend}
+              disabled={!this.state.stationName}
+            >
+              {fixture.button.name}
+              <Icon className={classes.sendIcon}>radio</Icon>
+            </Button>
           </Grid>
           <Grid item xs className={classes.backgroundImg}>
             <img
@@ -90,21 +102,24 @@ class Backdrop extends Component {
 
 Backdrop.propTypes = {
   classes: PropTypes.any,
-  loading: PropTypes.any,
-  error: PropTypes.any,
-  addStation: PropTypes.func,
+  createStation: PropTypes.func,
+  redirectToStationPageRequest: PropTypes.func,
+  station: PropTypes.object,
+  history: PropTypes.object,
 };
 
 const mapStateToProps = ({ api: { stations } }) => ({
-  loading: stations.add.loading,
-  error: stations.add.error,
+  station: stations.station,
 });
 
 const mapDispatchToProps = dispatch => ({
-  addStation: station => dispatch(addStation(station)),
+  createStation: stationName => dispatch(createStation({ stationName })),
+  redirectToStationPageRequest: isRedirect =>
+    dispatch(redirectToStationPageRequest(isRedirect)),
 });
 
 export default compose(
+  withRouter,
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
 )(Backdrop);

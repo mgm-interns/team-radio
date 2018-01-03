@@ -1,6 +1,8 @@
 import Images from 'Theme/Images';
 import { capitalizeFirstLetter } from 'material-ui/utils/helpers';
-import { NOTIFICATION_DURATION, LEVELS } from '.';
+import { levels } from 'react-notification-system/src/constants';
+
+const NOTIFICATION_DURATION = 5000;
 
 /* eslint-disable */
 const PERMISSION_TYPE_DENIED = 'denied';
@@ -36,8 +38,8 @@ class BrowserNotification {
      * - error
      */
     /* eslint-disable array-callback-return */
-    Object.keys(LEVELS).map(key => {
-      const level = LEVELS[key];
+    Object.keys(levels).map(key => {
+      const level = levels[key];
       const title = capitalizeFirstLetter(`${level} !`);
       this[level] = notification => this.notify({ title, ...notification });
     });

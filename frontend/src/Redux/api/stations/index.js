@@ -1,25 +1,31 @@
-import { combineReducers } from 'redux';
-import HttpRequest from 'Util/redux/HttpRequest';
+import {
+  CLIENT_CREATE_STATION,
+  SERVER_CREATE_STATION_SUCCESS,
+  SERVER_UPDATE_STATIONS,
+} from 'Redux/actions';
 
-export const fetchRequest = new HttpRequest({
-  type: 'FETCH_STATIONS',
-  method: 'GET',
-  endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/stations`,
-  initialData: [],
-});
+const INITIAL_STATE = {
+  station: null,
+  data: [],
+};
 
-export const addRequest = new HttpRequest({
-  type: 'ADD_STATION',
-  method: 'POST',
-  endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/stations`,
-  initialData: {},
-});
-
-export const fetchStations = fetchRequest.getAction();
-
-export const addStation = addRequest.getAction();
-
-export default combineReducers({
-  fetch: fetchRequest.getReducer(),
-  add: addRequest.getReducer(),
-});
+export default (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case CLIENT_CREATE_STATION:
+      return {
+        ...state,
+      };
+    case SERVER_CREATE_STATION_SUCCESS:
+      return {
+        ...state,
+        station: action.payload.station,
+      };
+    case SERVER_UPDATE_STATIONS:
+      return {
+        ...state,
+        data: action.payload.stations,
+      };
+    default:
+      return state;
+  }
+};

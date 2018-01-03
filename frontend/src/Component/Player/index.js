@@ -42,7 +42,6 @@ class Player extends Component {
         }}
         controls={false}
         playing={playing}
-        muted={true}
         onStart={this._onStart}
         onPlay={onPlay}
         onPause={onPause}

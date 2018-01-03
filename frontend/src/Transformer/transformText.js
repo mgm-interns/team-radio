@@ -31,8 +31,19 @@ export const trimText = text => {
   return '';
 };
 
+export const checkValidYoutubeUrl = url => {
+  const p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+  const matches = url.match(p);
+  if (matches) {
+    // return video_id if url is valid
+    return matches[1];
+  }
+  return false;
+};
+
 export default {
   reduceByWords,
   reduceByCharacters,
   trimText,
+  checkValidYoutubeUrl,
 };

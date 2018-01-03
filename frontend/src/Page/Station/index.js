@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import stations from 'Fixture/stations';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
@@ -23,28 +21,19 @@ class StationPage extends Component {
     currentStation: PropTypes.object,
   };
 
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      currentStation: { ...stations[0] },
-    };
-  }
-
   componentWillMount() {
     // Get station id from react-router
-    // const { match: { params: { stationName } }, history } = this.props;
-    // if (stationName) {
-    // console.log(this.props.joinStation());
-    this.props.joinStation();
-    // } else {
-    //   history.push(`/`);
-    // }
+    const { match: { params: { stationId } }, history } = this.props;
+    if (stationId) {
+      // console.log(this.props.joinStation(stationId));
+      this.props.joinStation(stationId);
+    } else {
+      history.replace(`/`);
+    }
   }
 
   render() {
-    const { classes } = this.props;
-    const { currentStation } = this.state;
+    const { classes, currentStation } = this.props;
     return [
       <NavBar key={1} color="primary" />,
       <Grid
@@ -69,7 +58,7 @@ class StationPage extends Component {
                 </Grid>
                 <NowPlaying
                   className={`${classes.content} ${classes.nowPlaying}`}
-                  autoplay={true}
+                  autoPlay={true}
                 />
               </Grid>
             </Grid>
@@ -101,7 +90,7 @@ StationPage.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  currentStation: state.api.currentStation,
+  currentStation: state.api.currentStation.station,
 });
 
 const mapDispatchToProps = dispatch => ({

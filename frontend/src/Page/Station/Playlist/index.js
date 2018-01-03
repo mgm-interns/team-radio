@@ -11,6 +11,7 @@ import styles from './styles';
 class Playlist extends Component {
   render() {
     const { playlist, className, style } = this.props;
+    const notPlayedList = playlist.filter(song => song.is_played === false);
     return (
       <Grid
         item
@@ -19,7 +20,7 @@ class Playlist extends Component {
         style={{ ...style, overflowY: 'auto' }}
       >
         <List style={{ paddingTop: 0, paddingBottom: 0 }}>
-          {playlist.map((video, index) => <Item key={index} {...video} />)}
+          {notPlayedList.map((video, index) => <Item key={index} {...video} />)}
         </List>
       </Grid>
     );

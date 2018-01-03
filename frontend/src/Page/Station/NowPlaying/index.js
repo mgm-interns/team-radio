@@ -9,7 +9,7 @@ class NowPlaying extends Component {
     style: PropTypes.any,
     className: PropTypes.any,
     nowPlaying: PropTypes.object,
-    autoplay: PropTypes.bool,
+    autoPlay: PropTypes.bool,
   };
 
   constructor(props) {
@@ -30,15 +30,15 @@ class NowPlaying extends Component {
   // }
 
   render() {
-    const { className, nowPlaying, autoplay } = this.props;
-
+    const { className, nowPlaying, autoPlay } = this.props;
     return (
       <Grid item xs={12} className={className}>
         <Player
           url={nowPlaying ? nowPlaying.url : ''}
           // ref={this._getRefPlayer}
-          playing={autoplay}
-          seektime={756}
+          playing={autoPlay}
+          seektime={parseInt(nowPlaying && nowPlaying.starting_time, 10) / 1000}
+          muted={false}
         />
       </Grid>
     );
