@@ -38,7 +38,7 @@ export default ({ breakpoints, spacing }) => ({
   station_title: {
     marginTop: spacing.smallMargin,
     fontWeight: 'bold',
-    fontSize: '13pt',
+    fontSize: '16px',
   },
   station_subtitle: {
     color: 'grey',

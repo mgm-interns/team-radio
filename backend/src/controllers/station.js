@@ -1,7 +1,7 @@
+import { ObjectId } from 'mongodb';
 import * as songController from './song';
 import * as players from '../players';
 import * as stationModels from './../models/Station';
-import { ObjectId } from 'mongodb';
 
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 
@@ -113,7 +113,7 @@ export const setPlayedSongs = async (stationId, songIds) => {
     for (let i = 0; i < songIds.length; i++) {
       for (let j = 0; j < currentPlaylist.length; j++) {
         if (currentPlaylist[j].song_id === songIds[i]) {
-          currentPlaylist[j].is_played = false;
+          currentPlaylist[j].is_played = true;
         }
       }
     }
@@ -130,25 +130,31 @@ export const getAllAvailableStations = async () => {
   return stations;
 };
 
+export const getAllStationDetails = async () => {
+  const stations = await stationModels.getStationDetails();
+  return stations;
+};
+
 export const getListSong = async stationId => {
   const playList = (await stationModels.getPlaylistOfStation(stationId))
     .playlist;
   return playList;
 };
 
-// export const upVote = async (stationId, songId, userId) => {
-//   // TO DO :
-//   const currentSong = (await stationModels.getAsongInStation(
-//     stationId,
-//     songId,
-//   ))[0];
-//   let upVoteArray = currentSong.up_vote;
-//   if (upVoteArray.length > 0) {
-//   } else {
-//     await stationModels.
-//   }
-//   return currentSong;
-// };
+export const upVote = async (stationId, songId, userId) => {
+  // TO DO :
+  const currentSong = (await stationModels.getAsongInStation(
+    stationId,
+    songId,
+  ))[0];
+  let upVoteArray = currentSong.up_vote;
+  if (upVoteArray.length > 0) {
+  } else {
+    upVoteArray.push(_safeObjectId(userId));
+    await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
+  }
+  return currentSong;
+};
 
 function _stringToId(str) {
   return str

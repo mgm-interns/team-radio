@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -59,7 +58,7 @@ class StationPage extends Component {
                 </Grid>
                 <NowPlaying
                   className={`${classes.content} ${classes.nowPlaying}`}
-                  autoplay={true}
+                  autoPlay={true}
                 />
               </Grid>
             </Grid>
