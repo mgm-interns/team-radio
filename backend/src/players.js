@@ -168,7 +168,7 @@ export const attachWebSocket = _io => {
   init();
 };
 
-export const getPlayer = async stationId => {
+export const getPlayer = async function getPlayer(stationId) {
   if (!_players[stationId]) {
     const station = await stationController.getStation(stationId);
     // check the stationdId is available or not
