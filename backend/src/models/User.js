@@ -55,3 +55,7 @@ module.exports.getUserByEmail = async email => {
   const query = { email: email };
   return user.findOne(query);
 };
+module.exports.getUserById = async userId => {
+  const query = { _id: userId };
+  return user.findOne(query);
+};

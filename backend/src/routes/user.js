@@ -5,7 +5,7 @@ import authController from '../controllers/auth';
 export default router => {
   router.post('/signup', async (req, res) => {
     try {
-      const user = await User.findOne({ email: req.body.email });
+      let user = await User.findOne({ email: req.body.email });
       if (user) {
         res.status(400).json({ email: 'This email has already been taken.' });
       } else {
@@ -14,12 +14,14 @@ export default router => {
         newUser.name = req.body.name;
         newUser.password = newUser.generateHash(req.body.password);
 
-        newUser.save(function(err) {
+        newUser.save(async err => {
           if (err) throw err;
           const payload = {
             email: newUser.email,
             name: newUser.name,
           };
+
+          user = await User.findOne({ email: req.body.email });
 
           const token = jwt.sign(payload, req.app.get('superSecret'), {
             expiresIn: 1440 * 7, // expires in 24 hours
@@ -28,6 +30,7 @@ export default router => {
             data: {
               message: 'signup success',
               token: token,
+              userId: user._id,
             },
           });
         });
@@ -69,6 +72,7 @@ export default router => {
               success: true,
               message: 'Enjoy your token!',
               token: token,
+              userId: user._id,
             },
           });
         }
