@@ -102,7 +102,8 @@ export default ({ palette, breakpoints }) => ({
   },
   error: {
     color: '#ff1744',
-    fontSize: 'bold',
+    fontWeight: 'bold',
+    marginBottom: '10px',
   },
   cardButton: {
     display: 'flex',

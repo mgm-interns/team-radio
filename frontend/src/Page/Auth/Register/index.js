@@ -170,45 +170,13 @@ class Register extends Component {
                           </Button>
                         )}
 
-                        <FormHelperText>
-                          <div className={classes.callout}>
-                            <span>Already have an account?</span>
-                            <Link to="/auth/login">Login</Link>
-                          </div>
+                        <FormHelperText className={classes.callout}>
+                          <span>Already have an account?</span>
+                          <Link to="/auth/login">Login</Link>
                         </FormHelperText>
                       </Grid>
                     </Grid>
                   </CardActions>
-                  {/* <Grid container>
-                    <Grid>
-                      <CardActions
-                        className={classes.cardButton}
-                        style={{ justifyContent: 'flex-end' }}
-                      >
-                        {loading ? (
-                          <CircularProgress />
-                        ) : (
-                          <Button
-                            raised
-                            color="primary"
-                            type="submit"
-                            // className={classes.buttonSend}
-                            disabled={submitting}
-                          >
-                            Sign Up
-                          </Button>
-                        )}
-                      </CardActions>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FormHelperText>
-                        <div className={classes.callout}>
-                          <span>Already have an account?</span>
-                          <Link to="/auth/login">Login</Link>
-                        </div>
-                      </FormHelperText>
-                    </Grid>
-                  </Grid> */}
                 </form>
               </Card>
             </Grid>

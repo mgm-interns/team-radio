@@ -168,11 +168,9 @@ class Login extends Component {
                           </Button>
                         )}
 
-                        <FormHelperText>
-                          <div className={classes.callout}>
-                            <span>Not a member?</span>
-                            <Link to="/auth/register">Create an account</Link>
-                          </div>
+                        <FormHelperText className={classes.callout}>
+                          <span>Not a member?</span>
+                          <Link to="/auth/register">Create an account</Link>
                         </FormHelperText>
                       </Grid>
                     </Grid>
