@@ -29,3 +29,16 @@ export const getUserByEmail = async email => {
     throw err;
   }
 };
+
+export const getUserById = async userId => {
+    try {
+        let user = await userModels.getUserById(userId);
+        if (user) {
+            return user;
+        } else {
+            return 'User not found.';
+        }
+    } catch (err) {
+        throw err;
+    }
+};

@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import authController from '../controllers/auth';
+import * as userController from '../controllers/user';
 
 export default router => {
   router.post('/signup', async (req, res) => {
     try {
-      const user = await User.findOne({ email: req.body.email });
+      let user = await User.findOne({ email: req.body.email });
       if (user) {
         res.status(400).json({ message: 'This email has already been taken.' });
       } else {
@@ -14,12 +15,14 @@ export default router => {
         newUser.name = req.body.name;
         newUser.password = newUser.generateHash(req.body.password);
 
-        newUser.save(function(err) {
+        newUser.save(async err => {
           if (err) throw err;
           const payload = {
             email: newUser.email,
             name: newUser.name,
           };
+
+          user = await User.findOne({ email: req.body.email });
 
           const token = jwt.sign(payload, req.app.get('superSecret'), {
             expiresIn: 1440 * 7, // expires in 24 hours
@@ -74,7 +77,16 @@ export default router => {
     }
   });
 
-  // router.use(authController);
+  router.post('/getProfile', async (req, res) => {
+    try {
+      const userProfile = await userController.getUserById(req.body.userId);
+      if (userProfile) res.json(userProfile);
+      else res.json({ message: 'User not found' });
+    } catch (err) {
+      throw err;
+    }
+  });
+  router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {
