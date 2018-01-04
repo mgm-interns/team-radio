@@ -9,6 +9,7 @@ export const loadAuthenticationState = () => {
       return undefined;
     }
 
+    console.log(serializedState);
     return serializedState;
   } catch (error) {
     return undefined;

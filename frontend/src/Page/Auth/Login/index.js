@@ -12,7 +12,7 @@ import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
 import { NavBar, GoogleLogin, FacebookLogin } from 'Component';
 import { saveAuthenticationState, loadAuthenticationState } from 'Config';
-import { fetchUser, addUser } from 'Redux/api/user/actions';
+import { fetchUser, addUser, addUserWithSocialAccount } from 'Redux/api/user/actions';
 import sleep from 'Util/sleep';
 
 import { connect } from 'react-redux';
@@ -57,7 +57,9 @@ class Login extends Component {
 
       // handle data
       saveAuthenticationState(authResponse);
-      this.props.dispatch(addUser(profileObj));
+      this.props.dispatch(addUserWithSocialAccount(profileObj));
+      // this.props.dispatch(fetchUser());
+      // console.log(this.props.fetchUserResponse());
     }
   }
 
@@ -72,6 +74,7 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     const response = nextProps.fetchUserResponse;
+    console.log(response);
     const { error } = response;
     if (response.error != null) {
       this.setState({

@@ -20,6 +20,22 @@ export const addUser = data => ({
   },
 });
 
+export const addUserWithSocialAccount = data => ({
+  [CALL_API]: {
+    types: [
+      'ADD_USER_WITH_SOCIAL',
+      'ADD_USER_WITH_SOCIAL_SUCCESS',
+      'ADD_USER_WITH_SOCIAL_FAILURE',
+    ],
+    endpoint: `${
+      process.env.REACT_APP_SERVER_END_POINT
+    }/signupWithSocialAccount`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  },
+});
+
 export const logout = () => ({
   type: 'LOGOUT_REQUEST',
 });
