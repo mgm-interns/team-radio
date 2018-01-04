@@ -108,4 +108,16 @@ export default ({ palette, breakpoints }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
   },
+  buttonSend: {
+    width: '100%',
+  },
+  callout: {
+    display: 'flex',
+    justifyContent: 'center',
+    fontSize: '14px',
+    margin: '20px',
+    '& a': {
+      marginLeft: '5px',
+    },
+  },
 });

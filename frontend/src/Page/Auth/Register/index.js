@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
+import { Link } from 'react-router-dom';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
@@ -54,7 +55,7 @@ class Register extends Component {
       asyncError: '',
       benefits: [
         'Edit profile',
-        'Be rewarded',
+        'Increase your reputation',
         'Play more songs than these anonymous freaks',
         'See some information of the past activities',
       ],
@@ -153,24 +154,61 @@ class Register extends Component {
                       {this.state.asyncError}
                     </FormHelperText>
                   </CardContent>
-                  <CardActions
-                    className={classes.cardButton}
-                    style={{ justifyContent: 'flex-end' }}
-                  >
-                    {loading ? (
-                      <CircularProgress />
-                    ) : (
-                      <Button
-                        raised
-                        color="primary"
-                        type="submit"
-                        className={classes.buttonSend}
-                        disabled={submitting}
-                      >
-                        Sign Up
-                      </Button>
-                    )}
+                  <CardActions>
+                    <Grid container>
+                      <Grid item xs={12}>
+                        {loading ? (
+                          <CircularProgress />
+                        ) : (
+                          <Button
+                            raised
+                            color="primary"
+                            type="submit"
+                            className={classes.buttonSend}
+                          >
+                            Sign up
+                          </Button>
+                        )}
+
+                        <FormHelperText>
+                          <div className={classes.callout}>
+                            <span>Already have an account?</span>
+                            <Link to="/auth/login">Login</Link>
+                          </div>
+                        </FormHelperText>
+                      </Grid>
+                    </Grid>
                   </CardActions>
+                  {/* <Grid container>
+                    <Grid>
+                      <CardActions
+                        className={classes.cardButton}
+                        style={{ justifyContent: 'flex-end' }}
+                      >
+                        {loading ? (
+                          <CircularProgress />
+                        ) : (
+                          <Button
+                            raised
+                            color="primary"
+                            type="submit"
+                            // className={classes.buttonSend}
+                            disabled={submitting}
+                          >
+                            Sign Up
+                          </Button>
+                        )}
+                      </CardActions>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FormHelperText>
+                        <div className={classes.callout}>
+                          <span>Already have an account?</span>
+                          <Link to="/auth/login">Login</Link>
+                        </div>
+                      </FormHelperText>
+                    </Grid>
+                  </Grid> */}
                 </form>
               </Card>
             </Grid>
