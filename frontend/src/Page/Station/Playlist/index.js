@@ -11,7 +11,9 @@ import styles from './styles';
 class Playlist extends Component {
   render() {
     const { playlist, className, style } = this.props;
-    const notPlayedList = playlist.filter(song => song.is_played === false);
+    const notPlayedList = playlist
+      ? playlist.filter(song => song.is_played === false)
+      : [];
     if (notPlayedList[0]) {
       notPlayedList[0].playing = true;
     }
