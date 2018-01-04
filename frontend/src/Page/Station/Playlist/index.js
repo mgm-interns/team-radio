@@ -12,6 +12,9 @@ class Playlist extends Component {
   render() {
     const { playlist, className, style } = this.props;
     const notPlayedList = playlist.filter(song => song.is_played === false);
+    if (notPlayedList[0]) {
+      notPlayedList[0].playing = true;
+    }
     return (
       <Grid
         item

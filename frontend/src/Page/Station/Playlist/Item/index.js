@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
+import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { upVoteSong, downVoteSong } from 'Redux/api/currentStation/actions';
@@ -27,12 +28,7 @@ class PlaylistItem extends Component {
       id,
     } = this.props;
     return (
-      <Grid
-        container
-        className={[classes.container, playing ? 'playing' : ''].reduce(
-          (classesName, className) => (classesName += ` ${className}`),
-        )}
-      >
+      <Grid container className={classNames(classes.container, { playing })}>
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} alt="" />
         </Grid>
@@ -49,11 +45,7 @@ class PlaylistItem extends Component {
           >
             arrow_drop_up
           </IconButton>
-          <div
-            className={[classes.score, isUpvoted ? 'active' : ''].reduce(
-              (classesName, className) => (classesName += ` ${className}`),
-            )}
-          >
+          <div className={classNames(classes.score, { active: isUpvoted })}>
             {score}
           </div>
           <IconButton

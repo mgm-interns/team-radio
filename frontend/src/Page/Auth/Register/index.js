@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import { Link } from 'react-router-dom';
+import classNames from 'classnames';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
@@ -64,7 +65,7 @@ class Register extends Component {
 
   componentWillReceiveProps(nextProps) {
     const response = nextProps.addUserResponse;
-    console.log(response);
+    // console.log(response);
     const { error } = response;
     if (error != null) {
       this.setState({
@@ -86,9 +87,12 @@ class Register extends Component {
           <Grid container className={classes.foreground}>
             <Grid
               item
-              xs={0}
+              xs={1}
               sm={5}
-              className={[classes.cardWrapper, classes.cardInfoWrapper]}
+              className={classNames([
+                classes.cardWrapper,
+                classes.cardInfoWrapper,
+              ])}
             >
               <Card className={classes.cardInfo}>
                 <CardContent>
@@ -180,7 +184,6 @@ class Register extends Component {
                 </form>
               </Card>
             </Grid>
-
             <Grid item xs className={classes.backgroundImg}>
               <img
                 src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=2250&q=80"
