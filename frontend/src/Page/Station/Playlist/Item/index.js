@@ -3,36 +3,110 @@ import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
+import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { upVoteSong, downVoteSong } from 'Redux/api/currentStation/actions';
 import styles from './styles';
 
-/* eslint-disable no-return-assign */
-/* eslint-disable no-param-reassign */
 /* eslint-disable no-shadow */
+/* eslint-disable camelcase */
 class PlaylistItem extends Component {
+  constructor(props) {
+    super(props);
+
+    // For improving UX
+    this.state = {
+      isUpVote: false,
+      isDownVote: false,
+      score: 0,
+    };
+
+    this.upVoteSong = this.upVoteSong.bind(this);
+    this.downVoteSong = this.downVoteSong.bind(this);
+    this.isUpVote = this.isUpVote.bind(this);
+    this.isDownVote = this.isDownVote.bind(this);
+  }
+
+  componentDidMount() {
+    const { up_vote, down_vote } = this.props;
+
+    this.setState({
+      isUpVote: this.isUpVote(this.props),
+      isDownVote: this.isDownVote(this.props),
+      score: up_vote.length - down_vote.length,
+    });
+  }
+
+  // Always re-render upVote & downVote when props has changed
+  componentWillReceiveProps(nextProps) {
+    const { up_vote, down_vote } = nextProps;
+    this.setState({
+      isUpVote: this.isUpVote(nextProps),
+      isDownVote: this.isDownVote(nextProps),
+      score: up_vote.length - down_vote.length,
+    });
+  }
+
+  upVoteSong() {
+    const { upVoteSong, song_id, userId, stationId } = this.props;
+    const { isDownVote, isUpVote } = this.state;
+    upVoteSong({
+      songId: song_id,
+      userId: localStorage.getItem('userId'),
+      stationId,
+    });
+    this.setState({
+      isUpVote: !isUpVote,
+      isDownVote: isUpVote ? isDownVote : false,
+    });
+  }
+
+  downVoteSong() {
+    const { downVoteSong, song_id, userId, stationId } = this.props;
+    const { isDownVote, isUpVote } = this.state;
+    downVoteSong({
+      songId: song_id,
+      userId: localStorage.getItem('userId'),
+      stationId,
+    });
+    this.setState({
+      isDownVote: !isDownVote,
+      isUpVote: isDownVote ? isUpVote : false,
+    });
+  }
+
+  isUpVote(props) {
+    const { up_vote, userId } = props;
+    for (let i = 0; i < up_vote.length; i++) {
+      if (up_vote[i] === localStorage.getItem('userId')) return true;
+    }
+    return false;
+  }
+
+  isDownVote(props) {
+    const { down_vote, userId } = props;
+    for (let i = 0; i < down_vote.length; i++) {
+      if (down_vote[i] === localStorage.getItem('userId')) return true;
+    }
+    return false;
+  }
+
   render() {
     const {
       thumbnail,
       title,
-      score,
       singer,
       uploader,
       isUpvoted,
       playing,
       classes,
-      upVoteSong,
-      downVoteSong,
-      id,
+      up_vote,
+      down_vote,
     } = this.props;
+
     return (
-      <Grid
-        container
-        className={[classes.container, playing ? 'playing' : ''].reduce(
-          (classesName, className) => (classesName += ` ${className}`),
-        )}
-      >
+      <Grid container className={classNames(classes.container, { playing })}>
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} alt="" />
         </Grid>
@@ -43,23 +117,19 @@ class PlaylistItem extends Component {
         </Grid>
         <Grid item xs={2} className={classes.actions}>
           <IconButton
-            onClick={() => upVoteSong(id)}
+            onClick={this.upVoteSong}
             className={classes.action}
-            color={isUpvoted ? 'primary' : 'default'}
+            color={this.state.isUpVote ? 'primary' : 'default'}
           >
             arrow_drop_up
           </IconButton>
-          <div
-            className={[classes.score, isUpvoted ? 'active' : ''].reduce(
-              (classesName, className) => (classesName += ` ${className}`),
-            )}
-          >
-            {score}
+          <div className={classNames(classes.score, { active: isUpvoted })}>
+            {this.state.score}
           </div>
           <IconButton
-            onClick={() => downVoteSong(id)}
+            onClick={this.downVoteSong}
             className={classes.action}
-            color={isUpvoted ? 'primary' : 'default'}
+            color={this.state.isDownVote ? 'primary' : 'default'}
           >
             arrow_drop_down
           </IconButton>
@@ -70,26 +140,36 @@ class PlaylistItem extends Component {
 }
 
 PlaylistItem.propTypes = {
-  thumbnail: PropTypes.string,
-  name: PropTypes.string,
-  score: PropTypes.number,
-  singer: PropTypes.string,
-  uploader: PropTypes.string,
-  id: PropTypes.string,
+  classes: PropTypes.any,
+  song_id: PropTypes.any,
   isUpvoted: PropTypes.bool,
   playing: PropTypes.bool,
+  score: PropTypes.number,
+  singer: PropTypes.string,
+  thumbnail: PropTypes.string,
+  title: PropTypes.any,
+  uploader: PropTypes.string,
+  name: PropTypes.string,
   theme: PropTypes.any,
-  classes: PropTypes.any,
   upVoteSong: PropTypes.func,
   downVoteSong: PropTypes.func,
+  up_vote: PropTypes.array,
+  down_vote: PropTypes.array,
+  userId: PropTypes.any,
+  stationId: PropTypes.any,
 };
 
+const mapStateToProps = ({ api }) => ({
+  userId: api.user.data.userId,
+  stationId: api.currentStation.station.id,
+});
+
 const mapDispatchToProps = dispatch => ({
-  upVoteSong: songId => dispatch(upVoteSong({ songId })),
-  downVoteSong: songId => dispatch(downVoteSong({ songId })),
+  upVoteSong: option => dispatch(upVoteSong(option)),
+  downVoteSong: option => dispatch(downVoteSong(option)),
 });
 
 export default compose(
-  connect(undefined, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   withStyles(styles),
 )(PlaylistItem);

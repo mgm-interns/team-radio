@@ -54,6 +54,28 @@ const user = (state = INITIAL_STATE, action) => {
         error: { ...action.payload },
         isAuthenticated: false,
       };
+    case 'ADD_USER_WITH_SOCIAL':
+      return {
+        data: {},
+        error: null,
+        loading: true,
+        isAuthenticated: false,
+      };
+    case 'ADD_USER_WITH_SOCIAL_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+        isAuthenticated: true,
+      };
+
+    case 'ADD_USER_WITH_SOCIAL_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+        isAuthenticated: false,
+      };
 
     case 'LOGOUT_REQUEST':
       return {

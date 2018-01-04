@@ -349,7 +349,7 @@ class AddLink extends Component {
       <Grid container className={classes.addLinkContainer}>
         <Grid item xs={12} className={classes.linkTitle}>
           <div>
-            <h1 className={classes.primaryTitle}>Request more songs</h1>
+            <h1 className={classes.primaryTitle}>Add more songs</h1>
             <span className={classes.secondaryTitle}>
               {' - '} {STATION_DEFAULT.name}
             </span>
