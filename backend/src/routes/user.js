@@ -8,7 +8,7 @@ export default router => {
     try {
       let user = await User.findOne({ email: req.body.email });
       if (user) {
-        res.status(400).json({ email: 'This email has already been taken.' });
+        res.status(400).json({ message: 'This email has already been taken.' });
       } else {
         const newUser = new User();
         newUser.email = req.body.email;
@@ -28,11 +28,9 @@ export default router => {
             expiresIn: 1440 * 7, // expires in 24 hours
           });
           res.json({
-            data: {
-              message: 'signup success',
-              token: token,
-              userId: user._id,
-            },
+            message: 'signup success',
+            token: token,
+            userId: user._id,
           });
         });
       }
@@ -47,13 +45,13 @@ export default router => {
       if (!user) {
         res.status(401).json({
           success: false,
-          message: 'Sorry, we could not find an account with that email.',
+          message: 'Incorrect email or password',
         });
       } else if (user) {
         if (!user.validPassword(req.body.password)) {
           res.status(401).json({
             success: false,
-            message: 'The password is incorrect.',
+            message: 'Incorrect email or password',
           });
         } else {
           // if user is found and password is right
@@ -69,12 +67,10 @@ export default router => {
           });
 
           res.json({
-            data: {
-              success: true,
-              message: 'Enjoy your token!',
-              token: token,
-              userId: user._id,
-            },
+            success: true,
+            message: 'Enjoy your token!',
+            token: token,
+            userId: user._id,
           });
         }
       }

@@ -13,6 +13,7 @@ import NowPlaying from './NowPlaying';
 import styles from './styles';
 
 const STATION_NAME_DEFAULT = 'Station Name';
+const JOIN_STATION_DELAY = 2000; // 2 seconds
 
 class StationPage extends Component {
   static propTypes = {
@@ -21,14 +22,28 @@ class StationPage extends Component {
     currentStation: PropTypes.object,
   };
 
+  joinStationInterval = null;
+
   componentWillMount() {
     // Get station id from react-router
     const { match: { params: { stationId } }, history } = this.props;
     if (stationId) {
-      // console.log(this.props.joinStation(stationId));
       this.props.joinStation(stationId);
+      this.joinStationInterval = setInterval(() => {
+        this.props.joinStation(stationId);
+      }, JOIN_STATION_DELAY);
     } else {
       history.replace(`/`);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (
+      (nextProps.currentStation && nextProps.currentStation.id) !==
+      (this.props.currentStation && this.props.currentStation.id)
+    ) {
+      clearInterval(this.joinStationInterval);
     }
   }
 

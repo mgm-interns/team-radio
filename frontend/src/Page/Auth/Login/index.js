@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
@@ -111,23 +112,7 @@ class Login extends Component {
                         for listening and sharing music
                       </Typography>
                     </Grid>
-                    <Field
-                      name="email"
-                      placeholde="Email"
-                      type="text"
-                      component={TextView}
-                      label="Email"
-                    />
-                    <Field
-                      name="password"
-                      placeholder="Password"
-                      type="password"
-                      component={TextView}
-                      label="Password"
-                    />
-                    <FormHelperText className={classes.error}>
-                      {this.state.formErrors.message}
-                    </FormHelperText>
+
                     <Grid>
                       <FacebookLogin
                         appId="138193143563601"
@@ -148,8 +133,26 @@ class Login extends Component {
                         buttonText="Login with Google"
                       />
                     </Grid>
+
+                    <Field
+                      name="email"
+                      placeholde="Email"
+                      type="text"
+                      component={TextView}
+                      label="Email"
+                    />
+                    <Field
+                      name="password"
+                      placeholder="Password"
+                      type="password"
+                      component={TextView}
+                      label="Password"
+                    />
+                    <FormHelperText className={classes.error}>
+                      {this.state.formErrors.message}
+                    </FormHelperText>
                   </CardContent>
-                  <CardActions className={classes.cardButton}>
+                  <CardActions>
                     <Grid container>
                       <Grid item xs={12}>
                         {loading ? (
@@ -164,6 +167,11 @@ class Login extends Component {
                             Log in
                           </Button>
                         )}
+
+                        <FormHelperText className={classes.callout}>
+                          <span>Not a member?</span>
+                          <Link to="/auth/register">Create an account</Link>
+                        </FormHelperText>
                       </Grid>
                     </Grid>
                   </CardActions>

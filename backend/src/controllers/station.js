@@ -26,7 +26,6 @@ export const addStation = async (stationName, userId) => {
       }
       throw new Error('Can not create new. The station name is already exist!');
     } catch (err) {
-      console.log(err);
       throw err;
     }
   }
@@ -216,7 +215,6 @@ export const downVote = async (stationId, songId, userId) => {
     stationId,
     songId,
   ))[0];
-  console.log(currentSong);
   const upVoteArray = currentSong.up_vote;
   const downVoteArray = currentSong.down_vote;
   const _userId = _safeObjectId(userId);

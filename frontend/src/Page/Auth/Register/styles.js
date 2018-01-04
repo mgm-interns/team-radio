@@ -102,10 +102,23 @@ export default ({ palette, breakpoints }) => ({
   },
   error: {
     color: '#ff1744',
-    fontSize: 'bold',
+    fontWeight: 'bold',
+    marginBottom: '10px',
   },
   cardButton: {
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  buttonSend: {
+    width: '100%',
+  },
+  callout: {
+    display: 'flex',
+    justifyContent: 'center',
+    fontSize: '14px',
+    margin: '20px',
+    '& a': {
+      marginLeft: '5px',
+    },
   },
 });

@@ -1,19 +1,42 @@
 import * as stationController from '../../controllers/station';
 import * as EVENTS from '../../const/actions';
 
-export default (emitter, score, userId, stationId, songId) => {
-  // TODO
-  if (score === 1) {
+export default (emitter, action, userId, stationId, songId) => {
+  if (action === 1) {
     _upVoteSong(emitter, userId, stationId, songId);
-  } else if (score === -1) {
+  } else if (action === -1) {
     _downVoteSong(emitter, userId, stationId, songId);
-  } else console.log('Score unknow!');
+  } else console.log('Action unknow!');
 };
 
 const _upVoteSong = async (emitter, userId, stationId, songId) => {
-  console.log('Up vote feature is coming soon!');
+  try {
+    const playlist = await stationController.upVote(stationId, songId, userId);
+    emitter.emit(EVENTS.SERVER_UPVOTE_SONG_SUCCESS, {});
+    emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_PLAYLIST, {
+      playlist: playlist,
+    });
+  } catch (err) {
+    emitter.emit(EVENTS.SERVER_UPVOTE_SONG_FAILURE, {
+      message: err.message,
+    });
+  }
 };
 
 const _downVoteSong = async (emitter, userId, stationId, songId) => {
-  console.log('Down vote feature is coming soon!');
+  try {
+    const playlist = await stationController.downVote(
+      stationId,
+      songId,
+      userId,
+    );
+    emitter.emit(EVENTS.SERVER_DOWNVOTE_SONG_SUCCESS, {});
+    emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_PLAYLIST, {
+      playlist: playlist,
+    });
+  } catch (err) {
+    emitter.emit(EVENTS.SERVER_DOWNVOTE_SONG_FAILURE, {
+      message: err.message,
+    });
+  }
 };
