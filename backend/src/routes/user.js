@@ -28,16 +28,8 @@ export default router => {
             expiresIn: 1440 * 7, // expires in 24 hours
           });
           res.json({
-<<<<<<< HEAD
-            data: {
-              message: 'signup success',
-              token: token,
-              userId: user._id,
-            },
-=======
             message: 'signup success',
             token: token,
->>>>>>> dev
           });
         });
       }
