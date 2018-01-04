@@ -23,7 +23,7 @@ export const getUserByEmail = async email => {
     if (user) {
       return user;
     } else {
-      return 'User not found.';
+      throw 'User not found.';
     }
   } catch (err) {
     throw err;
@@ -36,7 +36,7 @@ export const getUserById = async userId => {
         if (user) {
             return user;
         } else {
-            return 'User not found.';
+            throw 'User not found.';
         }
     } catch (err) {
         throw err;

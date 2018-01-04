@@ -1,18 +1,32 @@
+/* eslint-disable one-var */
 import * as EVENTS from '../../const/actions';
 import * as stationController from '../../controllers/station';
+import * as userController from '../../controllers/user';
 import * as players from '../../players';
 
+// eslint-disable-next-line one-var
 export default async (emitter, userId, stationId, socket) => {
   let station;
   try {
+    // Check if station is not exist, throw err and send to client
     station = await stationController.getStation(stationId);
     _leaveAllAndJoinStation(socket, stationId);
     emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
       station: station,
     });
-    emitter.emitToStation(stationId, EVENTS.SERVER_NEW_USER_JOINED, {
-      user: userId,
-    });
+
+    // check if user not exist, allow anonymous user to join station!
+    try {
+      const user = await userController.getUserById(userId);
+      emitter.broadcastToStation(stationId, EVENTS.SERVER_NEW_USER_JOINED, {
+        user: user.name,
+      });
+    } catch (err) {
+      console.log('Join station log: ' + err);
+      emitter.broadcastToStation(stationId, EVENTS.SERVER_NEW_USER_JOINED, {
+        user: 'Anonymous',
+      });
+    }
   } catch (err) {
     console.error('Error join station: ' + err);
     socket.leaveAll();
