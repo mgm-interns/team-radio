@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as songController from './song';
 import * as players from '../players';
 import * as stationModels from './../models/station';
@@ -16,7 +17,6 @@ export const addStation = async (stationName, userId) => {
       if (!availableStation) {
         const stationId = await _createStationId(stationName);
         // or var ObjectId = require('mongodb').ObjectId if node version < 6
-
         const currentStation = await stationModels.addStation({
           station_name: stationName,
           id: stationId,
@@ -32,8 +32,6 @@ export const addStation = async (stationName, userId) => {
   }
 };
 
-const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
-
 // get a statio by id
 export const getStation = async stationId => {
   const station = await stationModels.getStationById(stationId);
@@ -43,7 +41,7 @@ export const getStation = async stationId => {
     return station;
   }
 };
-// add a song of station
+// Add a song of station
 
 export const addSong = async (stationId, songUrl, userId = null) => {
   let station;
@@ -65,7 +63,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
         ) {
           throw new Error(
             `When a playlist contains three or more songs from unregistered users,` +
-              ` new songs can only be entered by logged in users`,
+            ` new songs can only be entered by logged in users`,
           );
         }
       }
@@ -113,7 +111,7 @@ export const setPlayedSongs = async (stationId, songIds) => {
     for (let i = 0; i < songIds.length; i++) {
       for (let j = 0; j < currentPlaylist.length; j++) {
         if (currentPlaylist[j].song_id === songIds[i]) {
-          currentPlaylist[j].is_played = false;
+          currentPlaylist[j].is_played = true;
         }
       }
     }
@@ -140,21 +138,150 @@ export const getListSong = async stationId => {
     .playlist;
   return playList;
 };
-
+/**
+ * Upvote
+ * userId : String
+*/
 export const upVote = async (stationId, songId, userId) => {
-  // TO DO :
   const currentSong = (await stationModels.getAsongInStation(
     stationId,
     songId,
   ))[0];
-  let upVoteArray = currentSong.up_vote;
-  if (upVoteArray.length > 0) {
-  } else {
-    upVoteArray.push(_safeObjectId(userId));
-    await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
+  const upVoteArray = currentSong.up_vote;
+  const downVoteArray = currentSong.down_vote;
+  try {
+    if (upVoteArray.length > 0) {
+      for (let i = 0; i < upVoteArray.length; i++) {
+
+        if (upVoteArray[i].toString() === userId) {
+
+          upVoteArray.remove(_safeObjectId(userId));
+          await stationModels.updateValueOfUpvote(
+            stationId,
+            songId,
+            upVoteArray,
+          );
+          const resolve = await getListSong(stationId);
+          return resolve;
+        }
+      }
+      if (downVoteArray.length > 0) {
+        for (let i = 0; i < downVoteArray.length; i++) {
+          if (downVoteArray[i].toString() === userId) {
+            downVoteArray.remove(_safeObjectId(userId));
+            upVoteArray.push(_safeObjectId(userId));
+            await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
+            await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
+
+            const resolve = await getListSong(stationId);
+            return resolve;
+          }
+        }
+      }
+      upVoteArray.push(_safeObjectId(userId));
+      await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
+      const resolve = await getListSong(stationId);
+      return resolve;
+    } else {
+      if (downVoteArray.length > 0) {
+        for (let i = 0; i < downVoteArray.length; i++) {
+          if (downVoteArray[i].toString() === userId) {
+            downVoteArray.remove(_safeObjectId(userId));
+            upVoteArray.push(_safeObjectId(userId));
+            await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
+            await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
+            const resolve = await getListSong(stationId);
+            return resolve;
+          }
+        }
+      }
+      upVoteArray.push(_safeObjectId(userId));
+      await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
+      const resolve = await getListSong(stationId);
+      return resolve
+    }
+    const resolve = await getListSong(stationId);
+    return resolve
+  } catch (err) {
+    console.log(err);
+    throw new Error("Can not vote song !");
   }
-  return currentSong;
 };
+/**
+ * DownVote
+ * userId : String
+*/
+export const downVote = async (stationId, songId, userId) => {
+  const currentSong = (await stationModels.getAsongInStation(
+    stationId,
+    songId,
+  ))[0];
+  console.log(currentSong);
+  const upVoteArray = currentSong.up_vote;
+  const downVoteArray = currentSong.down_vote;
+  const _userId = _safeObjectId(userId);
+  try {
+    if (downVoteArray.length > 0) {
+
+      for (let i = 0; i < downVoteArray.length; i++) {
+        if (downVoteArray[i].toString() === userId) {
+          downVoteArray.remove(_safeObjectId(userId));
+          await stationModels.updateValueOfDownvote(
+            stationId,
+            songId,
+            downVoteArray,
+          );
+          const resolve = await getListSong(stationId);
+          return resolve
+        }
+      }
+      if (upVoteArray.length > 0) {
+
+        for (let i = 0; i < upVoteArray.length; i++) {
+          if (upVoteArray[i].toString() === userId) {
+            upVoteArray.remove(_safeObjectId(userId));
+            downVoteArray.push(_safeObjectId(userId));
+            await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
+            await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
+            const resolve = await getListSong(stationId);
+            return resolve
+          }
+        }
+      }
+      downVoteArray.push(_safeObjectId(userId));
+      await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
+      const resolve = await getListSong(stationId);
+      return resolve
+    } else {
+      if (upVoteArray.length > 0) {
+
+        for (let i = 0; i < upVoteArray.length; i++) {
+          if (upVoteArray[i].toString() === userId) {
+            upVoteArray.remove(_safeObjectId(userId));
+            downVoteArray.push(_safeObjectId(userId));
+            await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
+            await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
+            const resolve = await getListSong(stationId);
+            return resolve
+          }
+        }
+      }
+      downVoteArray.push(_safeObjectId(userId));
+      await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
+      const resolve = await getListSong(stationId);
+      return resolve
+    }
+    const resolve = await getListSong(stationId);
+    return resolve
+  } catch (err) {
+    console.log(err);
+    throw new Error("Can not vote song !");
+  }
+
+};
+
+// Covert string to ObjectId
+const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
 
 function _stringToId(str) {
   return str

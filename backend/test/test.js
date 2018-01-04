@@ -62,7 +62,11 @@ station.setPlayedSongs = async function (req, res) {
 
 };
 
-station.getAsong = async function(req,res){
+station.upVote = async function(req,res){
     let song = await stationController.upVote(req.params.id,req.body.song_id,req.body.user_id);
+    res.json(song);
+}
+station.downVote = async function(req,res){
+    let song = await stationController.downVote(req.params.id,req.body.song_id,req.body.user_id);
     res.json(song);
 }
