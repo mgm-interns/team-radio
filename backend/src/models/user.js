@@ -60,10 +60,9 @@ module.exports.getUserByEmail = async email => {
 module.exports.getUserById = async userId =>
   user.findOne({ _id: _safeObjectId(userId) });
 
-module.exports.setSocialAccount = async (email, googleId, facebookId) => {
-  return user.update(
+module.exports.setSocialAccount = async (email, googleId, facebookId) =>
+  user.update(
     { email: email },
     { facebook_ID: facebookId, google_ID: googleId },
     { multi: true },
   );
-};
