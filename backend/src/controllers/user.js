@@ -42,3 +42,16 @@ export const getUserById = async userId => {
         throw err;
     }
 };
+
+export const createUserWithSocialAccount = async userId => {
+    try {
+        let user = await userModels.getUserById(userId);
+        if (user) {
+            return user;
+        } else {
+            return 'User not found.';
+        }
+    } catch (err) {
+        throw err;
+    }
+};
