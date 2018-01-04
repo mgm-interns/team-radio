@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User';
+import User from '../models/user';
 import authController from '../controllers/auth';
 import * as userController from '../controllers/user';
 

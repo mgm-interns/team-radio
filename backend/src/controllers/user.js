@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as userModels from './../models/User';
+import * as userModels from './../models/user';
 
 export const isExistUserHandler = async email => {
   try {

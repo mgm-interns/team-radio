@@ -215,7 +215,6 @@ export const downVote = async (stationId, songId, userId) => {
     stationId,
     songId,
   ))[0];
-  console.log(currentSong);
   const upVoteArray = currentSong.up_vote;
   const downVoteArray = currentSong.down_vote;
   const _userId = _safeObjectId(userId);
