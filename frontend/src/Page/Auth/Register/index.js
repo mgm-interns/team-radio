@@ -65,13 +65,13 @@ class Register extends Component {
 
   componentWillReceiveProps(nextProps) {
     const response = nextProps.addUserResponse;
-    // console.log(response);
+    console.log(response);
     const { error } = response;
     if (error != null) {
       this.setState({
         asyncError: error.response.message,
       });
-    } else if (response.data.token) {
+    } else if (response.data.token || response.isAuthenticated) {
       saveAuthenticationState(response.data);
       this.props.history.push('/');
     }
