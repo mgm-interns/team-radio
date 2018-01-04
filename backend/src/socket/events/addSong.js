@@ -6,6 +6,9 @@ export default async (emitter, userId, stationId, songUrl) => {
   try {
     // Addsong and return playlist
     playlist = await stationController.addSong(stationId, songUrl, userId);
+    emitter.emit(EVENTS.SERVER_ADD_SONG_SUCCESS, {
+      message: 'Add song success!',
+    });
     emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_PLAYLIST, {
       playlist: playlist,
     });
