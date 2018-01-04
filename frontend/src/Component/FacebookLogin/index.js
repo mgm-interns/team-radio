@@ -1,8 +1,7 @@
-// @flow
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // import styles from '../styles/facebook.scss';
-import getParamsFromObject from './objectToParams';
+import getParamsFromObject from 'Util/objectToParams';
 
 const CLIENT_ID = process.env.REACT_APP_FACEBOOK_API_CLIENT_ID;
 
@@ -66,11 +65,10 @@ class FacebookLogin extends Component {
 
   setFbAsyncInit() {
     const { appId, xfbml, cookie, version, autoLoad } = this.props;
-    console.log(CLIENT_ID);
     window.fbAsyncInit = () => {
       window.FB.init({
         version: `v${version}`,
-        appId,
+        appId: CLIENT_ID,
         xfbml,
         cookie,
       });
@@ -107,7 +105,22 @@ class FacebookLogin extends Component {
       { locale: this.props.language, fields: this.props.fields },
       me => {
         Object.assign(me, authResponse);
-        this.props.onSuccess(me);
+
+        // handle data response
+        const res = {};
+        res.authResponse = {
+          accessToken: me.accessToken,
+          userID: me.userID,
+          signedRequest: me.signedRequest,
+        };
+        res.profileObj = {
+          facebookId: me.id,
+          imageUrl: me.picture.data.url,
+          email: me.email,
+          name: me.name,
+        };
+
+        this.props.onSuccess(res);
       },
     );
   };
@@ -145,7 +158,7 @@ class FacebookLogin extends Component {
     this.setState({ isProcessing: true });
     const {
       scope,
-      appId,
+      // appId,
       onClick,
       reAuthenticate,
       returnScopes,
@@ -161,7 +174,7 @@ class FacebookLogin extends Component {
     }
 
     const params = {
-      client_id: appId,
+      client_id: CLIENT_ID,
       redirect_uri: redirectUri,
       state: 'facebookdirect',
       return_scopes: returnScopes,
@@ -263,14 +276,14 @@ class FacebookLogin extends Component {
 FacebookLogin.propTypes = {
   isDisabled: PropTypes.bool,
   onSuccess: PropTypes.func.isRequired,
-  appId: PropTypes.string.isRequired,
+  // appId: PropTypes.string.isRequired,
   xfbml: PropTypes.bool,
   cookie: PropTypes.bool,
   reAuthenticate: PropTypes.bool,
   scope: PropTypes.string,
   returnScopes: PropTypes.bool,
   redirectUri: PropTypes.string,
-  buttonText: PropTypes.string,
+  buttonText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   typeButton: PropTypes.string,
   autoLoad: PropTypes.bool,
   disableMobileRedirect: PropTypes.bool,

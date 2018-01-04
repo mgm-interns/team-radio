@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
 
 import { withStyles } from 'material-ui/styles';
+import { withNotification } from 'Component';
 import fixture from 'Fixture/landing';
 import { loadAuthenticationState, removeAuthenticationState } from 'Config';
 import { logout } from 'Redux/api/user/actions';
 import { connect } from 'react-redux';
-import { GoogleLogout } from 'Component';
+import { compose } from 'redux';
 
 import styles from './styles';
 
@@ -124,7 +125,6 @@ class NavBar extends Component {
 
 class AuthLink extends Component {
   _logout() {
-    // localStorage.removeItem('token');
     removeAuthenticationState();
     this.props.dispatch(logout());
     this.forceUpdate();
@@ -134,14 +134,14 @@ class AuthLink extends Component {
     return (
       <div>
         {!loadAuthenticationState() && (
-          <React.Fragment>
+          <Fragment>
             <Link to="/auth/login" style={{ marginLeft: 16 }}>
               Login
             </Link>
             <Link to="/auth/register" style={{ marginLeft: 16 }}>
               Register
             </Link>
-          </React.Fragment>
+          </Fragment>
         )}
         {loadAuthenticationState() && (
           <a onClick={this._logout.bind(this)} style={{ marginLeft: 16 }}>
@@ -163,4 +163,7 @@ AuthLink.propTypes = {
   dispatch: PropTypes.any,
 };
 
-export default connect(null, null)(withStyles(styles)(NavBar));
+export default compose(
+  withStyles(styles),
+  connect(undefined, undefined),
+)(NavBar);

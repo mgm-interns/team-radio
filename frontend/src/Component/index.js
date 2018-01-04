@@ -14,5 +14,6 @@ export {
   withNotification
 } from './Notification';
 export { default as ImageCropper } from './ImageCropper';
-export { GoogleLogin, GoogleLogout } from './GoogleForm';
-export { default as FacebookLogin } from './FacebookForm';
+export { default as GoogleLogin } from './GoogleLogin';
+export { default as FacebookLogin } from './FacebookLogin';
+export { default as Logout } from './Logout';

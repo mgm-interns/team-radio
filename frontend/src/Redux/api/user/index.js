@@ -1,8 +1,10 @@
+import { loadAuthenticationState } from 'Config'
+
 const INITIAL_STATE = {
   data: {},
   error: null,
   loading: false,
-  isAuthenticated: !!localStorage.getItem('token'),
+  isAuthenticated: !!localStorage.getItem('authentication'),
 };
 
 const user = (state = INITIAL_STATE, action) => {
