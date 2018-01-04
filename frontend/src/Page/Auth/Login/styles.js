@@ -101,11 +101,14 @@ export default ({ palette, breakpoints }) => ({
     paddingLeft: 20,
   },
   error: {
-    color: palette.red['700'],
+    color: '#ff1744',
     fontSize: 'bold',
   },
   cardButton: {
     display: 'flex',
     justifyContent: 'flex-end',
   },
+  buttonSend: {
+    width: '100%',
+  }
 });

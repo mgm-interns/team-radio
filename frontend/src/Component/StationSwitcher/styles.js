@@ -1,7 +1,6 @@
 export default ({ breakpoints, spacing }) => ({
   container: {
     margin: 'auto',
-    paddingTop: 80,
     paddingLeft: 20,
     paddingRight: 20,
     '& .slick-track': {
@@ -30,14 +29,16 @@ export default ({ breakpoints, spacing }) => ({
   },
   station_wrapper: {
     display: 'flex !important',
+    paddingTop: spacing.baseMargin,
+    paddingBottom: spacing.baseMargin,
     flexDirection: 'column',
     alignItems: 'center',
-    paddingTop: spacing.baseMargin,
+    cursor: 'pointer',
   },
   station_title: {
     marginTop: spacing.smallMargin,
     fontWeight: 'bold',
-    fontSize: '13pt',
+    fontSize: '16px',
   },
   station_subtitle: {
     color: 'grey',
@@ -56,7 +57,7 @@ export default ({ breakpoints, spacing }) => ({
     marginBottom: spacing.baseMargin,
   },
   active_station: {
-    border: '1px solid #333',
+    // border: '1px solid #333',
     background: 'white',
   },
   loadingContainer: {

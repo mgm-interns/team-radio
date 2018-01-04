@@ -1,4 +1,4 @@
-export default ({ breakpoints }) => ({
+export default ({ breakpoints, spacing }) => ({
   container: {
     margin: 'auto',
     zIndex: '10',
@@ -35,10 +35,14 @@ export default ({ breakpoints }) => ({
     justifyContent: 'flex-end',
   },
   navWrapper: {
+    display: 'flex',
     '& a': {
       textDecoration: 'none',
       color: 'white',
       fontSize: '1rem',
     },
+  },
+  navItem: {
+    marginLeft: spacing.doubleBaseMargin,
   },
 });

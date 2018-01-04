@@ -4,29 +4,54 @@ import Grid from 'material-ui/Grid';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import Input, { InputLabel } from 'material-ui/Input';
 import Icon from 'material-ui/Icon';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
-
 import { withStyles } from 'material-ui/styles';
-import styles from './styles';
-
-import { NavBar } from '../../../Component';
-import { error } from 'util';
-import { addUser } from 'Redux/api/user';
+import { addUser } from 'Redux/api/user/actions';
 import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form';
+import { FormHelperText } from 'material-ui/Form';
+import { NavBar } from 'Component';
+import { saveAuthenticationState } from 'Config';
+
+import styles from './styles';
+import TextView from '../TextView';
+
+const validate = values => {
+  const errors = {};
+  if (!values.name) {
+    errors.name = 'Name is required';
+  } else if (values.name.length > 15) {
+    errors.name = 'Must be 15 characters or less';
+  }
+
+  if (!values.email) {
+    errors.email = 'Email is required';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'Invalid email address';
+  }
+
+  if (!values.password) {
+    errors.password = 'Password is required';
+  } else if (values.password.length < 6) {
+    errors.password = 'Must be at least 6 characters';
+  }
+
+  if (!values.confirmPassword) {
+    errors.confirmPassword = 'Confirm Password is required';
+  } else if (values.password !== values.confirmPassword) {
+    errors.confirmPassword = 'Password and confirm password does not match';
+  }
+
+  return errors;
+};
 
 class Register extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      formErrors: {},
+      asyncError: '',
       benefits: [
         'Edit profile',
         'Be rewarded',
@@ -34,105 +59,25 @@ class Register extends Component {
         'See some information of the past activities',
       ],
     };
-    this._handlenameChanged = this._handlenameChanged.bind(this);
-    this._handleEmailChanged = this._handleEmailChanged.bind(this);
-    this._handlePasswordChanged = this._handlePasswordChanged.bind(this);
-    this._handleConfirmPasswordChanged = this._handleConfirmPasswordChanged.bind(
-      this,
-    );
-    this._submit = this._submit.bind(this);
-  }
-
-  _handlenameChanged(e) {
-    this.setState({ name: e.target.value });
-  }
-  _handleEmailChanged(e) {
-    this.setState({ email: e.target.value });
-  }
-
-  _handlePasswordChanged(e) {
-    this.setState({ password: e.target.value });
-  }
-
-  _handleConfirmPasswordChanged(e) {
-    this.setState({ confirmPassword: e.target.value });
-  }
-
-  _submit(e) {
-    e.preventDefault();
-    if (this._validate()) {
-      let { name, email, password } = this.state;
-      this.props.signUp({ name, email, password });
-    }
-  }
-
-  _validate() {
-    const {
-      name,
-      email,
-      password,
-      confirmPassword,
-      formErrors,
-    } = this.state;
-    let isValid = true;
-
-    let newFormErrors = {};
-    if (!name) {
-      newFormErrors.name = 'Name is required';
-      isValid = false;
-    }
-
-    if (email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-      newFormErrors.email = 'Invalid email address';
-      isValid = false;
-    }
-
-    if (!password) {
-      newFormErrors.password = 'Password is required';
-      isValid = false;
-    } else if (password.length < 6) {
-      newFormErrors.password = 'Password must be at least 6 characters';
-      isValid = false;
-    } else if (confirmPassword && password != confirmPassword) {
-      newFormErrors.confirmPassword =
-        'Password and confirm password does not match';
-      isValid = false;
-    }
-
-    if (!confirmPassword) {
-      newFormErrors.confirmPassword = 'Confirm Password is required';
-      isValid = false;
-    }
-
-    this.setState({
-      formErrors: newFormErrors,
-    });
-
-    return isValid;
   }
 
   componentWillReceiveProps(nextProps) {
     const response = nextProps.addUserResponse;
+    console.log(response);
     const { error } = response;
-    if (response.error != null) {
-      this.setState(prevState => {
-        return {
-          formErrors: {
-            email: error.response.email,
-          },
-        };
+    if (error != null) {
+      this.setState({
+        asyncError: error.response.message,
       });
-    } else if (!response.loading) {
-      localStorage.setItem('token', response.data.token);
+    } else if (response.data.token) {
+      saveAuthenticationState(response.data);
       this.props.history.push('/');
     }
   }
 
   render() {
-    const { classes, loading, error } = this.props;
+    const { classes, loading, handleSubmit, submitting } = this.props;
     const { benefits } = this.state;
-
-    // const { addUserResponse } = this.props;
     return (
       <div>
         <NavBar />
@@ -154,8 +99,8 @@ class Register extends Component {
                     A registered user can:
                   </Typography>
                   <ul className={classes.listWrapper}>
-                    {benefits.map(benefit => (
-                      <li className={classes.listItem}>
+                    {benefits.map((benefit, index) => (
+                      <li key={index} className={classes.listItem}>
                         <Icon>done</Icon>
                         <span className={classes.listText}>{benefit}</span>
                       </li>
@@ -166,7 +111,7 @@ class Register extends Component {
             </Grid>
             <Grid item xs={11} sm={5} className={classes.cardWrapper}>
               <Card raised className={classes.cardForm}>
-                <form  onSubmit={this._submit}>
+                <form onSubmit={handleSubmit}>
                   <CardContent>
                     <Grid style={{ paddingBottom: '2em' }}>
                       <Typography type="headline" component="h2">
@@ -176,75 +121,37 @@ class Register extends Component {
                         to get the most out of Team Radio
                       </Typography>
                     </Grid>
-
-                    <FormControl className={classes.textField} error={!!error}>
-                      <InputLabel htmlFor="name" required>
-                        Name
-                      </InputLabel>
-                      <Input
-                        required
-                        id="name"
-                        placeholder="Choose a name"
-                        margin="normal"
-                        autoFocus={true}
-                        onChange={this._handlenameChanged}
-                        value={this.state.name}
-                      />
-                      <FormHelperText className={classes.error}>
-                        {this.state.formErrors.name}
-
-                        {/* {error && error.response && error.response.error.name} */}
-                      </FormHelperText>
-                    </FormControl>
-
-                    <FormControl className={classes.textField} error={!!error}>
-                      <InputLabel htmlFor="email">Email</InputLabel>
-                      <Input
-                        id="email"
-                        placeholder="hello@example.com"
-                        margin="normal"
-                        onChange={this._handleEmailChanged}
-                        value={this.state.email}
-                      />
-                      <FormHelperText className={classes.error}>
-                        {this.state.formErrors.email}
-                        {/* {error && error.response && error.response.error.name} */}
-                      </FormHelperText>
-                    </FormControl>
-
-                    <FormControl className={classes.textField} error={!!error}>
-                      <InputLabel htmlFor="password">Password</InputLabel>
-                      <Input
-                        required
-                        id="password"
-                        placeholder="Must be at least 6 characters"
-                        type="password"
-                        margin="normal"
-                        onChange={this._handlePasswordChanged}
-                        value={this.state.password}
-                      />
-                      <FormHelperText className={classes.error}>
-                        {this.state.formErrors.password}
-                        {/* {error && error.response && error.response.error.name} */}
-                      </FormHelperText>
-                    </FormControl>
-
-                    <FormControl className={classes.textField} error={!!error}>
-                      <InputLabel htmlFor="confirm-password">
-                        Confirm Password
-                      </InputLabel>
-                      <Input
-                        placeholder="Re-enter your password"
-                        type="password"
-                        margin="normal"
-                        onChange={this._handleConfirmPasswordChanged}
-                        value={this.state.confirmPassword}
-                      />
-                      <FormHelperText className={classes.error}>
-                        {this.state.formErrors.confirmPassword}
-                        {/* {error && error.response && error.response.error.name} */}
-                      </FormHelperText>
-                    </FormControl>
+                    <Field
+                      name="name"
+                      placeholder="Enter your name"
+                      type="text"
+                      component={TextView}
+                      label="Name"
+                    />
+                    <Field
+                      name="email"
+                      placeholde="hello@example.com"
+                      type="text"
+                      component={TextView}
+                      label="Email"
+                    />
+                    <Field
+                      name="password"
+                      placeholder="Must be at least 6 characters"
+                      type="password"
+                      component={TextView}
+                      label="Password"
+                    />
+                    <Field
+                      name="confirmPassword"
+                      placeholder="Re-enter your password"
+                      type="password"
+                      component={TextView}
+                      label="Confirm Password"
+                    />
+                    <FormHelperText className={classes.error}>
+                      {this.state.asyncError}
+                    </FormHelperText>
                   </CardContent>
                   <CardActions
                     className={classes.cardButton}
@@ -258,13 +165,13 @@ class Register extends Component {
                         color="primary"
                         type="submit"
                         className={classes.buttonSend}
+                        disabled={submitting}
                       >
                         Sign Up
                       </Button>
                     )}
                   </CardActions>
                 </form>
-                
               </Card>
             </Grid>
 
@@ -283,25 +190,27 @@ class Register extends Component {
 }
 
 Register.propTypes = {
+  addUserResponse: PropTypes.any,
+  history: PropTypes.any,
   classes: PropTypes.any,
-  loading: PropTypes.any,
-  error: PropTypes.any,
-  addStation: PropTypes.func,
+  loading: PropTypes.bool,
+  handleSubmit: PropTypes.any,
+  submitting: PropTypes.any,
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  signUp: newUser => {
-    dispatch(addUser(newUser));
+const mapDispatchToProps = dispatch => ({
+  onSubmit: values => {
+    dispatch(addUser(values));
   },
 });
 
-const mapStateToProps = state => {
-  // console.log(state.api.user.add);
-  return {
-    addUserResponse: state.api.user.add,
-  };
-};
+const mapStateToProps = state => ({
+  addUserResponse: state.api.user,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(Register),
+  reduxForm({
+    form: 'registerForm',
+    validate,
+  })(withStyles(styles)(Register)),
 );

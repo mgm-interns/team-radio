@@ -1,25 +1,67 @@
-import { combineReducers } from 'redux';
-import HttpRequest from 'Util/redux/HttpRequest';
+const INITIAL_STATE = {
+  data: {},
+  error: null,
+  loading: false,
+  isAuthenticated: !!localStorage.getItem('token'),
+};
 
-export const fetchRequest = new HttpRequest({
-  type: 'FETCH_USER',
-  method: 'POST',
-  endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/login`,
-  initialData: [],
-});
+const user = (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case 'FETCH_USER':
+      return {
+        data: {},
+        error: null,
+        loading: true,
+        isAuthenticated: false,
+      };
+    case 'FETCH_USER_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+        isAuthenticated: true,
+      };
 
-export const addRequest = new HttpRequest({
-  type: 'ADD_USER',
-  method: 'POST',
-  endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/signup`,
-  initialData: {},
-});
+    case 'FETCH_USER_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+        isAuthenticated: false,
+      };
 
-export const fetchUser = fetchRequest.getAction();
+    case 'ADD_USER':
+      return {
+        data: {},
+        error: null,
+        loading: true,
+        isAuthenticated: false,
+      };
+    case 'ADD_USER_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+        isAuthenticated: true,
+      };
 
-export const addUser = addRequest.getAction();
+    case 'ADD_USER_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+        isAuthenticated: false,
+      };
 
-export default combineReducers({
-  fetch: fetchRequest.getReducer(),
-  add: addRequest.getReducer(),
-});
+    case 'LOGOUT_REQUEST':
+      return {
+        ...state,
+        data: {},
+        isAuthenticated: false,
+      };
+    default:
+      return state;
+  }
+};
+
+export default user;

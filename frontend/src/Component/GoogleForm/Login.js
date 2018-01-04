@@ -4,13 +4,26 @@ import PropTypes from 'prop-types';
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_API_CLIENT_ID;
 const platformSrc = '//apis.google.com/js/client:platform.js';
 
+// https://www.w3.org/TR/html5/disabled-elements.html#disabled-elements
+const _shouldAddDisabledProp = tag =>
+  [
+    'button',
+    'input',
+    'select',
+    'textarea',
+    'optgroup',
+    'option',
+    'fieldset',
+  ].indexOf(`${tag}`.toLowerCase()) >= 0;
+
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.signIn = this.signIn.bind(this);
     this.state = {
       disabled: true,
     };
+    this.signIn = this.signIn.bind(this);
+    this.enableButton = this.enableButton.bind(this);
   }
   componentDidMount() {
     const {
@@ -54,9 +67,7 @@ class Login extends Component {
       }
 
       window.gapi.load('auth2', () => {
-        this.setState({
-          disabled: false,
-        });
+        this.enableButton();
         if (!window.gapi.auth2.getAuthInstance()) {
           window.gapi.auth2.init(params).then(
             res => {
@@ -73,6 +84,16 @@ class Login extends Component {
       });
     });
   }
+  componentWillUnmount() {
+    this.enableButton = () => {};
+  }
+
+  enableButton() {
+    this.setState({
+      disabled: false,
+    });
+  }
+
   signIn(e) {
     if (e) {
       e.preventDefault(); // to prevent submit if used within form
@@ -122,7 +143,7 @@ class Login extends Component {
     this.props.onSuccess(res);
   }
 
-  render() {
+  renderOwnButton() {
     const {
       tag,
       type,
@@ -132,12 +153,20 @@ class Login extends Component {
       buttonText,
       children,
     } = this.props;
+
+    // verify disabled
     const disabled = this.state.disabled || this.props.disabled;
+    const optionalProps = {};
+    if (disabled && _shouldAddDisabledProp(this.props.tag)) {
+      optionalProps.disabled = true;
+    }
+
+    // init style
     const initialStyle = {
       display: 'inline-block',
       background: '#d14836',
       color: '#fff',
-      width: 190,
+      width: '100%',
       paddingTop: 10,
       paddingBottom: 10,
       borderRadius: 2,
@@ -157,18 +186,30 @@ class Login extends Component {
       }
       return styleProp;
     })();
-    const googleLoginButton = React.createElement(
-      tag,
-      {
-        onClick: this.signIn,
-        style: defaultStyle,
-        type,
-        disabled,
-        className,
-      },
-      children || buttonText,
+
+    return (
+      <span>
+        <this.props.tag
+          type={type}
+          className={className}
+          style={defaultStyle}
+          onClick={this.signIn}
+          {...optionalProps}
+        >
+          {buttonText}
+        </this.props.tag>
+      </span>
     );
-    return googleLoginButton;
+  }
+
+  render() {
+    const { children } = this.props;
+
+    return children ? (
+      <span onClick={this.signIn}>{children}</span>
+    ) : (
+      this.renderOwnButton()
+    );
   }
 }
 

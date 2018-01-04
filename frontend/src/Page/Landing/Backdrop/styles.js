@@ -3,6 +3,7 @@ export default ({ palette, breakpoints }) => ({
     margin: 'auto',
     width: '100%',
     background: palette.secondary['500'],
+    position: 'relative',
   },
   foreground: {
     height: '100vh',
