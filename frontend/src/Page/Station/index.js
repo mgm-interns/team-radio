@@ -38,7 +38,6 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (
       (nextProps.currentStation && nextProps.currentStation.id) !==
       (this.props.currentStation && this.props.currentStation.id)
