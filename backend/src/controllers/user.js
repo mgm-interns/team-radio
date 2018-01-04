@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as userModels from './../models/User';
+import userModels from '../models/user';
 
 export const isExistUserHandler = async email => {
   try {
@@ -43,14 +43,28 @@ export const getUserById = async userId => {
     }
 };
 
-export const createUserWithSocialAccount = async userId => {
+export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, name) => {
     try {
-        let user = await userModels.getUserById(userId);
+        let user = await userModels.getUserByEmail(email);
         if (user) {
-            return user;
+            await userModels.setSocialAccount(email, googleId, facebookId)
         } else {
-            return 'User not found.';
+            const user = await new userModels({
+                email : email,
+                google_ID : googleId,
+                facebook_ID : facebookId,
+                name : name,
+            });
+            // user.email = email;
+            // user.google_ID = googleId;
+            // user.facebook_ID = facebookId;
+            // user.name = name;
+
+
+            await user.save();
         }
+        user = await userModels.getUserByEmail(email);
+        return user;
     } catch (err) {
         throw err;
     }

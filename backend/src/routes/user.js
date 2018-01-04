@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User';
+import User from '../models/user';
 import authController from '../controllers/auth';
 import * as userController from '../controllers/user';
 
@@ -84,30 +84,17 @@ export default router => {
   });
   router.post('/signupWithSocialAccount', async (req, res) => {
     try {
-      let user = await User.findOne({ email: req.body.email });
-      if (user) {
-        userController.updateSocialAccount(
-          req.body.email,
-          req.body.googleID,
-          req.body.facebookID,
-        );
-      } else {
-        user.email = req.body.email;
-        user.name = req.body.name;
-        user.google_ID = req.body.googleID;
-        user.facebook_ID = req.body.facebookID;
-
-        user.save(async err => {
-          if (err) throw err;
-        });
-      }
+      await userController.createUserWithSocialAccount(
+        req.body.email,
+        req.body.googleId,
+        req.body.facebookId,
+        req.body.name,
+      );
+      const user = await User.findOne({ email: req.body.email });
       const payload = {
         email: user.email,
         name: user.name,
       };
-
-      user = await User.findOne({ email: req.body.email });
-
       const token = jwt.sign(payload, req.app.get('superSecret'), {
         expiresIn: 1440 * 7, // expires in 24 hours
       });
@@ -116,6 +103,8 @@ export default router => {
           message: 'signup success',
           token: token,
           userId: user._id,
+          googleId: user.google_ID,
+          facebookId: user.facebook_ID,
         },
       });
     } catch (err) {
