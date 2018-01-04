@@ -31,6 +31,7 @@ export default router => {
             message: 'signup success',
             token: token,
             userId: user._id,
+            name: user.name,
           });
         });
       }
@@ -71,6 +72,7 @@ export default router => {
             message: 'Enjoy your token!',
             token: token,
             userId: user._id,
+            name: user.name,
           });
         }
       }
@@ -101,6 +103,7 @@ export default router => {
           userId: user._id,
           googleId: user.google_ID,
           facebookId: user.facebook_ID,
+          name: user.name,
         },
       });
     } catch (err) {
