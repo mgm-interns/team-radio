@@ -1,4 +1,5 @@
 import * as stationController from '../../controllers/station';
+import * as userController from '../../controllers/user'
 import * as EVENTS from '../../const/actions';
 
 export default (emitter, action, userId, stationId, songId) => {

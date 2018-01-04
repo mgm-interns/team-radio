@@ -24,14 +24,14 @@ export const addStation = async (stationName, userId) => {
         });
         return currentStation;
       }
-      throw new Error('Can not create new. The station name is already exist!');
+      throw new Error('The station name is already exist!');
     } catch (err) {
       throw err;
     }
   }
 };
 
-// get a statio by id
+// get a station by id
 export const getStation = async stationId => {
   const station = await stationModels.getStationById(stationId);
   if (!station) {
