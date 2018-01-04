@@ -14,6 +14,7 @@ const INITIAL_STATE = {
     url: 'https://www.youtube.com/watch?v=igSCSQ9fg14',
     starting_time: 0,
   },
+  // resetSearchBox: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -24,6 +25,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         station: action.payload.station,
         playlist: action.payload.station.playlist,
+        // resetSearchBox: '',
       };
 
     case SERVER_UPDATE_PLAYLIST:
