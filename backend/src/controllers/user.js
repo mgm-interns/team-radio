@@ -1,5 +1,6 @@
 /* eslint-disable */
 import userModels from '../models/user';
+import jwt from 'jsonwebtoken';
 
 export const isExistUserHandler = async email => {
   try {

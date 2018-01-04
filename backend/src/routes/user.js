@@ -57,7 +57,7 @@ export default router => {
         } else {
           // if user is found and password is right
           // create a token with only our given payload
-          // we don't want to pass in the entrie user since that has the password=
+          // we don't want to pass in the entrie user since that has the password
           const payload = {
             email: user.email,
             name: user.name,
@@ -66,7 +66,6 @@ export default router => {
           const token = jwt.sign(payload, req.app.get('superSecret'), {
             expiresIn: 1440, // expires in 24 hours *****************************
           });
-
           res.json({
             success: true,
             message: 'Enjoy your token!',
@@ -114,9 +113,38 @@ export default router => {
   router.post('/isExistUser', async (req, res) => {
     try {
       const alreadyUser = await User.getUserByEmail(req.body.email);
-      console.log(alreadyUser)
+      console.log(alreadyUser);
       if (alreadyUser) res.json({ data: { isExist: true } });
       else res.json({ data: { isExist: false } });
+    } catch (err) {
+      throw err;
+    }
+  });
+  router.post('/verifyToken', async (req, res) => {
+    try {
+      const token = req.body.token;
+      if (token) {
+        // verifies secret and checks exp
+        jwt.verify(token, req.app.get('superSecret'), (err, decoded) => {
+          if (err) {
+            return res.json({
+              success: false,
+            });
+          }
+          return res.json({
+            data: {
+              userId: decoded.userId,
+              success: true,
+            },
+          });
+        });
+      } else {
+        return res.json({
+          data: {
+            success: false,
+          },
+        });
+      }
     } catch (err) {
       throw err;
     }
