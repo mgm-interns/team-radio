@@ -24,7 +24,7 @@ export const addStation = async (stationName, userId) => {
         });
         return currentStation;
       }
-      throw new Error('The station name is available');
+      throw new Error('Can not create new. The station name is already exist!');
     } catch (err) {
       console.log(err);
       throw err;
@@ -36,7 +36,7 @@ export const addStation = async (stationName, userId) => {
 export const getStation = async stationId => {
   const station = await stationModels.getStationById(stationId);
   if (!station) {
-    throw new Error(`Station id ${stationId} is not available!`);
+    throw new Error(`Station id ${stationId} is not exist!`);
   } else {
     return station;
   }
@@ -51,7 +51,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
     throw err;
   }
   if (!station) {
-    throw new Error('The station id is not existed');
+    throw new Error(`Station id ${stationId} is not exist!`);
   }
   if (!userId) {
     let numOfSongsAddedByUnregistedUsers = 0;
@@ -72,7 +72,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
 
   const songDetail = await songController.getSongDetails(songUrl);
   if (!songDetail) {
-    throw new Error('The song url is not available !');
+    throw new Error('Song url is incorrect!');
   }
   try {
     const song = {
@@ -90,7 +90,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
     return station.playlist;
     // return Promise.resolve(station.playlist);
   } catch (err) {
-    console.log('Error of add song : ' + err);
+    console.log('Error add song : ' + err);
     throw err;
   }
 };

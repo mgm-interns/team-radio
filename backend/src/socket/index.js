@@ -9,50 +9,21 @@ import * as stationController from '../controllers/station';
 
 const io = SocketIO();
 
-const createEmitter = socket => ({
-  emit: (eventName, payload) => {
-    socket.emit('action', {
-      type: eventName,
-      payload: payload,
-    });
-    console.log(
-      'Emit to: ' + socket.id + ' type: ' + eventName + ' payload: ' + payload,
-    );
-  },
-  emitToStation: (stationId, eventName, payload) => {
-    io.to(stationId).emit('action', {
-      type: eventName,
-      payload: payload,
-    });
-    console.log(
-      'Emit to station: ' +
-        stationId +
-        ', type: ' +
-        eventName +
-        ', payload: ' +
-        payload,
-    );
-  },
-  emitAll: (eventName, payload) => {
-    io.emit('action', {
-      type: eventName,
-      payload: payload,
-    });
-    console.log('Emit to all, type: ' + eventName + ' payload: ' + payload);
-  },
-});
-
 io.on('connection', async function(socket) {
   console.log('Connected with ' + socket.id);
   // Emit all stations when user connect
-  const allStations = await stationController.getAllAvailableStations();
-  console.log('Emit to ' + socket.id + ' all stations');
-  socket.emit('action', {
-    type: EVENTS.SERVER_UPDATE_STATIONS,
-    payload: {
-      stations: allStations,
-    },
-  });
+  try {
+    const allStations = await stationController.getAllAvailableStations();
+    console.log('Emit to ' + socket.id + ' all stations');
+    socket.emit('action', {
+      type: EVENTS.SERVER_UPDATE_STATIONS,
+      payload: {
+        stations: allStations,
+      },
+    });
+  } catch (err) {
+    console.log(EVENTS.SERVER_UPDATE_STATIONS + ' fail!!! Error: ' + err);
+  }
 
   // Listening for action request
   socket.on('action', action => {
@@ -67,27 +38,21 @@ io.on('connection', async function(socket) {
         break;
 
       case EVENTS.CLIENT_JOIN_STATION:
-        console.log('Action: ' + EVENTS.CLIENT_JOIN_STATION);
-        try {
-          eventHandlers.joinStationHandler(
-            createEmitter(socket),
-            action.payload.userId,
-            action.payload.stationId,
-          );
-          _leaveAllAndJoinRoom(socket, action.payload.stationId);
-        } catch (err) {
-          console.log(err);
-          socket.leaveAll();
-        }
+        eventHandlers.joinStationHandler(
+          createEmitter(socket),
+          action.payload.userId,
+          action.payload.stationId,
+          socket,
+        );
         break;
 
       case EVENTS.CLIENT_LEAVE_STATION:
         console.log('Action: ' + EVENTS.CLIENT_LEAVE_STATION);
-        socket.leaveAll();
         eventHandlers.leaveStationHandler(
           createEmitter(socket),
           action.payload.userId,
           action.payload.stationId,
+          socket,
         );
         break;
 
@@ -140,24 +105,38 @@ io.on('connection', async function(socket) {
   });
 });
 
-const _leaveAllAndJoinRoom = (socket, stationId) => {
-  const allRooms = Object.keys(socket.rooms).slice(1);
-  const leaveRoomPromises = [];
-
-  allRooms.forEach(room => {
-    leaveRoomPromises.push(_leaveRoom(socket, room));
-  });
-
-  Promise.all(leaveRoomPromises).then(() => {
-    socket.join(stationId);
-    console.log('Join accept: ' + socket.id + ' join to ' + stationId);
-  });
-};
-
-const _leaveRoom = (socket, room) =>
-  new Promise(function(resolve, reject) {
-    socket.leave(room, resolve);
-  });
+const createEmitter = socket => ({
+  emit: (eventName, payload) => {
+    socket.emit('action', {
+      type: eventName,
+      payload: payload,
+    });
+    console.log(
+      'Emit to: ' + socket.id + ' type: ' + eventName + ' payload: ' + payload,
+    );
+  },
+  emitToStation: (stationId, eventName, payload) => {
+    io.to(stationId).emit('action', {
+      type: eventName,
+      payload: payload,
+    });
+    console.log(
+      'Emit to station: ' +
+        stationId +
+        ', type: ' +
+        eventName +
+        ', payload: ' +
+        payload,
+    );
+  },
+  emitAll: (eventName, payload) => {
+    io.emit('action', {
+      type: eventName,
+      payload: payload,
+    });
+    console.log('Emit to all, type: ' + eventName + ' payload: ' + payload);
+  },
+});
 
 players.attachWebSocket(io);
 
