@@ -12,7 +12,8 @@ import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
 import { NavBar, GoogleLogin, FacebookLogin } from 'Component';
 import { saveAuthenticationState, loadAuthenticationState } from 'Config';
-import { fetchUser } from 'Redux/api/user/actions';
+import { fetchUser, addUser } from 'Redux/api/user/actions';
+import sleep from 'Util/sleep';
 
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -46,26 +47,17 @@ class Login extends Component {
 
     this.error = this.error.bind(this);
     this.loading = this.loading.bind(this);
-    this.responseGoogle = this.responseGoogle.bind(this);
-    this.responseFacebook = this.responseFacebook.bind(this);
+    this.responseSocial = this.responseSocial.bind(this);
   }
 
-  responseGoogle(response) {
+  responseSocial(response) {
     if (response) {
       this.setState({ isLoggedIn: true });
-      const { googleId, accessToken, tokenId } = response;
-      saveAuthenticationState({ googleId, accessToken, tokenId });
-      this.props.history.push('/');
-    }
-  }
+      const { profileObj, authResponse } = response;
 
-  responseFacebook(response) {
-    if (response) {
-      console.log(response);
-      this.setState({ isLoggedIn: true });
-      // const { id, accessToken, userId } = response;
-      saveAuthenticationState(response);
-      this.props.history.push('/');
+      // handle data
+      saveAuthenticationState(authResponse);
+      this.props.dispatch(addUser(profileObj));
     }
   }
 
@@ -74,7 +66,8 @@ class Login extends Component {
   }
 
   loading() {
-    console.log('loading');
+    console.info('loading');
+    return <CircularProgress />;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -90,6 +83,13 @@ class Login extends Component {
       saveAuthenticationState(response.data);
       this.props.history.push('/');
     }
+  }
+
+  componentWillUnmount() {
+    this.setState(() => ({
+      formErrors: {},
+      isLoggedIn: false,
+    }));
   }
 
   render() {
@@ -112,23 +112,24 @@ class Login extends Component {
                         for listening and sharing music
                       </Typography>
                     </Grid>
-
                     <Grid>
                       <FacebookLogin
-                        appId="138193143563601"
+                        fields="name,email,picture"
+                        // scope={}
                         autoLoad={false}
-                        onSuccess={this.responseFacebook}
-                        icon="fa-facebook"
+                        onSuccess={this.responseSocial}
+                        isDisabled={this.state.isLoggedIn}
+                        // icon="fa-facebook"
                       />
                       <div style={{ height: 16 }} />
                       <GoogleLogin
-                        onSuccess={this.responseGoogle}
+                        onSuccess={this.responseSocial}
                         onFailure={this.error}
-                        // onRequest={this.loading}
+                        onRequest={this.loading}
                         offline={false}
                         responseType="id_token"
                         isSignedIn
-                        disabled={this.state.isLoggedIn}
+                        isDisabled={this.state.isLoggedIn}
                         prompt="consent"
                         buttonText="Login with Google"
                       />

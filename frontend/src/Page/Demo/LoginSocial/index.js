@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { GoogleLogin, GoogleLogout } from 'Component/GoogleForm';
+import { GoogleLogin } from 'Component';
 import Grid from 'material-ui/Grid';
 
 class LoginSocialDemo extends Component {
@@ -51,10 +51,6 @@ class LoginSocialDemo extends Component {
             isSignedIn={true}
             disabled={this.state.isSignedIn}
             prompt="consent"
-          />
-          <GoogleLogout
-            onLogoutSuccess={this.logout}
-            disabled={!this.state.isSignedIn}
           />
         </Grid>
       </Grid>

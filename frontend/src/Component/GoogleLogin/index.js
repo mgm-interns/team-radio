@@ -20,7 +20,7 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      disabled: true,
+      isDisabled: true,
     };
     this.signIn = this.signIn.bind(this);
     this.enableButton = this.enableButton.bind(this);
@@ -90,7 +90,7 @@ class Login extends Component {
 
   enableButton() {
     this.setState({
-      disabled: false,
+      isDisabled: false,
     });
   }
 
@@ -98,7 +98,7 @@ class Login extends Component {
     if (e) {
       e.preventDefault(); // to prevent submit if used within form
     }
-    if (!this.state.disabled) {
+    if (!this.state.isDisabled) {
       const auth2 = window.gapi.auth2.getAuthInstance();
       const {
         onSuccess,
@@ -128,17 +128,17 @@ class Login extends Component {
     */
     const basicProfile = res.getBasicProfile();
     const authResponse = res.getAuthResponse();
-    res.googleId = basicProfile.getId();
-    res.tokenObj = authResponse;
-    res.tokenId = authResponse.id_token;
-    res.accessToken = authResponse.access_token;
+    res.authResponse = {
+      googleId: basicProfile.getId(),
+      tokenObj: authResponse,
+      tokenId: authResponse.id_token,
+      accessToken: authResponse.access_token,
+    };
     res.profileObj = {
       googleId: basicProfile.getId(),
       imageUrl: basicProfile.getImageUrl(),
       email: basicProfile.getEmail(),
       name: basicProfile.getName(),
-      givenName: basicProfile.getGivenName(),
-      familyName: basicProfile.getFamilyName(),
     };
     this.props.onSuccess(res);
   }
@@ -155,9 +155,9 @@ class Login extends Component {
     } = this.props;
 
     // verify disabled
-    const disabled = this.state.disabled || this.props.disabled;
+    const isDisabled = this.state.isDisabled || this.props.isDisabled;
     const optionalProps = {};
-    if (disabled && _shouldAddDisabledProp(this.props.tag)) {
+    if (isDisabled && _shouldAddDisabledProp(this.props.tag)) {
       optionalProps.disabled = true;
     }
 
@@ -181,7 +181,7 @@ class Login extends Component {
       return initialStyle;
     })();
     const defaultStyle = (() => {
-      if (disabled) {
+      if (isDisabled) {
         return Object.assign({}, styleProp, disabledStyle);
       }
       return styleProp;
@@ -231,7 +231,7 @@ Login.propTypes = {
   prompt: PropTypes.string,
   tag: PropTypes.string,
   autoLoad: PropTypes.bool,
-  disabled: PropTypes.bool,
+  isDisabled: PropTypes.bool,
   discoveryDocs: PropTypes.array,
   uxMode: PropTypes.string,
   isSignedIn: PropTypes.bool,
