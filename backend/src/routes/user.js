@@ -20,6 +20,7 @@ export default router => {
           const payload = {
             email: newUser.email,
             name: newUser.name,
+            userId: user._id,
           };
 
           user = await User.findOne({ email: req.body.email });
@@ -61,6 +62,7 @@ export default router => {
           const payload = {
             email: user.email,
             name: user.name,
+            userId: user._id,
           };
 
           const token = jwt.sign(payload, req.app.get('superSecret'), {

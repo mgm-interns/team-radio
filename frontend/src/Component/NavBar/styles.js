@@ -36,6 +36,7 @@ export default ({ breakpoints, spacing }) => ({
   },
   navWrapper: {
     display: 'flex',
+    alignItems: 'center',
     '& a': {
       textDecoration: 'none',
       color: 'white',

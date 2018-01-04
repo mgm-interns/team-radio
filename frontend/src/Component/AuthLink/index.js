@@ -31,9 +31,11 @@ class AuthLink extends Component {
   }
 
   render() {
+    const { classes, user } = this.props;
+
     return (
-      <div>
-        {!loadAuthenticationState() && (
+      <Fragment>
+        {!user.isAuthenticated && (
           <Fragment>
             <Link to="/auth/login" style={{ marginLeft: 16 }}>
               Login
@@ -43,21 +45,35 @@ class AuthLink extends Component {
             </Link>
           </Fragment>
         )}
-        {loadAuthenticationState() && (
-          <a onClick={this._logout} style={{ marginLeft: 16 }}>
-            Logout
-          </a>
+        {user.isAuthenticated && (
+          <Fragment>
+            <a onClick={this._logout} style={{ marginLeft: 16 }}>
+              Logout
+            </a>
+            <a style={{ marginLeft: 16 }}>{user.data.name}</a>
+            <img
+              className={classes.avatar}
+              src="http://i.pravatar.cc/50"
+              alt="avatar"
+            />
+          </Fragment>
         )}
-      </div>
+      </Fragment>
     );
   }
 }
 
 AuthLink.propTypes = {
+  classes: PropTypes.any,
   dispatch: PropTypes.any,
   notification: PropTypes.object,
+  user: PropTypes.any,
 };
 
-export default compose(withNotification, connect(undefined, undefined))(
-  AuthLink,
+const mapStateToProps = state => ({
+  user: state.api.user,
+});
+
+export default compose(withNotification, connect(mapStateToProps, undefined))(
+  withStyles(styles)(AuthLink),
 );

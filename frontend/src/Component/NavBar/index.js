@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 
 import styles from './styles';
-import AuthLink from './AuthLink';
+import AuthLink from '../AuthLink';
 
 const MENUS = {
   home: {
