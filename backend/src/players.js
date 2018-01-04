@@ -37,10 +37,7 @@ class Player {
   };
 
   _emitNowPlaying = () => {
-    this._emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, {
-      starting_time: this.nowPlaying.starting_time,
-      url: this.nowPlaying.url,
-    });
+    this._emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, this.getNowPlaying());
   };
 
   _emit = (eventName, payload) => {
@@ -73,7 +70,7 @@ class Player {
       const playlist = await stationController.setPlayedSongs(this.stationId, [
         this.nowPlaying.song_id,
       ]);
-      const song = this._setPlayableSong(playlist);
+      this._setPlayableSong();
     }, timeout);
   };
   // TODO: [start server, add new song to empty station, next song nomarly]
@@ -95,8 +92,9 @@ class Player {
     const sortedPlaylist = _.sortBy(filteredPlaylist, ['song_id']);
     const currentTime = Date.now();
     let preStartingTime = station.starting_time;
-
+    let playedSongs = [];
     // TODO: explain clearly in comments
+    // TODO: stationController.setPlayedSongs to ids
     // DO NOT use foreach (can't be stop)
     for(let i = 0; i<sortedPlaylist.length; i++){
       const song = sortedPlaylist[i];
@@ -106,7 +104,6 @@ class Player {
       if (song.added_time + song.duration > currentTime) {
         // The song is available to play
         // Update is_played of the pre songs to true
-        const playedSongs = sortedPlaylist.slice(0, i);
         // When the current nowPlaying song is available
         if (this.nowPlaying.song_id) {
           playedSongs.push(this.nowPlaying.song_id);
@@ -115,14 +112,13 @@ class Player {
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
-        this.nowPlaying.starting_time = song.added_time;
+        this.nowPlaying.starting_time = this.nowPlaying.song_id ? Date.now() : song.added_time;
         // play the song
         this._startSong(song);
         return;
       } else if (preStartingTime + song.duration > currentTime) {
         // The song is available to play
         // Update is_played of the pre songs to true
-        const playedSongs = sortedPlaylist.slice(0, i);
         // When the current nowPlaying song is available
         if (this.nowPlaying.song_id) {
           playedSongs.push(this.nowPlaying.song_id);
@@ -132,22 +128,22 @@ class Player {
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
         // The time is different. need explain clearly
-        this.nowPlaying.starting_time = preStartingTime;
+        this.nowPlaying.starting_time = this.nowPlaying.song_id ? Date.now() : preStartingTime;
         // play the song
         this._startSong(song);
         return;
       }
       // Move the song to next song for checking
       preStartingTime += song.duration;
+      playedSongs.push(song.song_id);
     };
 
     // The available song is not existed
     // Update is_played of the song in the sortedPlaylist to true
     if (this.nowPlaying.song_id) {
-      sortedPlaylist.push(this.nowPlaying.song_id);
+      playedSongs.push(this.nowPlaying.song_id);
     }
-    await stationController.setPlayedSongs(this.stationId, sortedPlaylist);
-
+    await stationController.setPlayedSongs(this.stationId, playedSongs);
     // Update nowPlaying song is not available
     this.nowPlaying.song_id = 0;
     this.nowPlaying.url = '';
@@ -156,7 +152,7 @@ class Player {
 }
 
 export const init = async () => {
-  const stations = await stationController.getAllAvailableStations();
+  const stations = await stationController.getAllStationDetails();
   stations.forEach(station => {
     _players[station.id] = new Player(station);
   });

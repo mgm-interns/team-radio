@@ -47,11 +47,14 @@ const stationSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
       },
       up_vote: [
-        String, // userID
+        {
+          type: mongoose.Schema.Types.ObjectId, // userID
+        }
       ],
       down_vote: [
-        String,
-        // userID
+        {
+          type: mongoose.Schema.Types.ObjectId, // userID
+        }
       ],
       created_day: {
         type: Number,
@@ -82,6 +85,11 @@ module.exports.addStation = station => {
 // get all station
 module.exports.getStations = (limit) => {
   return Station.find({}, { station_name: 1, created_day  : 1 , id: 1,_id:0}).limit(limit);
+};
+// 
+// get all station
+module.exports.getStationDetails = (limit) => {
+  return Station.find().limit(limit);
 };
 
 // get station from name
