@@ -26,7 +26,6 @@ export const addStation = async (stationName, userId) => {
       }
       throw new Error('Can not create new. The station name is already exist!');
     } catch (err) {
-      console.log(err);
       throw err;
     }
   }

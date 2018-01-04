@@ -9,9 +9,9 @@ export default async (emitter, userId, stationName) => {
       station: station,
     });
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     emitter.emit(EVENTS.SERVER_CREATE_STATION_FAILURE, {
-      message: err,
+      message: err.message,
     });
   }
 
@@ -22,7 +22,7 @@ export default async (emitter, userId, stationName) => {
         stations: stations,
       });
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
     }
   }
 };

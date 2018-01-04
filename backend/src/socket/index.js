@@ -38,6 +38,7 @@ io.on('connection', async function(socket) {
         break;
 
       case EVENTS.CLIENT_JOIN_STATION:
+        console.log('Action: ' + EVENTS.CLIENT_JOIN_STATION);
         eventHandlers.joinStationHandler(
           createEmitter(socket),
           action.payload.userId,
