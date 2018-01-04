@@ -76,26 +76,51 @@ export default router => {
       throw err;
     }
   });
-
-  router.post('/getProfile', async (req, res) => {
+  router.post('/signupWithSocialAccount', async (req, res) => {
     try {
-      const userProfile = await userController.getUserById(req.body.userId);
-      if (userProfile) res.json(userProfile);
-      else res.json({ message: 'User not found' });
+      let user = await User.findOne({ email: req.body.email });
+      if (user) {
+        userController.updateSocialAccount(
+          req.body.email,
+          req.body.googleID,
+          req.body.facebookID,
+        );
+      } else {
+        user.email = req.body.email;
+        user.name = req.body.name;
+        user.google_ID = req.body.googleID;
+        user.facebook_ID = req.body.facebookID;
+
+        user.save(async err => {
+          if (err) throw err;
+        });
+      }
+      const payload = {
+        email: user.email,
+        name: user.name,
+      };
+
+      user = await User.findOne({ email: req.body.email });
+
+      const token = jwt.sign(payload, req.app.get('superSecret'), {
+        expiresIn: 1440 * 7, // expires in 24 hours
+      });
+      res.json({
+        data: {
+          message: 'signup success',
+          token: token,
+          userId: user._id,
+        },
+      });
     } catch (err) {
       throw err;
     }
   });
+
   router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {
     res.json({ message: 'Welcome to the coolest API on earth!' });
-  });
-
-  router.get('/User', (req, res) => {
-    User.find({}, function(err, users) {
-      res.json(users);
-    });
   });
 };
