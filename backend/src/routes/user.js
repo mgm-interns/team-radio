@@ -20,7 +20,7 @@ export default router => {
           const payload = {
             email: newUser.email,
             name: newUser.name,
-            userId: user._id,
+            userId: newUser._id,
           };
 
           user = await User.findOne({ email: req.body.email });

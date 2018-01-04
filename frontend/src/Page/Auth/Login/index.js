@@ -93,7 +93,8 @@ class Login extends Component {
           message: error.response.message,
         },
       });
-    } else if (response.data.token) {
+    } else if (response.data.token || response.isAuthenticated) {
+      // } else if (response.data.token) {
       saveAuthenticationState(response.data);
       this.props.history.push('/');
     }
@@ -101,13 +102,6 @@ class Login extends Component {
     if (!loadAuthenticationState()) {
       this.setState({ isLoggedIn: false });
     }
-  }
-
-  componentWillUnmount() {
-    this.setState(() => ({
-      formErrors: {},
-      isLoggedIn: false,
-    }));
   }
 
   render() {
