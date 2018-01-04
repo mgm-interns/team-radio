@@ -48,7 +48,7 @@ class StationSwitcher extends Component {
       this.scrollBar.scrollToLeft();
     }
     notification.app.success({
-      message: `Switch to station ${station.station_name}`,
+      message: `Switched to station ${station.station_name}`,
     });
   }
 
