@@ -12,10 +12,16 @@ import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
 import { NavBar, GoogleLogin, FacebookLogin } from 'Component';
 import { saveAuthenticationState, loadAuthenticationState } from 'Config';
-import { fetchUser, addUser, addUserWithSocialAccount } from 'Redux/api/user/actions';
+import {
+  fetchUser,
+  addUser,
+  addUserWithSocialAccount,
+} from 'Redux/api/user/actions';
 import sleep from 'Util/sleep';
+import { withNotification } from 'Component/Notification';
 
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import styles from './styles';
 import TextView from '../TextView';
 
@@ -51,15 +57,20 @@ class Login extends Component {
   }
 
   responseSocial(response) {
+    const { notification } = this.props;
     if (response) {
       this.setState({ isLoggedIn: true });
       const { profileObj, authResponse } = response;
 
+      notification.app.success({
+        message: `Logout your account!`,
+      });
       // handle data
       saveAuthenticationState(authResponse);
       this.props.dispatch(addUserWithSocialAccount(profileObj));
       // this.props.dispatch(fetchUser());
       // console.log(this.props.fetchUserResponse());
+      this.props.history.push('/');
     }
   }
 
@@ -85,6 +96,10 @@ class Login extends Component {
     } else if (response.data.token) {
       saveAuthenticationState(response.data);
       this.props.history.push('/');
+    }
+
+    if (!loadAuthenticationState()) {
+      this.setState({ isLoggedIn: false });
     }
   }
 
@@ -205,6 +220,7 @@ Login.propTypes = {
   handleSubmit: PropTypes.any,
   submitting: PropTypes.any,
   login: PropTypes.func,
+  notification: PropTypes.object,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -217,9 +233,12 @@ const mapStateToProps = state => ({
   fetchUserResponse: state.api.user,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
   reduxForm({
     form: 'loginForm',
     validate,
-  })(withStyles(styles)(Login)),
-);
+  }),
+  withStyles(styles),
+  withNotification,
+)(Login);
