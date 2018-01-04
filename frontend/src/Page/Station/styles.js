@@ -28,4 +28,10 @@ export default ({ typography, breakpoints, palette }) => ({
     },
   },
   nowPlaying: {},
+  emptyNowPlaying: {
+    height: 0,
+  },
+  emptyPlaylist: {
+    height: 0,
+  },
 });
