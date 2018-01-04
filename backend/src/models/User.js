@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
+import { ObjectId } from 'mongodb';
+
+const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
 
 // define the schema for our user model
 const userSchema = mongoose.Schema({
@@ -47,15 +50,13 @@ userSchema.methods.validPassword = function(password) {
 };
 
 // create the model for users and expose it ti our app
-module.exports = mongoose.model('users', userSchema);
 
-var user;
+var user = (module.exports = mongoose.model('users', userSchema));
 
 module.exports.getUserByEmail = async email => {
   const query = { email: email };
   return user.findOne(query);
 };
 module.exports.getUserById = async userId => {
-  const query = { _id: userId };
-  return user.findOne(query);
+  return user.findOne({ _id: _safeObjectId(userId) });
 };

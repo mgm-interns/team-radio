@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import authController from '../controllers/auth';
+import * as userController from '../controllers/user';
 
 export default router => {
   router.post('/signup', async (req, res) => {
@@ -82,7 +83,16 @@ export default router => {
     }
   });
 
-  // router.use(authController);
+  router.post('/getProfile', async (req, res) => {
+    try {
+      const userProfile = await userController.getUserById(req.body.userId);
+      if (userProfile) res.json(userProfile);
+      else res.json({ message: 'User not found' });
+    } catch (err) {
+      throw err;
+    }
+  });
+  router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {
