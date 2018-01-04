@@ -19,17 +19,17 @@ export const leaveStation = (stationId = DEFAULT_STATION_ID) => ({
   payload: { userId: 0, stationId },
 });
 
-export const addSong = ({ stationId, songUrl }) => ({
+export const addSong = ({ userId, stationId, songUrl }) => ({
   type: CLIENT_ADD_SONG,
-  payload: { userId: 0, stationId, songUrl },
+  payload: { userId, stationId, songUrl },
 });
 
-export const upVoteSong = ({ stationId, songId }) => ({
+export const upVoteSong = ({ userId, stationId, songId }) => ({
   type: CLIENT_UPVOTE_SONG,
-  payload: { useId: 0, stationId, songId },
+  payload: { userId, stationId, songId },
 });
 
-export const downVoteSong = ({ stationId, songId }) => ({
+export const downVoteSong = ({ userId, stationId, songId }) => ({
   type: CLIENT_DOWNVOTE_SONG,
-  payload: { useId: 0, stationId, songId },
+  payload: { userId, stationId, songId },
 });

@@ -2,7 +2,6 @@ export default ({ spacing, palette, typography }) => ({
   container: {
     margin: 0,
     width: '100%',
-    marginBottom: spacing.baseMargin,
     '&.playing': {
       background: palette.lightGrey['500'],
     },
