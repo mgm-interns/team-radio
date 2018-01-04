@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
-import withRouter from 'react-router-dom/withRouter';
-import { withNotification } from 'Component';
+import { withNotification } from 'Component/Notification';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 
