@@ -108,6 +108,16 @@ export default router => {
     }
   });
 
+  router.post('/isExistUser', async (req, res) => {
+    try {
+      const alreadyUser = await User.getUserByEmail(req.body.email);
+      console.log(alreadyUser)
+      if (alreadyUser) res.json({ data: { isExist: true } });
+      else res.json({ data: { isExist: false } });
+    } catch (err) {
+      throw err;
+    }
+  });
   router.use(authController);
 
   // test function *************************************
