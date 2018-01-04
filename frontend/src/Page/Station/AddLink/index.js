@@ -23,11 +23,6 @@ import { Images } from 'Theme';
 import { checkValidYoutubeUrl } from 'Transformer/transformText';
 import styles from './styles';
 
-const STATION_DEFAULT = {
-  number: 1,
-  name: 'mgm internship 2017',
-};
-
 /* eslint-disable no-shadow */
 class AddLink extends Component {
   static propTypes = {
@@ -219,7 +214,11 @@ class AddLink extends Component {
       match: { params: { stationId } },
     } = this.props;
     setPreviewVideo();
-    addSong(this._getVideoUrl(preview), stationId);
+    addSong(
+      this._getVideoUrl(preview),
+      stationId,
+      localStorage.getItem('userId'),
+    );
     this.setState({ searchText: '', isDisableButton: true });
   }
   /* End of handle add link events */
@@ -287,7 +286,8 @@ class AddLink extends Component {
               renderSuggestion={this._renderSuggestion}
               inputProps={{
                 classes,
-                placeholder: 'Search...',
+                placeholder:
+                  "Type the Youtube's video name. e.g. Despacito,...",
                 value: this.state.searchText,
                 onChange: this._onChange,
               }}
@@ -349,10 +349,8 @@ class AddLink extends Component {
       <Grid container className={classes.addLinkContainer}>
         <Grid item xs={12} className={classes.linkTitle}>
           <div>
-            <h1 className={classes.primaryTitle}>Add more songs</h1>
-            <span className={classes.secondaryTitle}>
-              {' - '} {STATION_DEFAULT.name}
-            </span>
+            <h1 className={classes.primaryTitle}>Add song</h1>
+            <span className={classes.secondaryTitle} />
           </div>
         </Grid>
         <Card className={classes.addLinkBox}>
@@ -373,7 +371,8 @@ const mapStateToProps = ({ page }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addSong: (songUrl, stationId) => dispatch(addSong({ songUrl, stationId })),
+  addSong: (songUrl, stationId, userId) =>
+    dispatch(addSong({ songUrl, stationId, userId })),
   setPreviewVideo: video => dispatch(setPreviewVideo(video)),
 });
 
