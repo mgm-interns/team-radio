@@ -19,10 +19,10 @@ export default styles => ({
     height: '300px',
     objectFit: 'cover',
   },
-  station_title: {
+  stationTitle: {
     fontWeight: 'bold',
   },
-  station_subtitle: {
+  stationSubtitle: {
     color: 'grey',
   },
   '@media screen and (max-width: 1366px)': {

@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User';
+import User from '../models/user';
 import authController from '../controllers/auth';
+import * as userController from '../controllers/user';
 
 export default router => {
   router.post('/signup', async (req, res) => {
     try {
-      const user = await User.findOne({ email: req.body.email });
+      let user = await User.findOne({ email: req.body.email });
       if (user) {
         res.status(400).json({ message: 'This email has already been taken.' });
       } else {
@@ -14,12 +15,14 @@ export default router => {
         newUser.name = req.body.name;
         newUser.password = newUser.generateHash(req.body.password);
 
-        newUser.save(function(err) {
+        newUser.save(async err => {
           if (err) throw err;
           const payload = {
             email: newUser.email,
             name: newUser.name,
           };
+
+          user = await User.findOne({ email: req.body.email });
 
           const token = jwt.sign(payload, req.app.get('superSecret'), {
             expiresIn: 1440 * 7, // expires in 24 hours
@@ -27,6 +30,7 @@ export default router => {
           res.json({
             message: 'signup success',
             token: token,
+            userId: user._id,
           });
         });
       }
@@ -66,6 +70,7 @@ export default router => {
             success: true,
             message: 'Enjoy your token!',
             token: token,
+            userId: user._id,
           });
         }
       }
@@ -73,17 +78,40 @@ export default router => {
       throw err;
     }
   });
+  router.post('/signupWithSocialAccount', async (req, res) => {
+    try {
+      await userController.createUserWithSocialAccount(
+        req.body.email,
+        req.body.googleId,
+        req.body.facebookId,
+        req.body.name,
+      );
+      const user = await User.findOne({ email: req.body.email });
+      const payload = {
+        email: user.email,
+        name: user.name,
+      };
+      const token = jwt.sign(payload, req.app.get('superSecret'), {
+        expiresIn: 1440 * 7, // expires in 24 hours
+      });
+      res.json({
+        data: {
+          message: 'signup success',
+          token: token,
+          userId: user._id,
+          googleId: user.google_ID,
+          facebookId: user.facebook_ID,
+        },
+      });
+    } catch (err) {
+      throw err;
+    }
+  });
 
-  // router.use(authController);
+  router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {
     res.json({ message: 'Welcome to the coolest API on earth!' });
-  });
-
-  router.get('/User', (req, res) => {
-    User.find({}, function(err, users) {
-      res.json(users);
-    });
   });
 };

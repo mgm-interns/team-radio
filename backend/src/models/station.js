@@ -84,7 +84,7 @@ module.exports.addStation = station => {
 
 // get all station
 module.exports.getStations = (limit) => {
-  return Station.find({}, { station_name: 1, created_day  : 1 , id: 1,_id:0}).limit(limit);
+  return Station.find({}, { station_name: 1, created_day: 1, id: 1, _id: 0 }).limit(limit);
 };
 // 
 // get all station
@@ -105,7 +105,6 @@ module.exports.getStationById = idToFind => {
 // The function update a field in db
 module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
   try {
-    console.log('valueNeedUpdate : ' + valueNeedUpdate);
     let query = { id: stationId };
     return Station.update(query, {
       $set: {
@@ -150,6 +149,14 @@ module.exports.updateValueOfUpvote = (stationId, songId, valueNeedUpdate) => {
   return Station.update(
     { id: stationId, 'playlist.song_id': songId },
     { $set: { 'playlist.$.up_vote': valueNeedUpdate } },
+  );
+};
+
+module.exports.updateValueOfDownvote = (stationId, songId, valueNeedUpdate) => {
+  //let query = { id: stationId };
+  return Station.update(
+    { id: stationId, 'playlist.song_id': songId },
+    { $set: { 'playlist.$.down_vote': valueNeedUpdate } },
   );
 };
 /**

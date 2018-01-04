@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
-import { NavBar, Footer, withNotification } from 'Component';
-
+import { NavBar, Footer } from 'Component';
+import { withNotification } from 'Component/Notification';
 import Backdrop from './Backdrop';
 import SectionCover from './SectionCover';
 import SectionContent from './SectionContent';
