@@ -20,7 +20,9 @@ class Player {
 
   getNowPlaying = () => ({
     url: this.nowPlaying.url,
-    starting_time: Date.now() - this.nowPlaying.starting_time,
+    starting_time: this.nowPlaying.starting_time
+      ? Date.now() - this.nowPlaying.starting_time
+      : 0,
   });
 
   updatePlaylist = async (station = null) => {
@@ -40,6 +42,18 @@ class Player {
     this._emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, this.getNowPlaying());
   };
 
+  _emitPlaylist = async () => {
+    const playlist = await stationController.getListSong(this.stationId);
+    this._emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
+      playlist: playlist,
+    });
+  };
+
+  _emitStationState = async () => {
+    this._emitNowPlaying();
+    this._emitPlaylist();
+  }
+
   _emit = (eventName, payload) => {
     io.to(this.stationId).emit('action', {
       type: eventName,
@@ -49,15 +63,14 @@ class Player {
 
   _startSong = async song => {
     try {
+      this._emitStationState();
       if (song) {
         // Update starting time in the station
         stationController.updateStartingTime(
           this.stationId,
           this.nowPlaying.starting_time,
         );
-        // TODO: update is_played of the current song
         this._nextSongByTimeout(song.duration + TIME_BUFFER);
-        this._emitNowPlaying();
       }
     } catch (err) {
       console.error(err);
@@ -86,28 +99,25 @@ class Player {
     }
     const { playlist } = station;
     // Filter songs wasn't played and is not the current playing song
-    let filteredPlaylist = _.filter(playlist, { is_played: false });
-    // TODO: remove nowPlaying.url
+    const filteredPlaylist = _.filter(
+      playlist,
+      song => !song.is_played && song.song_id !== this.nowPlaying.song_id,
+    );
     // Sort the filteredPlaylist by time (current the song_id is the song added time)
     const sortedPlaylist = _.sortBy(filteredPlaylist, ['song_id']);
     const currentTime = Date.now();
     let preStartingTime = station.starting_time;
-    let playedSongs = [];
+    const playedSongs = this.nowPlaying.song_id ? [this.nowPlaying.song_id] : [];
     // TODO: explain clearly in comments
     // TODO: stationController.setPlayedSongs to ids
-    // DO NOT use foreach (can't be stop)
-    for(let i = 0; i<sortedPlaylist.length; i++){
+    // DO NOT use foreach (can't be stop the loop)
+    for (let i = 0; i < sortedPlaylist.length; i++) {
       const song = sortedPlaylist[i];
       // current the song_id is song added time
       song.added_time = song.song_id;
       // Check the song is new or not
       if (song.added_time + song.duration > currentTime) {
-        // The song is available to play
-        // Update is_played of the pre songs to true
-        // When the current nowPlaying song is available
-        if (this.nowPlaying.song_id) {
-          playedSongs.push(this.nowPlaying.song_id);
-        }
+        // Update is_played of the playedSongs to true
         await stationController.setPlayedSongs(this.stationId, playedSongs);
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
@@ -117,17 +127,11 @@ class Player {
         this._startSong(song);
         return;
       } else if (preStartingTime + song.duration > currentTime) {
-        // The song is available to play
-        // Update is_played of the pre songs to true
-        // When the current nowPlaying song is available
-        if (this.nowPlaying.song_id) {
-          playedSongs.push(this.nowPlaying.song_id);
-        }
+        // Update is_played of the playedSongs to true
         await stationController.setPlayedSongs(this.stationId, playedSongs);
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
-        // The time is different. need explain clearly
         this.nowPlaying.starting_time = this.nowPlaying.song_id ? Date.now() : preStartingTime;
         // play the song
         this._startSong(song);
@@ -140,14 +144,12 @@ class Player {
 
     // The available song is not existed
     // Update is_played of the song in the sortedPlaylist to true
-    if (this.nowPlaying.song_id) {
-      playedSongs.push(this.nowPlaying.song_id);
-    }
     await stationController.setPlayedSongs(this.stationId, playedSongs);
     // Update nowPlaying song is not available
     this.nowPlaying.song_id = 0;
     this.nowPlaying.url = '';
     this.nowPlaying.starting_time = 0;
+    this._emitStationState();
   };
 }
 

@@ -30,7 +30,10 @@ export default router => {
   router.get('/stations/playlist/:id', function(req, res) {
     station.getListSong(req, res);
   });
-  router.put('/stations/getsong/:id', function(req, res) {
-    station.getAsong(req, res);
+  router.put('/stations/upvote/:id', function(req, res) {
+    station.upVote(req, res);
+  });
+  router.put('/stations/downvote/:id', function(req, res) {
+    station.downVote(req, res);
   });
 };
