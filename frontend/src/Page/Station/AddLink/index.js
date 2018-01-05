@@ -68,6 +68,15 @@ class AddLink extends Component {
     this._onVolumeClick = this._onVolumeClick.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { isMutePlayer, preview } = nextProps;
+    this.setState({ isMute: !isMutePlayer });
+
+    if (preview === null) {
+      this.setState({ searchText: '' });
+    }
+  }
+
   /* Get video info */
   _getVideoUrl(video) {
     return typeof video.id === 'string'
@@ -353,11 +362,6 @@ class AddLink extends Component {
         </Grid>
       </Grid>
     );
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { isMutePlayer } = nextProps;
-    this.setState({ isMute: !isMutePlayer });
   }
 
   _renderPreviewSection() {
