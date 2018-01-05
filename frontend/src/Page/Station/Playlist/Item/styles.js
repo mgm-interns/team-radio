@@ -1,6 +1,7 @@
 export default ({ spacing, palette, typography }) => ({
   container: {
-    marginBottom: spacing.unit,
+    margin: 0,
+    width: '100%',
     '&.playing': {
       background: palette.lightGrey['500'],
     },
@@ -13,7 +14,7 @@ export default ({ spacing, palette, typography }) => ({
     objectFit: 'cover',
   },
   info: {
-    padding: spacing.unit,
+    padding: spacing.baseMargin,
   },
   name: {
     ...typography.body2,
@@ -34,16 +35,16 @@ export default ({ spacing, palette, typography }) => ({
     alignSelf: 'center',
   },
   action: {
-    width: spacing.unit * 5,
-    height: spacing.unit * 5,
+    width: spacing.baseMargin * 5,
+    height: spacing.baseMargin * 5,
     '& .material-icons': {
-      fontSize: spacing.unit * 5,
+      fontSize: spacing.baseMargin * 5,
     },
   },
   score: {
     ...typography.body2,
     margin: 'auto',
-    width: spacing.unit * 5,
+    width: spacing.baseMargin * 5,
     fontSize: 20,
     color: palette.secondary['500'],
     '&.active': {

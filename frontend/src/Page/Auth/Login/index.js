@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
@@ -11,9 +12,16 @@ import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
 import { NavBar, GoogleLogin, FacebookLogin } from 'Component';
 import { saveAuthenticationState, loadAuthenticationState } from 'Config';
-import { fetchUser } from 'Redux/api/user/actions';
+import {
+  fetchUser,
+  addUser,
+  addUserWithSocialAccount,
+} from 'Redux/api/user/actions';
+import sleep from 'Util/sleep';
+import { withNotification } from 'Component/Notification';
 
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import styles from './styles';
 import TextView from '../TextView';
 
@@ -45,26 +53,21 @@ class Login extends Component {
 
     this.error = this.error.bind(this);
     this.loading = this.loading.bind(this);
-    this.responseGoogle = this.responseGoogle.bind(this);
-    this.responseFacebook = this.responseFacebook.bind(this);
+    this.responseSocial = this.responseSocial.bind(this);
   }
 
-  responseGoogle(response) {
+  responseSocial(response) {
+    const { notification } = this.props;
     if (response) {
       this.setState({ isLoggedIn: true });
-      const { googleId, accessToken, tokenId } = response;
-      saveAuthenticationState({ googleId, accessToken, tokenId });
-      this.props.history.push('/');
-    }
-  }
+      const { profileObj, authResponse } = response;
 
-  responseFacebook(response) {
-    if (response) {
-      console.log(response);
-      this.setState({ isLoggedIn: true });
-      // const { id, accessToken, userId } = response;
-      saveAuthenticationState(response);
-      this.props.history.push('/');
+      notification.app.success({
+        message: `Login successful!`,
+      });
+      // handle data
+      saveAuthenticationState(authResponse);
+      this.props.dispatch(addUserWithSocialAccount(profileObj));
     }
   }
 
@@ -73,11 +76,13 @@ class Login extends Component {
   }
 
   loading() {
-    console.log('loading');
+    console.info('loading');
+    return <CircularProgress />;
   }
 
   componentWillReceiveProps(nextProps) {
     const response = nextProps.fetchUserResponse;
+    console.log(response);
     const { error } = response;
     if (response.error != null) {
       this.setState({
@@ -85,9 +90,14 @@ class Login extends Component {
           message: error.response.message,
         },
       });
-    } else if (response.data.token) {
+    } else if (response.data.token || response.isAuthenticated) {
+      // } else if (response.data.token) {
       saveAuthenticationState(response.data);
-      this.props.history.push('/');
+      // this.props.history.push('/');
+    }
+
+    if (!loadAuthenticationState()) {
+      this.setState({ isLoggedIn: false });
     }
   }
 
@@ -111,6 +121,29 @@ class Login extends Component {
                         for listening and sharing music
                       </Typography>
                     </Grid>
+                    <Grid style={{ paddingBottom: '1em' }}>
+                      <FacebookLogin
+                        fields="name,email,picture"
+                        // scope={}
+                        autoLoad={false}
+                        onSuccess={this.responseSocial}
+                        isDisabled={this.state.isLoggedIn}
+                        // icon="fa-facebook"
+                      />
+                      <div style={{ height: 16 }} />
+                      <GoogleLogin
+                        onSuccess={this.responseSocial}
+                        onFailure={this.error}
+                        onRequest={this.loading}
+                        offline={false}
+                        responseType="id_token"
+                        isSignedIn
+                        isDisabled={this.state.isLoggedIn}
+                        prompt="consent"
+                        buttonText="Login with Google"
+                      />
+                    </Grid>
+
                     <Field
                       name="email"
                       placeholde="Email"
@@ -128,28 +161,8 @@ class Login extends Component {
                     <FormHelperText className={classes.error}>
                       {this.state.formErrors.message}
                     </FormHelperText>
-                    <Grid>
-                      <FacebookLogin
-                        appId="138193143563601"
-                        autoLoad={false}
-                        onSuccess={this.responseFacebook}
-                        icon="fa-facebook"
-                      />
-                      <div style={{ height: 16 }} />
-                      <GoogleLogin
-                        onSuccess={this.responseGoogle}
-                        onFailure={this.error}
-                        // onRequest={this.loading}
-                        offline={false}
-                        responseType="id_token"
-                        isSignedIn
-                        disabled={this.state.isLoggedIn}
-                        prompt="consent"
-                        buttonText="Login with Google"
-                      />
-                    </Grid>
                   </CardContent>
-                  <CardActions className={classes.cardButton}>
+                  <CardActions>
                     <Grid container>
                       <Grid item xs={12}>
                         {loading ? (
@@ -164,6 +177,11 @@ class Login extends Component {
                             Log in
                           </Button>
                         )}
+
+                        <FormHelperText className={classes.callout}>
+                          <span>Not a member?</span>
+                          <Link to="/auth/register">Create an account</Link>
+                        </FormHelperText>
                       </Grid>
                     </Grid>
                   </CardActions>
@@ -193,6 +211,7 @@ Login.propTypes = {
   handleSubmit: PropTypes.any,
   submitting: PropTypes.any,
   login: PropTypes.func,
+  notification: PropTypes.object,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -205,9 +224,12 @@ const mapStateToProps = state => ({
   fetchUserResponse: state.api.user,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
   reduxForm({
     form: 'loginForm',
     validate,
-  })(withStyles(styles)(Login)),
-);
+  }),
+  withStyles(styles),
+  withNotification,
+)(Login);

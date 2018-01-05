@@ -117,7 +117,6 @@ module.exports.getStationById = idToFind => {
 // The function update a field in db
 module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
   try {
-    console.log('valueNeedUpdate : ' + valueNeedUpdate);
     let query = { id: stationId };
     return Station.update(query, {
       $set: {

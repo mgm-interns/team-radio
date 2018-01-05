@@ -1,4 +1,4 @@
-export default theme => ({
+export default ({ typography, breakpoints, palette }) => ({
   containerWrapper: {
     width: '100%',
     margin: 0,
@@ -6,26 +6,32 @@ export default theme => ({
   },
   container: {
     margin: 'auto',
-    // width: '100%',
-    [theme.breakpoints.up('lg')]: {
+    [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
     },
     '& h1': {
-      fontWeight: 'normal',
+      ...typography.display1,
+      color: 'black',
     },
   },
   switcherContainer: {
     margin: 'auto',
     padding: '0 !important',
     marginTop: 85,
-    background: theme.palette.lightGrey['500'],
+    background: palette.lightGrey['500'],
   },
   content: {
     height: 300,
-    [theme.breakpoints.up('md')]: {
+    [breakpoints.up('md')]: {
       height: 600,
     },
   },
   nowPlaying: {},
+  emptyNowPlaying: {
+    height: 0,
+  },
+  emptyPlaylist: {
+    height: 0,
+  },
 });

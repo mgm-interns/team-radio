@@ -22,8 +22,8 @@ class PopularStations extends Component {
             alt=""
             className={classes.stations_primary_img}
           />
-          <h1 className={classes.station_title}>{mainStation.name}</h1>
-          <span className={classes.station_subtitle}>
+          <h1 className={classes.stationTitle}>{mainStation.name}</h1>
+          <span className={classes.stationSubtitle}>
             {mainStation.description}
           </span>
         </div>

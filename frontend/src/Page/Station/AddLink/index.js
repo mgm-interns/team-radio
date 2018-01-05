@@ -23,11 +23,6 @@ import { Images } from 'Theme';
 import { checkValidYoutubeUrl } from 'Transformer/transformText';
 import styles from './styles';
 
-const STATION_DEFAULT = {
-  number: 1,
-  name: 'mgm internship 2017',
-};
-
 /* eslint-disable no-shadow */
 class AddLink extends Component {
   static propTypes = {
@@ -35,6 +30,8 @@ class AddLink extends Component {
     addSong: PropTypes.func,
     setPreviewVideo: PropTypes.func,
     preview: PropTypes.object,
+    match: PropTypes.any,
+    userId: PropTypes.any,
   };
 
   constructor(props) {
@@ -45,7 +42,7 @@ class AddLink extends Component {
       searchText: '',
       suggestions: [],
       isDisableButton: true,
-      // isAddLinkProgress: false,
+      isAddLinkProgress: false,
     };
     this._onChange = this._onChange.bind(this);
     this._onAddClick = this._onAddClick.bind(this);
@@ -70,6 +67,7 @@ class AddLink extends Component {
       : process.env.REACT_APP_YOUTUBE_URL + video.id.videoId;
   }
 
+  // use for link
   async _getVideoInfo(id) {
     const { data: { items } } = await axios.get(
       `${process.env.REACT_APP_YOUTUBE_API_URL}/videos`,
@@ -161,19 +159,21 @@ class AddLink extends Component {
 
   _timeoutSearchFunc;
   _onSuggestionsFetchRequested({ value }) {
-    // skip the other params of youtube link
-    // just get the main part: https://www.youtube.com/watch?v={video_id}
-    const searchInput = !checkValidYoutubeUrl(value)
-      ? value
-      : value.split('&')[0];
     try {
       clearTimeout(this._timeoutSearchFunc);
       this._timeoutSearchFunc = setTimeout(async () => {
-        const data = await this._getSearchResults(searchInput);
-        this.setState({
-          videoId: '',
-          suggestions: data,
-        });
+        // Search by keyword if value is not a youtube link
+        if (!checkValidYoutubeUrl(value)) {
+          const data = await this._getSearchResults(value);
+          this.setState({
+            videoId: '',
+            suggestions: data,
+          });
+        } else {
+          this.setState({
+            suggestions: [],
+          });
+        }
       }, 300);
     } catch (error) {
       console.log(error);
@@ -198,10 +198,26 @@ class AddLink extends Component {
   /** End of autoComplete search  */
 
   /* Handle add link events */
-  _onChange(e) {
+  async _onChange(e) {
     const { setPreviewVideo } = this.props;
     const result = e.target.value;
     this.setState({ searchText: result });
+    try {
+      // Display preview if result is a youtube link without search
+      if (checkValidYoutubeUrl(result)) {
+        // skip the other params of youtube link
+        // just get the main part: https://www.youtube.com/watch?v={video_id}
+        const input = result.split('&')[0];
+        const videoId = checkValidYoutubeUrl(input);
+        const data = await this._getVideoInfo(videoId);
+        setPreviewVideo(data[0]);
+        this.setState({
+          isDisableButton: false,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
     if (result === '') {
       setPreviewVideo();
       this.setState({
@@ -217,9 +233,10 @@ class AddLink extends Component {
       addSong,
       setPreviewVideo,
       match: { params: { stationId } },
+      userId,
     } = this.props;
     setPreviewVideo();
-    addSong(this._getVideoUrl(preview), stationId);
+    addSong({ songUrl: this._getVideoUrl(preview), stationId, userId });
     this.setState({ searchText: '', isDisableButton: true });
   }
   /* End of handle add link events */
@@ -258,7 +275,6 @@ class AddLink extends Component {
 
   _renderLinkBoxSection() {
     const { classes } = this.props;
-    const { isDisableButton } = this.state;
 
     return (
       <Grid item md={5} xs={12} className={classes.addLinkBoxLeft}>
@@ -287,22 +303,12 @@ class AddLink extends Component {
               renderSuggestion={this._renderSuggestion}
               inputProps={{
                 classes,
-                placeholder: 'Search...',
+                placeholder:
+                  "Type the Youtube's video name. e.g. Despacito,...",
                 value: this.state.searchText,
                 onChange: this._onChange,
               }}
             />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              className={classes.sendBtn}
-              raised
-              color="primary"
-              disabled={isDisableButton}
-              onClick={this._onAddClick}
-            >
-              Add <Icon className={classes.sendIcon}>send</Icon>
-            </Button>
           </Grid>
         </Grid>
       </Grid>
@@ -311,6 +317,7 @@ class AddLink extends Component {
 
   _renderPreviewSection() {
     const { classes, preview } = this.props;
+    const { isDisableButton } = this.state;
     let view = null;
 
     if (preview === null) {
@@ -325,11 +332,20 @@ class AddLink extends Component {
               playing={true}
             />
           </Grid>
-          <Grid item sm={8} xs={12}>
+          <Grid item sm={8} xs={12} className={classes.previewRightContainer}>
             <p className={classes.previewTitle}>{preview.snippet.title}</p>
             <p className={classes.secondaryTitle}>
               Channel: {preview.snippet.channelTitle}
             </p>
+            <Button
+              className={classes.sendBtn}
+              raised
+              color="primary"
+              disabled={isDisableButton}
+              onClick={this._onAddClick}
+            >
+              Add <Icon className={classes.sendIcon}>send</Icon>
+            </Button>
           </Grid>
         </Grid>
       );
@@ -349,10 +365,8 @@ class AddLink extends Component {
       <Grid container className={classes.addLinkContainer}>
         <Grid item xs={12} className={classes.linkTitle}>
           <div>
-            <h1 className={classes.primaryTitle}>Request more songs</h1>
-            <span className={classes.secondaryTitle}>
-              {' - '} {STATION_DEFAULT.name}
-            </span>
+            <h1 className={classes.primaryTitle}>Add song</h1>
+            <span className={classes.secondaryTitle} />
           </div>
         </Grid>
         <Card className={classes.addLinkBox}>
@@ -368,12 +382,13 @@ class AddLink extends Component {
   }
 }
 
-const mapStateToProps = ({ page }) => ({
+const mapStateToProps = ({ page, api }) => ({
   preview: page.station.preview,
+  userId: api.user.data.userId,
 });
 
 const mapDispatchToProps = dispatch => ({
-  addSong: (songUrl, stationId) => dispatch(addSong({ songUrl, stationId })),
+  addSong: option => dispatch(addSong(option)),
   setPreviewVideo: video => dispatch(setPreviewVideo(video)),
 });
 

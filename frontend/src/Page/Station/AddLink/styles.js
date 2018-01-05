@@ -42,6 +42,12 @@ export default theme => {
       marginBottom: baseMargin,
     },
 
+    sendBtn: {
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+    },
+
     sendIcon: {
       marginLeft: baseMargin,
       fontSize: doubleBaseMargin,
@@ -52,6 +58,10 @@ export default theme => {
       [breakpoints.down('md')]: {
         paddingLeft: '8px !important',
       },
+    },
+
+    previewRightContainer: {
+      position: 'relative',
     },
 
     previewTitle: {

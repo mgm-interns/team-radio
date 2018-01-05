@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
+import { Link } from 'react-router-dom';
+import classNames from 'classnames';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
@@ -54,7 +56,7 @@ class Register extends Component {
       asyncError: '',
       benefits: [
         'Edit profile',
-        'Be rewarded',
+        'Increase your reputation',
         'Play more songs than these anonymous freaks',
         'See some information of the past activities',
       ],
@@ -69,7 +71,7 @@ class Register extends Component {
       this.setState({
         asyncError: error.response.message,
       });
-    } else if (response.data.token) {
+    } else if (response.data.token || response.isAuthenticated) {
       saveAuthenticationState(response.data);
       this.props.history.push('/');
     }
@@ -85,9 +87,12 @@ class Register extends Component {
           <Grid container className={classes.foreground}>
             <Grid
               item
-              xs={0}
+              xs={1}
               sm={5}
-              className={[classes.cardWrapper, classes.cardInfoWrapper]}
+              className={classNames([
+                classes.cardWrapper,
+                classes.cardInfoWrapper,
+              ])}
             >
               <Card className={classes.cardInfo}>
                 <CardContent>
@@ -153,28 +158,32 @@ class Register extends Component {
                       {this.state.asyncError}
                     </FormHelperText>
                   </CardContent>
-                  <CardActions
-                    className={classes.cardButton}
-                    style={{ justifyContent: 'flex-end' }}
-                  >
-                    {loading ? (
-                      <CircularProgress />
-                    ) : (
-                      <Button
-                        raised
-                        color="primary"
-                        type="submit"
-                        className={classes.buttonSend}
-                        disabled={submitting}
-                      >
-                        Sign Up
-                      </Button>
-                    )}
+                  <CardActions>
+                    <Grid container>
+                      <Grid item xs={12}>
+                        {loading ? (
+                          <CircularProgress />
+                        ) : (
+                          <Button
+                            raised
+                            color="primary"
+                            type="submit"
+                            className={classes.buttonSend}
+                          >
+                            Sign up
+                          </Button>
+                        )}
+
+                        <FormHelperText className={classes.callout}>
+                          <span>Already have an account?</span>
+                          <Link to="/auth/login">Login</Link>
+                        </FormHelperText>
+                      </Grid>
+                    </Grid>
                   </CardActions>
                 </form>
               </Card>
             </Grid>
-
             <Grid item xs className={classes.backgroundImg}>
               <img
                 src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=2250&q=80"

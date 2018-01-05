@@ -22,7 +22,7 @@ io.on('connection', async function(socket) {
       },
     });
   } catch (err) {
-    console.log(EVENTS.SERVER_UPDATE_STATIONS + ' fail!!! Error: ' + err);
+    console.log(EVENTS.SERVER_UPDATE_STATIONS + ' fail! Error: ' + err);
   }
 
   // Listening for action request
@@ -38,6 +38,7 @@ io.on('connection', async function(socket) {
         break;
 
       case EVENTS.CLIENT_JOIN_STATION:
+        console.log('Action: ' + EVENTS.CLIENT_JOIN_STATION);
         eventHandlers.joinStationHandler(
           createEmitter(socket),
           action.payload.userId,
@@ -68,24 +69,36 @@ io.on('connection', async function(socket) {
 
       case EVENTS.CLIENT_UPVOTE_SONG:
         console.log('Action: ' + EVENTS.CLIENT_UPVOTE_SONG);
-        eventHandlers.voteSongHandler(
-          createEmitter(socket),
-          1,
-          action.payload.userId,
-          action.payload.stationId,
-          action.payload.songId,
-        );
+        if (action.payload.userId !== '0') {
+          eventHandlers.voteSongHandler(
+            createEmitter(socket),
+            1,
+            action.payload.userId,
+            action.payload.stationId,
+            action.payload.songId,
+          );
+        } else {
+          socket.emit('action', {
+            message: 'Anonymous users can not vote song',
+          });
+        }
         break;
 
       case EVENTS.CLIENT_DOWNVOTE_SONG:
         console.log('Action: ' + EVENTS.CLIENT_DOWNVOTE_SONG);
-        eventHandlers.voteSongHandler(
-          createEmitter(socket),
-          -1,
-          action.payload.userId,
-          action.payload.stationId,
-          action.payload.songId,
-        );
+        if (action.payload.userId !== '0') {
+          eventHandlers.voteSongHandler(
+            createEmitter(socket),
+            -1,
+            action.payload.userId,
+            action.payload.stationId,
+            action.payload.songId,
+          );
+        } else {
+          socket.emit('action', {
+            message: 'Anonymous users can not vote song',
+          });
+        }
         break;
 
       case EVENTS.CLIENT_CHECK_EXISTS_EMAIL:
@@ -101,6 +114,7 @@ io.on('connection', async function(socket) {
   });
 
   socket.on('disconnect', () => {
+    socket.leaveAll();
     console.log('Disconnect with ' + socket.id);
   });
 });
@@ -122,6 +136,21 @@ const createEmitter = socket => ({
     });
     console.log(
       'Emit to station: ' +
+        stationId +
+        ', type: ' +
+        eventName +
+        ', payload: ' +
+        payload,
+    );
+  },
+  broadcastToStation: (stationId, eventName, payload) => {
+    // Use broadcast to emit room except sender
+    socket.broadcast.to(stationId).emit('action', {
+      type: eventName,
+      payload: payload,
+    });
+    console.log(
+      'Broadcast to station: ' +
         stationId +
         ', type: ' +
         eventName +

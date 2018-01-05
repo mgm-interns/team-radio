@@ -1,88 +1,89 @@
 export default ({ breakpoints, spacing }) => ({
   container: {
     margin: 'auto',
-    paddingLeft: 20,
-    paddingRight: 20,
-    '& .slick-track': {
-      // height: 140,
-    },
-    '& .slick-dots': {
-      position: 'relative',
-      bottom: 0,
-    },
-    '& .slick-arrow': {
-      height: '100%',
-      transition: '300ms',
-      paddingLeft: 2,
-      paddingRight: 2,
-      '&::before': {
-        fontSize: 16,
-      },
-      '&:hover': {
-        background: 'rgba(255,255,255,0.33)',
-      },
-    },
+    overflowX: 'auto',
+    minHeight: 120,
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
+      minHeight: 135,
+      paddingLeft: spacing.doubleBaseMargin,
+      paddingRight: spacing.doubleBaseMargin,
     },
   },
-  station_wrapper: {
+  scrollArea: {
+    display: 'flex',
+    flexDirection: 'row',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflow: 'scroll',
+    marginRight: -17,
+    marginBottom: -17,
+    paddingLeft: spacing.doubleBaseMargin,
+    paddingRight: spacing.doubleBaseMargin,
+  },
+  stationWrapper: {
     display: 'flex !important',
-    paddingTop: spacing.baseMargin,
-    paddingBottom: spacing.baseMargin,
+    padding: spacing.baseMargin,
     flexDirection: 'column',
     alignItems: 'center',
     cursor: 'pointer',
   },
-  station_title: {
+  stationTitle: {
     marginTop: spacing.smallMargin,
     fontWeight: 'bold',
-    fontSize: '16px',
+    fontSize: '0.825em',
+    textAlign: 'center',
+    display: 'block',
   },
-  station_subtitle: {
+  stationSubtitle: {
     color: 'grey',
     fontSize: '0.75em',
   },
-  station_avatar: {
-    width: '100px',
-    height: '100px',
+  stationAvatar: {
+    width: 90,
+    height: 90,
   },
-  station_item: {
-    marginRight: '2.5em',
-    width: '100px',
-  },
-  station_info: {
-    width: '100px',
+  stationInfo: {
+    width: 90,
     marginBottom: spacing.baseMargin,
   },
-  active_station: {
-    // border: '1px solid #333',
+  activeStation: {
     background: 'white',
   },
   loadingContainer: {
     display: 'flex',
+    flexDirection: 'row',
+  },
+  loadingAvatar: {
+    background: 'rgba(0,0,0,0.075)',
+  },
+  loadingInfo: {
+    background: 'rgba(0,0,0,0.075)',
+    height: spacing.doubleBaseMargin,
+    marginTop: spacing.baseMargin,
+  },
+  emptyContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: 158,
   },
   [breakpoints.down('sm')]: {
-    station_avatar: {
-      width: '80px',
-      height: '80px',
+    stationAvatar: {
+      width: 80,
+      height: 80,
     },
-    station_info: {
-      width: '80px',
+    stationInfo: {
+      width: 80,
     },
-    station_title: {
-      fontSize: '0.875em',
+    stationTitle: {
+      fontSize: '0.75em',
     },
-    station_subtitle: {
+    stationSubtitle: {
       color: 'grey',
       fontSize: '0.65em',
-    },
-    loadingContainer: {
-      minHeight: 138,
     },
   },
 });
