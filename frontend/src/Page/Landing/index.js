@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
-import { NavBar, Footer, StationSwitcher } from 'Component';
+import { NavBar, Footer } from 'Component';
 import { withNotification } from 'Component/Notification';
-import Grid from 'material-ui/Grid';
 import Backdrop from './Backdrop';
 import SectionCover from './SectionCover';
 import SectionContent from './SectionContent';
+import Stations from './Stations';
 
 class Landing extends Component {
   componentWillReceiveProps(nextProps) {
@@ -28,19 +28,7 @@ class Landing extends Component {
     return [
       <NavBar key={1} />,
       <Backdrop key={2} />,
-      <Grid
-        key={3}
-        container
-        style={{
-          paddingBottom: '10em',
-          paddingTop: '2em',
-          margin: 'auto',
-          padding: '0 !important',
-          width: '100%',
-        }}
-      >
-        <StationSwitcher />
-      </Grid>,
+      <Stations key={3} />,
       <SectionCover key={4} />,
       <SectionContent key={5} />,
       <Footer key={6} />,
