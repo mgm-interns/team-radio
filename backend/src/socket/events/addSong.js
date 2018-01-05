@@ -19,7 +19,7 @@ export default async (emitter, userId, stationId, songUrl) => {
     }
   } catch (err) {
     emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
-      message: err,
+      message: err.message,
     });
   }
 };

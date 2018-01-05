@@ -78,7 +78,7 @@ io.on('connection', async function(socket) {
             action.payload.songId,
           );
         } else {
-          socket.emit('action', {
+          socket.emit(EVENTS.SERVER_UPVOTE_SONG_FAILURE, {
             message: 'Anonymous users can not vote song',
           });
         }
@@ -95,7 +95,7 @@ io.on('connection', async function(socket) {
             action.payload.songId,
           );
         } else {
-          socket.emit('action', {
+          socket.emit(EVENTS.SERVER_DOWNVOTE_SONG_FAILURE, {
             message: 'Anonymous users can not vote song',
           });
         }

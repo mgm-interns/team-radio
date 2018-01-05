@@ -49,14 +49,13 @@ class StationPage extends Component {
     }
   }
 
-  static isNotAnEmptyArray(data) {
-    console.log(data);
-    if (!data) {
-      return false;
-    } else if (data.length === 0) {
+  static isNotAnEmptyArray(playlist) {
+    if (!playlist) {
       return false;
     }
-    return true;
+    const filteredPlaylist = playlist.filter(song => song.is_played === false);
+
+    return !!filteredPlaylist.length;
   }
 
   render() {

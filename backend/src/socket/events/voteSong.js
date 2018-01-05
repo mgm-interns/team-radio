@@ -1,5 +1,5 @@
 import * as stationController from '../../controllers/station';
-import * as userController from '../../controllers/user'
+import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
 
 export default (emitter, action, userId, stationId, songId) => {
@@ -7,11 +7,14 @@ export default (emitter, action, userId, stationId, songId) => {
     _upVoteSong(emitter, userId, stationId, songId);
   } else if (action === -1) {
     _downVoteSong(emitter, userId, stationId, songId);
-  } else console.log('Action unknow!');
+  } else console.log('Action Unknow!');
 };
 
 const _upVoteSong = async (emitter, userId, stationId, songId) => {
   try {
+    // Check if userId is exist, allow vote song
+    // If not, throw an error and emit message to user
+    const user = await userController.getUserById(userId);
     const playlist = await stationController.upVote(stationId, songId, userId);
     emitter.emit(EVENTS.SERVER_UPVOTE_SONG_SUCCESS, {});
     emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_PLAYLIST, {
@@ -26,6 +29,9 @@ const _upVoteSong = async (emitter, userId, stationId, songId) => {
 
 const _downVoteSong = async (emitter, userId, stationId, songId) => {
   try {
+    // Check if userId is exist, allow vote song
+    // If not, throw an error and emit message to user
+    const user = await userController.getUserById(userId);
     const playlist = await stationController.downVote(
       stationId,
       songId,
