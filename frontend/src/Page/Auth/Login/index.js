@@ -93,7 +93,7 @@ class Login extends Component {
     } else if (response.data.token || response.isAuthenticated) {
       // } else if (response.data.token) {
       saveAuthenticationState(response.data);
-      // this.props.history.push('/');
+      this.props.history.push('/');
     }
 
     if (!loadAuthenticationState()) {
