@@ -11,6 +11,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { transformText } from 'Transformer';
 import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
+import SwitcherItem from './Item';
 import styles from './styles';
 
 class StationSwitcher extends Component {
@@ -78,25 +79,11 @@ class StationSwitcher extends Component {
         }}
       >
         {filteredStations.map((station, index) => (
-          <div
+          <SwitcherItem
             key={index}
-            className={`${classes.stationWrapper} ${station.isActive &&
-              classes.activeStation}`}
-            onClick={() => this._goToStationPage(station)}
-          >
-            <img src={station.avatar} className={classes.stationAvatar} />
-            <div className={classes.stationInfo}>
-              <Tooltip
-                id={station.id}
-                title={station.station_name}
-                placement={'right'}
-              >
-                <span className={classes.stationTitle}>
-                  {transformText.reduceByCharacters(station.station_name, 10)}
-                </span>
-              </Tooltip>
-            </div>
-          </div>
+            {...station}
+            goToStationPage={() => this._goToStationPage(station)}
+          />
         ))}
       </Scrollbars>
     );
