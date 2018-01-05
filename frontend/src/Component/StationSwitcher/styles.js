@@ -6,7 +6,7 @@ export default ({ breakpoints, spacing }) => ({
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
-      minHeight: 135,
+      minHeight: 140,
       paddingLeft: spacing.doubleBaseMargin,
       paddingRight: spacing.doubleBaseMargin,
     },
@@ -46,6 +46,7 @@ export default ({ breakpoints, spacing }) => ({
   stationAvatar: {
     width: 90,
     height: 90,
+    objectFit: 'cover',
   },
   stationInfo: {
     width: 90,

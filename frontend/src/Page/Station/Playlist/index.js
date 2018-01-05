@@ -29,8 +29,6 @@ class Playlist extends Component {
     sortedPlaylist.sort((songA, songB) => {
       // Push now playing to the first position
       if (songA.url === nowPlaying.url) {
-        // Make the now playing song has playing = true
-        songA.playing = true; // eslint-disable-line no-param-reassign
         return -2;
       }
       const scoreA = Playlist.getSongScore(songA);
@@ -59,7 +57,7 @@ class Playlist extends Component {
       >
         <List style={{ paddingTop: 0, paddingBottom: 0 }}>
           {this.getFilteredPlaylist().map((video, index) => (
-            <Item key={index} {...video} />
+            <Item key={index} {...video} playing={index === 0} />
           ))}
         </List>
       </Grid>
