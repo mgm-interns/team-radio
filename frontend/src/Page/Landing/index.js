@@ -36,6 +36,7 @@ class Landing extends Component {
           paddingTop: '2em',
           margin: 'auto',
           padding: '0 !important',
+          width: '100%',
         }}
       >
         <StationSwitcher />
