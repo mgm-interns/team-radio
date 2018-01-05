@@ -127,24 +127,12 @@ export default router => {
         // verifies secret and checks exp
         jwt.verify(token, req.app.get('superSecret'), (err, decoded) => {
           if (err) {
-            return res.json({
-              success: false,
-            });
+            return res.status(400).json({ tokenError: 'Verify token failed.' });
           }
-          return res.json({
-            data: {
-              userId: decoded.userId,
-              success: true,
-            },
-          });
-        });
-      } else {
-        return res.json({
-          data: {
-            success: false,
-          },
+          return res.json(decoded);
         });
       }
+      return res.status(400).json({ tokenError: 'No token provided.' });
     } catch (err) {
       throw err;
     }

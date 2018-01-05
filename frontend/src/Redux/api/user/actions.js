@@ -36,6 +36,16 @@ export const addUserWithSocialAccount = data => ({
   },
 });
 
+export const verifyToken = () => ({
+  [CALL_API]: {
+    types: ['VERIFY_TOKEN', 'VERIFY_TOKEN_SUCCESS', 'VERIFY_TOKEN_FAILURE'],
+    endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/verifyToken`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: localStorage.getItem('token') }),
+  },
+});
+
 export const logout = () => ({
   type: 'LOGOUT_REQUEST',
 });
