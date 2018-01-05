@@ -1,20 +1,19 @@
 import {
   SERVER_JOINED_STATION_SUCCESS,
-  // SERVER_JOINED_STATION_FAILURE,
   SERVER_UPDATE_PLAYLIST,
   SERVER_UPDATE_NOW_PLAYING,
+  CLIENT_ADD_SONG,
+  SERVER_ADD_SONG_FAILURE,
 } from 'Redux/actions';
-
-import playlist from './fixtures';
 
 const INITIAL_STATE = {
   station: null,
-  playlist,
+  playlist: [],
   nowPlaying: {
     url: 'https://www.youtube.com/watch?v=igSCSQ9fg14',
     starting_time: 0,
   },
-  // resetSearchBox: false,
+  tempPlaylist: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -25,7 +24,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         station: action.payload.station,
         playlist: action.payload.station.playlist,
-        // resetSearchBox: '',
       };
 
     case SERVER_UPDATE_PLAYLIST:
@@ -39,7 +37,26 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         nowPlaying: action.payload,
       };
-
+    /**
+     * Add the song to playlist if user added a new song
+     * Move the old playlist to temp
+     */
+    case CLIENT_ADD_SONG:
+      return {
+        ...state,
+        tempPlaylist: state.playlist,
+        playlist: [...state.playlist, action.payload],
+      };
+    /**
+     * Remove the new song when ADD_SONG action has failed
+     * by copy from temp playlist
+     */
+    case SERVER_ADD_SONG_FAILURE:
+      return {
+        ...state,
+        playlist: [...state.tempPlaylist],
+        tempPlaylist: INITIAL_STATE.tempPlaylist,
+      };
     default:
       return state;
   }

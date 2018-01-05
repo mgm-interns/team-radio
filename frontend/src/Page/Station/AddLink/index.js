@@ -193,7 +193,6 @@ class AddLink extends Component {
 
   _onSuggestionSelected(e, { suggestion }) {
     const { nowPlaying } = this.props;
-    console.log('now playing: ', nowPlaying);
     if (!nowPlaying.url) {
       this.setState({ isMute: true });
     }
@@ -209,7 +208,7 @@ class AddLink extends Component {
 
   /* Handle add link events */
   async _onChange(e) {
-    const { setPreviewVideo } = this.props;
+    const { setPreviewVideo, mutePlayer } = this.props;
     const result = e.target.value;
     this.setState({ searchText: result });
     try {
@@ -230,6 +229,7 @@ class AddLink extends Component {
     }
     if (result === '') {
       setPreviewVideo();
+      mutePlayer(false);
       this.setState({
         isDisableButton: true,
         videoId: '',
@@ -242,11 +242,19 @@ class AddLink extends Component {
       preview,
       addSong,
       setPreviewVideo,
+      mutePlayer,
       match: { params: { stationId } },
       userId,
     } = this.props;
     setPreviewVideo();
-    addSong({ songUrl: this._getVideoUrl(preview), stationId, userId });
+    addSong({
+      songUrl: this._getVideoUrl(preview),
+      title: preview.snippet.title,
+      thumbnail: preview.snippet.thumbnails.default.url,
+      stationId,
+      userId,
+    });
+    mutePlayer(false);
     this.setState({ searchText: '', isDisableButton: true, isMute: true });
   }
   /* End of handle add link events */
