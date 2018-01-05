@@ -45,20 +45,19 @@ class AuthLink extends Component {
             </Link>
           </Fragment>
         )}
-        {user.isAuthenticated &&
-          (
-            <Fragment>
-              <a onClick={this._logout} style={{ marginLeft: 16 }}>
-                Logout
-              </a>
-              <a style={{ marginLeft: 16 }}>Hi ! {user.data.name}</a>
-              <img
-                className={classes.avatar}
-                src="http://i.pravatar.cc/50"
-                alt="avatar"
-              />
-            </Fragment>
-          )}
+        {user.isAuthenticated && (
+          <Fragment>
+            <a onClick={this._logout} style={{ marginLeft: 16 }}>
+              Logout
+            </a>
+            <a style={{ marginLeft: 16 }}>Hi ! {user.data.name}</a>
+            <img
+              className={classes.avatar}
+              src="http://i.pravatar.cc/50"
+              alt="avatar"
+            />
+          </Fragment>
+        )}
       </Fragment>
     );
   }
