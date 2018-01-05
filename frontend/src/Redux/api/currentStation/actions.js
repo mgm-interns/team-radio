@@ -19,9 +19,18 @@ export const leaveStation = (stationId = DEFAULT_STATION_ID) => ({
   payload: { userId: 0, stationId },
 });
 
-export const addSong = ({ userId, stationId, songUrl }) => ({
+export const addSong = ({ userId, stationId, songUrl, title, thumbnail }) => ({
   type: CLIENT_ADD_SONG,
-  payload: { userId, stationId, songUrl },
+  payload: {
+    userId,
+    stationId,
+    songUrl,
+    title,
+    thumbnail,
+    is_played: false,
+    up_vote: [],
+    down_vote: [],
+  },
 });
 
 export const upVoteSong = ({ userId, stationId, songId }) => ({

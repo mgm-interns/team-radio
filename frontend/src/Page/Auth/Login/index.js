@@ -173,6 +173,7 @@ class Login extends Component {
                             color="primary"
                             type="submit"
                             className={classes.buttonSend}
+                            disabled={this.state.isLoggedIn}
                           >
                             Log in
                           </Button>
