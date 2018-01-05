@@ -1,8 +1,7 @@
 /* eslint-disable */
 import mongoose from 'mongoose';
-import station from '../routes/station';
-mongoose.Promise = require('bluebird');
-//const ObjectId = mongoose.Schema.Types.ObjectId;
+import { type } from 'os';
+
 const stationSchema = mongoose.Schema({
   station_name: {
     type: String,
@@ -20,48 +19,52 @@ const stationSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  playlist: [
+  playlist:
     {
-      song_id: {
-        type: Number,
-        require: true,
-      },
-      is_played: {
-        type: Boolean,
-      },
-      url: {
-        type: String,
-        required: true,
-      },
-      title: {
-        type: String,
-      },
-      thumbnail: {
-        type: String,
-      },
-      duration: {
-        type: Number,
-        min: 0,
-      },
-      creator_id: {
-        type: mongoose.Schema.Types.ObjectId,
-      },
-      up_vote: [
+      type: [
         {
-          type: mongoose.Schema.Types.ObjectId, // userID
-        }
+          song_id: {
+            type: Number,
+            require: true,
+          },
+          is_played: {
+            type: Boolean,
+          },
+          url: {
+            type: String,
+            required: true,
+          },
+          title: {
+            type: String,
+          },
+          thumbnail: {
+            type: String,
+          },
+          duration: {
+            type: Number,
+            min: 0,
+          },
+          creator_id: {
+            type: mongoose.Schema.Types.ObjectId,
+          },
+          up_vote: [
+            {
+              type: mongoose.Schema.Types.ObjectId, // userID
+            }
+          ],
+          down_vote: [
+            {
+              type: mongoose.Schema.Types.ObjectId, // userID
+            }
+          ],
+          created_day: {
+            type: Number,
+            default: new Date().getTime(),
+          },
+        },
       ],
-      down_vote: [
-        {
-          type: mongoose.Schema.Types.ObjectId, // userID
-        }
-      ],
-      created_day: {
-        type: Number,
-        default: new Date().getTime(),
-      },
+      default: []
     },
-  ],
   created_day: {
     type: Number,
     default: new Date().getTime(),
@@ -81,6 +84,15 @@ module.exports.addStation = station => {
     console.log('err : ' + err);
   }
 };
+// Remove station
+module.exports.deleteStation = (stationId, userId) => {
+  try {
+    return Station.deleteOne({ owner_id: userId, id: stationId });
+  } catch (err) {
+    throw err;
+  }
+
+}
 
 // get all station
 module.exports.getStations = (limit) => {

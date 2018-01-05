@@ -20,6 +20,7 @@ export const addStation = async (stationName, userId) => {
         const currentStation = await stationModels.addStation({
           station_name: stationName,
           id: stationId,
+          playlist:[],
           owner_id: _safeObjectId(userId),
         });
         return currentStation;
@@ -31,6 +32,16 @@ export const addStation = async (stationName, userId) => {
     }
   }
 };
+
+export const deleteStation = async (stationId, userId) => {
+  try {
+    const resolve = await stationModels.deleteStation(stationId, userId);
+    return resolve;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
 
 // get a statio by id
 export const getStation = async stationId => {
@@ -302,14 +313,4 @@ async function _createStationId(stationName) {
   }
   return currentId;
 }
-/**
- * check song id has playlist
- */
-function validateDuplicatedSong(songId, playList) {
-  for (var i = 0; i < playList.length; i++) {
-    if (playList[i].song_id.equals(songId)) {
-      return false;
-    }
-  }
-  return true;
-}
+
