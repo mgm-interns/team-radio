@@ -93,6 +93,7 @@ export default router => {
       const payload = {
         email: user.email,
         name: user.name,
+        userId: user._id,
       };
       const token = jwt.sign(payload, req.app.get('superSecret'), {
         expiresIn: 1440 * 7, // expires in 24 hours

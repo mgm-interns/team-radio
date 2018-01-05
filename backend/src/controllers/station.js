@@ -20,6 +20,7 @@ export const addStation = async (stationName, userId) => {
         const currentStation = await stationModels.addStation({
           station_name: stationName,
           id: stationId,
+          playlist:[],
           owner_id: _safeObjectId(userId),
         });
         return currentStation;
@@ -31,7 +32,17 @@ export const addStation = async (stationName, userId) => {
   }
 };
 
-// get a station by id
+export const deleteStation = async (stationId, userId) => {
+  try {
+    const resolve = await stationModels.deleteStation(stationId, userId);
+    return resolve;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+// get a statio by id
 export const getStation = async stationId => {
   const station = await stationModels.getStationById(stationId);
   if (!station) {
@@ -160,8 +171,8 @@ export const upVote = async (stationId, songId, userId) => {
             songId,
             upVoteArray,
           );
-          const resolve = await getListSong(stationId);
-          return resolve;
+          const playList = await getListSong(stationId);
+          return playList;
         }
       }
       if (downVoteArray.length > 0) {
@@ -172,15 +183,15 @@ export const upVote = async (stationId, songId, userId) => {
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
 
-            const resolve = await getListSong(stationId);
-            return resolve;
+            const playList = await getListSong(stationId);
+            return playList;
           }
         }
       }
       upVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
-      const resolve = await getListSong(stationId);
-      return resolve;
+      const playList = await getListSong(stationId);
+      return playList;
     } else {
       if (downVoteArray.length > 0) {
         for (let i = 0; i < downVoteArray.length; i++) {
@@ -189,18 +200,18 @@ export const upVote = async (stationId, songId, userId) => {
             upVoteArray.push(_safeObjectId(userId));
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
-            const resolve = await getListSong(stationId);
-            return resolve;
+            const playList = await getListSong(stationId);
+            return playList;
           }
         }
       }
       upVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
-      const resolve = await getListSong(stationId);
-      return resolve
+      const playList = await getListSong(stationId);
+      return playList;
     }
-    const resolve = await getListSong(stationId);
-    return resolve
+    const playList = await getListSong(stationId);
+    return playList
   } catch (err) {
     console.log(err);
     throw new Error("Can not vote song !");
@@ -229,8 +240,8 @@ export const downVote = async (stationId, songId, userId) => {
             songId,
             downVoteArray,
           );
-          const resolve = await getListSong(stationId);
-          return resolve
+          const playList = await getListSong(stationId);
+          return playList
         }
       }
       if (upVoteArray.length > 0) {
@@ -241,15 +252,15 @@ export const downVote = async (stationId, songId, userId) => {
             downVoteArray.push(_safeObjectId(userId));
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
-            const resolve = await getListSong(stationId);
-            return resolve
+            const playList = await getListSong(stationId);
+            return playList;
           }
         }
       }
       downVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
-      const resolve = await getListSong(stationId);
-      return resolve
+      const playList = await getListSong(stationId);
+      return playList
     } else {
       if (upVoteArray.length > 0) {
 
@@ -259,18 +270,18 @@ export const downVote = async (stationId, songId, userId) => {
             downVoteArray.push(_safeObjectId(userId));
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
-            const resolve = await getListSong(stationId);
-            return resolve
+            const playList = await getListSong(stationId);
+            return playList
           }
         }
       }
       downVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
-      const resolve = await getListSong(stationId);
-      return resolve
+      const playList = await getListSong(stationId);
+      return playList
     }
-    const resolve = await getListSong(stationId);
-    return resolve
+    const playList = await getListSong(stationId);
+    return playList
   } catch (err) {
     console.log(err);
     throw new Error("Can not vote song !");
@@ -300,14 +311,4 @@ async function _createStationId(stationName) {
   }
   return currentId;
 }
-/**
- * check song id has playlist
- */
-function validateDuplicatedSong(songId, playList) {
-  for (var i = 0; i < playList.length; i++) {
-    if (playList[i].song_id.equals(songId)) {
-      return false;
-    }
-  }
-  return true;
-}
+

@@ -14,8 +14,6 @@
     "axios": "^0.17.1",
     "classnames": "^2.2.5",
     "font-awesome": "^4.7.0",
-    "graphql": "^0.11.7",
-    "immutable": "^3.8.2",
     "jsonwebtoken": "^8.1.0",
     "material-ui": "^1.0.0-beta.23",
     "moment": "^2.19.4",
