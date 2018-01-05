@@ -268,7 +268,7 @@ class AddLink extends Component {
         justify="center"
         alignItems="center"
       >
-        <img src={Images.notFound} className={classes.emptyImg} />
+        <img src={Images.loadingSong} className={classes.emptyImg} />
       </Grid>
     );
   }

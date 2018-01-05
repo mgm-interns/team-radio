@@ -84,7 +84,8 @@ export default theme => {
     },
 
     emptyCollection: {
-      width: 200,
+      // width: 200,
+      height: 200,
       margin: 'auto',
     },
 
