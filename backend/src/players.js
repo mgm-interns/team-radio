@@ -52,7 +52,7 @@ class Player {
   _emitStationState = async () => {
     this._emitNowPlaying();
     this._emitPlaylist();
-  }
+  };
 
   _emit = (eventName, payload) => {
     io.to(this.stationId).emit('action', {
@@ -107,7 +107,9 @@ class Player {
     const sortedPlaylist = _.sortBy(filteredPlaylist, ['song_id']);
     const currentTime = Date.now();
     let preStartingTime = station.starting_time;
-    const playedSongs = this.nowPlaying.song_id ? [this.nowPlaying.song_id] : [];
+    const playedSongs = this.nowPlaying.song_id
+      ? [this.nowPlaying.song_id]
+      : [];
     // TODO: explain clearly in comments
     // TODO: stationController.setPlayedSongs to ids
     // DO NOT use foreach (can't be stop the loop)
@@ -122,7 +124,9 @@ class Player {
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
-        this.nowPlaying.starting_time = this.nowPlaying.song_id ? Date.now() : song.added_time;
+        this.nowPlaying.starting_time = this.nowPlaying.song_id
+          ? Date.now()
+          : song.added_time;
         // play the song
         this._startSong(song);
         return;
@@ -132,7 +136,9 @@ class Player {
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
-        this.nowPlaying.starting_time = this.nowPlaying.song_id ? Date.now() : preStartingTime;
+        this.nowPlaying.starting_time = this.nowPlaying.song_id
+          ? Date.now()
+          : preStartingTime;
         // play the song
         this._startSong(song);
         return;
@@ -140,7 +146,7 @@ class Player {
       // Move the song to next song for checking
       preStartingTime += song.duration;
       playedSongs.push(song.song_id);
-    };
+    }
 
     // The available song is not existed
     // Update is_played of the song in the sortedPlaylist to true
@@ -161,7 +167,7 @@ export const init = async () => {
 };
 
 export const attachWebSocket = _io => {
-  console.log('attchWebSocket');
+  console.log('PlayerAttachWebSocket');
   io = _io;
   init();
 };
