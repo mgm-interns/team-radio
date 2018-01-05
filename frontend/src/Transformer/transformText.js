@@ -1,7 +1,7 @@
 const DEFAULT_WORDS_MAX_LENGTH = 25;
 const DEFAULT_CHAR_MAX_LENGTH = 50;
 
-export const reduceByWords = (text, length = DEFAULT_WORDS_MAX_LENGTH) => {
+export const reduceByWords = (text = '', length = DEFAULT_WORDS_MAX_LENGTH) => {
   const words = text.split(' ');
   const parts = [];
   for (let i = 0; i < words.length; i++) {
@@ -14,7 +14,10 @@ export const reduceByWords = (text, length = DEFAULT_WORDS_MAX_LENGTH) => {
   return parts.join(' ');
 };
 
-export const reduceByCharacters = (text, length = DEFAULT_CHAR_MAX_LENGTH) => {
+export const reduceByCharacters = (
+  text = '',
+  length = DEFAULT_CHAR_MAX_LENGTH,
+) => {
   let output = '';
   for (let i = 0; i < text.length; i++) {
     if (i < length - 1) {
