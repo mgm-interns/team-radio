@@ -26,6 +26,7 @@ class StationSwitcher extends Component {
     match: PropTypes.object,
     notification: PropTypes.object,
     setPreviewVideo: PropTypes.func,
+    userId: PropTypes.string,
   };
 
   constructor(props) {
@@ -42,11 +43,12 @@ class StationSwitcher extends Component {
       joinStationRequest,
       setPreviewVideo,
       notification,
+      userId,
     } = this.props;
     // Only change to new station if the id has changed
     if (station.id !== stationId) {
       history.replace(`/station/${station.id}`);
-      joinStationRequest(station.id);
+      joinStationRequest({ userId, stationId: station.id });
       setPreviewVideo();
       // Scroll to left after switch successful
       this.scrollBar.scrollToLeft();
@@ -150,10 +152,11 @@ class StationSwitcher extends Component {
 const mapStateToProps = ({ api }) => ({
   stations: api.stations.data,
   currentStation: api.currentStation,
+  userId: api.user.data.userId,
 });
 
 const mapDispatchToProps = dispatch => ({
-  joinStationRequest: stationId => dispatch(joinStation(stationId)),
+  joinStationRequest: option => dispatch(joinStation(option)),
   setPreviewVideo: () => dispatch(setPreviewVideo()),
 });
 

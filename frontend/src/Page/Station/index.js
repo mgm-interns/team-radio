@@ -8,7 +8,7 @@ import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
 import { StationSwitcher, NavBar, Footer } from 'Component';
-import { joinStation } from 'Redux/api/currentStation/actions';
+import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
 import { mutePlayer } from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
@@ -34,15 +34,21 @@ class StationPage extends Component {
 
   componentWillMount() {
     // Get station id from react-router
-    const { match: { params: { stationId } }, history } = this.props;
+    const { match: { params: { stationId } }, userId, history } = this.props;
     if (stationId) {
-      this.props.joinStation(stationId);
+      this.props.joinStation({ stationId, userId });
       this.joinStationInterval = setInterval(() => {
-        this.props.joinStation(stationId);
+        this.props.joinStation({ stationId, userId });
       }, JOIN_STATION_DELAY);
     } else {
       history.replace(`/`);
     }
+  }
+
+  componentWillUnmount() {
+    const { match: { params: { stationId } }, userId } = this.props;
+    this.props.leaveStation({ stationId, userId });
+    clearInterval(this.joinStationInterval);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -157,10 +163,12 @@ class StationPage extends Component {
 
 StationPage.propTypes = {
   classes: PropTypes.any,
-  joinStation: PropTypes.any,
+  joinStation: PropTypes.func,
+  leaveStation: PropTypes.func,
   match: PropTypes.any,
   history: PropTypes.any,
   currentStation: PropTypes.any,
+  userId: PropTypes.string,
   mutePlayer: PropTypes.func,
   isMutePlayer: PropTypes.bool,
   preview: PropTypes.object,
@@ -170,10 +178,12 @@ const mapStateToProps = ({ api, page }) => ({
   currentStation: api.currentStation,
   isMutePlayer: page.station.mutePlayer,
   preview: page.station.preview,
+  userId: api.user.data.userId,
 });
 
 const mapDispatchToProps = dispatch => ({
-  joinStation: stationId => dispatch(joinStation(stationId)),
+  joinStation: option => dispatch(joinStation(option)),
+  leaveStation: option => dispatch(leaveStation(option)),
   mutePlayer: isMute => dispatch(mutePlayer(isMute)),
 });
 
