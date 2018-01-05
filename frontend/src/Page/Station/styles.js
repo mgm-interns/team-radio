@@ -27,6 +27,10 @@ export default ({ typography, breakpoints, palette }) => ({
       height: 600,
     },
   },
+  nowPlayingHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
   nowPlaying: {},
   emptyNowPlaying: {
     height: 0,

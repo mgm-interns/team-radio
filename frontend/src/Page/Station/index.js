@@ -46,10 +46,18 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { mutePlayer } = this.props;
+    const { mutePlayer, isMutePlayer } = this.props;
     const { currentStation, preview } = nextProps;
+    // reset video volume (mute/unmute) without preview
     if (preview === null) {
-      mutePlayer(false);
+      this.setState({ isMute: !this.state.isMute }, () => {
+        mutePlayer(this.state.isMute);
+      });
+    }
+
+    // watch now playing volume
+    if (isMutePlayer !== nextProps.isMutePlayer) {
+      this.setState({ isMute: nextProps.isMutePlayer });
     }
 
     if (
@@ -61,14 +69,13 @@ class StationPage extends Component {
     }
   }
 
-  static isNotAnEmptyArray(data) {
-    console.log(data);
-    if (!data) {
-      return false;
-    } else if (data.length === 0) {
+  static isNotAnEmptyArray(playlist) {
+    if (!playlist) {
       return false;
     }
-    return true;
+    const filteredPlaylist = playlist.filter(song => song.is_played === false);
+
+    return !!filteredPlaylist.length;
   }
 
   _onVolumeClick() {
@@ -105,7 +112,7 @@ class StationPage extends Component {
             {StationPage.isNotAnEmptyArray(playlist) && [
               <Grid key={1} item xs={12} md={7} xl={8}>
                 <Grid container>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} className={classes.nowPlayingHeader}>
                     <h1>
                       {station ? station.station_name : STATION_NAME_DEFAULT}
                     </h1>

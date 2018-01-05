@@ -13,6 +13,11 @@ station.addStation = async function (req, res) {
 
 };
 
+station.deleteStation = async function(req,res){
+    let station = await stationController.deleteStation(req.body.station_id,req.body.user_id);
+    res.status(200).json(station);
+}
+
 station.getStation = async function (req, res) {
     //  var station = await stationController.addStation(req.body.station_name);
     let station = await stationController.getStation(req.params.id);

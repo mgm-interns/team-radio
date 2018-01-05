@@ -68,9 +68,6 @@ class Login extends Component {
       // handle data
       saveAuthenticationState(authResponse);
       this.props.dispatch(addUserWithSocialAccount(profileObj));
-      // this.props.dispatch(fetchUser());
-      // console.log(this.props.fetchUserResponse());
-      // this.props.history.push('/');
     }
   }
 
@@ -96,7 +93,7 @@ class Login extends Component {
     } else if (response.data.token || response.isAuthenticated) {
       // } else if (response.data.token) {
       saveAuthenticationState(response.data);
-      this.props.history.push('/');
+      // this.props.history.push('/');
     }
 
     if (!loadAuthenticationState()) {
@@ -124,7 +121,7 @@ class Login extends Component {
                         for listening and sharing music
                       </Typography>
                     </Grid>
-                    <Grid>
+                    <Grid style={{ paddingBottom: '1em' }}>
                       <FacebookLogin
                         fields="name,email,picture"
                         // scope={}
@@ -176,6 +173,7 @@ class Login extends Component {
                             color="primary"
                             type="submit"
                             className={classes.buttonSend}
+                            disabled={this.state.isLoggedIn}
                           >
                             Log in
                           </Button>

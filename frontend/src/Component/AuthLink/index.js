@@ -50,7 +50,7 @@ class AuthLink extends Component {
             <a onClick={this._logout} style={{ marginLeft: 16 }}>
               Logout
             </a>
-            {/* <a style={{ marginLeft: 16 }}>{user.data.name}</a> */}
+            <a style={{ marginLeft: 16 }}>{user.data.name}</a>
             <img
               className={classes.avatar}
               src="http://i.pravatar.cc/50"

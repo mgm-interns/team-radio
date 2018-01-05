@@ -13,7 +13,7 @@ export const setPreviewVideo = (value = null) => ({
   payload: value,
 });
 
-export const mutePlayer = isMute => ({
+export const mutePlayer = (isMute = false) => ({
   type: MUTE_PLAYER,
   payload: isMute,
 });

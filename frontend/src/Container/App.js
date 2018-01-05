@@ -1,18 +1,45 @@
-import React from 'react';
-import { Provider } from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { Notification } from 'Component';
+import { compose } from 'redux';
+import { verifyToken } from 'Redux/api/user/actions';
 import Router from './Router';
-import { initRedux } from '../Config';
 import styles from './styles';
 
-const store = initRedux();
+class App extends Component {
+  componentDidMount() {
+    this.props.getAuth();
+  }
 
-export default withStyles(styles)(({ classes }) => (
-  <div className={classes.container}>
-    <Provider store={store}>
-      <Router />
-    </Provider>
-    <Notification.AppNotification />
-  </div>
-));
+  render() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.container}>
+        <Router />
+        <Notification.AppNotification />
+      </div>
+    );
+  }
+}
+
+App.propTypes = {
+  classes: PropTypes.any,
+  getAuth: PropTypes.any,
+};
+
+const mapDispatchToProps = dispatch => ({
+  getAuth: () => {
+    dispatch(verifyToken());
+  },
+});
+
+const mapStateToProps = state => ({
+  user: state.api.user,
+});
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withStyles(styles),
+)(App);
