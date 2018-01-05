@@ -63,14 +63,14 @@ class Login extends Component {
       const { profileObj, authResponse } = response;
 
       notification.app.success({
-        message: `Logout your account!`,
+        message: `Login successful!`,
       });
       // handle data
       saveAuthenticationState(authResponse);
       this.props.dispatch(addUserWithSocialAccount(profileObj));
       // this.props.dispatch(fetchUser());
       // console.log(this.props.fetchUserResponse());
-      this.props.history.push('/');
+      // this.props.history.push('/');
     }
   }
 
