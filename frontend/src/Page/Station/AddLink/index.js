@@ -56,7 +56,6 @@ class AddLink extends Component {
     this._renderLinkBoxSection = this._renderLinkBoxSection.bind(this);
     this._renderPreviewSection = this._renderPreviewSection.bind(this);
     this._renderSuggestion = this._renderSuggestion.bind(this);
-
     this._renderInput = this._renderInput.bind(this);
   }
 
@@ -216,7 +215,7 @@ class AddLink extends Component {
         });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     if (result === '') {
       setPreviewVideo();
@@ -236,7 +235,6 @@ class AddLink extends Component {
       userId,
     } = this.props;
     setPreviewVideo();
-    console.log(preview);
     addSong({
       songUrl: this._getVideoUrl(preview),
       title: preview.snippet.title,
