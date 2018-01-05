@@ -236,7 +236,14 @@ class AddLink extends Component {
       userId,
     } = this.props;
     setPreviewVideo();
-    addSong({ songUrl: this._getVideoUrl(preview), stationId, userId });
+    console.log(preview);
+    addSong({
+      songUrl: this._getVideoUrl(preview),
+      title: preview.snippet.title,
+      thumbnail: preview.snippet.thumbnails.default.url,
+      stationId,
+      userId,
+    });
     this.setState({ searchText: '', isDisableButton: true });
   }
   /* End of handle add link events */
