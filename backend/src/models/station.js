@@ -59,7 +59,7 @@ const stationSchema = mongoose.Schema({
           ],
           created_day: {
             type: Number,
-            default: new Date().getTime(),
+            default: true,
           },
         },
       ],
@@ -76,7 +76,7 @@ var Station = (module.exports = mongoose.model('Stations', stationSchema));
  * Station
  */
 
-// add station
+// Add station
 module.exports.addStation = station => {
   try {
     return Station.create(station);
@@ -94,24 +94,29 @@ module.exports.deleteStation = (stationId, userId) => {
 
 }
 
-// get all station
+// Get all station
 module.exports.getStations = (limit) => {
   return Station.find({}, { station_name: 1, created_day: 1, id: 1, _id: 0 }).limit(limit);
 };
 // 
-// get all station
+// Get all station
 module.exports.getStationDetails = (limit) => {
   return Station.find().limit(limit);
 };
 
-// get station from name
+// Get station by name
 module.exports.getStationByName = stationNameToFind => {
   return Station.findOne({ station_name: stationNameToFind });
 };
 
-// get station from url
+// Get station by url
 module.exports.getStationById = idToFind => {
   return Station.findOne({ id: idToFind });
+};
+
+// Get station by user_id
+module.exports.getStationsByUserId = userId => {
+  return Station.find({ owner_id: userId });
 };
 
 // The function update a field in db
@@ -189,4 +194,14 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
 module.exports.getPlaylistOfStation = stationId => {
   let query = { id: stationId };
   return Station.findOne(query, { playlist: true, _id: false });
+};
+
+// Get list song by User ID
+module.exports.getLisSongByUserId = (stationId, userId) => {
+  // TODO :
+  return Station.find({ id: stationId }, {
+    playlist: {
+      creator_id: userId
+    }
+  });
 };
