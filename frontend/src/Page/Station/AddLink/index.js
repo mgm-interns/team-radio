@@ -225,7 +225,7 @@ class AddLink extends Component {
         });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     if (result === '') {
       setPreviewVideo();

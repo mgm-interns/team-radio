@@ -20,7 +20,7 @@ export const addStation = async (stationName, userId) => {
         const currentStation = await stationModels.addStation({
           station_name: stationName,
           id: stationId,
-          playlist:[],
+          playlist: [],
           owner_id: _safeObjectId(userId),
         });
         return currentStation;
@@ -51,8 +51,19 @@ export const getStation = async stationId => {
     return station;
   }
 };
-// Add a song of station
 
+// get list station by user_id
+export const getStationsByUserId = async userId => {
+  try {
+    const stations = stationModels.getStationsByUserId(_safeObjectId(userId));
+    return stations;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+// Add a song of station
 export const addSong = async (stationId, songUrl, userId = null) => {
   let station;
   try {
@@ -93,6 +104,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
       thumbnail: songDetail.thumbnail,
       duration: songDetail.duration,
       creator_id: _safeObjectId(userId),
+      created_day : new Date().getTime(),
     };
     await stationModels.addSong(stationId, song);
     station = await stationModels.getStationById(stationId);
@@ -260,7 +272,7 @@ export const downVote = async (stationId, songId, userId) => {
       downVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
       const playList = await getListSong(stationId);
-      return playList
+      return playList;
     } else {
       if (upVoteArray.length > 0) {
 
@@ -271,17 +283,17 @@ export const downVote = async (stationId, songId, userId) => {
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
             const playList = await getListSong(stationId);
-            return playList
+            return playList;
           }
         }
       }
       downVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
       const playList = await getListSong(stationId);
-      return playList
+      return playList;
     }
     const playList = await getListSong(stationId);
-    return playList
+    return playList;
   } catch (err) {
     console.log(err);
     throw new Error("Can not vote song !");
