@@ -4,13 +4,14 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { addSong } from 'Redux/api/currentStation/actions';
-import { setPreviewVideo } from 'Redux/page/station/actions';
+import { setPreviewVideo, mutePlayer } from 'Redux/page/station/actions';
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
+import IconButton from 'material-ui/IconButton';
 import Card from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
@@ -30,8 +31,11 @@ class AddLink extends Component {
     addSong: PropTypes.func,
     setPreviewVideo: PropTypes.func,
     preview: PropTypes.object,
+    nowPlaying: PropTypes.object,
     match: PropTypes.any,
     userId: PropTypes.any,
+    mutePlayer: PropTypes.func,
+    isMutePlayer: PropTypes.bool,
   };
 
   constructor(props) {
@@ -43,6 +47,7 @@ class AddLink extends Component {
       suggestions: [],
       isDisableButton: true,
       isAddLinkProgress: false,
+      isMute: true,
     };
     this._onChange = this._onChange.bind(this);
     this._onAddClick = this._onAddClick.bind(this);
@@ -56,8 +61,8 @@ class AddLink extends Component {
     this._renderLinkBoxSection = this._renderLinkBoxSection.bind(this);
     this._renderPreviewSection = this._renderPreviewSection.bind(this);
     this._renderSuggestion = this._renderSuggestion.bind(this);
-
     this._renderInput = this._renderInput.bind(this);
+    this._onVolumeClick = this._onVolumeClick.bind(this);
   }
 
   /* Get video info */
@@ -187,6 +192,11 @@ class AddLink extends Component {
   }
 
   _onSuggestionSelected(e, { suggestion }) {
+    const { nowPlaying } = this.props;
+    console.log('now playing: ', nowPlaying);
+    if (!nowPlaying.url) {
+      this.setState({ isMute: true });
+    }
     this.props.setPreviewVideo(suggestion);
     this.previewVideo = suggestion;
     this.setState({
@@ -237,9 +247,18 @@ class AddLink extends Component {
     } = this.props;
     setPreviewVideo();
     addSong({ songUrl: this._getVideoUrl(preview), stationId, userId });
-    this.setState({ searchText: '', isDisableButton: true });
+    this.setState({ searchText: '', isDisableButton: true, isMute: true });
   }
   /* End of handle add link events */
+
+  /* Handle preview volume */
+  _onVolumeClick() {
+    const { mutePlayer } = this.props;
+    this.setState({ isMute: !this.state.isMute }, () => {
+      // mute now playing if user want to unmute preview
+      mutePlayer(!this.state.isMute);
+    });
+  }
 
   /* Render loading while waiting for load data */
   _renderLoading() {
@@ -315,9 +334,14 @@ class AddLink extends Component {
     );
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { isMutePlayer } = nextProps;
+    this.setState({ isMute: !isMutePlayer });
+  }
+
   _renderPreviewSection() {
     const { classes, preview } = this.props;
-    const { isDisableButton } = this.state;
+    const { isDisableButton, isMute } = this.state;
     let view = null;
 
     if (preview === null) {
@@ -328,7 +352,7 @@ class AddLink extends Component {
           <Grid item sm={4} xs={12} className={classes.previewImg}>
             <Player
               url={this._getVideoUrl(preview)}
-              muted={true}
+              muted={isMute}
               playing={true}
             />
           </Grid>
@@ -337,11 +361,19 @@ class AddLink extends Component {
             <p className={classes.secondaryTitle}>
               Channel: {preview.snippet.channelTitle}
             </p>
+            <IconButton
+              onClick={this._onVolumeClick}
+              className={classes.volume}
+              color="default"
+            >
+              {isMute ? 'volume_off' : 'volume_up'}
+            </IconButton>
             <Button
               className={classes.sendBtn}
               raised
               color="primary"
               disabled={isDisableButton}
+              mini={true}
               onClick={this._onAddClick}
             >
               Add <Icon className={classes.sendIcon}>send</Icon>
@@ -384,12 +416,15 @@ class AddLink extends Component {
 
 const mapStateToProps = ({ page, api }) => ({
   preview: page.station.preview,
+  isMutePlayer: page.station.mutePlayer,
   userId: api.user.data.userId,
+  nowPlaying: api.currentStation.nowPlaying,
 });
 
 const mapDispatchToProps = dispatch => ({
   addSong: option => dispatch(addSong(option)),
   setPreviewVideo: video => dispatch(setPreviewVideo(video)),
+  mutePlayer: isMute => dispatch(mutePlayer(isMute)),
 });
 
 export default compose(

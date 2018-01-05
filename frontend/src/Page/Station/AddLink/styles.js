@@ -42,17 +42,6 @@ export default theme => {
       marginBottom: baseMargin,
     },
 
-    sendBtn: {
-      position: 'absolute',
-      right: 0,
-      bottom: 0,
-    },
-
-    sendIcon: {
-      marginLeft: baseMargin,
-      fontSize: doubleBaseMargin,
-    },
-
     addLinkBoxRight: {
       paddingLeft: '30px !important',
       [breakpoints.down('md')]: {
@@ -70,6 +59,38 @@ export default theme => {
       [breakpoints.down('sm')]: {
         fontSize: '1rem',
       },
+    },
+
+    // actions: {
+    //   position: 'absolute',
+    //   bottom: 0,
+    //   width: '100%',
+    //   display: 'flex',
+    //   alignItems: 'center',
+    //   justifyContent: 'space-between',
+    // },
+
+    volume: {
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      // height: '100%',
+    },
+
+    sendBtn: {
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      // minHeight: 0,
+      // paddingHorizontal: '8px',
+      // paddingVertical: '2px',
+      // padding: 4px 8px,
+      // height: '100%',
+    },
+
+    sendIcon: {
+      marginLeft: baseMargin,
+      fontSize: doubleBaseMargin,
     },
 
     content: {

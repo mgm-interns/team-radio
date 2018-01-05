@@ -39,6 +39,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         nowPlaying: action.payload,
       };
+
     default:
       return state;
   }

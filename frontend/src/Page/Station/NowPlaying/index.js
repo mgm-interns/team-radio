@@ -10,6 +10,7 @@ class NowPlaying extends Component {
     className: PropTypes.any,
     nowPlaying: PropTypes.object,
     autoPlay: PropTypes.bool,
+    isMutePlayer: PropTypes.bool,
   };
 
   constructor(props) {
@@ -30,7 +31,7 @@ class NowPlaying extends Component {
   // }
 
   render() {
-    const { className, nowPlaying, autoPlay } = this.props;
+    const { className, nowPlaying, autoPlay, isMutePlayer } = this.props;
     return (
       <Grid item xs={12} className={className}>
         <Player
@@ -38,15 +39,16 @@ class NowPlaying extends Component {
           // ref={this._getRefPlayer}
           playing={autoPlay}
           seektime={parseInt(nowPlaying && nowPlaying.starting_time, 10) / 1000}
-          muted={false}
+          muted={isMutePlayer}
         />
       </Grid>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  nowPlaying: state.api.currentStation.nowPlaying,
+const mapStateToProps = ({ api, page }) => ({
+  nowPlaying: api.currentStation.nowPlaying,
+  isMutePlayer: page.station.mutePlayer,
 });
 
 export default connect(mapStateToProps)(NowPlaying);
