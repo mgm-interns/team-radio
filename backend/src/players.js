@@ -39,10 +39,7 @@ class Player {
   };
 
   _emitNowPlaying = () => {
-    this._emit(
-      'Player' + EVENTS.SERVER_UPDATE_NOW_PLAYING,
-      this.getNowPlaying(),
-    );
+    this._emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, this.getNowPlaying());
   };
 
   _emitPlaylist = async () => {
