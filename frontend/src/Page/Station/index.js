@@ -50,7 +50,6 @@ class StationPage extends Component {
   }
 
   static isNotAnEmptyArray(data) {
-    console.log(data);
     if (!data) {
       return false;
     } else if (data.length === 0) {

@@ -9,14 +9,47 @@ import Item from './Item';
 import styles from './styles';
 
 class Playlist extends Component {
-  render() {
-    const { playlist, className, style } = this.props;
-    const notPlayedList = playlist
+  constructor(props) {
+    super(props);
+
+    this.getFilteredPlaylist = this.getFilteredPlaylist.bind(this);
+  }
+
+  static getSongScore(song) {
+    return song.up_vote.length - song.down_vote.length;
+  }
+
+  getFilteredPlaylist() {
+    const { playlist, nowPlaying } = this.props;
+    // Filter all song that have not been played
+    const sortedPlaylist = playlist
       ? playlist.filter(song => song.is_played === false)
       : [];
-    if (notPlayedList[0]) {
-      notPlayedList[0].playing = true;
-    }
+    // Sort the list
+    sortedPlaylist.sort((songA, songB) => {
+      // Push now playing to the first position
+      if (songA.url === nowPlaying.url) {
+        // Make the now playing song has playing = true
+        songA.playing = true; // eslint-disable-line no-param-reassign
+        return -2;
+      }
+      const scoreA = Playlist.getSongScore(songA);
+      const scoreB = Playlist.getSongScore(songB);
+      // Compare the rest songs based on scores
+      if (scoreA > scoreB) {
+        return -1;
+      }
+      if (scoreA < scoreB) {
+        return 1;
+      }
+      // when score is equal
+      return songA.created_day > songB.created_day ? 1 : -1;
+    });
+    return sortedPlaylist;
+  }
+
+  render() {
+    const { className, style } = this.props;
     return (
       <Grid
         item
@@ -25,7 +58,9 @@ class Playlist extends Component {
         style={{ ...style, overflowY: 'auto' }}
       >
         <List style={{ paddingTop: 0, paddingBottom: 0 }}>
-          {notPlayedList.map((video, index) => <Item key={index} {...video} />)}
+          {this.getFilteredPlaylist().map((video, index) => (
+            <Item key={index} {...video} />
+          ))}
         </List>
       </Grid>
     );
@@ -36,10 +71,12 @@ Playlist.propTypes = {
   className: PropTypes.any,
   style: PropTypes.any,
   playlist: PropTypes.array,
+  nowPlaying: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   playlist: state.api.currentStation.playlist,
+  nowPlaying: state.api.currentStation.nowPlaying,
 });
 
 export default compose(withStyles(styles), connect(mapStateToProps))(Playlist);
