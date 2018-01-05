@@ -103,7 +103,7 @@ class PlaylistItem extends Component {
         <Grid item xs={7} className={classes.info}>
           <div className={classes.name}>{title}</div>
           <div className={classes.singer}>{singer}</div>
-          <div className={classes.uploader}>Added by {uploader}</div>
+          {/* <div className={classes.uploader}>Added by {uploader}</div> */}
         </Grid>
         <Grid item xs={2} className={classes.actions}>
           <IconButton
