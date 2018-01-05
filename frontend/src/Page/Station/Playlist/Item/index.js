@@ -24,16 +24,14 @@ class PlaylistItem extends Component {
 
     this.upVoteSong = this.upVoteSong.bind(this);
     this.downVoteSong = this.downVoteSong.bind(this);
-    this.isUpVote = this.isUpVote.bind(this);
-    this.isDownVote = this.isDownVote.bind(this);
   }
 
   componentDidMount() {
     const { up_vote, down_vote } = this.props;
 
     this.setState({
-      isUpVote: this.isUpVote(this.props),
-      isDownVote: this.isDownVote(this.props),
+      isUpVote: PlaylistItem.isUpVote(this.props),
+      isDownVote: PlaylistItem.isDownVote(this.props),
       score: up_vote.length - down_vote.length,
     });
   }
@@ -42,8 +40,8 @@ class PlaylistItem extends Component {
   componentWillReceiveProps(nextProps) {
     const { up_vote, down_vote } = nextProps;
     this.setState({
-      isUpVote: this.isUpVote(nextProps),
-      isDownVote: this.isDownVote(nextProps),
+      isUpVote: PlaylistItem.isUpVote(nextProps),
+      isDownVote: PlaylistItem.isDownVote(nextProps),
       score: up_vote.length - down_vote.length,
     });
   }
@@ -51,11 +49,7 @@ class PlaylistItem extends Component {
   upVoteSong() {
     const { upVoteSong, song_id, userId, stationId } = this.props;
     const { isDownVote, isUpVote } = this.state;
-    upVoteSong({
-      songId: song_id,
-      userId: localStorage.getItem('userId'),
-      stationId,
-    });
+    upVoteSong({ songId: song_id, userId, stationId });
     this.setState({
       isUpVote: !isUpVote,
       isDownVote: isUpVote ? isDownVote : false,
@@ -65,29 +59,25 @@ class PlaylistItem extends Component {
   downVoteSong() {
     const { downVoteSong, song_id, userId, stationId } = this.props;
     const { isDownVote, isUpVote } = this.state;
-    downVoteSong({
-      songId: song_id,
-      userId: localStorage.getItem('userId'),
-      stationId,
-    });
+    downVoteSong({ songId: song_id, userId, stationId });
     this.setState({
       isDownVote: !isDownVote,
       isUpVote: isDownVote ? isUpVote : false,
     });
   }
 
-  isUpVote(props) {
+  static isUpVote(props) {
     const { up_vote, userId } = props;
     for (let i = 0; i < up_vote.length; i++) {
-      if (up_vote[i] === localStorage.getItem('userId')) return true;
+      if (up_vote[i] === userId) return true;
     }
     return false;
   }
 
-  isDownVote(props) {
+  static isDownVote(props) {
     const { down_vote, userId } = props;
     for (let i = 0; i < down_vote.length; i++) {
-      if (down_vote[i] === localStorage.getItem('userId')) return true;
+      if (down_vote[i] === userId) return true;
     }
     return false;
   }
