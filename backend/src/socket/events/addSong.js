@@ -1,6 +1,6 @@
 import * as stationController from '../../controllers/station';
 import * as EVENTS from '../../const/actions';
-import * as players from "../../players";
+import * as players from '../../players';
 
 export default async (emitter, userId, stationId, songUrl) => {
   let playlist;
