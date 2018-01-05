@@ -46,17 +46,8 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { mutePlayer, isMutePlayer } = this.props;
-    const { currentStation, preview } = nextProps;
-    // reset video volume (mute/unmute) without preview
-
-    // if (preview === null) {
-    //   console.log('pre: ', this.state.isMute);
-    //   this.setState({ isMute: !this.state.isMute }, () => {
-    //     console.log(this.state.isMute);
-    //     mutePlayer(this.state.isMute);
-    //   });
-    // }
+    const { isMutePlayer } = this.props;
+    const { currentStation } = nextProps;
 
     // watch now playing volume
     if (isMutePlayer !== nextProps.isMutePlayer) {
