@@ -20,6 +20,7 @@ import withRouter from 'react-router-dom/withRouter';
 import { MenuItem } from 'material-ui/Menu';
 import { CircularProgress } from 'material-ui/Progress';
 import { Player } from 'Component';
+import { withNotification } from 'Component/Notification';
 import { Images } from 'Theme';
 import { checkValidYoutubeUrl } from 'Transformer/transformText';
 import styles from './styles';
@@ -36,6 +37,8 @@ class AddLink extends Component {
     userId: PropTypes.any,
     mutePlayer: PropTypes.func,
     isMutePlayer: PropTypes.bool,
+    isAuthenticated: PropTypes.bool,
+    notification: PropTypes.object,
   };
 
   constructor(props) {
@@ -245,7 +248,17 @@ class AddLink extends Component {
       mutePlayer,
       match: { params: { stationId } },
       userId,
+      notification,
+      isAuthenticated,
     } = this.props;
+    // Show warning message if not authenticated
+    if (!isAuthenticated) {
+      notification.app.warning({
+        message: 'You need to login to use this feature.',
+      });
+      return;
+    }
+    // If authenticated
     setPreviewVideo();
     addSong({
       songUrl: this._getVideoUrl(preview),
@@ -427,6 +440,7 @@ const mapStateToProps = ({ page, api }) => ({
   isMutePlayer: page.station.mutePlayer,
   userId: api.user.data.userId,
   nowPlaying: api.currentStation.nowPlaying,
+  isAuthenticated: api.user.isAuthenticated,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -439,4 +453,5 @@ export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
   withRouter,
+  withNotification,
 )(AddLink);
