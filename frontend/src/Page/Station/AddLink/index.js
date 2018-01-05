@@ -31,6 +31,7 @@ class AddLink extends Component {
     setPreviewVideo: PropTypes.func,
     preview: PropTypes.object,
     match: PropTypes.any,
+    userId: PropTypes.any,
   };
 
   constructor(props) {
@@ -232,13 +233,10 @@ class AddLink extends Component {
       addSong,
       setPreviewVideo,
       match: { params: { stationId } },
+      userId,
     } = this.props;
     setPreviewVideo();
-    addSong(
-      this._getVideoUrl(preview),
-      stationId,
-      localStorage.getItem('userId'),
-    );
+    addSong({ songUrl: this._getVideoUrl(preview), stationId, userId });
     this.setState({ searchText: '', isDisableButton: true });
   }
   /* End of handle add link events */
@@ -384,13 +382,13 @@ class AddLink extends Component {
   }
 }
 
-const mapStateToProps = ({ page }) => ({
+const mapStateToProps = ({ page, api }) => ({
   preview: page.station.preview,
+  userId: api.user.data.userId,
 });
 
 const mapDispatchToProps = dispatch => ({
-  addSong: (songUrl, stationId, userId) =>
-    dispatch(addSong({ songUrl, stationId, userId })),
+  addSong: option => dispatch(addSong(option)),
   setPreviewVideo: video => dispatch(setPreviewVideo(video)),
 });
 
