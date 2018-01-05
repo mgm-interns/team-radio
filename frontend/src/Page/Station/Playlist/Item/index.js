@@ -8,6 +8,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
 import { upVoteSong, downVoteSong } from 'Redux/api/currentStation/actions';
+import { withNotification } from 'Component/Notification';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -53,7 +54,17 @@ class PlaylistItem extends Component {
       song_id,
       userId,
       match: { params: { stationId } },
+      isAuthenticated,
+      notification,
     } = this.props;
+    // Show warning message if not authenticated
+    if (!isAuthenticated) {
+      notification.app.warning({
+        message: 'You need to login to use this feature.',
+      });
+      return;
+    }
+    // If authenticated
     const { isDownVote, isUpVote } = this.state;
     upVoteSong({ songId: song_id, userId, stationId });
     this.setState({
@@ -68,7 +79,17 @@ class PlaylistItem extends Component {
       song_id,
       userId,
       match: { params: { stationId } },
+      isAuthenticated,
+      notification,
     } = this.props;
+    // Show warning message if not authenticated
+    if (!isAuthenticated) {
+      notification.app.warning({
+        message: 'You need to login to use this feature.',
+      });
+      return;
+    }
+    // If authenticated
     const { isDownVote, isUpVote } = this.state;
     downVoteSong({ songId: song_id, userId, stationId });
     this.setState({
@@ -144,11 +165,14 @@ PlaylistItem.propTypes = {
   up_vote: PropTypes.array,
   down_vote: PropTypes.array,
   userId: PropTypes.any,
+  isAuthenticated: PropTypes.bool,
   match: PropTypes.any,
+  notification: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({
   userId: api.user.data.userId,
+  isAuthenticated: api.user.isAuthenticated,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -160,4 +184,5 @@ export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   withStyles(styles),
   withRouter,
+  withNotification,
 )(PlaylistItem);
