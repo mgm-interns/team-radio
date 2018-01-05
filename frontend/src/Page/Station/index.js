@@ -99,7 +99,9 @@ class StationPage extends Component {
         className={classes.containerWrapper}
       >
         <Grid item xs={12} className={classes.switcherContainer}>
-          <StationSwitcher />
+          <div className={classes.switcherContent}>
+            <StationSwitcher />
+          </div>
         </Grid>
         <Grid item xs={12} className={classes.container}>
           <Grid container>

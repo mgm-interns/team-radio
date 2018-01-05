@@ -21,6 +21,14 @@ export default ({ typography, breakpoints, palette }) => ({
     marginTop: 85,
     background: palette.lightGrey['500'],
   },
+  switcherContent: {
+    width: '100%',
+    margin: 'auto',
+    [breakpoints.up('lg')]: {
+      minWidth: 1024,
+      maxWidth: 1280,
+    },
+  },
   content: {
     height: 300,
     [breakpoints.up('md')]: {

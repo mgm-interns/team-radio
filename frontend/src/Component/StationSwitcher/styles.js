@@ -4,8 +4,6 @@ export default ({ breakpoints, spacing }) => ({
     overflowX: 'auto',
     minHeight: 120,
     [breakpoints.up('lg')]: {
-      minWidth: 1024,
-      maxWidth: 1280,
       minHeight: 140,
       paddingLeft: spacing.doubleBaseMargin,
       paddingRight: spacing.doubleBaseMargin,
