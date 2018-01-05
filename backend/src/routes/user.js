@@ -98,14 +98,12 @@ export default router => {
         expiresIn: 1440 * 7, // expires in 24 hours
       });
       res.json({
-        data: {
-          message: 'signup success',
-          token: token,
-          userId: user._id,
-          googleId: user.google_ID,
-          facebookId: user.facebook_ID,
-          name: user.name,
-        },
+        message: 'signup success',
+        token: token,
+        userId: user._id,
+        googleId: user.google_ID,
+        facebookId: user.facebook_ID,
+        name: user.name,
       });
     } catch (err) {
       throw err;
