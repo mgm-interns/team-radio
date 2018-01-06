@@ -35,6 +35,7 @@ class Login extends Component {
 
     this._showNotification = this._showNotification.bind(this);
     this._onLoginSocialClick = this._onLoginSocialClick.bind(this);
+    this._onLoginSocialFailure = this._onLoginSocialFailure.bind(this);
     this._renderHeadline = this._renderHeadline.bind(this);
     this._renderLoginSocial = this._renderLoginSocial.bind(this);
     this._renderLoginLocalForm = this._renderLoginLocalForm.bind(this);
@@ -82,6 +83,17 @@ class Login extends Component {
     }
   }
 
+  _onLoginSocialFailure(response) {
+    if (response) {
+      const socialErrors = {
+        message: 'Login failed!',
+      };
+      this.setState({
+        formErrors: socialErrors,
+      });
+    }
+  }
+
   _renderHeadline() {
     return (
       <Grid style={{ paddingBottom: '1em' }}>
@@ -99,8 +111,10 @@ class Login extends Component {
         <FacebookLogin
           fields="name,email,picture"
           autoLoad={false}
+          scope="email,public_profile,user_friends"
           onSuccess={this._onLoginSocialClick}
           isDisabled={this.state.isLoggedIn}
+          onFailure={this._onLoginSocialFailure}
           // icon="fa-facebook"
         />
         <div style={{ height: 16 }} />
@@ -112,6 +126,7 @@ class Login extends Component {
           isDisabled={this.state.isLoggedIn}
           prompt="consent"
           buttonText="Login with Google"
+          onFailure={this._onLoginSocialFailure}
         />
       </Grid>
     );
