@@ -156,6 +156,7 @@ StationSwitcher.propTypes = {
   setPreviewVideo: PropTypes.func,
   muteNowPlaying: PropTypes.func,
   mutePreview: PropTypes.func,
+  userId: PropTypes.string,
 };
 
 const mapStateToProps = ({ api }) => ({

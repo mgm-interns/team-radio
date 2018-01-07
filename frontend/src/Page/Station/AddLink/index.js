@@ -56,6 +56,7 @@ class AddLink extends Component {
     this._renderSuggestion = this._renderSuggestion.bind(this);
     this._renderInput = this._renderInput.bind(this);
     this._onVolumeClick = this._onVolumeClick.bind(this);
+    this._clearSearchInput = this._clearSearchInput.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -100,7 +101,7 @@ class AddLink extends Component {
           part: 'snippet',
           safeSearch: 'strict',
           type: 'video',
-          maxResults: 5,
+          maxResults: 10,
           videoDefinition: 'any',
           relevanceLanguage: 'en',
         },
@@ -113,8 +114,9 @@ class AddLink extends Component {
   _renderInput(inputProps) {
     const { classes, value, ref, ...other } = inputProps;
 
-    return (
+    return [
       <TextField
+        key={1}
         autoComplete="search-input"
         id="search-input"
         name="search-input"
@@ -127,8 +129,16 @@ class AddLink extends Component {
           },
           ...other,
         }}
-      />
-    );
+      />,
+      <IconButton
+        key={2}
+        color="default"
+        onClick={this._clearSearchInput}
+        className={classes.closeIcon}
+      >
+        close
+      </IconButton>,
+    ];
   }
 
   _renderSuggestion(suggestion, { query, isHighlighted }) {
@@ -209,6 +219,14 @@ class AddLink extends Component {
   /** End of autoComplete search  */
 
   /* Handle add link events */
+  _clearSearchInput() {
+    const { setPreviewVideo, muteNowPlaying, mutePreview } = this.props;
+    this.setState({ searchText: '' });
+    setPreviewVideo();
+    muteNowPlaying();
+    mutePreview();
+  }
+
   async _onChange(e) {
     const { setPreviewVideo } = this.props;
     const result = e.target.value;
