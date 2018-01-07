@@ -9,7 +9,7 @@ import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
 import { StationSwitcher, NavBar, Footer } from 'Component';
 import { joinStation } from 'Redux/api/currentStation/actions';
-import { mutePlayer } from 'Redux/page/station/actions';
+import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
@@ -24,7 +24,7 @@ class StationPage extends Component {
     super(props);
 
     this.state = {
-      isMute: false,
+      muted: false,
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
@@ -34,7 +34,11 @@ class StationPage extends Component {
 
   componentWillMount() {
     // Get station id from react-router
-    const { match: { params: { stationId } }, history } = this.props;
+    const {
+      match: { params: { stationId } },
+      history,
+      mutedNowPlaying,
+    } = this.props;
     if (stationId) {
       this.props.joinStation(stationId);
       this.joinStationInterval = setInterval(() => {
@@ -43,16 +47,15 @@ class StationPage extends Component {
     } else {
       history.replace(`/`);
     }
+
+    // watch volume
+    this.setState({ muted: mutedNowPlaying });
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isMutePlayer } = this.props;
-    const { currentStation } = nextProps;
+    const { currentStation, mutedNowPlaying } = nextProps;
 
-    // watch now playing volume
-    if (isMutePlayer !== nextProps.isMutePlayer) {
-      this.setState({ isMute: nextProps.isMutePlayer });
-    }
+    this.setState({ muted: mutedNowPlaying });
 
     if (
       (currentStation.station && currentStation.station.id) !==
@@ -73,19 +76,18 @@ class StationPage extends Component {
   }
 
   _onVolumeClick() {
-    const { mutePlayer } = this.props;
-    this.setState({ isMute: !this.state.isMute }, () => {
-      mutePlayer(this.state.isMute);
-    });
+    const { mutePreview, muteNowPlaying, mutedNowPlaying } = this.props;
+    muteNowPlaying(!mutedNowPlaying);
+    // always mute preview even any video is playing or not
+    mutePreview();
   }
 
   render() {
     const {
       classes,
       currentStation: { station, playlist, nowPlaying },
-      isMutePlayer,
     } = this.props;
-
+    const { muted } = this.state;
     const volumeIconClass = classNames({
       volume: nowPlaying.url !== '',
     });
@@ -117,7 +119,7 @@ class StationPage extends Component {
                       className={volumeIconClass}
                       color="default"
                     >
-                      {isMutePlayer ? 'volume_off' : 'volume_up'}
+                      {muted ? 'volume_off' : 'volume_up'}
                     </IconButton>
                   </Grid>
                   <NowPlaying
@@ -128,6 +130,8 @@ class StationPage extends Component {
                       },
                     )}
                     autoPlay={true}
+                    muted={muted}
+                    nowPlaying={nowPlaying}
                   />
                 </Grid>
               </Grid>,
@@ -161,20 +165,22 @@ StationPage.propTypes = {
   match: PropTypes.any,
   history: PropTypes.any,
   currentStation: PropTypes.any,
-  mutePlayer: PropTypes.func,
-  isMutePlayer: PropTypes.bool,
+  muteNowPlaying: PropTypes.func,
+  mutePreview: PropTypes.func,
+  mutedNowPlaying: PropTypes.bool,
   preview: PropTypes.object,
 };
 
 const mapStateToProps = ({ api, page }) => ({
   currentStation: api.currentStation,
-  isMutePlayer: page.station.mutePlayer,
+  mutedNowPlaying: page.station.mutedNowPlaying,
   preview: page.station.preview,
 });
 
 const mapDispatchToProps = dispatch => ({
   joinStation: stationId => dispatch(joinStation(stationId)),
-  mutePlayer: isMute => dispatch(mutePlayer(isMute)),
+  muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
+  mutePreview: muted => dispatch(mutePreview(muted)),
 });
 
 export default compose(
