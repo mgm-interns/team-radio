@@ -35,11 +35,12 @@ class StationSwitcher extends Component {
       muteNowPlaying,
       mutePreview,
       notification,
+      userId,
     } = this.props;
     // Only change to new station if the id has changed
     if (station.id !== stationId) {
       history.replace(`/station/${station.id}`);
-      joinStationRequest(station.id);
+      joinStationRequest({ userId, stationId: station.id });
       setPreviewVideo();
       muteNowPlaying();
       mutePreview();
@@ -160,10 +161,11 @@ StationSwitcher.propTypes = {
 const mapStateToProps = ({ api }) => ({
   stations: api.stations.data,
   currentStation: api.currentStation,
+  userId: api.user.data.userId,
 });
 
 const mapDispatchToProps = dispatch => ({
-  joinStationRequest: stationId => dispatch(joinStation(stationId)),
+  joinStationRequest: option => dispatch(joinStation(option)),
   setPreviewVideo: () => dispatch(setPreviewVideo()),
   muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
   mutePreview: muted => dispatch(mutePreview(muted)),

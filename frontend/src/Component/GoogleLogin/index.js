@@ -215,7 +215,7 @@ class Login extends Component {
 
 Login.propTypes = {
   onSuccess: PropTypes.func.isRequired,
-  onFailure: PropTypes.func.isRequired,
+  onFailure: PropTypes.func, // required if we need
   onRequest: PropTypes.func,
   buttonText: PropTypes.string,
   scope: PropTypes.string,

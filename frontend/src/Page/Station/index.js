@@ -8,7 +8,7 @@ import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
 import { StationSwitcher, NavBar, Footer } from 'Component';
-import { joinStation } from 'Redux/api/currentStation/actions';
+import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
 import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
@@ -37,12 +37,13 @@ class StationPage extends Component {
     const {
       match: { params: { stationId } },
       history,
+      userId,
       mutedNowPlaying,
     } = this.props;
     if (stationId) {
-      this.props.joinStation(stationId);
+      this.props.joinStation({ stationId, userId });
       this.joinStationInterval = setInterval(() => {
-        this.props.joinStation(stationId);
+        this.props.joinStation({ stationId, userId });
       }, JOIN_STATION_DELAY);
     } else {
       history.replace(`/`);
@@ -50,6 +51,12 @@ class StationPage extends Component {
 
     // watch volume
     this.setState({ muted: mutedNowPlaying });
+  }
+
+  componentWillUnmount() {
+    const { match: { params: { stationId } }, userId } = this.props;
+    this.props.leaveStation({ stationId, userId });
+    clearInterval(this.joinStationInterval);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -161,10 +168,12 @@ class StationPage extends Component {
 
 StationPage.propTypes = {
   classes: PropTypes.any,
-  joinStation: PropTypes.any,
+  joinStation: PropTypes.func,
+  leaveStation: PropTypes.func,
   match: PropTypes.any,
   history: PropTypes.any,
   currentStation: PropTypes.any,
+  userId: PropTypes.string,
   muteNowPlaying: PropTypes.func,
   mutePreview: PropTypes.func,
   mutedNowPlaying: PropTypes.bool,
@@ -175,10 +184,12 @@ const mapStateToProps = ({ api, page }) => ({
   currentStation: api.currentStation,
   mutedNowPlaying: page.station.mutedNowPlaying,
   preview: page.station.preview,
+  userId: api.user.data.userId,
 });
 
 const mapDispatchToProps = dispatch => ({
   joinStation: stationId => dispatch(joinStation(stationId)),
+  leaveStation: option => dispatch(leaveStation(option)),
   muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
   mutePreview: muted => dispatch(mutePreview(muted)),
 });
