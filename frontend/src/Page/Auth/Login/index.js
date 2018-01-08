@@ -45,7 +45,7 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { fetchUserResponse: { error, data, isAuthenticated } } = nextProps;
-
+    console.log(this.props);
     if (error !== null) {
       this.setState({
         formErrors: { message: error.response.message },
@@ -133,7 +133,8 @@ class Login extends Component {
   }
 
   _renderLoginLocalForm() {
-    const { classes } = this.props;
+    const { classes, submitSucceeded } = this.props;
+    // console.log(this.props);
     return (
       <Grid>
         <Field
@@ -153,7 +154,7 @@ class Login extends Component {
           validate={required}
         />
         <FormHelperText className={classes.error}>
-          {this.state.formErrors.message}
+          {submitSucceeded && this.state.formErrors.message}
         </FormHelperText>
       </Grid>
     );
@@ -233,7 +234,7 @@ Login.propTypes = {
   classes: PropTypes.any,
   loading: PropTypes.bool,
   handleSubmit: PropTypes.any,
-  submitting: PropTypes.any,
+  submitSucceeded: PropTypes.any,
   notification: PropTypes.object,
   addUserWithSocialAccount: PropTypes.func,
 };
