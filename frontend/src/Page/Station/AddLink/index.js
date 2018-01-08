@@ -372,7 +372,7 @@ class AddLink extends Component {
               inputProps={{
                 classes,
                 placeholder:
-                  "Type the Youtube's video name. e.g. Despacito,...",
+                  "Type the Youtube's video name. e.g. Shape of you,...",
                 value: this.state.searchText,
                 onChange: this._onChange,
               }}
