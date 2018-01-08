@@ -13,7 +13,6 @@ import IconButton from 'material-ui/IconButton';
 import FacebookIcon from 'react-icons/lib/fa/facebook-square';
 import GoogleIcon from 'react-icons/lib/fa/google-plus-square';
 import TwitterIcon from 'react-icons/lib/fa/twitter-square';
-// import CopyOutLineIcon from 'react-icons/lib/io/ios-copy-outline';
 import CopyIcon from 'react-icons/lib/go/clippy';
 import { withNotification } from 'Component/Notification';
 import styles from './styles';
@@ -134,11 +133,11 @@ class StationSharing extends Component {
         <Popover
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'right',
+            horizontal: 'left',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'right',
+            horizontal: 'left',
           }}
           open={this.state.open}
           anchorEl={this.state.anchor}
@@ -197,7 +196,7 @@ class StationSharing extends Component {
                   </IconButton>
                 </Tooltip>
                 <Tooltip
-                  placement={'right'}
+                  placement={'left'}
                   title={'Copy to clipboard'}
                   className={classes.copyIconWrapper}
                 >
