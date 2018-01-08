@@ -1,34 +1,45 @@
-/* eslint-disable one-var */
 import * as EVENTS from '../../const/actions';
 import * as stationController from '../../controllers/station';
 import * as userController from '../../controllers/user';
 import * as players from '../../players';
 
-// eslint-disable-next-line one-var
 export default async (emitter, userId, stationId, socket) => {
   let station;
-  try {
-    // Check if station is not exist: throw err
-    // and emit SERVER_JOINED_STATION_FAILURE
-    station = await stationController.getStation(stationId);
 
+  // Join station
+  try {
+    // Check if stationId is not exist, decline join request
+    station = await stationController.getStation(stationId);
     // Force socket to leave all stations and then join stationId
     _leaveAllAndJoinStation(socket, stationId);
     emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
       station: station,
     });
+  } catch (err) {
+    console.error('Error join station: ' + err);
+    socket.leaveAll();
+    emitter.emit(EVENTS.SERVER_JOINED_STATION_FAILURE, {
+      message: err.message,
+    });
+  }
 
-    // If join success, Emit nowPlaying to user
-    const player = await players.getPlayer(stationId);
-    const nowPlaying = await player.getNowPlaying();
-    emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, nowPlaying);
-
+  // If join success, get nowplaying and emit to user
+  if (station) {
     try {
-      // check if user not exist, throw an error,
-      // and allow anonymous user to join station!
-      const user = await userController.getUserById(userId);
+      const player = await players.getPlayer(stationId);
+      const nowPlaying = await player.getNowPlaying();
+      emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, nowPlaying);
+    } catch (err) {
+      console.log('Players error: ' + err.message);
+    }
+  }
+
+  // Check if user is not exist, notify that anonymous has joined
+  if (station) {
+    try {
+      const { name } = await userController.getUserById(userId);
       emitter.broadcastToStation(stationId, EVENTS.SERVER_NEW_USER_JOINED, {
-        user: user.name,
+        user: name,
       });
     } catch (err) {
       console.log('Join station log: ' + err);
@@ -36,17 +47,11 @@ export default async (emitter, userId, stationId, socket) => {
         user: 'Anonymous',
       });
     }
-  } catch (err) {
-    // catch all error, include runtime error, system error, server error
-    console.error('Error join station: ' + err);
-    socket.leaveAll();
-    emitter.emit(EVENTS.SERVER_JOINED_STATION_FAILURE, {
-      message: err.message,
-    });
   }
 };
 
 const _leaveAllAndJoinStation = (socket, stationId) => {
+  // Get all stations that socket is in
   const allStations = Object.keys(socket.rooms).slice(1);
   const leaveStationPromises = [];
 
@@ -56,7 +61,7 @@ const _leaveAllAndJoinStation = (socket, stationId) => {
 
   Promise.all(leaveStationPromises).then(() => {
     socket.join(stationId);
-    console.log('Join accept: ' + socket.id + ' join to ' + stationId);
+    console.log('Join accept: ' + socket.id + ' joined to ' + stationId);
   });
 };
 

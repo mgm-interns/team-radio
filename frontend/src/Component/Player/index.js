@@ -4,15 +4,6 @@ import ReactPlayer from 'react-player';
 // import { transformNumber } from '../../Transformer';
 
 class Player extends Component {
-  static propTypes = {
-    url: PropTypes.string,
-    ref: PropTypes.object,
-    seektime: PropTypes.number,
-    playing: PropTypes.bool,
-    onPlay: PropTypes.func,
-    onPause: PropTypes.func,
-  };
-
   static defaultProps = {
     width: '100%',
     height: '100%',
@@ -52,5 +43,14 @@ class Player extends Component {
     );
   }
 }
+
+Player.propTypes = {
+  url: PropTypes.string,
+  ref: PropTypes.object,
+  seektime: PropTypes.number,
+  playing: PropTypes.bool,
+  onPlay: PropTypes.func,
+  onPause: PropTypes.func,
+};
 
 export default Player;

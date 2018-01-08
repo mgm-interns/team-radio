@@ -6,7 +6,11 @@ import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import withStyles from 'material-ui/styles/withStyles';
 import { joinStation } from 'Redux/api/currentStation/actions';
-import { setPreviewVideo } from 'Redux/page/station/actions';
+import {
+  setPreviewVideo,
+  muteNowPlaying,
+  mutePreview,
+} from 'Redux/page/station/actions';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
@@ -15,20 +19,6 @@ import styles from './styles';
 
 /* eslint-disable no-shadow */
 class StationSwitcher extends Component {
-  static propTypes = {
-    classes: PropTypes.any,
-    currentStation: PropTypes.object,
-    history: PropTypes.object,
-    joinStationRequest: PropTypes.func,
-    stations: PropTypes.any,
-    stationList: PropTypes.array,
-    fetchStations: PropTypes.func,
-    match: PropTypes.object,
-    notification: PropTypes.object,
-    setPreviewVideo: PropTypes.func,
-    userId: PropTypes.string,
-  };
-
   constructor(props) {
     super(props);
 
@@ -42,6 +32,8 @@ class StationSwitcher extends Component {
       history,
       joinStationRequest,
       setPreviewVideo,
+      muteNowPlaying,
+      mutePreview,
       notification,
       userId,
     } = this.props;
@@ -50,6 +42,8 @@ class StationSwitcher extends Component {
       history.replace(`/station/${station.id}`);
       joinStationRequest({ userId, stationId: station.id });
       setPreviewVideo();
+      muteNowPlaying();
+      mutePreview();
       // Scroll to left after switch successful
       this.scrollBar.scrollToLeft();
     }
@@ -149,6 +143,22 @@ class StationSwitcher extends Component {
   }
 }
 
+StationSwitcher.propTypes = {
+  classes: PropTypes.any,
+  currentStation: PropTypes.object,
+  history: PropTypes.object,
+  joinStationRequest: PropTypes.func,
+  stations: PropTypes.any,
+  stationList: PropTypes.array,
+  fetchStations: PropTypes.func,
+  match: PropTypes.object,
+  notification: PropTypes.object,
+  setPreviewVideo: PropTypes.func,
+  muteNowPlaying: PropTypes.func,
+  mutePreview: PropTypes.func,
+  userId: PropTypes.string,
+};
+
 const mapStateToProps = ({ api }) => ({
   stations: api.stations.data,
   currentStation: api.currentStation,
@@ -158,6 +168,8 @@ const mapStateToProps = ({ api }) => ({
 const mapDispatchToProps = dispatch => ({
   joinStationRequest: option => dispatch(joinStation(option)),
   setPreviewVideo: () => dispatch(setPreviewVideo()),
+  muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
+  mutePreview: muted => dispatch(mutePreview(muted)),
 });
 
 export default compose(

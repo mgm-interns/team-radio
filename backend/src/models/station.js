@@ -91,8 +91,7 @@ module.exports.deleteStation = (stationId, userId) => {
   } catch (err) {
     throw err;
   }
-
-}
+};
 
 // Get all station
 module.exports.getStations = (limit) => {

@@ -5,13 +5,21 @@ import Tooltip from 'material-ui/Tooltip';
 import { transformText } from 'Transformer';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
 import { withNotification } from 'Component/Notification';
 import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
 import styles from '../styles';
 
 /* eslint-disable camelcase */
+/* eslint-disable no-shadow */
 class SwitcherItem extends Component {
+  componentDidMount() {
+    // const { muteNowPlaying, mutePreview } = this.props;
+    // muteNowPlaying();
+    // mutePreview();
+  }
+
   render() {
     const {
       goToStationPage,
@@ -56,15 +64,22 @@ SwitcherItem.propTypes = {
   station_name: PropTypes.any,
   currentStation: PropTypes.object,
   id: PropTypes.any,
+  muteNowPlaying: PropTypes.func,
+  mutePreview: PropTypes.func,
 };
 
 const mapStateToProps = ({ api }) => ({
   currentStation: api.currentStation,
 });
 
+const mapDispatchToProps = dispatch => ({
+  muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
+  mutePreview: muted => dispatch(mutePreview(muted)),
+});
+
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   withRouter,
   withNotification,
 )(SwitcherItem);

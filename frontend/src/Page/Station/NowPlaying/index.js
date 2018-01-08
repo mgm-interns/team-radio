@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
 import { Player } from 'Component';
 
 class NowPlaying extends Component {
-  static propTypes = {
-    style: PropTypes.any,
-    className: PropTypes.any,
-    nowPlaying: PropTypes.object,
-    autoPlay: PropTypes.bool,
-    isMutePlayer: PropTypes.bool,
-  };
-
   constructor(props) {
     super(props);
 
@@ -31,7 +23,7 @@ class NowPlaying extends Component {
   // }
 
   render() {
-    const { className, nowPlaying, autoPlay, isMutePlayer } = this.props;
+    const { className, nowPlaying, autoPlay, muted } = this.props;
     return (
       <Grid item xs={12} className={className}>
         <Player
@@ -39,16 +31,19 @@ class NowPlaying extends Component {
           // ref={this._getRefPlayer}
           playing={autoPlay}
           seektime={parseInt(nowPlaying && nowPlaying.starting_time, 10) / 1000}
-          muted={isMutePlayer}
+          muted={muted}
         />
       </Grid>
     );
   }
 }
 
-const mapStateToProps = ({ api, page }) => ({
-  nowPlaying: api.currentStation.nowPlaying,
-  isMutePlayer: page.station.mutePlayer,
-});
+NowPlaying.propTypes = {
+  style: PropTypes.any,
+  className: PropTypes.any,
+  nowPlaying: PropTypes.object,
+  autoPlay: PropTypes.bool,
+  muted: PropTypes.bool,
+};
 
-export default connect(mapStateToProps)(NowPlaying);
+export default NowPlaying;
