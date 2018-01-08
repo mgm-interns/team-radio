@@ -61,6 +61,14 @@ class Player {
     });
   };
 
+  _resetNowPlaying = () => {
+    this.nowPlaying = {
+      song_id: 0,
+      url: '',
+      starting_time: 0,
+    };
+    this._emitStationState();
+  }
   _startSong = async song => {
     try {
       this._emitStationState();
@@ -88,11 +96,6 @@ class Player {
   };
   // TODO: [start server, add new song to empty station, next song nomarly]
   _setPlayableSong = async (station = null) => {
-    /*
-          get nextSong
-          get list of songs will be change is_played to true
-          update this.nowPlaying
-        */
     if (!station) {
       // Get the station if it is not available
       station = await stationController.getStation(this.stationId);
@@ -103,8 +106,33 @@ class Player {
       playlist,
       song => !song.is_played && song.song_id !== this.nowPlaying.song_id,
     );
-    // Sort the filteredPlaylist by time (current the song_id is the song added time)
-    const sortedPlaylist = _.sortBy(filteredPlaylist, ['song_id']);
+    filteredPlaylist.forEach((song, i) => {
+      song.votes = song.up_vote.length - song.down_vote.length;
+    });
+
+    // console.log('Playlist with votes:', filteredPlaylist, Date.now());
+    // Sort the filteredPlaylist by votes and time (current the song_id is the song added time)
+    const sortedPlaylist = _.orderBy(
+      filteredPlaylist,
+      ['votes', 'song_id'],
+      ['desc', 'asc'],
+    );
+    // Reset nowPlaying when the station is done
+    if (sortedPlaylist.length === 0){
+      this._resetNowPlaying();
+      return;
+    }
+    if (this.nowPlaying.song_id) {
+      await stationController.setPlayedSongs(this.stationId, [this.nowPlaying.song_id]);
+      // Update nowPlaying song
+      this.nowPlaying.song_id = sortedPlaylist[0].song_id;
+      this.nowPlaying.url = sortedPlaylist[0].url;
+      this.nowPlaying.starting_time = Date.now();
+      // play the song
+      this._startSong(sortedPlaylist[0]);
+      return;
+    }
+
     const currentTime = Date.now();
     let preStartingTime = station.starting_time;
     const playedSongs = this.nowPlaying.song_id
@@ -118,33 +146,34 @@ class Player {
       // current the song_id is song added time
       song.added_time = song.song_id;
       // Check the song is new or not
-      if (song.added_time + song.duration > currentTime) {
+      if (song.added_time + song.duration + TIME_BUFFER > currentTime) {
         // Update is_played of the playedSongs to true
         await stationController.setPlayedSongs(this.stationId, playedSongs);
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
         this.nowPlaying.starting_time = this.nowPlaying.song_id
-          ? Date.now()
+          ? currentTime
           : song.added_time;
         // play the song
         this._startSong(song);
         return;
-      } else if (preStartingTime + song.duration > currentTime) {
+      } else if (preStartingTime + song.duration + TIME_BUFFER > currentTime) {
         // Update is_played of the playedSongs to true
+
         await stationController.setPlayedSongs(this.stationId, playedSongs);
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
         this.nowPlaying.starting_time = this.nowPlaying.song_id
-          ? Date.now()
+          ? currentTime
           : preStartingTime;
         // play the song
         this._startSong(song);
         return;
       }
       // Move the song to next song for checking
-      preStartingTime += song.duration;
+      preStartingTime += song.duration + TIME_BUFFER;
       playedSongs.push(song.song_id);
     }
 
@@ -152,10 +181,7 @@ class Player {
     // Update is_played of the song in the sortedPlaylist to true
     await stationController.setPlayedSongs(this.stationId, playedSongs);
     // Update nowPlaying song is not available
-    this.nowPlaying.song_id = 0;
-    this.nowPlaying.url = '';
-    this.nowPlaying.starting_time = 0;
-    this._emitStationState();
+    this._resetNowPlaying();
   };
 }
 
