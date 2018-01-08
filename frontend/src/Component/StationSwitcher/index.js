@@ -56,7 +56,7 @@ class StationSwitcher extends Component {
       ...station,
       isActive:
         (currentStation.station && currentStation.station.id) === station.id,
-      avatar: Images.fixture.avatar1,
+      avatar: Images.stationDefault,
     }));
     // Move the current station to the first position of array
     filteredStations.sort(({ id }) => (id === stationId ? -1 : 1));
