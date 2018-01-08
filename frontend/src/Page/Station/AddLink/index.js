@@ -38,6 +38,7 @@ class AddLink extends Component {
       videoId: '',
       searchText: '',
       suggestions: [],
+      notFoundSearchResults: false,
       isDisableButton: true,
       isAddLinkProgress: false,
       muted: true,
@@ -189,16 +190,38 @@ class AddLink extends Component {
 
   _timeoutSearchFunc;
   _onSuggestionsFetchRequested({ value }) {
+    const { setPreviewVideo } = this.props;
+
     try {
       clearTimeout(this._timeoutSearchFunc);
       this._timeoutSearchFunc = setTimeout(async () => {
+        // Display preview if result is a youtube link without search
+        if (checkValidYoutubeUrl(value)) {
+          // skip the other params of youtube link
+          // just get the main part: https://www.youtube.com/watch?v={video_id}
+          const input = value.split('&')[0];
+          const videoId = checkValidYoutubeUrl(input);
+          const data = await this._getVideoInfo(videoId);
+          setPreviewVideo(data[0]);
+          this.setState({
+            isDisableButton: false,
+          });
+        }
+
         // Search by keyword if value is not a youtube link
         if (!checkValidYoutubeUrl(value)) {
           const data = await this._getSearchResults(value);
-          this.setState({
-            videoId: '',
-            suggestions: data,
-          });
+          this.setState(
+            {
+              videoId: '',
+              suggestions: data,
+            },
+            () => {
+              if (this.state.suggestions.length === 0) {
+                this.setState({ notFoundSearchResults: true });
+              }
+            },
+          );
         } else {
           this.setState({
             suggestions: [],
@@ -234,37 +257,21 @@ class AddLink extends Component {
   /* Handle add link events */
   _clearSearchInput() {
     const { setPreviewVideo, muteNowPlaying, mutePreview } = this.props;
-    this.setState({ searchText: '' });
+    this.setState({ searchText: '', notFoundSearchResults: false });
     setPreviewVideo();
     muteNowPlaying();
     mutePreview(true);
   }
 
-  async _onChange(e) {
-    const { setPreviewVideo } = this.props;
+  _onChange(e) {
     const result = e.target.value;
     this.setState({ searchText: result });
-    try {
-      // Display preview if result is a youtube link without search
-      if (checkValidYoutubeUrl(result)) {
-        // skip the other params of youtube link
-        // just get the main part: https://www.youtube.com/watch?v={video_id}
-        const input = result.split('&')[0];
-        const videoId = checkValidYoutubeUrl(input);
-        const data = await this._getVideoInfo(videoId);
-        setPreviewVideo(data[0]);
-        this.setState({
-          isDisableButton: false,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
     if (result === '') {
       setPreviewVideo();
       this.setState({
         isDisableButton: true,
         videoId: '',
+        notFoundSearchResults: false,
       });
     }
   }
@@ -328,6 +335,7 @@ class AddLink extends Component {
   /* Render icon if there is not preview content */
   _renderEmptyComponent() {
     const { classes } = this.props;
+    const { notFoundSearchResults } = this.state;
 
     return (
       <Grid
@@ -336,7 +344,11 @@ class AddLink extends Component {
         justify="center"
         alignItems="center"
       >
-        <img src={Images.loadingSong} className={classes.emptyImg} />
+        {notFoundSearchResults ? (
+          <img src={Images.notFound} className={classes.notFound} />
+        ) : (
+          <img src={Images.loadingSong} className={classes.emptyImg} />
+        )}
       </Grid>
     );
   }
@@ -372,7 +384,7 @@ class AddLink extends Component {
               inputProps={{
                 classes,
                 placeholder:
-                  "Type the Youtube's video name. e.g. Despacito,...",
+                  "Type the Youtube's video name. e.g. Shape of you,...",
                 value: this.state.searchText,
                 onChange: this._onChange,
               }}
