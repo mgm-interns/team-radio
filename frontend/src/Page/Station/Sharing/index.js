@@ -13,7 +13,14 @@ import IconButton from 'material-ui/IconButton';
 import FacebookIcon from 'react-icons/lib/fa/facebook-square';
 import GoogleIcon from 'react-icons/lib/fa/google-plus-square';
 import TwitterIcon from 'react-icons/lib/fa/twitter-square';
+// import CopyOutLineIcon from 'react-icons/lib/io/ios-copy-outline';
+import CopyIcon from 'react-icons/lib/go/clippy';
+import { withNotification } from 'Component/Notification';
 import styles from './styles';
+
+const FACEBOOK_SHARING = 'https://www.facebook.com/sharer/sharer.php?u=';
+const GOOGLE_PLUS_SHARING = 'https://plus.google.com/share?url=';
+const TWITTER_SHARING = 'http://twitter.com/share?url=';
 
 class StationSharing extends Component {
   constructor(props) {
@@ -30,6 +37,7 @@ class StationSharing extends Component {
     this._closePopover = this._closePopover.bind(this);
     this._togglePopover = this._togglePopover.bind(this);
     this._copyToClipboard = this._copyToClipboard.bind(this);
+    this._shareTo = this._shareTo.bind(this);
     this.setStationUrl = this.setStationUrl.bind(this);
   }
 
@@ -65,10 +73,11 @@ class StationSharing extends Component {
      */
     return window.location.href;
   }
+
   _togglePopover(event) {
     this.setState({
       open: !this.state.open,
-      anchor: event.target,
+      anchor: this.state.open ? event.target : null,
     });
   }
 
@@ -79,17 +88,35 @@ class StationSharing extends Component {
     });
   }
 
-  _closePopover(event) {
-    this.setState({
-      open: false,
-      anchor: event.target,
+  _closePopover() {
+    this.setState({ open: false }, () => {
+      this.setState({ copied: false, anchor: null });
     });
   }
 
   _copyToClipboard() {
-    this.setState({
-      copied: true,
-    });
+    try {
+      this.inputRef.select();
+      document.execCommand('Copy');
+
+      this.setState({ copied: true });
+      this.props.notification.app.info({
+        message: 'Copied to clipboard',
+      });
+    } catch (error) {
+      console.error(error);
+      this.props.notification.app.warning({
+        message: 'Fail to copy to clipboard!',
+      });
+    }
+  }
+
+  _shareTo(prefix) {
+    try {
+      window.open(`${prefix}${this.state.url}`, '_newtab');
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   render() {
@@ -112,44 +139,62 @@ class StationSharing extends Component {
         >
           <Card>
             <CardContent>
-              <Grid container style={{ width: '100%', margin: 'auto' }}>
+              <Grid container className={classes.cardContainer}>
                 <Grid item xs={12}>
-                  <Typography type={'display1'} style={{ fontSize: '1.3em' }}>
+                  <Typography type={'display1'} className={classes.cardHeader}>
                     Share this station
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Input
-                    value={this.state.url || ''}
+                    readOnly
                     className={classes.input}
+                    value={this.state.url || ''}
+                    inputRef={ref => {
+                      this.inputRef = ref;
+                    }}
                   />
                 </Grid>
               </Grid>
             </CardContent>
             <CardActions>
-              <Tooltip placement={'right'} title={'Copy to clipboard'}>
-                <IconButton
-                  color={this.state.copied ? 'primary' : 'default'}
-                  onClick={this._copyToClipboard}
-                >
-                  content_copy
-                </IconButton>
-              </Tooltip>
-              <Tooltip placement={'right'} title={'Share on Facebook'}>
-                <IconButton className={classes.facebookIcon}>
-                  <FacebookIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip placement={'right'} title={'Share on Google+'}>
-                <IconButton className={classes.googleIcon}>
-                  <GoogleIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip placement={'right'} title={'Share on Twitter'}>
-                <IconButton className={classes.twitterIcon}>
-                  <TwitterIcon />
-                </IconButton>
-              </Tooltip>
+              <Grid container>
+                <Grid item xs={12} className={classes.actionsContainer}>
+                  <Tooltip placement={'right'} title={'Share on Facebook'}>
+                    <IconButton
+                      className={classes.facebookIcon}
+                      onClick={() => this._shareTo(FACEBOOK_SHARING)}
+                    >
+                      <FacebookIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip placement={'right'} title={'Share on Google+'}>
+                    <IconButton
+                      className={classes.googleIcon}
+                      onClick={() => this._shareTo(GOOGLE_PLUS_SHARING)}
+                    >
+                      <GoogleIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip placement={'right'} title={'Share on Twitter'}>
+                    <IconButton
+                      className={classes.twitterIcon}
+                      onClick={() => this._shareTo(TWITTER_SHARING)}
+                    >
+                      <TwitterIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip placement={'right'} title={'Copy to clipboard'}>
+                    <IconButton
+                      className={classes.copyIcon}
+                      color={this.state.copied ? 'primary' : 'default'}
+                      onClick={this._copyToClipboard}
+                    >
+                      <CopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
             </CardActions>
           </Card>
         </Popover>
@@ -161,12 +206,15 @@ class StationSharing extends Component {
 StationSharing.propTypes = {
   currentStation: PropTypes.object,
   classes: PropTypes.object,
+  notification: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({
   currentStation: api.currentStation.station,
 });
 
-export default compose(withStyles(styles), connect(mapStateToProps))(
-  StationSharing,
-);
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps),
+  withNotification,
+)(StationSharing);
