@@ -46,7 +46,7 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SERVER_NEW_USER_JOINED:
       appNotificationInstance.info({
-        message: action.payload && action.payload.user,
+        message: action.payload && `${action.payload.user} has joined!`,
       });
       return state;
     case SERVER_UPVOTE_SONG_FAILURE:

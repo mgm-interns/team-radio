@@ -110,7 +110,7 @@ class Register extends Component {
   }
 
   _renderLoginLocalForm() {
-    const { classes } = this.props;
+    const { classes, submitSucceeded } = this.props;
     return [
       <Field
         key={1}
@@ -149,7 +149,7 @@ class Register extends Component {
         validate={[required]}
       />,
       <FormHelperText key={5} className={classes.error}>
-        {this.state.asyncError}
+        {submitSucceeded && this.state.asyncError}
       </FormHelperText>,
     ];
   }
@@ -195,7 +195,7 @@ class Register extends Component {
   }
 
   render() {
-    const { classes, handleSubmit, submitting } = this.props;
+    const { classes, handleSubmit } = this.props;
     return (
       <div>
         <NavBar />
@@ -237,7 +237,7 @@ Register.propTypes = {
   classes: PropTypes.any,
   loading: PropTypes.bool,
   handleSubmit: PropTypes.any,
-  submitting: PropTypes.any,
+  submitSucceeded: PropTypes.any,
 };
 
 const mapDispatchToProps = dispatch => ({

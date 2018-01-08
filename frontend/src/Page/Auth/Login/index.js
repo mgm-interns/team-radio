@@ -45,7 +45,7 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { fetchUserResponse: { error, data, isAuthenticated } } = nextProps;
-
+    console.log(this.props);
     if (error !== null) {
       this.setState({
         formErrors: { message: error.response.message },
@@ -53,9 +53,8 @@ class Login extends Component {
     } else if (data.token || isAuthenticated) {
       this._showNotification('Login successful!');
       saveAuthenticationState(data);
-      this.props.history.push('/');
+      this.props.history.replace('/');
     }
-
     if (!loadAuthenticationState()) {
       this.setState({ isLoggedIn: false });
     }
@@ -94,6 +93,12 @@ class Login extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.setState({
+      formErrors: {},
+    });
+  }
+
   _renderHeadline() {
     return (
       <Grid style={{ paddingBottom: '1em' }}>
@@ -115,25 +120,26 @@ class Login extends Component {
           onSuccess={this._onLoginSocialClick}
           isDisabled={this.state.isLoggedIn}
           onFailure={this._onLoginSocialFailure}
-          // icon="fa-facebook"
         />
         <div style={{ height: 16 }} />
         <GoogleLogin
           onSuccess={this._onLoginSocialClick}
           offline={false}
           responseType="id_token"
-          isSignedIn
+          isSignedIn={this.state.isLoggedIn}
           isDisabled={this.state.isLoggedIn}
           prompt="consent"
-          buttonText="Login with Google"
           onFailure={this._onLoginSocialFailure}
+          autoLoad={false}
+          onSignedIn={this._onSignedIn}
         />
       </Grid>
     );
   }
 
   _renderLoginLocalForm() {
-    const { classes } = this.props;
+    const { classes, submitSucceeded } = this.props;
+    // console.log(this.props);
     return (
       <Grid>
         <Field
@@ -153,7 +159,7 @@ class Login extends Component {
           validate={required}
         />
         <FormHelperText className={classes.error}>
-          {this.state.formErrors.message}
+          {submitSucceeded && this.state.formErrors.message}
         </FormHelperText>
       </Grid>
     );
@@ -233,7 +239,7 @@ Login.propTypes = {
   classes: PropTypes.any,
   loading: PropTypes.bool,
   handleSubmit: PropTypes.any,
-  submitting: PropTypes.any,
+  submitSucceeded: PropTypes.any,
   notification: PropTypes.object,
   addUserWithSocialAccount: PropTypes.func,
 };

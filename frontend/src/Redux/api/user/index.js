@@ -1,12 +1,4 @@
 import { loadAuthenticationState } from 'Config';
-import jwt from 'jsonwebtoken';
-
-function localTokenToData() {
-  if (localStorage.getItem('token')) {
-    return jwt.decode(localStorage.getItem('token'));
-  }
-  return {};
-}
 
 const INITIAL_STATE = {
   // data: localTokenToData(),
