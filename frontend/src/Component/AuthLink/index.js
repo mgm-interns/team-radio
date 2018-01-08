@@ -8,9 +8,7 @@ import { logout } from 'Redux/api/user/actions';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Icon from 'material-ui/Icon';
-import classNames from 'classnames';
 import Menu, { MenuItem } from 'material-ui/Menu';
-import Button from 'material-ui/Button';
 
 import styles from './styles';
 
@@ -76,29 +74,6 @@ class AuthLink extends Component {
           </Fragment>
         )}
         {user.isAuthenticated && (
-          // <div
-          //   className={classes.dropdown}
-          //   ref={node => {
-          //     this.node = node;
-          //   }}
-          // >
-          //   <div className={classes.menuItem} onClick={this._handleClick}>
-          //     <img
-          //       className={classes.avatar}
-          //       src="http://i.pravatar.cc/50"
-          //       alt="avatar"
-          //     />
-          //     <Icon className={classes.dropdownIcon}>arrow_drop_down</Icon>
-          //   </div>
-          //   <div
-          //     className={classNames([classes.dropdownContent], {
-          //       [classes.show]: this.state.show,
-          //     })}
-          //   >
-          //     <a>{user.data.name}</a>
-          //     <a>My Profile</a>
-          //     <a onClick={this._logout}>Logout</a>
-          //   </div>
           <div
             ref={node => {
               this.node = node;
