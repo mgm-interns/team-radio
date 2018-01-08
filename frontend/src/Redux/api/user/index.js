@@ -1,9 +1,3 @@
-import { loadAuthenticationState } from 'Config';
-<<<<<<< HEAD
-//import jwt from 'jsonwebtoken';
-=======
->>>>>>> 5ba2e4e1ba7612fc26db5ebb8e23140c709a226a
-
 const INITIAL_STATE = {
   // data: localTokenToData(),
   data: {},
