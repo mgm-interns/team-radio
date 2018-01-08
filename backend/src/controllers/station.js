@@ -71,6 +71,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
   } catch (err) {
     throw err;
   }
+
   if (!station) {
     throw new Error(`Station id ${stationId} is not exist!`);
   }
