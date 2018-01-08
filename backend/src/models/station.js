@@ -160,7 +160,7 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
 module.exports.getPlaylistOfStation = stationId => {
   let query = { id: stationId };
   return Station.findOne(query, { playlist: true, _id: false })
-    .populate('playlist.creator_id', { _id: 1, name: 1, avatar_Url: 1})
+    .populate('playlist.creator_id', { _id: 1, name: 1, avatar_url: 1})
     .exec();
 };
 

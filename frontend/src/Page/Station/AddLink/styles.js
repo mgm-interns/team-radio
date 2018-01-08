@@ -126,6 +126,9 @@ export default theme => {
     textField: {
       width: '100%',
     },
+    input: {
+      paddingRight: 50,
+    },
     searchItemImg: {
       height: '100%',
       marginRight: baseMargin,

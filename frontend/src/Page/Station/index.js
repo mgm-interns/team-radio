@@ -8,12 +8,14 @@ import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
 import { StationSwitcher, NavBar, Footer } from 'Component';
+import { Images } from 'Theme';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
 import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
 import styles from './styles';
+import StationSharing from './Sharing';
 
 const STATION_NAME_DEFAULT = 'Station Name';
 const JOIN_STATION_DELAY = 2000; // 2 seconds
@@ -38,7 +40,7 @@ class StationPage extends Component {
       match: { params: { stationId } },
       history,
       userId,
-      mutedNowPlaying,
+      // mutedNowPlaying,
     } = this.props;
     if (stationId) {
       this.props.joinStation({ stationId, userId });
@@ -50,7 +52,7 @@ class StationPage extends Component {
     }
 
     // watch volume
-    this.setState({ muted: mutedNowPlaying });
+    // this.setState({ muted: mutedNowPlaying });
   }
 
   componentWillUnmount() {
@@ -73,6 +75,24 @@ class StationPage extends Component {
     }
   }
 
+  componentDidMount() {
+    const { muteNowPlaying, mutePreview } = this.props;
+    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus')) || [];
+    volumeStatus.forEach(item => {
+      switch (item.player) {
+        case 'nowPlaying':
+          muteNowPlaying(item.muted);
+          this.setState({ muted: item.muted });
+          break;
+        case 'preview':
+          mutePreview(item.muted);
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
   static isNotAnEmptyArray(playlist) {
     if (!playlist) {
       return false;
@@ -86,7 +106,7 @@ class StationPage extends Component {
     const { mutePreview, muteNowPlaying, mutedNowPlaying } = this.props;
     muteNowPlaying(!mutedNowPlaying);
     // always mute preview even any video is playing or not
-    mutePreview();
+    mutePreview(true);
   }
 
   render() {
@@ -114,21 +134,26 @@ class StationPage extends Component {
         </Grid>
         <Grid item xs={12} className={classes.container}>
           <Grid container>
-            {StationPage.isNotAnEmptyArray(playlist) && [
-              <Grid key={1} item xs={12} md={7} xl={8}>
-                <Grid container>
-                  <Grid item xs={12} className={classes.nowPlayingHeader}>
-                    <h1>
-                      {station ? station.station_name : STATION_NAME_DEFAULT}
-                    </h1>
-                    <IconButton
-                      onClick={this._onVolumeClick}
-                      className={volumeIconClass}
-                      color="default"
-                    >
-                      {muted ? 'volume_off' : 'volume_up'}
-                    </IconButton>
-                  </Grid>
+            <Grid item xs={12} md={7} xl={8}>
+              <Grid container>
+                <Grid item xs={12} className={classes.nowPlayingHeader}>
+                  <h1>
+                    {station ? station.station_name : STATION_NAME_DEFAULT}
+                  </h1>
+                  <div className={classes.nowPlayingActions}>
+                    {!nowPlaying.url ? null : (
+                      <IconButton
+                        onClick={this._onVolumeClick}
+                        className={volumeIconClass}
+                        color="default"
+                      >
+                        {muted ? 'volume_off' : 'volume_up'}
+                      </IconButton>
+                    )}
+                    <StationSharing />
+                  </div>
+                </Grid>
+                {StationPage.isNotAnEmptyArray(playlist) ? (
                   <NowPlaying
                     className={classNames(
                       [classes.content, classes.nowPlaying],
@@ -140,21 +165,30 @@ class StationPage extends Component {
                     muted={muted}
                     nowPlaying={nowPlaying}
                   />
-                </Grid>
-              </Grid>,
-              <Grid key={2} item xs={12} md={5} xl={4}>
-                <Grid container>
+                ) : (
                   <Grid item xs={12}>
-                    <h1>Now Playing</h1>
+                    <img
+                      src={Images.notFound}
+                      className={classes.emptyNowPlayingImage}
+                    />
                   </Grid>
+                )}
+              </Grid>
+            </Grid>
+            <Grid item xs={12} md={5} xl={4}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <h1>Now Playing</h1>
+                </Grid>
+                {StationPage.isNotAnEmptyArray(playlist) && (
                   <Playlist
                     className={classNames(classes.content, {
                       [classes.emptyPlaylist]: !playlist,
                     })}
                   />
-                </Grid>
-              </Grid>,
-            ]}
+                )}
+              </Grid>
+            </Grid>
             <Grid item xs={12}>
               <AddLink />
             </Grid>
@@ -177,12 +211,14 @@ StationPage.propTypes = {
   muteNowPlaying: PropTypes.func,
   mutePreview: PropTypes.func,
   mutedNowPlaying: PropTypes.bool,
+  mutedPreview: PropTypes.bool,
   preview: PropTypes.object,
 };
 
 const mapStateToProps = ({ api, page }) => ({
   currentStation: api.currentStation,
   mutedNowPlaying: page.station.mutedNowPlaying,
+  mutedPreview: page.station.mutedPreview,
   preview: page.station.preview,
   userId: api.user.data.userId,
 });

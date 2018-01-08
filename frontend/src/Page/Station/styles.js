@@ -39,7 +39,15 @@ export default ({ typography, breakpoints, palette }) => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
+  nowPlayingActions: {
+    display: 'flex',
+    marginLeft: 'auto',
+    flexDirection: 'row',
+  },
   nowPlaying: {},
+  emptyNowPlayingImage: {
+    width: '100%',
+  },
   emptyNowPlaying: {
     height: 0,
   },

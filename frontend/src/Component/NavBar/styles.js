@@ -37,13 +37,11 @@ export default ({ breakpoints, spacing }) => ({
   navWrapper: {
     display: 'flex',
     alignItems: 'center',
-    '& a': {
-      textDecoration: 'none',
-      color: 'white',
-      fontSize: '1rem',
-    },
   },
   navItem: {
     marginLeft: spacing.doubleBaseMargin,
+    textDecoration: 'none',
+    color: 'white',
+    fontSize: '1rem',
   },
 });
