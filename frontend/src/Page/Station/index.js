@@ -77,7 +77,7 @@ class StationPage extends Component {
 
   componentDidMount() {
     const { muteNowPlaying, mutePreview } = this.props;
-    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus'));
+    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus')) || [];
     volumeStatus.forEach(item => {
       switch (item.player) {
         case 'nowPlaying':
