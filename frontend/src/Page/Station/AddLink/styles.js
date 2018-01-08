@@ -90,6 +90,7 @@ export default theme => {
     },
 
     emptyCollection: {
+      width: '100%',
       height: 200,
       margin: 'auto',
     },
@@ -97,7 +98,11 @@ export default theme => {
     emptyImg: {
       width: '100%',
       height: '100%',
-      objectFit: 'cover',
+      objectFit: 'contain',
+    },
+
+    notFound: {
+      width: '40%',
     },
 
     /* Search */
