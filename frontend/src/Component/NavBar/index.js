@@ -1,13 +1,10 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
 
 import { withStyles } from 'material-ui/styles';
-import { withNotification } from 'Component';
 import fixture from 'Fixture/landing';
-import { loadAuthenticationState, removeAuthenticationState } from 'Config';
-import { logout } from 'Redux/api/user/actions';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -23,17 +20,7 @@ const MENUS = {
     title: 'My Station',
     url: '/station',
   },
-  // login: {
-  //   title: 'Login',
-  //   url: '/auth/login',
-  // },
 };
-
-// const function isLogin(params) {
-//   ret
-// }
-
-// const defaultColor = 'rgba(10, 55, 58, 0.4) !important';
 
 const setColor = {
   default: 'rgba(10, 55, 58, 0.4) !important',
@@ -128,6 +115,7 @@ NavBar.propTypes = {
   classes: PropTypes.any,
   style: PropTypes.any,
   color: PropTypes.string,
+  dispatch: PropTypes.any,
 };
 
 export default compose(withStyles(styles), connect(undefined, undefined))(
