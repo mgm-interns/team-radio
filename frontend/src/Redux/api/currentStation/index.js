@@ -4,7 +4,11 @@ import {
   SERVER_UPDATE_NOW_PLAYING,
   CLIENT_ADD_SONG,
   SERVER_ADD_SONG_FAILURE,
+  SERVER_NEW_USER_JOINED,
+  SERVER_DOWNVOTE_SONG_FAILURE,
+  SERVER_UPVOTE_SONG_FAILURE,
 } from 'Redux/actions';
+import { appNotificationInstance } from 'Component/Notification/AppNotification';
 
 const INITIAL_STATE = {
   station: null,
@@ -38,6 +42,24 @@ export default (state = INITIAL_STATE, action) => {
         nowPlaying: action.payload,
       };
     /**
+     * Notify when a new user join
+     */
+    case SERVER_NEW_USER_JOINED:
+      appNotificationInstance.info({
+        message: action.payload && `${action.payload.user} has joined!`,
+      });
+      return state;
+    case SERVER_UPVOTE_SONG_FAILURE:
+      appNotificationInstance.info({
+        message: action.payload && action.payload.message,
+      });
+      return state;
+    case SERVER_DOWNVOTE_SONG_FAILURE:
+      appNotificationInstance.info({
+        message: action.payload && action.payload.message,
+      });
+      return state;
+    /**
      * Add the song to playlist if user added a new song
      * Move the old playlist to temp
      */
@@ -52,6 +74,9 @@ export default (state = INITIAL_STATE, action) => {
      * by copy from temp playlist
      */
     case SERVER_ADD_SONG_FAILURE:
+      appNotificationInstance.warning({
+        message: action.payload && action.payload.message,
+      });
       return {
         ...state,
         playlist: [...state.tempPlaylist],

@@ -1,45 +1,28 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+
 import Grid from 'material-ui/Grid';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import { FormHelperText } from 'material-ui/Form';
-// import Input, { InputLabel } from 'material-ui/Input';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
+
 import { Field, reduxForm } from 'redux-form';
+import { fetchUser, addUserWithSocialAccount } from 'Redux/api/user/actions';
+
 import { NavBar, GoogleLogin, FacebookLogin } from 'Component';
-import { saveAuthenticationState, loadAuthenticationState } from 'Config';
-import {
-  fetchUser,
-  addUser,
-  addUserWithSocialAccount,
-} from 'Redux/api/user/actions';
-import sleep from 'Util/sleep';
 import { withNotification } from 'Component/Notification';
 
-import { connect } from 'react-redux';
-import { compose } from 'redux';
+import { saveAuthenticationState, loadAuthenticationState } from 'Config';
+import { email, required } from 'Util/validate';
+
 import styles from './styles';
 import TextView from '../TextView';
-
-const validate = values => {
-  const errors = {};
-
-  if (!values.email) {
-    errors.email = 'Email is required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address';
-  }
-
-  if (!values.password) {
-    errors.password = 'Password is required';
-  }
-
-  return errors;
-};
 
 class Login extends Component {
   constructor(props) {
@@ -48,52 +31,29 @@ class Login extends Component {
     this.state = {
       formErrors: {},
       isLoggedIn: false,
-      // loading: false,
     };
 
-    this.error = this.error.bind(this);
-    this.loading = this.loading.bind(this);
-    this.responseSocial = this.responseSocial.bind(this);
-  }
-
-  responseSocial(response) {
-    const { notification } = this.props;
-    if (response) {
-      this.setState({ isLoggedIn: true });
-      const { profileObj, authResponse } = response;
-
-      notification.app.success({
-        message: `Login successful!`,
-      });
-      // handle data
-      saveAuthenticationState(authResponse);
-      this.props.dispatch(addUserWithSocialAccount(profileObj));
-    }
-  }
-
-  error(response) {
-    console.error(response);
-  }
-
-  loading() {
-    console.info('loading');
-    return <CircularProgress />;
+    this._showNotification = this._showNotification.bind(this);
+    this._onLoginSocialClick = this._onLoginSocialClick.bind(this);
+    this._onLoginSocialFailure = this._onLoginSocialFailure.bind(this);
+    this._renderHeadline = this._renderHeadline.bind(this);
+    this._renderLoginSocial = this._renderLoginSocial.bind(this);
+    this._renderLoginLocalForm = this._renderLoginLocalForm.bind(this);
+    this._renderLoginLocalActions = this._renderLoginLocalActions.bind(this);
+    this._renderBackground = this._renderBackground.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    const response = nextProps.fetchUserResponse;
-    console.log(response);
-    const { error } = response;
-    if (response.error != null) {
+    const { fetchUserResponse: { error, data, isAuthenticated } } = nextProps;
+    console.log(this.props);
+    if (error !== null) {
       this.setState({
-        formErrors: {
-          message: error.response.message,
-        },
+        formErrors: { message: error.response.message },
       });
-    } else if (response.data.token || response.isAuthenticated) {
-      // } else if (response.data.token) {
-      saveAuthenticationState(response.data);
-      // this.props.history.push('/');
+    } else if (data.token || isAuthenticated) {
+      this._showNotification('Login successful!');
+      saveAuthenticationState(data);
+      this.props.history.push('/');
     }
 
     if (!loadAuthenticationState()) {
@@ -101,106 +61,170 @@ class Login extends Component {
     }
   }
 
-  render() {
-    const { classes, loading, handleSubmit } = this.props;
+  _showNotification(content) {
+    const { notification } = this.props;
 
+    notification.app.success({
+      message: content,
+    });
+    // notification.browser.success({
+    //   message: content,
+    // });
+  }
+
+  _onLoginSocialClick(response) {
+    if (response) {
+      this.setState({ isLoggedIn: true });
+      const { profileObj, authResponse } = response;
+
+      // handle data
+      saveAuthenticationState(authResponse);
+      this.props.addUserWithSocialAccount(profileObj);
+    }
+  }
+
+  _onLoginSocialFailure(response) {
+    if (response) {
+      const socialErrors = {
+        message: 'Login failed!',
+      };
+      this.setState({
+        formErrors: socialErrors,
+      });
+    }
+  }
+
+  _renderHeadline() {
     return (
-      <div>
-        <NavBar />
-        <Grid container direction="column" className={classes.container}>
-          <Grid container className={classes.foreground}>
-            <Grid item xs={11} sm={5} className={classes.cardWrapper}>
-              <Card raised className={classes.cardForm}>
-                <form onSubmit={handleSubmit}>
-                  <CardContent>
-                    <Grid style={{ paddingBottom: '1em' }}>
-                      <Typography type="headline" component="h2">
-                        Log in
-                      </Typography>
-                      <Typography component="p">
-                        for listening and sharing music
-                      </Typography>
-                    </Grid>
-                    <Grid style={{ paddingBottom: '1em' }}>
-                      <FacebookLogin
-                        fields="name,email,picture"
-                        // scope={}
-                        autoLoad={false}
-                        onSuccess={this.responseSocial}
-                        isDisabled={this.state.isLoggedIn}
-                        // icon="fa-facebook"
-                      />
-                      <div style={{ height: 16 }} />
-                      <GoogleLogin
-                        onSuccess={this.responseSocial}
-                        onFailure={this.error}
-                        onRequest={this.loading}
-                        offline={false}
-                        responseType="id_token"
-                        isSignedIn
-                        isDisabled={this.state.isLoggedIn}
-                        prompt="consent"
-                        buttonText="Login with Google"
-                      />
-                    </Grid>
-
-                    <Field
-                      name="email"
-                      placeholde="Email"
-                      type="text"
-                      component={TextView}
-                      label="Email"
-                    />
-                    <Field
-                      name="password"
-                      placeholder="Password"
-                      type="password"
-                      component={TextView}
-                      label="Password"
-                    />
-                    <FormHelperText className={classes.error}>
-                      {this.state.formErrors.message}
-                    </FormHelperText>
-                  </CardContent>
-                  <CardActions>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        {loading ? (
-                          <CircularProgress />
-                        ) : (
-                          <Button
-                            raised
-                            color="primary"
-                            type="submit"
-                            className={classes.buttonSend}
-                            disabled={this.state.isLoggedIn}
-                          >
-                            Log in
-                          </Button>
-                        )}
-
-                        <FormHelperText className={classes.callout}>
-                          <span>Not a member?</span>
-                          <Link to="/auth/register">Create an account</Link>
-                        </FormHelperText>
-                      </Grid>
-                    </Grid>
-                  </CardActions>
-                </form>
-              </Card>
-            </Grid>
-
-            <Grid item xs className={classes.backgroundImg}>
-              <img
-                src="https://images.unsplash.com/photo-1512692505538-1e7bb8980a77?auto=format&fit=crop&w=2600&q=80"
-                alt="Team Radio - Cover"
-                className={classes.backgroundImg}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      </div>
+      <Grid style={{ paddingBottom: '1em' }}>
+        <Typography type="headline" component="h2">
+          Log in
+        </Typography>
+        <Typography component="p">for listening and sharing music</Typography>
+      </Grid>
     );
+  }
+
+  _renderLoginSocial() {
+    return (
+      <Grid style={{ paddingBottom: '1em' }}>
+        <FacebookLogin
+          fields="name,email,picture"
+          autoLoad={false}
+          scope="email,public_profile,user_friends"
+          onSuccess={this._onLoginSocialClick}
+          isDisabled={this.state.isLoggedIn}
+          onFailure={this._onLoginSocialFailure}
+          // icon="fa-facebook"
+        />
+        <div style={{ height: 16 }} />
+        <GoogleLogin
+          onSuccess={this._onLoginSocialClick}
+          offline={false}
+          responseType="id_token"
+          isSignedIn
+          isDisabled={this.state.isLoggedIn}
+          prompt="consent"
+          buttonText="Login with Google"
+          onFailure={this._onLoginSocialFailure}
+        />
+      </Grid>
+    );
+  }
+
+  _renderLoginLocalForm() {
+    const { classes, submitSucceeded } = this.props;
+    // console.log(this.props);
+    return (
+      <Grid>
+        <Field
+          name="email"
+          placeholde="Email"
+          type="text"
+          component={TextView}
+          label="Email"
+          validate={[required, email]}
+        />
+        <Field
+          name="password"
+          placeholder="Password"
+          type="password"
+          component={TextView}
+          label="Password"
+          validate={required}
+        />
+        <FormHelperText className={classes.error}>
+          {submitSucceeded && this.state.formErrors.message}
+        </FormHelperText>
+      </Grid>
+    );
+  }
+
+  _renderLoginLocalActions() {
+    const { classes, loading } = this.props;
+    return (
+      <Grid container>
+        <Grid item xs={12}>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Button
+              raised
+              color="primary"
+              type="submit"
+              className={classes.buttonSend}
+              disabled={this.state.isLoggedIn}
+            >
+              Log in
+            </Button>
+          )}
+
+          <FormHelperText className={classes.callout}>
+            <span>Not a member?</span>
+            <Link to="/auth/register">Create an account</Link>
+          </FormHelperText>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  _renderBackground() {
+    const { classes } = this.props;
+    return (
+      <Grid item xs className={classes.backgroundImg}>
+        <img
+          src="https://images.unsplash.com/photo-1512692505538-1e7bb8980a77?auto=format&fit=crop&w=2600&q=80"
+          alt="Team Radio - Cover"
+          className={classes.backgroundImg}
+        />
+      </Grid>
+    );
+  }
+
+  render() {
+    const { classes, handleSubmit } = this.props;
+
+    return [
+      <NavBar key={1} />,
+      <Grid key={2} container direction="column" className={classes.container}>
+        <Grid container className={classes.foreground}>
+          <Grid item xs={11} sm={5} className={classes.cardWrapper}>
+            <Card raised className={classes.cardForm}>
+              <form onSubmit={handleSubmit}>
+                <CardContent>
+                  {this._renderHeadline()}
+                  {this._renderLoginSocial()}
+                  {this._renderLoginLocalForm()}
+                </CardContent>
+                <CardActions>{this._renderLoginLocalActions()}</CardActions>
+              </form>
+            </Card>
+          </Grid>
+
+          {this._renderBackground()}
+        </Grid>
+      </Grid>,
+    ];
   }
 }
 
@@ -210,26 +234,24 @@ Login.propTypes = {
   classes: PropTypes.any,
   loading: PropTypes.bool,
   handleSubmit: PropTypes.any,
-  submitting: PropTypes.any,
-  login: PropTypes.func,
+  submitSucceeded: PropTypes.any,
   notification: PropTypes.object,
+  addUserWithSocialAccount: PropTypes.func,
 };
-
-const mapDispatchToProps = dispatch => ({
-  onSubmit: user => {
-    dispatch(fetchUser(user));
-  },
-});
 
 const mapStateToProps = state => ({
   fetchUserResponse: state.api.user,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onSubmit: data => dispatch(fetchUser(data)),
+  addUserWithSocialAccount: data => dispatch(addUserWithSocialAccount(data)),
 });
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   reduxForm({
     form: 'loginForm',
-    validate,
   }),
   withStyles(styles),
   withNotification,

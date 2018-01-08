@@ -61,31 +61,16 @@ export default theme => {
       },
     },
 
-    // actions: {
-    //   position: 'absolute',
-    //   bottom: 0,
-    //   width: '100%',
-    //   display: 'flex',
-    //   alignItems: 'center',
-    //   justifyContent: 'space-between',
-    // },
-
     volume: {
       position: 'absolute',
       left: 0,
       bottom: 0,
-      // height: '100%',
     },
 
     sendBtn: {
       position: 'absolute',
       right: 0,
       bottom: 0,
-      // minHeight: 0,
-      // paddingHorizontal: '8px',
-      // paddingVertical: '2px',
-      // padding: 4px 8px,
-      // height: '100%',
     },
 
     sendIcon: {
@@ -105,7 +90,6 @@ export default theme => {
     },
 
     emptyCollection: {
-      // width: 200,
       height: 200,
       margin: 'auto',
     },
@@ -128,6 +112,8 @@ export default theme => {
       left: 0,
       right: 0,
       zIndex: 9999,
+      maxHeight: 240,
+      overflowY: 'auto',
     },
     suggestion: {
       display: 'block',
@@ -143,6 +129,11 @@ export default theme => {
     searchItemImg: {
       height: '100%',
       marginRight: baseMargin,
+    },
+    closeIcon: {
+      position: 'absolute',
+      top: '-25%',
+      right: 0,
     },
     /* End search */
   };

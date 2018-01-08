@@ -40,11 +40,11 @@ app.use('/api', cors(['http://localhost:3000']), Routes);
 app.use(express.static(path.resolve(__dirname, '../..', 'frontend', 'build')));
 
 // Always return the main index.html, so react-router render the route in the client
-// app.use('*', (req, res) => {
-//   res.sendFile(
-//     path.resolve(__dirname, '../..', 'frontend', 'build', 'index.html'),
-//   );
-// });
+app.use('*', (req, res) => {
+  res.sendFile(
+    path.resolve(__dirname, '../..', 'frontend', 'build', 'index.html'),
+  );
+});
 
 // error handler
 /* eslint no-unused-vars: 0 */

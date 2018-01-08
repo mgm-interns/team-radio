@@ -4,7 +4,11 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { addSong } from 'Redux/api/currentStation/actions';
-import { setPreviewVideo, mutePlayer } from 'Redux/page/station/actions';
+import {
+  setPreviewVideo,
+  mutePreview,
+  muteNowPlaying,
+} from 'Redux/page/station/actions';
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
@@ -27,20 +31,6 @@ import styles from './styles';
 
 /* eslint-disable no-shadow */
 class AddLink extends Component {
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-    addSong: PropTypes.func,
-    setPreviewVideo: PropTypes.func,
-    preview: PropTypes.object,
-    nowPlaying: PropTypes.object,
-    match: PropTypes.any,
-    userId: PropTypes.any,
-    mutePlayer: PropTypes.func,
-    isMutePlayer: PropTypes.bool,
-    isAuthenticated: PropTypes.bool,
-    notification: PropTypes.object,
-  };
-
   constructor(props) {
     super(props);
 
@@ -50,7 +40,7 @@ class AddLink extends Component {
       suggestions: [],
       isDisableButton: true,
       isAddLinkProgress: false,
-      isMute: true,
+      muted: true,
     };
     this._onChange = this._onChange.bind(this);
     this._onAddClick = this._onAddClick.bind(this);
@@ -66,6 +56,16 @@ class AddLink extends Component {
     this._renderSuggestion = this._renderSuggestion.bind(this);
     this._renderInput = this._renderInput.bind(this);
     this._onVolumeClick = this._onVolumeClick.bind(this);
+    this._clearSearchInput = this._clearSearchInput.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { preview, mutedPreview } = nextProps;
+    this.setState({ muted: mutedPreview });
+
+    if (preview === null) {
+      this.setState({ searchText: '' });
+    }
   }
 
   /* Get video info */
@@ -101,7 +101,7 @@ class AddLink extends Component {
           part: 'snippet',
           safeSearch: 'strict',
           type: 'video',
-          maxResults: 5,
+          maxResults: 10,
           videoDefinition: 'any',
           relevanceLanguage: 'en',
         },
@@ -114,8 +114,9 @@ class AddLink extends Component {
   _renderInput(inputProps) {
     const { classes, value, ref, ...other } = inputProps;
 
-    return (
+    return [
       <TextField
+        key={1}
         autoComplete="search-input"
         id="search-input"
         name="search-input"
@@ -128,8 +129,16 @@ class AddLink extends Component {
           },
           ...other,
         }}
-      />
-    );
+      />,
+      <IconButton
+        key={2}
+        color="default"
+        onClick={this._clearSearchInput}
+        className={classes.closeIcon}
+      >
+        close
+      </IconButton>,
+    ];
   }
 
   _renderSuggestion(suggestion, { query, isHighlighted }) {
@@ -210,8 +219,16 @@ class AddLink extends Component {
   /** End of autoComplete search  */
 
   /* Handle add link events */
+  _clearSearchInput() {
+    const { setPreviewVideo, muteNowPlaying, mutePreview } = this.props;
+    this.setState({ searchText: '' });
+    setPreviewVideo();
+    muteNowPlaying();
+    mutePreview();
+  }
+
   async _onChange(e) {
-    const { setPreviewVideo, mutePlayer } = this.props;
+    const { setPreviewVideo } = this.props;
     const result = e.target.value;
     this.setState({ searchText: result });
     try {
@@ -232,7 +249,6 @@ class AddLink extends Component {
     }
     if (result === '') {
       setPreviewVideo();
-      mutePlayer(false);
       this.setState({
         isDisableButton: true,
         videoId: '',
@@ -245,7 +261,8 @@ class AddLink extends Component {
       preview,
       addSong,
       setPreviewVideo,
-      mutePlayer,
+      mutePreview,
+      muteNowPlaying,
       match: { params: { stationId } },
       userId,
       notification,
@@ -260,6 +277,8 @@ class AddLink extends Component {
     }
     // If authenticated
     setPreviewVideo();
+    mutePreview();
+    muteNowPlaying();
     addSong({
       songUrl: this._getVideoUrl(preview),
       title: preview.snippet.title,
@@ -267,18 +286,16 @@ class AddLink extends Component {
       stationId,
       userId,
     });
-    mutePlayer(false);
     this.setState({ searchText: '', isDisableButton: true, isMute: true });
   }
   /* End of handle add link events */
 
   /* Handle preview volume */
   _onVolumeClick() {
-    const { mutePlayer } = this.props;
-    this.setState({ isMute: !this.state.isMute }, () => {
-      // mute now playing if user want to unmute preview
-      mutePlayer(!this.state.isMute);
-    });
+    const { mutePreview, muteNowPlaying, mutedPreview } = this.props;
+    // mute now playing if user want to unmute preview
+    mutePreview(!mutedPreview);
+    muteNowPlaying(mutedPreview);
   }
 
   /* Render loading while waiting for load data */
@@ -355,14 +372,9 @@ class AddLink extends Component {
     );
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { isMutePlayer } = nextProps;
-    this.setState({ isMute: !isMutePlayer });
-  }
-
   _renderPreviewSection() {
     const { classes, preview } = this.props;
-    const { isDisableButton, isMute } = this.state;
+    const { isDisableButton, muted } = this.state;
     let view = null;
 
     if (preview === null) {
@@ -373,7 +385,7 @@ class AddLink extends Component {
           <Grid item sm={4} xs={12} className={classes.previewImg}>
             <Player
               url={this._getVideoUrl(preview)}
-              muted={isMute}
+              muted={muted}
               playing={true}
             />
           </Grid>
@@ -387,7 +399,7 @@ class AddLink extends Component {
               className={classes.volume}
               color="default"
             >
-              {isMute ? 'volume_off' : 'volume_up'}
+              {muted ? 'volume_off' : 'volume_up'}
             </IconButton>
             <Button
               className={classes.sendBtn}
@@ -435,9 +447,26 @@ class AddLink extends Component {
   }
 }
 
+AddLink.propTypes = {
+  classes: PropTypes.object.isRequired,
+  addSong: PropTypes.func,
+  setPreviewVideo: PropTypes.func,
+  preview: PropTypes.object,
+  nowPlaying: PropTypes.object,
+  match: PropTypes.any,
+  userId: PropTypes.any,
+  mutePreview: PropTypes.func,
+  muteNowPlaying: PropTypes.func,
+  mutedPreview: PropTypes.bool,
+  mutedNowPlaying: PropTypes.bool,
+  isAuthenticated: PropTypes.bool,
+  notification: PropTypes.object,
+};
+
 const mapStateToProps = ({ page, api }) => ({
   preview: page.station.preview,
-  isMutePlayer: page.station.mutePlayer,
+  mutedPreview: page.station.mutedPreview,
+  mutedNowPlaying: page.station.mutedNowPlaying,
   userId: api.user.data.userId,
   nowPlaying: api.currentStation.nowPlaying,
   isAuthenticated: api.user.isAuthenticated,
@@ -446,7 +475,8 @@ const mapStateToProps = ({ page, api }) => ({
 const mapDispatchToProps = dispatch => ({
   addSong: option => dispatch(addSong(option)),
   setPreviewVideo: video => dispatch(setPreviewVideo(video)),
-  mutePlayer: isMute => dispatch(mutePlayer(isMute)),
+  mutePreview: muted => dispatch(mutePreview(muted)),
+  muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
 });
 
 export default compose(

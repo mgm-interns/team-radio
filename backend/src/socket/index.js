@@ -114,7 +114,6 @@ io.on('connection', async function(socket) {
   });
 
   socket.on('disconnect', () => {
-    socket.leaveAll();
     console.log('Disconnect with ' + socket.id);
   });
 });
