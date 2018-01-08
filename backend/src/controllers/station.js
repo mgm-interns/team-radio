@@ -130,12 +130,14 @@ export const updateStartingTime = async (stationId, time) => {
 // To stationId and set songIds from false to true
 export const setPlayedSongs = async (stationId, songIds) => {
   const currentPlaylist = await getListSong(stationId);
-  // console.log(currentPlaylist);
+   console.log("songIds : "+songIds);
   if (currentPlaylist) {
     for (let i = 0; i < songIds.length; i++) {
       for (let j = 0; j < currentPlaylist.length; j++) {
         if (currentPlaylist[j].song_id === songIds[i]) {
+          console.log("play list1 ****** "+currentPlaylist[j]);
           currentPlaylist[j].is_played = true;
+          console.log("play list2 "+currentPlaylist[j]);
         }
       }
     }

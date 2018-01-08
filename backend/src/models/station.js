@@ -3,72 +3,39 @@ import mongoose from 'mongoose';
 import { type } from 'os';
 
 const stationSchema = mongoose.Schema({
-  station_name: {
-    type: String,
-    require: true,
-  },
-  id: {
-    type: String,
-    require: true,
-  },
-  owner_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: null,
-  },
-  starting_time: {
-    type: Number,
-    default: 0,
-  },
+  station_name: { type: String, require: true, },
+  id: { type: String, require: true, },
+  owner_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users', default: null, },
+  starting_time: { type: Number, default: 0, },
   playlist:
     {
       type: [
         {
-          song_id: {
-            type: Number,
-            require: true,
-          },
-          is_played: {
-            type: Boolean,
-          },
-          url: {
-            type: String,
-            required: true,
-          },
-          title: {
-            type: String,
-          },
-          thumbnail: {
-            type: String,
-          },
-          duration: {
-            type: Number,
-            min: 0,
-          },
-          creator_id: {
-            type: mongoose.Schema.Types.ObjectId,
-          },
+          song_id: { type: Number, require: true, },
+          is_played: { type: Boolean, },
+          url: { type: String, required: true, },
+          title: { type: String, },
+          thumbnail: { type: String, },
+          duration: { type: Number, min: 0, },
+          creator_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+          created_day: { type: Number, default: true, },
           up_vote: [
             {
-              type: mongoose.Schema.Types.ObjectId, // userID
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'users' // userID
             }
           ],
           down_vote: [
             {
               type: mongoose.Schema.Types.ObjectId, // userID
+              ref: 'users'
             }
           ],
-          created_day: {
-            type: Number,
-            default: true,
-          },
         },
       ],
       default: []
     },
-  created_day: {
-    type: Number,
-    default: new Date().getTime(),
-  },
+  created_day: { type: Number, default: new Date().getTime(), },
 });
 
 var Station = (module.exports = mongoose.model('Stations', stationSchema));
@@ -99,7 +66,7 @@ module.exports.getStations = (limit) => {
 };
 // 
 // Get all station
-module.exports.getStationDetails = (limit) => {
+module.exports.getStationDetails = limit => {
   return Station.find().limit(limit);
 };
 
@@ -192,7 +159,9 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
 //get playlist of station
 module.exports.getPlaylistOfStation = stationId => {
   let query = { id: stationId };
-  return Station.findOne(query, { playlist: true, _id: false });
+  return Station.findOne(query, { playlist: true, _id: false })
+    .populate('playlist.creator_id', { _id: 1, name: 1, avatar_Url: 1})
+    .exec();
 };
 
 // Get list song by User ID
