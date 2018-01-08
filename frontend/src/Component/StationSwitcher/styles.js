@@ -3,7 +3,7 @@ export default ({ breakpoints, spacing }) => ({
     margin: 'auto',
     overflowX: 'auto',
     minHeight: 120,
-    [breakpoints.up('lg')]: {
+    [breakpoints.up('md')]: {
       minHeight: 140,
       paddingLeft: spacing.doubleBaseMargin,
       paddingRight: spacing.doubleBaseMargin,
