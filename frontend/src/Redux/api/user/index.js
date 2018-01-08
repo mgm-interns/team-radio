@@ -1,5 +1,3 @@
-import { loadAuthenticationState } from 'Config';
-
 const INITIAL_STATE = {
   // data: localTokenToData(),
   data: {},

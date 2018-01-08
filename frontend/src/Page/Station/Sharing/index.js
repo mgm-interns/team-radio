@@ -13,7 +13,6 @@ import IconButton from 'material-ui/IconButton';
 import FacebookIcon from 'react-icons/lib/fa/facebook-square';
 import GoogleIcon from 'react-icons/lib/fa/google-plus-square';
 import TwitterIcon from 'react-icons/lib/fa/twitter-square';
-// import CopyOutLineIcon from 'react-icons/lib/io/ios-copy-outline';
 import CopyIcon from 'react-icons/lib/go/clippy';
 import { withNotification } from 'Component/Notification';
 import styles from './styles';
@@ -113,25 +112,32 @@ class StationSharing extends Component {
 
   _shareTo(prefix) {
     try {
-      window.open(`${prefix}${this.state.url}`, '_newtab');
+      this.setState({ open: false }, () => {
+        window.open(`${prefix}${this.state.url}`, '_newtab');
+      });
     } catch (error) {
       console.error(error);
     }
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, currentStation } = this.props;
     return (
       <div>
-        <IconButton onClick={this._openPopover}>share</IconButton>
+        <IconButton
+          onClick={this._openPopover}
+          color={this.state.open ? 'primary' : 'default'}
+        >
+          share
+        </IconButton>
         <Popover
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'right',
+            horizontal: 'left',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'right',
+            horizontal: 'left',
           }}
           open={this.state.open}
           anchorEl={this.state.anchor}
@@ -142,7 +148,13 @@ class StationSharing extends Component {
               <Grid container className={classes.cardContainer}>
                 <Grid item xs={12}>
                   <Typography type={'display1'} className={classes.cardHeader}>
-                    Share this station
+                    Share{' '}
+                    {currentStation ? (
+                      <strong>{currentStation.station_name}</strong>
+                    ) : (
+                      'this station'
+                    )}{' '}
+                    to your friends
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -158,42 +170,44 @@ class StationSharing extends Component {
               </Grid>
             </CardContent>
             <CardActions>
-              <Grid container>
-                <Grid item xs={12} className={classes.actionsContainer}>
-                  <Tooltip placement={'right'} title={'Share on Facebook'}>
-                    <IconButton
-                      className={classes.facebookIcon}
-                      onClick={() => this._shareTo(FACEBOOK_SHARING)}
-                    >
-                      <FacebookIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip placement={'right'} title={'Share on Google+'}>
-                    <IconButton
-                      className={classes.googleIcon}
-                      onClick={() => this._shareTo(GOOGLE_PLUS_SHARING)}
-                    >
-                      <GoogleIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip placement={'right'} title={'Share on Twitter'}>
-                    <IconButton
-                      className={classes.twitterIcon}
-                      onClick={() => this._shareTo(TWITTER_SHARING)}
-                    >
-                      <TwitterIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip placement={'right'} title={'Copy to clipboard'}>
-                    <IconButton
-                      className={classes.copyIcon}
-                      color={this.state.copied ? 'primary' : 'default'}
-                      onClick={this._copyToClipboard}
-                    >
-                      <CopyIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
+              <Grid container className={classes.actionsContainer}>
+                <Tooltip placement={'right'} title={'Share on Facebook'}>
+                  <IconButton
+                    className={classes.facebookIcon}
+                    onClick={() => this._shareTo(FACEBOOK_SHARING)}
+                  >
+                    <FacebookIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip placement={'right'} title={'Share on Google+'}>
+                  <IconButton
+                    className={classes.googleIcon}
+                    onClick={() => this._shareTo(GOOGLE_PLUS_SHARING)}
+                  >
+                    <GoogleIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip placement={'right'} title={'Share on Twitter'}>
+                  <IconButton
+                    className={classes.twitterIcon}
+                    onClick={() => this._shareTo(TWITTER_SHARING)}
+                  >
+                    <TwitterIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip
+                  placement={'left'}
+                  title={'Copy to clipboard'}
+                  className={classes.copyIconWrapper}
+                >
+                  <IconButton
+                    className={classes.copyIcon}
+                    color={this.state.copied ? 'primary' : 'default'}
+                    onClick={this._copyToClipboard}
+                  >
+                    <CopyIcon />
+                  </IconButton>
+                </Tooltip>
               </Grid>
             </CardActions>
           </Card>

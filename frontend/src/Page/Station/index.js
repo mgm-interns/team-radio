@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
+import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
 import { StationSwitcher, NavBar, Footer } from 'Component';
-import { Images } from 'Theme';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
 import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
+import AlertIcon from 'react-icons/lib/go/alert';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
@@ -77,7 +78,7 @@ class StationPage extends Component {
 
   componentDidMount() {
     const { muteNowPlaying, mutePreview } = this.props;
-    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus'));
+    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus')) || [];
     volumeStatus.forEach(item => {
       switch (item.player) {
         case 'nowPlaying':
@@ -92,21 +93,20 @@ class StationPage extends Component {
       }
     });
   }
-
-  static isNotAnEmptyArray(playlist) {
+  static getPlaylistLength(playlist) {
     if (!playlist) {
       return false;
     }
     const filteredPlaylist = playlist.filter(song => song.is_played === false);
 
-    return !!filteredPlaylist.length;
+    return filteredPlaylist.length;
   }
 
   _onVolumeClick() {
     const { mutePreview, muteNowPlaying, mutedNowPlaying } = this.props;
     muteNowPlaying(!mutedNowPlaying);
     // always mute preview even any video is playing or not
-    mutePreview();
+    mutePreview(true);
   }
 
   render() {
@@ -137,21 +137,23 @@ class StationPage extends Component {
             <Grid item xs={12} md={7} xl={8}>
               <Grid container>
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
-                  <h1>
+                  <Typography type={'display1'}>
                     {station ? station.station_name : STATION_NAME_DEFAULT}
-                  </h1>
+                  </Typography>
                   <div className={classes.nowPlayingActions}>
-                    <IconButton
-                      onClick={this._onVolumeClick}
-                      className={volumeIconClass}
-                      color="default"
-                    >
-                      {muted ? 'volume_off' : 'volume_up'}
-                    </IconButton>
+                    {!nowPlaying.url ? null : (
+                      <IconButton
+                        onClick={this._onVolumeClick}
+                        className={volumeIconClass}
+                        color="default"
+                      >
+                        {muted ? 'volume_off' : 'volume_up'}
+                      </IconButton>
+                    )}
                     <StationSharing />
                   </div>
                 </Grid>
-                {StationPage.isNotAnEmptyArray(playlist) ? (
+                {StationPage.getPlaylistLength(playlist) ? (
                   <NowPlaying
                     className={classNames(
                       [classes.content, classes.nowPlaying],
@@ -165,10 +167,28 @@ class StationPage extends Component {
                   />
                 ) : (
                   <Grid item xs={12}>
-                    <img
-                      src={Images.notFound}
-                      className={classes.emptyNowPlayingImage}
-                    />
+                    <Grid
+                      container
+                      className={classNames(
+                        classes.content,
+                        classes.nowPlayingSuggestion,
+                      )}
+                      justify={'center'}
+                      alignItems={'center'}
+                      alignContent={'center'}
+                      direction={'column'}
+                    >
+                      <AlertIcon className={classes.suggestionIcon} />
+                      <Typography
+                        type={'title'}
+                        align={'center'}
+                        className={classes.suggestionText}
+                      >
+                        There is no song in playlist!
+                        <br />
+                        Please add a new song.
+                      </Typography>
+                    </Grid>
                   </Grid>
                 )}
               </Grid>
@@ -176,9 +196,11 @@ class StationPage extends Component {
             <Grid item xs={12} md={5} xl={4}>
               <Grid container>
                 <Grid item xs={12}>
-                  <h1>Now Playing</h1>
+                  <Typography type={'display1'}>
+                    Playlist ({StationPage.getPlaylistLength(playlist)})
+                  </Typography>
                 </Grid>
-                {StationPage.isNotAnEmptyArray(playlist) && (
+                {!!StationPage.getPlaylistLength(playlist) && (
                   <Playlist
                     className={classNames(classes.content, {
                       [classes.emptyPlaylist]: !playlist,
