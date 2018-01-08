@@ -1,4 +1,4 @@
-export default ({ typography, breakpoints, palette }) => ({
+export default ({ breakpoints, palette, spacing }) => ({
   containerWrapper: {
     width: '100%',
     margin: 0,
@@ -10,15 +10,11 @@ export default ({ typography, breakpoints, palette }) => ({
       minWidth: 1024,
       maxWidth: 1280,
     },
-    '& h1': {
-      ...typography.display1,
-      color: 'black',
-    },
   },
   switcherContainer: {
     margin: 'auto',
     padding: '0 !important',
-    marginTop: 85,
+    marginTop: 84,
     background: palette.lightGrey['500'],
   },
   switcherContent: {
@@ -37,11 +33,10 @@ export default ({ typography, breakpoints, palette }) => ({
   },
   nowPlayingHeader: {
     display: 'flex',
-    justifyContent: 'space-between',
   },
   nowPlayingActions: {
     display: 'flex',
-    marginLeft: 'auto',
+    marginLeft: spacing.baseMargin,
     flexDirection: 'row',
   },
   nowPlaying: {},
@@ -53,5 +48,17 @@ export default ({ typography, breakpoints, palette }) => ({
   },
   emptyPlaylist: {
     height: 0,
+  },
+  nowPlayingSuggestion: {
+    margin: 'auto',
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.0225)',
+  },
+  suggestionText: {
+    color: palette.lightBlack,
+  },
+  suggestionIcon: {
+    color: palette.lightBlack,
+    fontSize: 64,
   },
 });

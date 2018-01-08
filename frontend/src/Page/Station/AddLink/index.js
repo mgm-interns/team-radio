@@ -19,6 +19,7 @@ import IconButton from 'material-ui/IconButton';
 import Card from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import { MenuItem } from 'material-ui/Menu';
@@ -453,7 +454,9 @@ class AddLink extends Component {
       <Grid container className={classes.addLinkContainer}>
         <Grid item xs={12} className={classes.linkTitle}>
           <div>
-            <h1 className={classes.primaryTitle}>Add song</h1>
+            <Typography type={'display1'} className={classes.primaryTitle}>
+              Add song
+            </Typography>
             <span className={classes.secondaryTitle} />
           </div>
         </Grid>
