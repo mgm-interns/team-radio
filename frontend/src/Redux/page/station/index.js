@@ -10,7 +10,7 @@ const INITIAL_STATE = {
   preview: null,
   searchInput: '',
   mutedNowPlaying: false,
-  mutedPreview: true,
+  mutedPreview: false,
 };
 
 export default (state = INITIAL_STATE, action) => {

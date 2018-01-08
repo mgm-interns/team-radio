@@ -20,7 +20,7 @@ station.deleteStation = async function(req,res){
 
 station.getStation = async function (req, res) {
     //  var station = await stationController.addStation(req.body.station_name);
-    let station = await stationController.getStation(req.params.id);
+    let station = await stationController.getAllStationDetails(req.params.id);
     console.log('resolve : '+station)
     res.status(200).json(station);
 

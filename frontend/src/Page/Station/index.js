@@ -77,7 +77,7 @@ class StationPage extends Component {
 
   componentDidMount() {
     const { muteNowPlaying, mutePreview } = this.props;
-    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus'));
+    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus')) || [];
     volumeStatus.forEach(item => {
       switch (item.player) {
         case 'nowPlaying':
@@ -106,7 +106,7 @@ class StationPage extends Component {
     const { mutePreview, muteNowPlaying, mutedNowPlaying } = this.props;
     muteNowPlaying(!mutedNowPlaying);
     // always mute preview even any video is playing or not
-    mutePreview();
+    mutePreview(true);
   }
 
   render() {
@@ -141,13 +141,15 @@ class StationPage extends Component {
                     {station ? station.station_name : STATION_NAME_DEFAULT}
                   </h1>
                   <div className={classes.nowPlayingActions}>
-                    <IconButton
-                      onClick={this._onVolumeClick}
-                      className={volumeIconClass}
-                      color="default"
-                    >
-                      {muted ? 'volume_off' : 'volume_up'}
-                    </IconButton>
+                    {!nowPlaying.url ? null : (
+                      <IconButton
+                        onClick={this._onVolumeClick}
+                        className={volumeIconClass}
+                        color="default"
+                      >
+                        {muted ? 'volume_off' : 'volume_up'}
+                      </IconButton>
+                    )}
                     <StationSharing />
                   </div>
                 </Grid>

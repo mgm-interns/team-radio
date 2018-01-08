@@ -1,8 +1,29 @@
-export default theme => ({
+export default ({ spacing }) => ({
   container: {},
+  cardContainer: {
+    width: '100%',
+    margin: 'auto',
+  },
+  actionsContainer: {
+    padding: spacing.baseMargin,
+    paddingTop: '0 !important',
+    paddingBottom: '0 !important',
+    margin: 0,
+    width: '100%',
+  },
+  cardHeader: {
+    fontSize: '1em',
+  },
   input: {
     fontFamily: 'consolas',
     width: '100%',
+    fontSize: '0.75em',
+  },
+  copyIcon: {
+    fontSize: 24,
+  },
+  copyIconWrapper: {
+    marginLeft: 'auto',
   },
   facebookIcon: {
     color: '#4867AA',
