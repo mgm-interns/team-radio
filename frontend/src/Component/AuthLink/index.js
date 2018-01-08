@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Icon from 'material-ui/Icon';
 import classNames from 'classnames';
+import Menu, { MenuItem } from 'material-ui/Menu';
+import Button from 'material-ui/Button';
 
 import styles from './styles';
 
@@ -17,9 +19,10 @@ class AuthLink extends Component {
     super(props);
 
     this._logout = this._logout.bind(this);
-    this._triggerDropdown = this._triggerDropdown.bind(this);
+    this._handleClick = this._handleClick.bind(this);
+    this._handleOutsideClick = this._handleOutsideClick.bind(this);
     this.state = {
-      show: false,
+      anchorEl: null,
     };
   }
 
@@ -33,14 +36,32 @@ class AuthLink extends Component {
     this.forceUpdate();
   }
 
-  _triggerDropdown() {
-    this.setState(prevState => ({
-      show: !prevState.show,
-    }));
+  _handleOutsideClick(e) {
+    if (this.node.contains(e.target)) {
+      return;
+    }
+
+    this._handleClick(e);
   }
+
+  _handleClick = event => {
+    if (!this.state.anchorEl) {
+      document.addEventListener('click', this._handleOutsideClick, false);
+      this.setState({ anchorEl: event.currentTarget });
+    } else {
+      document.removeEventListener('click', this._handleOutsideClick, false);
+      this.setState({ anchorEl: null });
+    }
+  };
+
+  _handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
 
   render() {
     const { classes, user } = this.props;
+
+    const { anchorEl } = this.state;
 
     return (
       <Fragment>
@@ -55,8 +76,40 @@ class AuthLink extends Component {
           </Fragment>
         )}
         {user.isAuthenticated && (
-          <div className={classes.dropdown}>
-            <div className={classes.menuItem} onClick={this._triggerDropdown}>
+          // <div
+          //   className={classes.dropdown}
+          //   ref={node => {
+          //     this.node = node;
+          //   }}
+          // >
+          //   <div className={classes.menuItem} onClick={this._handleClick}>
+          //     <img
+          //       className={classes.avatar}
+          //       src="http://i.pravatar.cc/50"
+          //       alt="avatar"
+          //     />
+          //     <Icon className={classes.dropdownIcon}>arrow_drop_down</Icon>
+          //   </div>
+          //   <div
+          //     className={classNames([classes.dropdownContent], {
+          //       [classes.show]: this.state.show,
+          //     })}
+          //   >
+          //     <a>{user.data.name}</a>
+          //     <a>My Profile</a>
+          //     <a onClick={this._logout}>Logout</a>
+          //   </div>
+          <div
+            ref={node => {
+              this.node = node;
+            }}
+          >
+            <div
+              className={classes.menuItem}
+              aria-owns={anchorEl ? 'simple-menu' : null}
+              aria-haspopup="true"
+              onClick={this._handleClick}
+            >
               <img
                 className={classes.avatar}
                 src="http://i.pravatar.cc/50"
@@ -64,15 +117,19 @@ class AuthLink extends Component {
               />
               <Icon className={classes.dropdownIcon}>arrow_drop_down</Icon>
             </div>
-            <div
-              className={classNames([classes.dropdownContent], {
-                [classes.show]: this.state.show,
-              })}
+
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this._handleClose}
             >
-              <a>{user.data.name}</a>
-              <a>My Profile</a>
-              <a onClick={this._logout}>Logout</a>
-            </div>
+              <MenuItem>{user.data.name}</MenuItem>
+              <MenuItem>My account</MenuItem>
+              <MenuItem>
+                <a onClick={this._logout}>Logout</a>
+              </MenuItem>
+            </Menu>
           </div>
         )}
       </Fragment>
