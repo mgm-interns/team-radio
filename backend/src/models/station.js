@@ -67,17 +67,24 @@ module.exports.getStations = (limit) => {
 // 
 // Get all station
 module.exports.getStationDetails = limit => {
-  return Station.find().limit(limit);
+  return Station.find()
+    .populate('playlist.creator_id', { _id: 1, name: 1, avatar_url: 1 })
+    .exec()
+    .limit(limit);
 };
 
 // Get station by name
 module.exports.getStationByName = stationNameToFind => {
-  return Station.findOne({ station_name: stationNameToFind });
+  return Station.findOne({ station_name: stationNameToFind })
+    .populate('playlist.creator_id', { _id: 1, name: 1, avatar_url: 1 })
+    .exec();
 };
 
 // Get station by url
 module.exports.getStationById = idToFind => {
-  return Station.findOne({ id: idToFind });
+  return Station.findOne({ id: idToFind })
+    .populate('playlist.creator_id', { _id: 1, name: 1, avatar_url: 1 })
+    .exec();
 };
 
 // Get station by user_id
@@ -160,7 +167,7 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
 module.exports.getPlaylistOfStation = stationId => {
   let query = { id: stationId };
   return Station.findOne(query, { playlist: true, _id: false })
-    .populate('playlist.creator_id', { _id: 1, name: 1, avatar_url: 1})
+    .populate('playlist.creator_id', { _id: 1, name: 1, avatar_url: 1 })
     .exec();
 };
 

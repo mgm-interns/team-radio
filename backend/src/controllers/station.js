@@ -1,8 +1,10 @@
 /* eslint-disable */
 import { ObjectId } from 'mongodb';
+import deleteDiacriticMarks from 'khong-dau';
 import * as songController from './song';
 import * as players from '../players';
 import * as stationModels from './../models/station';
+
 
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 
@@ -24,7 +26,7 @@ export const addStation = async (stationName, userId) => {
           playlist: [],
           owner_id: _safeObjectId(userId),
         });
-        return currentStation;
+        return currentStation.toObject();
       }
       throw new Error('The station name is already exist!');
     } catch (err) {
@@ -36,7 +38,7 @@ export const addStation = async (stationName, userId) => {
 export const deleteStation = async (stationId, userId) => {
   try {
     const resolve = await stationModels.deleteStation(stationId, userId);
-    return resolve;
+    return resolve.toObject();
   } catch (err) {
     console.log(err);
     throw err;
@@ -49,7 +51,7 @@ export const getStation = async stationId => {
   if (!station) {
     throw new Error(`Station id ${stationId} is not exist!`);
   } else {
-    return station;
+    return station.toObject();
   }
 };
 
@@ -57,7 +59,7 @@ export const getStation = async stationId => {
 export const getStationsByUserId = async userId => {
   try {
     const stations = stationModels.getStationsByUserId(_safeObjectId(userId));
-    return stations;
+    return stations.toObject();
   } catch (err) {
     console.log(err);
     throw err;
@@ -111,7 +113,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
     await stationModels.addSong(stationId, song);
     station = await stationModels.getStationById(stationId);
     players.updatePlaylist(stationId);
-    return station.playlist;
+    return station.playlist.toObject();
     // return Promise.resolve(station.playlist);
   } catch (err) {
     console.log('Error add song : ' + err);
@@ -159,7 +161,7 @@ export const getAllStationDetails = async () => {
 export const getListSong = async stationId => {
   const playList = (await stationModels.getPlaylistOfStation(stationId))
     .playlist;
-  return playList;
+  return playList.toObject();
 };
 /**
  * Upvote
@@ -185,7 +187,7 @@ export const upVote = async (stationId, songId, userId) => {
             upVoteArray,
           );
           const playList = await getListSong(stationId);
-          return playList;
+          return playList.toObject();
         }
       }
       if (downVoteArray.length > 0) {
@@ -197,14 +199,14 @@ export const upVote = async (stationId, songId, userId) => {
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
 
             const playList = await getListSong(stationId);
-            return playList;
+            return playList.toObject();
           }
         }
       }
       upVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
       const playList = await getListSong(stationId);
-      return playList;
+      return playList.toObject();
     } else {
       if (downVoteArray.length > 0) {
         for (let i = 0; i < downVoteArray.length; i++) {
@@ -214,17 +216,17 @@ export const upVote = async (stationId, songId, userId) => {
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
             const playList = await getListSong(stationId);
-            return playList;
+            return playList.toObject();
           }
         }
       }
       upVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
       const playList = await getListSong(stationId);
-      return playList;
+      return playList.toObject();
     }
     const playList = await getListSong(stationId);
-    return playList
+    return playList.toObject();
   } catch (err) {
     console.log(err);
     throw new Error("Can not vote song !");
@@ -254,7 +256,7 @@ export const downVote = async (stationId, songId, userId) => {
             downVoteArray,
           );
           const playList = await getListSong(stationId);
-          return playList
+          return playList.toObject();
         }
       }
       if (upVoteArray.length > 0) {
@@ -266,14 +268,14 @@ export const downVote = async (stationId, songId, userId) => {
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
             const playList = await getListSong(stationId);
-            return playList;
+            return playList.toObject();
           }
         }
       }
       downVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
       const playList = await getListSong(stationId);
-      return playList;
+      return playList.toObject();
     } else {
       if (upVoteArray.length > 0) {
 
@@ -284,17 +286,17 @@ export const downVote = async (stationId, songId, userId) => {
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
             const playList = await getListSong(stationId);
-            return playList;
+            return playList.toObject();
           }
         }
       }
       downVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
       const playList = await getListSong(stationId);
-      return playList;
+      return playList.toObject();
     }
     const playList = await getListSong(stationId);
-    return playList;
+    return playList.toObject();
   } catch (err) {
     console.log(err);
     throw new Error("Can not vote song !");
@@ -313,7 +315,7 @@ function _stringToId(str) {
 }
 
 async function _createStationId(stationName) {
-  const id = _stringToId(stationName);
+  const id = _stringToId(deleteDiacriticMarks(stationName));
   let currentId = id;
   let i = 1;
   let station = await stationModels.getStationById(currentId);
