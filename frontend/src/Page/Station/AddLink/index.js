@@ -237,7 +237,7 @@ class AddLink extends Component {
     this.setState({ searchText: '' });
     setPreviewVideo();
     muteNowPlaying();
-    mutePreview();
+    mutePreview(true);
   }
 
   async _onChange(e) {
@@ -289,7 +289,7 @@ class AddLink extends Component {
     }
     // If authenticated
     setPreviewVideo();
-    mutePreview();
+    mutePreview(true);
     addSong({
       songUrl: this._getVideoUrl(preview),
       title: preview.snippet.title,
