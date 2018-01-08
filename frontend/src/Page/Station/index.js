@@ -8,12 +8,14 @@ import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
 import { StationSwitcher, NavBar, Footer } from 'Component';
+import { Images } from 'Theme';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
 import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import NowPlaying from './NowPlaying';
 import styles from './styles';
+import StationSharing from './Sharing';
 
 const STATION_NAME_DEFAULT = 'Station Name';
 const JOIN_STATION_DELAY = 2000; // 2 seconds
@@ -114,13 +116,13 @@ class StationPage extends Component {
         </Grid>
         <Grid item xs={12} className={classes.container}>
           <Grid container>
-            {StationPage.isNotAnEmptyArray(playlist) && [
-              <Grid key={1} item xs={12} md={7} xl={8}>
-                <Grid container>
-                  <Grid item xs={12} className={classes.nowPlayingHeader}>
-                    <h1>
-                      {station ? station.station_name : STATION_NAME_DEFAULT}
-                    </h1>
+            <Grid item xs={12} md={7} xl={8}>
+              <Grid container>
+                <Grid item xs={12} className={classes.nowPlayingHeader}>
+                  <h1>
+                    {station ? station.station_name : STATION_NAME_DEFAULT}
+                  </h1>
+                  <div className={classes.nowPlayingActions}>
                     <IconButton
                       onClick={this._onVolumeClick}
                       className={volumeIconClass}
@@ -128,7 +130,10 @@ class StationPage extends Component {
                     >
                       {muted ? 'volume_off' : 'volume_up'}
                     </IconButton>
-                  </Grid>
+                    <StationSharing />
+                  </div>
+                </Grid>
+                {StationPage.isNotAnEmptyArray(playlist) ? (
                   <NowPlaying
                     className={classNames(
                       [classes.content, classes.nowPlaying],
@@ -140,21 +145,30 @@ class StationPage extends Component {
                     muted={muted}
                     nowPlaying={nowPlaying}
                   />
-                </Grid>
-              </Grid>,
-              <Grid key={2} item xs={12} md={5} xl={4}>
-                <Grid container>
+                ) : (
                   <Grid item xs={12}>
-                    <h1>Now Playing</h1>
+                    <img
+                      src={Images.notFound}
+                      className={classes.emptyNowPlayingImage}
+                    />
                   </Grid>
+                )}
+              </Grid>
+            </Grid>
+            <Grid item xs={12} md={5} xl={4}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <h1>Now Playing</h1>
+                </Grid>
+                {StationPage.isNotAnEmptyArray(playlist) && (
                   <Playlist
                     className={classNames(classes.content, {
                       [classes.emptyPlaylist]: !playlist,
                     })}
                   />
-                </Grid>
-              </Grid>,
-            ]}
+                )}
+              </Grid>
+            </Grid>
             <Grid item xs={12}>
               <AddLink />
             </Grid>
