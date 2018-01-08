@@ -7,19 +7,18 @@ import * as stationModels from './../models/station';
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 
 export const addStation = async (stationName, userId) => {
-  let currentstationName = stationName.trim();
-  if (!currentstationName) {
+  if (!stationName) {
     throw new Error('The station name can not be empty!');
   } else {
     try {
       const availableStation = await stationModels.getStationByName(
-        currentstationName,
+        stationName,
       );
       if (!availableStation) {
-        const stationId = await _createStationId(currentstationName);
+        const stationId = await _createStationId(stationName);
         // or var ObjectId = require('mongodb').ObjectId if node version < 6
         const currentStation = await stationModels.addStation({
-          station_name: currentstationName,
+          station_name: stationName,
           id: stationId,
           playlist: [],
           owner_id: _safeObjectId(userId),
@@ -72,7 +71,6 @@ export const addSong = async (stationId, songUrl, userId = null) => {
   } catch (err) {
     throw err;
   }
-
   if (!station) {
     throw new Error(`Station id ${stationId} is not exist!`);
   }
@@ -130,6 +128,7 @@ export const updateStartingTime = async (stationId, time) => {
 // To stationId and set songIds from false to true
 export const setPlayedSongs = async (stationId, songIds) => {
   const currentPlaylist = await getListSong(stationId);
+  // console.log(currentPlaylist);
   if (currentPlaylist) {
     for (let i = 0; i < songIds.length; i++) {
       for (let j = 0; j < currentPlaylist.length; j++) {
