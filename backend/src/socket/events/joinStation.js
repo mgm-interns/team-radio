@@ -2,8 +2,9 @@ import * as EVENTS from '../../const/actions';
 import * as stationController from '../../controllers/station';
 import * as userController from '../../controllers/user';
 import * as players from '../../players';
+import { countOnlineUserOfStation } from '../managers/onlineUserManager';
 
-export default async (emitter, userId, stationId, socket) => {
+export default async (emitter, userId, stationId, socket, io) => {
   let station;
 
   // Join station
@@ -48,6 +49,18 @@ export default async (emitter, userId, stationId, socket) => {
       });
     }
   }
+
+  // Update online user count
+  if (station) {
+    try {
+      const onlineUsers = await countOnlineUserOfStation(stationId, io);
+      emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
+        onlineCount: onlineUsers,
+      });
+    } catch (err) {
+      console.log('Update online user fail: ' + err.message);
+    }
+  }
 };
 
 const _leaveAllAndJoinStation = (socket, stationId) => {
@@ -66,6 +79,6 @@ const _leaveAllAndJoinStation = (socket, stationId) => {
 };
 
 const _leaveStation = (socket, station) =>
-  new Promise(function(resolve, reject) {
+  new Promise(resolve => {
     socket.leave(station, resolve);
   });

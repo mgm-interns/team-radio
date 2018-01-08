@@ -9,6 +9,7 @@
     "object-shorthand":"off",
     "no-var":"off",
     "vars-on-top": "off",
-    "no-param-reassign": "warn"
+    "no-param-reassign": "warn",
+    "linebreak-style": 0
   }
 }
