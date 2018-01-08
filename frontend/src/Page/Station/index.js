@@ -38,7 +38,7 @@ class StationPage extends Component {
       match: { params: { stationId } },
       history,
       userId,
-      mutedNowPlaying,
+      // mutedNowPlaying,
     } = this.props;
     if (stationId) {
       this.props.joinStation({ stationId, userId });
@@ -50,7 +50,7 @@ class StationPage extends Component {
     }
 
     // watch volume
-    this.setState({ muted: mutedNowPlaying });
+    // this.setState({ muted: mutedNowPlaying });
   }
 
   componentWillUnmount() {
@@ -71,6 +71,24 @@ class StationPage extends Component {
     ) {
       clearInterval(this.joinStationInterval);
     }
+  }
+
+  componentDidMount() {
+    const { muteNowPlaying, mutePreview } = this.props;
+    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus'));
+    volumeStatus.forEach(item => {
+      switch (item.player) {
+        case 'nowPlaying':
+          muteNowPlaying(item.muted);
+          this.setState({ muted: item.muted });
+          break;
+        case 'preview':
+          mutePreview(item.muted);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   static isNotAnEmptyArray(playlist) {
@@ -177,12 +195,14 @@ StationPage.propTypes = {
   muteNowPlaying: PropTypes.func,
   mutePreview: PropTypes.func,
   mutedNowPlaying: PropTypes.bool,
+  mutedPreview: PropTypes.bool,
   preview: PropTypes.object,
 };
 
 const mapStateToProps = ({ api, page }) => ({
   currentStation: api.currentStation,
   mutedNowPlaying: page.station.mutedNowPlaying,
+  mutedPreview: page.station.mutedPreview,
   preview: page.station.preview,
   userId: api.user.data.userId,
 });

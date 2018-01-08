@@ -60,8 +60,21 @@ class AddLink extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { preview, mutedPreview } = nextProps;
+    const { preview, mutedPreview, mutedNowPlaying } = nextProps;
     this.setState({ muted: mutedPreview });
+
+    const volumeStatus = [
+      {
+        player: 'nowPlaying',
+        muted: mutedNowPlaying,
+      },
+      {
+        player: 'preview',
+        muted: mutedPreview,
+      },
+    ];
+
+    localStorage.setItem('volumeStatus', JSON.stringify(volumeStatus));
 
     if (preview === null) {
       this.setState({ searchText: '' });
@@ -101,7 +114,7 @@ class AddLink extends Component {
           part: 'snippet',
           safeSearch: 'strict',
           type: 'video',
-          maxResults: 10,
+          maxResults: 5,
           videoDefinition: 'any',
           relevanceLanguage: 'en',
         },
@@ -262,7 +275,6 @@ class AddLink extends Component {
       addSong,
       setPreviewVideo,
       mutePreview,
-      muteNowPlaying,
       match: { params: { stationId } },
       userId,
       notification,
@@ -278,7 +290,6 @@ class AddLink extends Component {
     // If authenticated
     setPreviewVideo();
     mutePreview();
-    muteNowPlaying();
     addSong({
       songUrl: this._getVideoUrl(preview),
       title: preview.snippet.title,
