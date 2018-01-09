@@ -156,6 +156,7 @@ class Player {
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
+        this.nowPlaying.thumbnail = song.thumbnail;
         this.nowPlaying.starting_time = song.added_time;
         // play the song
         this._startSong(song);
@@ -167,6 +168,7 @@ class Player {
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
+        this.nowPlaying.thumbnail = song.thumbnail;
         this.nowPlaying.starting_time = preStartingTime;
         // play the song
         this._startSong(song);
