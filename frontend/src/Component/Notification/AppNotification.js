@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import NotificationSystem from 'react-notification-system';
 import withTheme from 'material-ui/styles/withTheme';
-import { capitalizeFirstLetter } from 'material-ui/utils/helpers';
 import sleep from 'Util/sleep';
 import { levels } from 'react-notification-system/src/constants';
 import getStyles from './styles';
@@ -54,9 +53,7 @@ const instance = {
 /* eslint-disable array-callback-return */
 Object.keys(levels).map(key => {
   const level = levels[key];
-  const title = capitalizeFirstLetter(`${level} !`);
-  instance[level] = notification =>
-    instance.add({ level, title, ...notification });
+  instance[level] = notification => instance.add({ level, ...notification });
 });
 
 /**

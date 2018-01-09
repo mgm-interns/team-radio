@@ -1,10 +1,10 @@
 export const countOnlineUserOfAllStations = async (stations, io) =>
   Promise.all(
     stations.map(async station => {
-      const count = await countOnlineUserOfStation(station.id, io);
+      const count = await countOnlineUserOfStation(station.station_id, io);
       return {
-        stationId: station.id,
-        onlineCount: count,
+        station_id: station.station_id,
+        online_count: count,
       };
     }),
   );

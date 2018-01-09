@@ -33,13 +33,13 @@ class StationSwitcher extends Component {
       userId,
     } = this.props;
     // Only change to new station if the id has changed
-    if (station.id !== stationId) {
+    if (station.station_id !== stationId) {
       // Leave current station
       leaveStationRequest({ userId, stationId });
 
       // Join in selected station
-      history.push(`/station/${station.id}`);
-      joinStationRequest({ userId, stationId: station.id });
+      history.push(`/station/${station.station_id}`);
+      joinStationRequest({ userId, stationId: station.station_id });
       setPreviewVideo();
       // Scroll to left after switch successful
       this.scrollBar.scrollToLeft();
@@ -60,11 +60,14 @@ class StationSwitcher extends Component {
     const filteredStations = stations.map(station => ({
       ...station,
       isActive:
-        (currentStation.station && currentStation.station.id) === station.id,
+        (currentStation.station && currentStation.station.station_id) ===
+        station.station_id,
       avatar: Images.stationDefault,
     }));
     // Move the current station to the first position of array
-    filteredStations.sort(({ id }) => (id === stationId ? -1 : 1));
+    filteredStations.sort(
+      ({ station_id }) => (station_id === stationId ? -1 : 1),
+    );
 
     return (
       <Scrollbars

@@ -35,6 +35,10 @@ export default router => {
   router.get('/stations/playlist/:id', function(req, res) {
     station.getListSong(req, res);
   });
+  router.get('/stations/get/all', function(req, res) {
+    console.log('router ');
+    station.getAllAvailableStations(req, res);
+  });
   router.put('/stations/upvote/:id', function(req, res) {
     station.upVote(req, res);
   });

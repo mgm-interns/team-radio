@@ -2,7 +2,7 @@ import _ from 'lodash';
 import * as stationController from './controllers/station';
 import * as EVENTS from './const/actions';
 
-const _players = {};
+const _players = [];
 const TIME_BUFFER = 5000;
 let io = null;
 
@@ -15,7 +15,7 @@ class Player {
   };
 
   constructor(station) {
-    this.stationId = station.id;
+    this.stationId = station.station_id;
     this.updatePlaylist(station);
   }
 
@@ -53,6 +53,7 @@ class Player {
   };
 
   _emitStationState = async () => {
+    // console.log('_emitStationState ' + this.stationId + ' : ' + Date.now());
     this._emitNowPlaying();
     this._emitPlaylist();
   };
@@ -72,7 +73,7 @@ class Player {
       thumbnail: '',
     };
     this._emitStationState();
-  }
+  };
   _startSong = async song => {
     try {
       this._emitStationState();
@@ -106,10 +107,7 @@ class Player {
     }
     const { playlist } = station;
     // Filter songs wasn't played and is not the current playing song
-    const filteredPlaylist = _.filter(
-      playlist,
-      song => !song.is_played,
-    );
+    const filteredPlaylist = _.filter(playlist, song => !song.is_played);
     filteredPlaylist.forEach((song, i) => {
       song.votes = song.up_vote.length - song.down_vote.length;
     });
@@ -122,7 +120,7 @@ class Player {
       ['desc', 'asc'],
     );
     // Reset nowPlaying when the station is done
-    if (sortedPlaylist.length === 0){
+    if (sortedPlaylist.length === 0) {
       this._resetNowPlaying();
       return;
     }
@@ -188,19 +186,27 @@ class Player {
 }
 
 export const init = async () => {
-  const stations = await stationController.getAllStationDetails();
-  stations.forEach(station => {
-    _players[station.id] = new Player(station);
-  });
+  try {
+    const stations = await stationController.getAllStationDetails();
+    // console.log('stations: ', stations);
+    stations.forEach((station, i) => {
+      station = station.toObject();
+      _players[station.station_id] = new Player(station);
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const attachWebSocket = _io => {
-  console.log('PlayerAttachWebSocket');
   io = _io;
   init();
 };
 
-export const getPlayer = async function getPlayer(stationId) {
+export const getPlayer = async stationId => {
+  if (!stationId) {
+    throw new Error(`The station id can't be empty`);
+  }
   if (!_players[stationId]) {
     const station = await stationController.getStation(stationId);
     // check the stationdId is available or not

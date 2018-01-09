@@ -72,7 +72,7 @@ class ImageUploader extends Component {
 
   _crop() {
     // image in dataUrl
-    console.log('croping');
+    console.log('cropping');
     console.log(b64toBlob(this.cropper.getCroppedCanvas().toDataURL()));
     // this.refs.cropper.getCroppedCanvas().toDataURL();
     // request
