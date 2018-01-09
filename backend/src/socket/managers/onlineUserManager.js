@@ -3,8 +3,8 @@ export const countOnlineUserOfAllStations = async (stations, io) =>
     stations.map(async station => {
       const count = await countOnlineUserOfStation(station.station_id, io);
       return {
-        stationId: station.station_id,
-        onlineCount: count,
+        station_id: station.station_id,
+        online_count: count,
       };
     }),
   );

@@ -150,10 +150,10 @@ const updateStationList = async (stations, emitter, fnIo) => {
 
 const mergeOnlineCountToStation = (stations, onlineCountData) =>
   stations.map((station, index) => {
-    const { onlineCount } = onlineCountData[index];
+    const { online_count } = onlineCountData[index];
     return {
       ...station,
-      onlineCount,
+      online_count,
     };
   });
 
