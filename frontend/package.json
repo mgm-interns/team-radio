@@ -9,6 +9,19 @@
   "engines": {
     "node": "8.x"
   },
+  "lock": false,
+  "scripts": {
+    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
+    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "copy-env:dev": "cp .env.development .env",
+    "copy-env:production": "cp .env.production .env",
+    "postinstall": "run-s copy-env:production build"
+  },
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.17.1",
@@ -35,18 +48,6 @@
     "redux-thunk": "^2.2.0",
     "socket.io-client": "^2.0.4",
     "subscriptions-transport-ws": "^0.9.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "dev": "react-scripts start",
-    "build": "react-scripts build",
-    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "copy-env:dev": "cp .env.development .env",
-    "copy-env:production": "cp .env.production .env",
-    "postinstall": "run-s copy-env:production build"
   },
   "devDependencies": {
     "babel-plugin-root-import": "^5.1.0",

@@ -46,6 +46,7 @@
   "bugs": {
     "url": "https://github.com/mgm-interns/team-radio/issues"
   },
+  "lock": false,
   "dependencies": {
     "cpx": "^1.5.0",
     "npm-run-all": "^4.1.2"
