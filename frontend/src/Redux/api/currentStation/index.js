@@ -18,7 +18,7 @@ const INITIAL_STATE = {
   station: null,
   playlist: [],
   nowPlaying: {
-    url: 'https://www.youtube.com/watch?v=igSCSQ9fg14',
+    url: '',
     starting_time: 0,
   },
   tempPlaylist: [],
