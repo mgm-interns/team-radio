@@ -18,12 +18,10 @@ export default async (emitter, userId, stationName) => {
     });
   }
 
-  //  If station is created, get nowPlaying and emit to user
+  //  If station is created, create player
   if (station) {
     try {
       const player = await players.getPlayer(station.id);
-      const nowPlaying = await player.getNowPlaying();
-      emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, nowPlaying);
     } catch (err) {
       console.error('Players error: ' + err.message);
     }
