@@ -5,6 +5,7 @@ import * as EVENTS from '../const/actions';
 import * as stationController from '../controllers/station';
 import * as onlineManager from './managers/onlineUserManager';
 import createEmitter from './managers/createEmitter';
+import * as userController from '../controllers/user';
 
 const io = SocketIO();
 
@@ -27,22 +28,20 @@ io.on('connection', async function(socket) {
       case EVENTS.CLIENT_JOIN_STATION:
         console.log('Action: ' + EVENTS.CLIENT_JOIN_STATION);
         eventHandlers.joinStationHandler(
-          createEmitter(socket, io),
+          io,
+          socket,
           action.payload.userId,
           action.payload.stationId,
-          socket,
-          io,
         );
         break;
 
       case EVENTS.CLIENT_LEAVE_STATION:
         console.log('Action: ' + EVENTS.CLIENT_LEAVE_STATION);
         eventHandlers.leaveStationHandler(
-          createEmitter(socket, io),
+          io,
+          socket,
           action.payload.userId,
           action.payload.stationId,
-          socket,
-          io,
         );
         break;
 
@@ -92,9 +91,17 @@ io.on('connection', async function(socket) {
 
       case EVENTS.CLIENT_CHECK_EXISTS_EMAIL:
         console.log('Action: ' + EVENTS.CLIENT_CHECK_EXISTS_EMAIL);
-        eventHandlers.checkExistUserHandler(
-          createEmitter(socket, io),
-          action.payload.email,
+        eventHandlers.checkExistUserHandler(io, socket, action.payload.email);
+        break;
+
+      case EVENTS.CLIENT_SKIP_SONG:
+        console.log('Action: ' + EVENTS.CLIENT_SKIP_SONG);
+        eventHandlers.skipSongHandler(
+          io,
+          socket,
+          action.payload.userId,
+          action.payload.songId,
+          action.payload.stationId,
         );
         break;
       default:
@@ -103,6 +110,19 @@ io.on('connection', async function(socket) {
   });
 
   socket.on('disconnect', () => {
+    const emitter = createEmitter(socket, io);
+    if (socket.inStation) {
+      try {
+        const { name } = userController.getUserById(socket.userId);
+        emitter.emitToStation(socket.inStation, EVENTS.SERVER_USER_LEFT, {
+          user: name,
+        });
+      } catch (err) {
+        emitter.emitToStation(socket.inStation, EVENTS.SERVER_USER_LEFT, {
+          user: 'Anonymous',
+        });
+      }
+    }
     console.log('Disconnect with ' + socket.id);
   });
 });
@@ -130,10 +150,10 @@ const updateStationList = async (stations, emitter, fnIo) => {
 
 const mergeOnlineCountToStation = (stations, onlineCountData) =>
   stations.map((station, index) => {
-    const { onlineCount } = onlineCountData[index];
+    const { online_count } = onlineCountData[index];
     return {
       ...station,
-      onlineCount,
+      online_count,
     };
   });
 

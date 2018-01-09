@@ -73,7 +73,7 @@ class Player {
       thumbnail: '',
     };
     this._emitStationState();
-  }
+  };
   _startSong = async song => {
     try {
       this._emitStationState();
@@ -107,10 +107,7 @@ class Player {
     }
     const { playlist } = station;
     // Filter songs wasn't played and is not the current playing song
-    const filteredPlaylist = _.filter(
-      playlist,
-      song => !song.is_played,
-    );
+    const filteredPlaylist = _.filter(playlist, song => !song.is_played);
     filteredPlaylist.forEach((song, i) => {
       song.votes = song.up_vote.length - song.down_vote.length;
     });
@@ -123,7 +120,7 @@ class Player {
       ['desc', 'asc'],
     );
     // Reset nowPlaying when the station is done
-    if (sortedPlaylist.length === 0){
+    if (sortedPlaylist.length === 0) {
       this._resetNowPlaying();
       return;
     }

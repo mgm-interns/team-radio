@@ -12,6 +12,7 @@ import {
   SERVER_LEAVE_STATION_SUCCESS,
   CLIENT_UPVOTE_SONG,
   CLIENT_DOWNVOTE_SONG,
+  SERVER_UPDATE_ONLINE_USERS,
 } from 'Redux/actions';
 import { appNotificationInstance } from 'Component/Notification/AppNotification';
 
@@ -24,6 +25,7 @@ const INITIAL_STATE = {
   },
   tempPlaylist: [],
   joined: false,
+  online_count: 0,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -57,6 +59,11 @@ export default (state = INITIAL_STATE, action) => {
         ...INITIAL_STATE,
       };
 
+    case SERVER_UPDATE_ONLINE_USERS:
+      return {
+        ...state,
+        online_count: action.payload.online_count,
+      };
     /**
      * Update playlist
      */

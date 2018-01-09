@@ -20,7 +20,7 @@ import styles from './styles';
 import StationSharing from './Sharing';
 
 const STATION_NAME_DEFAULT = 'Station Name';
-const JOIN_STATION_DELAY = 5000; // 5 seconds
+const JOIN_STATION_DELAY = 2000; // 5 seconds
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -40,33 +40,21 @@ class StationPage extends Component {
     this._onHistoryClick = this._onHistoryClick.bind(this);
   }
 
-  joinStationInterval = null;
-
   componentWillMount() {
     // Get station id from react-router
-    const {
-      match: { params: { stationId } },
-      history,
-      userId,
-      // mutedNowPlaying,
-    } = this.props;
+    const { match: { params: { stationId } }, history, userId } = this.props;
     if (stationId) {
       this.props.joinStation({ stationId, userId });
-      this.joinStationInterval = setInterval(() => {
-        this.props.joinStation({ stationId, userId });
-      }, JOIN_STATION_DELAY);
     } else {
       // Go to landing page
       history.replace(`/`);
     }
-
-    // watch volume
-    // this.setState({ muted: mutedNowPlaying });
   }
 
   componentWillUnmount() {
     const { match: { params: { stationId } }, userId } = this.props;
     this.props.leaveStation({ stationId, userId });
+    console.log('left station ', stationId);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -81,13 +69,13 @@ class StationPage extends Component {
       clearInterval(this.joinStationInterval);
     }
 
-    this.setState({ muted: mutedNowPlaying });
-
     // Get playlist & history
     this.setState({
       playlist: playlist.filter(item => item.is_played === false),
       history: playlist.filter(item => item.is_played === true),
     });
+
+    this.setState({ muted: mutedNowPlaying });
   }
 
   componentDidMount() {
@@ -172,7 +160,7 @@ class StationPage extends Component {
               <Grid container>
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <Typography type={'display1'}>
-                    {(station && station.name) || STATION_NAME_DEFAULT}
+                    {(station && station.station_name) || STATION_NAME_DEFAULT}
                   </Typography>
                   <div className={classes.nowPlayingActions}>
                     {!nowPlaying.url ? null : (

@@ -43,6 +43,9 @@ class Playlist extends Component {
       // when score is equal
       return songA.created_day > songB.created_day ? 1 : -1;
     });
+    // Push now playing to the first position
+    sortedPlaylist.sort(song => (song.song_id === nowPlaying.song_id ? -1 : 0));
+
     return sortedPlaylist;
   }
 
