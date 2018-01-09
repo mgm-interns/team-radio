@@ -54,9 +54,7 @@ const instance = {
 /* eslint-disable array-callback-return */
 Object.keys(levels).map(key => {
   const level = levels[key];
-  const title = capitalizeFirstLetter(`${level} !`);
-  instance[level] = notification =>
-    instance.add({ level, title, ...notification });
+  instance[level] = notification => instance.add({ level, ...notification });
 });
 
 /**
