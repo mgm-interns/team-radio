@@ -9,23 +9,25 @@ import * as stationModels from './../models/station';
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 
 export const addStation = async (stationName, userId) => {
-  if (!stationName) {
+  const currentStationName = stationName.trim();
+  if (!currentStationName) {
     throw new Error('The station name can not be empty!');
   } else {
     try {
       const availableStation = await stationModels.getStationByName(
-        stationName,
+        currentStationName,
       );
       if (!availableStation) {
-        const stationId = await _createStationId(stationName);
+        const stationId = await _createStationId(currentStationName);
         // or var ObjectId = require('mongodb').ObjectId if node version < 6
         const currentStation = await stationModels.addStation({
-          station_name: stationName,
-          id: stationId,
+          station_name: currentStationName,
+          station_id: stationId,
           playlist: [],
+          isPrivate: false,
           owner_id: _safeObjectId(userId),
         });
-        return currentStation.toObject();
+        return currentStation;
       }
       throw new Error('The station name is already exist!');
     } catch (err) {
@@ -33,6 +35,12 @@ export const addStation = async (stationName, userId) => {
     }
   }
 };
+
+// Set private/public of station
+// export const setIsPrivateOfStation = (stationId,userId)
+// {
+//    const resut l
+// }
 
 export const deleteStation = async (stationId, userId) => {
   try {
@@ -105,8 +113,8 @@ export const addSong = async (stationId, songUrl, userId = null) => {
       title: songDetail.title,
       thumbnail: songDetail.thumbnail,
       duration: songDetail.duration,
-      creator_id: _safeObjectId(userId),
-      created_day : new Date().getTime(),
+      creator: _safeObjectId(userId),
+      created_date: new Date().getTime(),
     };
     await stationModels.addSong(stationId, song);
     station = await stationModels.getStationById(stationId);
@@ -314,6 +322,7 @@ function _stringToId(str) {
 }
 
 async function _createStationId(stationName) {
+  console.log(deleteDiacriticMarks(stationName));
   const id = _stringToId(deleteDiacriticMarks(stationName));
   let currentId = id;
   let i = 1;
