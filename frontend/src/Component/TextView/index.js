@@ -1,5 +1,6 @@
-import React, { Component } from "react";
-import TextField from "material-ui/TextField";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import TextField from 'material-ui/TextField';
 
 class TextView extends Component {
   render() {
@@ -11,14 +12,23 @@ class TextView extends Component {
         label={label}
         type={type}
         placeholder={placeholder}
-        label={label}
         error={!!(touched && error)}
         helperText={touched && error}
         {...input}
-        style={{ marginBottom: "20px" }}
+        style={{ marginBottom: '20px' }}
       />
     );
   }
 }
+
+TextView.propTypes = {
+  input: PropTypes.any,
+  label: PropTypes.string,
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+  touched: PropTypes.any,
+  error: PropTypes.any,
+  meta: PropTypes.any,
+};
 
 export default TextView;
