@@ -20,7 +20,6 @@ import styles from './styles';
 import StationSharing from './Sharing';
 
 const STATION_NAME_DEFAULT = 'Station Name';
-const JOIN_STATION_DELAY = 2000; // 5 seconds
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -42,8 +41,13 @@ class StationPage extends Component {
 
   componentWillMount() {
     // Get station id from react-router
-    const { match: { params: { stationId } }, history, userId } = this.props;
-    if (stationId) {
+    const {
+      match: { params: { stationId } },
+      history,
+      userId,
+      // mutedNowPlaying,
+    } = this.props;
+    if (stationId && stationId !== 'null' && stationId !== 'undefined') {
       this.props.joinStation({ stationId, userId });
     } else {
       // Go to landing page
@@ -54,7 +58,6 @@ class StationPage extends Component {
   componentWillUnmount() {
     const { match: { params: { stationId } }, userId } = this.props;
     this.props.leaveStation({ stationId, userId });
-    console.log('left station ', stationId);
   }
 
   componentWillReceiveProps(nextProps) {
