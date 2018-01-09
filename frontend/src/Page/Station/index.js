@@ -19,7 +19,7 @@ import styles from './styles';
 import StationSharing from './Sharing';
 
 const STATION_NAME_DEFAULT = 'Station Name';
-const JOIN_STATION_DELAY = 2000; // 2 seconds
+const JOIN_STATION_DELAY = 5000; // 5 seconds
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -49,6 +49,7 @@ class StationPage extends Component {
         this.props.joinStation({ stationId, userId });
       }, JOIN_STATION_DELAY);
     } else {
+      // Go to landing page
       history.replace(`/`);
     }
 
@@ -59,7 +60,6 @@ class StationPage extends Component {
   componentWillUnmount() {
     const { match: { params: { stationId } }, userId } = this.props;
     this.props.leaveStation({ stationId, userId });
-    clearInterval(this.joinStationInterval);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -67,11 +67,8 @@ class StationPage extends Component {
 
     this.setState({ muted: mutedNowPlaying });
 
-    if (
-      (currentStation.station && currentStation.station.id) !==
-      (this.props.currentStation.station &&
-        this.props.currentStation.station.id)
-    ) {
+    // Clear the interval if join station request has success
+    if (currentStation.joined === true) {
       clearInterval(this.joinStationInterval);
     }
   }
@@ -138,7 +135,7 @@ class StationPage extends Component {
               <Grid container>
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <Typography type={'display1'}>
-                    {station ? station.station_name : STATION_NAME_DEFAULT}
+                    {(station && station.name) || STATION_NAME_DEFAULT}
                   </Typography>
                   <div className={classes.nowPlayingActions}>
                     {!nowPlaying.url ? null : (

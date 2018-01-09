@@ -28,7 +28,7 @@ class Playlist extends Component {
     // Sort the list
     sortedPlaylist.sort((songA, songB) => {
       // Push now playing to the first position
-      if (songA.url === nowPlaying.url) {
+      if (songA.song_id === nowPlaying.song_id) {
         return -2;
       }
       const scoreA = Playlist.getSongScore(songA);

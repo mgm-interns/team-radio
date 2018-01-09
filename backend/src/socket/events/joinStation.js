@@ -29,7 +29,9 @@ export default async (emitter, userId, stationId, socket, io) => {
     try {
       const player = await players.getPlayer(stationId);
       const nowPlaying = await player.getNowPlaying();
-      emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, nowPlaying);
+      // if have no song is playing, do not update nowPlaying
+      if (nowPlaying.url)
+        emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, nowPlaying);
     } catch (err) {
       console.log('Players error: ' + err.message);
     }
@@ -50,7 +52,7 @@ export default async (emitter, userId, stationId, socket, io) => {
     }
   }
 
-  // Update online user count
+  // Update online user count for station
   if (station) {
     try {
       const onlineUsers = await countOnlineUserOfStation(stationId, io);

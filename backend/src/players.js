@@ -11,6 +11,7 @@ class Player {
     song_id: 0,
     url: '',
     starting_time: 0,
+    thumbnail: '',
   };
 
   constructor(station) {
@@ -19,10 +20,12 @@ class Player {
   }
 
   getNowPlaying = () => ({
+    song_id: this.nowPlaying.song_id,
     url: this.nowPlaying.url,
     starting_time: this.nowPlaying.starting_time
       ? Date.now() - this.nowPlaying.starting_time
       : 0,
+    thumbnail: this.nowPlaying.thumbnail,
   });
 
   updatePlaylist = async (station = null) => {
@@ -66,6 +69,7 @@ class Player {
       song_id: 0,
       url: '',
       starting_time: 0,
+      thumbnail: '',
     };
     this._emitStationState();
   }
@@ -88,7 +92,7 @@ class Player {
 
   _nextSongByTimeout = timeout => {
     setTimeout(async () => {
-      const playlist = await stationController.setPlayedSongs(this.stationId, [
+      await stationController.setPlayedSongs(this.stationId, [
         this.nowPlaying.song_id,
       ]);
       this._setPlayableSong();
@@ -104,7 +108,7 @@ class Player {
     // Filter songs wasn't played and is not the current playing song
     const filteredPlaylist = _.filter(
       playlist,
-      song => !song.is_played && song.song_id !== this.nowPlaying.song_id,
+      song => !song.is_played,
     );
     filteredPlaylist.forEach((song, i) => {
       song.votes = song.up_vote.length - song.down_vote.length;
@@ -122,22 +126,22 @@ class Player {
       this._resetNowPlaying();
       return;
     }
+    // When the player is playing
     if (this.nowPlaying.song_id) {
-      await stationController.setPlayedSongs(this.stationId, [this.nowPlaying.song_id]);
       // Update nowPlaying song
-      this.nowPlaying.song_id = sortedPlaylist[0].song_id;
-      this.nowPlaying.url = sortedPlaylist[0].url;
+      const song = sortedPlaylist[0];
+      this.nowPlaying.song_id = song.song_id;
+      this.nowPlaying.url = song.url;
       this.nowPlaying.starting_time = Date.now();
+      this.nowPlaying.thumbnail = song.thumbnail;
       // play the song
-      this._startSong(sortedPlaylist[0]);
+      this._startSong(song);
       return;
     }
 
     const currentTime = Date.now();
     let preStartingTime = station.starting_time;
-    const playedSongs = this.nowPlaying.song_id
-      ? [this.nowPlaying.song_id]
-      : [];
+    const playedSongs = [];
     // TODO: explain clearly in comments
     // TODO: stationController.setPlayedSongs to ids
     // DO NOT use foreach (can't be stop the loop)
@@ -148,26 +152,24 @@ class Player {
       // Check the song is new or not
       if (song.added_time + song.duration + TIME_BUFFER > currentTime) {
         // Update is_played of the playedSongs to true
-        await stationController.setPlayedSongs(this.stationId, playedSongs);
+        stationController.setPlayedSongs(this.stationId, playedSongs);
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
-        this.nowPlaying.starting_time = this.nowPlaying.song_id
-          ? currentTime
-          : song.added_time;
+        this.nowPlaying.thumbnail = song.thumbnail;
+        this.nowPlaying.starting_time = song.added_time;
         // play the song
         this._startSong(song);
         return;
       } else if (preStartingTime + song.duration + TIME_BUFFER > currentTime) {
         // Update is_played of the playedSongs to true
 
-        await stationController.setPlayedSongs(this.stationId, playedSongs);
+        stationController.setPlayedSongs(this.stationId, playedSongs);
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
-        this.nowPlaying.starting_time = this.nowPlaying.song_id
-          ? currentTime
-          : preStartingTime;
+        this.nowPlaying.thumbnail = song.thumbnail;
+        this.nowPlaying.starting_time = preStartingTime;
         // play the song
         this._startSong(song);
         return;
@@ -179,7 +181,7 @@ class Player {
 
     // The available song is not existed
     // Update is_played of the song in the sortedPlaylist to true
-    await stationController.setPlayedSongs(this.stationId, playedSongs);
+    stationController.setPlayedSongs(this.stationId, playedSongs);
     // Update nowPlaying song is not available
     this._resetNowPlaying();
   };

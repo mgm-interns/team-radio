@@ -1,7 +1,9 @@
 export default () => ({
   avatar: {
+    width: 40,
+    height: 40,
     marginLeft: '16px',
-    borderRadius: '50px',
+    borderRadius: '40px',
   },
   dropdown: {
     position: 'relative',

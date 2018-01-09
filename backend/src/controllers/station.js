@@ -156,8 +156,21 @@ export const setPlayedSongs = async (stationId, songIds) => {
 };
 
 export const getAllAvailableStations = async () => {
-  const stations = await stationModels.getStations();
-  return stations;
+  try {
+    const stations = await stationModels.getStations();
+    let player;
+    // Can't use forEach because can't use await..
+    for(let i=0; i<stations.length; i++){
+      stations[i] = stations[i].toObject();
+      player = await players.getPlayer(stations[i].id);
+      stations[i].thumbnail = player.getNowPlaying().thumbnail;
+    }
+    console.log('stations: ', stations);
+    return stations;
+  } catch (err) {
+    console.log('EEERRRRROOOORRR: ', err);
+    throw err;
+  }
 };
 
 export const getAllStationDetails = async () => {

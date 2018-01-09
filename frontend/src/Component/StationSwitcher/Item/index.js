@@ -14,12 +14,6 @@ import styles from '../styles';
 /* eslint-disable camelcase */
 /* eslint-disable no-shadow */
 class SwitcherItem extends Component {
-  componentDidMount() {
-    // const { muteNowPlaying, mutePreview } = this.props;
-    // muteNowPlaying();
-    // mutePreview();
-  }
-
   render() {
     const {
       goToStationPage,
@@ -27,14 +21,11 @@ class SwitcherItem extends Component {
       isActive,
       station_name,
       id,
-      currentStation: { station, playlist, nowPlaying },
+      currentStation: { station, nowPlaying },
     } = this.props;
     let { avatar } = this.props;
     if ((station && station.id) === id) {
-      const currentSong = playlist.filter(
-        ({ url }) => url === nowPlaying.url,
-      )[0];
-      avatar = (currentSong && currentSong.thumbnail) || avatar;
+      avatar = (nowPlaying && nowPlaying.thumbnail) || avatar;
     }
     return (
       <div
