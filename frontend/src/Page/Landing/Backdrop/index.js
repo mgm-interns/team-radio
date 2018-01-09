@@ -32,8 +32,8 @@ class Backdrop extends Component {
     const { redirectToStationPageRequest } = this.props;
     const { history } = this.props;
     const { station } = nextProps;
-    if (station && station.id) {
-      history.replace(`/station/${station.id}`);
+    if (station && station.station_id) {
+      history.replace(`/station/${station.station_id}`);
       redirectToStationPageRequest();
     }
   }

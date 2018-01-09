@@ -20,11 +20,11 @@ class SwitcherItem extends Component {
       classes,
       isActive,
       station_name,
-      id,
+      station_id,
       currentStation: { station, nowPlaying },
     } = this.props;
     let { avatar } = this.props;
-    if ((station && station.id) === id) {
+    if ((station && station.station_id) === station_id) {
       avatar = (nowPlaying && nowPlaying.thumbnail) || avatar;
     }
     return (
@@ -36,7 +36,7 @@ class SwitcherItem extends Component {
       >
         <img src={avatar} className={classes.stationAvatar} />
         <div className={classes.stationInfo}>
-          <Tooltip id={id} title={station_name} placement={'right'}>
+          <Tooltip id={station_id} title={station_name} placement={'right'}>
             <span className={classes.stationTitle}>
               {transformText.reduceByCharacters(station_name, 10)}
             </span>
@@ -54,7 +54,7 @@ SwitcherItem.propTypes = {
   isActive: PropTypes.any,
   station_name: PropTypes.any,
   currentStation: PropTypes.object,
-  id: PropTypes.any,
+  station_id: PropTypes.any,
   muteNowPlaying: PropTypes.func,
   mutePreview: PropTypes.func,
 };
