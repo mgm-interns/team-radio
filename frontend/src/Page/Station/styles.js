@@ -40,6 +40,14 @@ export default ({ breakpoints, palette, spacing }) => ({
     flexDirection: 'row',
   },
   nowPlaying: {},
+  playlistHeader: {
+    padding: spacing.baseMargin,
+  },
+  playlistMenuItem: {
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
   emptyNowPlayingImage: {
     width: '100%',
   },
@@ -60,5 +68,8 @@ export default ({ breakpoints, palette, spacing }) => ({
   suggestionIcon: {
     color: palette.lightBlack,
     fontSize: 64,
+  },
+  switchedTitle: {
+    color: palette.primary['500'],
   },
 });
