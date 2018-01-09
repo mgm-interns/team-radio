@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
+import Tooltip from 'material-ui/Tooltip';
 import withStyles from 'material-ui/styles/withStyles';
 import classNames from 'classnames';
 import { compose } from 'redux';
@@ -26,6 +27,7 @@ class PlaylistItem extends Component {
 
     this.upVoteSong = this.upVoteSong.bind(this);
     this.downVoteSong = this.downVoteSong.bind(this);
+    this._onCreatorIconClicked = this._onCreatorIconClicked.bind(this);
   }
 
   componentDidMount() {
@@ -65,11 +67,12 @@ class PlaylistItem extends Component {
       return;
     }
     // If authenticated
-    const { isDownVote, isUpVote } = this.state;
+    const { isDownVote, isUpVote, score } = this.state;
     upVoteSong({ songId: song_id, userId, stationId });
     this.setState({
       isUpVote: !isUpVote,
       isDownVote: isUpVote ? isDownVote : false,
+      score: !isUpVote ? score + (isDownVote ? 2 : 1) : score - 1,
     });
   }
 
@@ -90,11 +93,12 @@ class PlaylistItem extends Component {
       return;
     }
     // If authenticated
-    const { isDownVote, isUpVote } = this.state;
+    const { isDownVote, isUpVote, score } = this.state;
     downVoteSong({ songId: song_id, userId, stationId });
     this.setState({
       isDownVote: !isDownVote,
       isUpVote: isDownVote ? isUpVote : false,
+      score: !isDownVote ? score - (isUpVote ? 2 : 1) : score + 1,
     });
   }
 
@@ -114,8 +118,16 @@ class PlaylistItem extends Component {
     return false;
   }
 
+  _onCreatorIconClicked(event) {
+    event.preventDefault();
+    const { notification } = this.props;
+    notification.app.info({
+      message: 'This feature is not ready yet!',
+    });
+  }
+
   render() {
-    const { thumbnail, title, singer, playing, classes } = this.props;
+    const { thumbnail, title, singer, playing, classes, creator } = this.props;
 
     return (
       <Grid container className={classNames(classes.container, { playing })}>
@@ -125,7 +137,18 @@ class PlaylistItem extends Component {
         <Grid item xs={7} className={classes.info}>
           <div className={classes.name}>{title}</div>
           <div className={classes.singer}>{singer}</div>
-          {/* <div className={classes.uploader}>Added by {uploader}</div> */}
+          {creator && (
+            <div className={classes.creator}>
+              Added by
+              <Tooltip placement={'bottom'} title={creator.name}>
+                <img
+                  src={creator.avatar_url}
+                  className={classes.creatorAvatar}
+                  onClick={this._onCreatorIconClicked}
+                />
+              </Tooltip>
+            </div>
+          )}
         </Grid>
         <Grid item xs={2} className={classes.actions}>
           <IconButton
@@ -157,7 +180,7 @@ PlaylistItem.propTypes = {
   singer: PropTypes.string,
   thumbnail: PropTypes.string,
   title: PropTypes.any,
-  uploader: PropTypes.string,
+  creator: PropTypes.object,
   name: PropTypes.string,
   theme: PropTypes.any,
   upVoteSong: PropTypes.func,

@@ -10,8 +10,6 @@ import {
   SERVER_JOINED_STATION_FAILURE,
   CLIENT_JOIN_STATION,
   SERVER_LEAVE_STATION_SUCCESS,
-  CLIENT_UPVOTE_SONG,
-  CLIENT_DOWNVOTE_SONG,
   SERVER_UPDATE_ONLINE_USERS,
 } from 'Redux/actions';
 import { appNotificationInstance } from 'Component/Notification/AppNotification';
@@ -89,46 +87,6 @@ export default (state = INITIAL_STATE, action) => {
         message: action.payload && `${action.payload.user} has joined!`,
       });
       return state;
-    /**
-     * Song vote
-     * Fake up_vote & down_vote for UX improvement
-     */
-    case CLIENT_UPVOTE_SONG: {
-      const playlist = state.playlist.map(song => {
-        if (song.song_id === action.payload.songId) {
-          return {
-            ...song,
-            up_vote: [...song.up_vote, action.payload.userId],
-            down_vote: song.down_vote.filter(
-              userId => userId !== action.payload.userId,
-            ),
-          };
-        }
-        return song;
-      });
-      return {
-        ...state,
-        playlist,
-      };
-    }
-    case CLIENT_DOWNVOTE_SONG: {
-      const playlist = state.playlist.map(song => {
-        if (song.song_id === action.payload.songId) {
-          return {
-            ...song,
-            up_vote: song.up_vote.filter(
-              userId => userId !== action.payload.userId,
-            ),
-            down_vote: [...song.down_vote, action.payload.userId],
-          };
-        }
-        return song;
-      });
-      return {
-        ...state,
-        playlist,
-      };
-    }
     /**
      * Show notification when fail
      */
