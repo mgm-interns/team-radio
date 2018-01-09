@@ -12,6 +12,11 @@ station.addStation = async function (req, res) {
 
 };
 
+station.getAllAvailableStations = async function (req, res) {
+    let station = await stationController.getAllStationDetails();
+    res.status(200).json(station);
+}
+
 station.deleteStation = async function (req, res) {
     let station = await stationController.deleteStation(req.body.station_id, req.body.user_id);
     res.status(200).json(station);
@@ -42,8 +47,9 @@ station.getStations = async function (req, res) {
 
 station.addSong = async function (req, res) {
     //  var station = await stationController.addStation(req.body.station_name);
-    console.log('url : ' + req.body.url);
-    let station = await stationController.addSong(req.params.id, req.body.url);
+    console.log('res.body.user_i' );
+    console.log('res.body.user_i : ' + req.body.user_id);
+    let station = await stationController.addSong(req.params.id, req.body.url,req.body.user_id);
     console.log('resolve : ' + station);
     res.status(200).json(station);
 

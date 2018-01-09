@@ -87,7 +87,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
   if (!userId) {
     let numOfSongsAddedByUnregistedUsers = 0;
     station.playlist.forEach((song, index) => {
-      if (!song.creator_id && song.is_played === false) {
+      if (!song.creator && song.is_played === false) {
         numOfSongsAddedByUnregistedUsers += 1;
         if (
           numOfSongsAddedByUnregistedUsers === MAX_SONG_UNREGISTED_USER_CAN_ADD
@@ -138,7 +138,6 @@ export const updateStartingTime = async (stationId, time) => {
 // To stationId and set songIds from false to true
 export const setPlayedSongs = async (stationId, songIds) => {
   const currentPlaylist = await getListSong(stationId);
-  // console.log(currentPlaylist);
   if (currentPlaylist) {
     for (let i = 0; i < songIds.length; i++) {
       for (let j = 0; j < currentPlaylist.length; j++) {
@@ -160,15 +159,13 @@ export const getAllAvailableStations = async () => {
     const stations = await stationModels.getStations();
     let player;
     // Can't use forEach because can't use await..
-    for(let i=0; i<stations.length; i++){
+    for (let i = 0; i < stations.length; i++) {
       stations[i] = stations[i].toObject();
-      player = await players.getPlayer(stations[i].id);
+      player = await players.getPlayer(stations[i].station_id);
       stations[i].thumbnail = player.getNowPlaying().thumbnail;
     }
-    console.log('stations: ', stations);
     return stations;
   } catch (err) {
-    console.log('EEERRRRROOOORRR: ', err);
     throw err;
   }
 };
@@ -335,7 +332,6 @@ function _stringToId(str) {
 }
 
 async function _createStationId(stationName) {
-  console.log(deleteDiacriticMarks(stationName));
   const id = _stringToId(deleteDiacriticMarks(stationName));
   let currentId = id;
   let i = 1;
