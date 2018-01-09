@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
 import { ObjectId } from 'mongodb';
@@ -73,6 +74,9 @@ module.exports.setGoogleId = async (email, googleId) =>
 
 module.exports.setName = async (email, name) =>
   user.update({ email: email }, { name: name }, { multi: true });
+
+module.exports.setAvatarUrl = async (email, avatar_url) =>
+  user.update({ email: email }, { avatar_url: avatar_url }, { multi: true });
 
 module.exports.setAvatar = async (userId, avatarUrl) =>
   user.update(

@@ -16,20 +16,6 @@ export const isExistUserHandler = async email => {
     throw err;
     }
 };
-export const getUserByEmail = async email => {
-    try {
-        let user = await userModels.getUserByEmail(email);
-
-        //if email is already sign up
-        if (user) {
-            return user;
-        } else {
-            throw new Error('User ID is not exist!');
-        }
-        } catch (err) {
-            throw err;
-        }
-};
 
 export const getUserById = async userId => {
     try {
@@ -44,14 +30,16 @@ export const getUserById = async userId => {
     }
 };
 
-export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null) => {
+export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null,) => {
     try {
         let user = await userModels.getUserByEmail(email);
         if (user) {
             if (googleId)
-                await userModels.setGoogleId(email, googleId)
+                await userModels.setGoogleId(email, googleId);
             if (facebookId)
-                await userModels.setFacebookId(email, facebookId)
+                await userModels.setFacebookId(email, facebookId);
+            if (avatar_url)
+                await userModels.setAvatarUrl(email, avatar_url);
         } else {
             let user = await new userModels({
                 email : email,
@@ -60,6 +48,8 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
             });
             await user.save();
             await userModels.setName(email, user._id.toString());
+            if (avatar_url)
+                await userModels.setAvatarUrl(email, avatar_url);
         }
         user = await userModels.getUserByEmail(email);
         return user;

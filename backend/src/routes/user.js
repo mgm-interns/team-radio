@@ -87,6 +87,7 @@ export default router => {
         req.body.email,
         req.body.googleId,
         req.body.facebookId,
+        req.body.avatar_url,
       );
       const payload = {
         email: user.email,
