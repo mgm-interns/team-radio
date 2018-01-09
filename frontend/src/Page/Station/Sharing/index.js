@@ -41,7 +41,7 @@ class StationSharing extends Component {
   }
 
   componentDidMount() {
-    this.setStationUrl();
+    this.setStationUrl(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
