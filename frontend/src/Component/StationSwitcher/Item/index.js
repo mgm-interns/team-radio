@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Tooltip from 'material-ui/Tooltip';
+import Typography from 'material-ui/Typography';
+import CircleOIcon from 'react-icons/lib/fa/circle-o';
+import CircleIcon from 'react-icons/lib/fa/circle';
 import { transformText } from 'Transformer';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -23,9 +26,10 @@ class SwitcherItem extends Component {
       station_id,
       currentStation: { station, nowPlaying },
     } = this.props;
-    let { avatar } = this.props;
+    let { avatar, online_count } = this.props;
     if ((station && station.station_id) === station_id) {
       avatar = (nowPlaying && nowPlaying.thumbnail) || avatar;
+      online_count = this.props.currentStation.online_count; // eslint-disable-line
     }
     return (
       <div
@@ -34,7 +38,27 @@ class SwitcherItem extends Component {
         })}
         onClick={goToStationPage}
       >
-        <img src={avatar} className={classes.stationAvatar} />
+        <div
+          className={classes.stationAvatar}
+          style={{ backgroundImage: `url(${avatar})` }}
+        >
+          <div className={classes.stationOnlineCountWrapper}>
+            {online_count > 0 ? (
+              <CircleIcon
+                className={classNames(classes.onlineIcon, 'active')}
+              />
+            ) : (
+              <CircleOIcon className={classNames(classes.onlineIcon)} />
+            )}
+            <Typography
+              type={'caption'}
+              align={'left'}
+              className={classes.stationOnlineCountText}
+            >
+              {online_count || 0} online
+            </Typography>
+          </div>
+        </div>
         <div className={classes.stationInfo}>
           <Tooltip id={station_id} title={station_name} placement={'right'}>
             <span className={classes.stationTitle}>
@@ -55,6 +79,7 @@ SwitcherItem.propTypes = {
   station_name: PropTypes.any,
   currentStation: PropTypes.object,
   station_id: PropTypes.any,
+  online_count: PropTypes.any,
   muteNowPlaying: PropTypes.func,
   mutePreview: PropTypes.func,
 };

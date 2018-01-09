@@ -1,10 +1,10 @@
-export default ({ breakpoints, spacing }) => ({
+export default ({ breakpoints, spacing, palette }) => ({
   container: {
     margin: 'auto',
     overflowX: 'auto',
     minHeight: 120,
     [breakpoints.up('md')]: {
-      minHeight: 140,
+      minHeight: 130,
       paddingLeft: spacing.doubleBaseMargin,
       paddingRight: spacing.doubleBaseMargin,
     },
@@ -42,13 +42,36 @@ export default ({ breakpoints, spacing }) => ({
     fontSize: '0.75em',
   },
   stationAvatar: {
+    display: 'flex',
+    flexFlow: 'column-reverse',
     width: 90,
     height: 90,
-    objectFit: 'cover',
+    backgroundSize: 'cover',
+  },
+  stationOnlineCountWrapper: {
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,.56)',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: spacing.smallMargin / 2,
+    paddingBottom: spacing.smallMargin / 2,
+  },
+  onlineIcon: {
+    fontSize: 10,
+    marginLeft: spacing.baseMargin,
+    marginRight: spacing.baseMargin,
+    color: palette.white,
+    '&.active': {
+      color: palette.green.A700,
+    },
+  },
+  stationOnlineCountText: {
+    fontSize: '0.625em',
+    color: palette.white,
   },
   stationInfo: {
     width: 90,
-    marginBottom: spacing.baseMargin,
   },
   activeStation: {
     background: 'white',

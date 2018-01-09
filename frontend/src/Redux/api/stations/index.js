@@ -1,6 +1,7 @@
 import {
   CLIENT_CREATE_STATION,
   SERVER_CREATE_STATION_SUCCESS,
+  SERVER_STATION_CHANGE_ONLINE_USERS,
   SERVER_UPDATE_STATIONS,
 } from 'Redux/actions';
 
@@ -25,6 +26,22 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         data: action.payload.stations,
       };
+    case SERVER_STATION_CHANGE_ONLINE_USERS: {
+      return {
+        ...state,
+        data: state.data.map(station => {
+          const { stationId, online_count } = action.payload;
+          if (station.station_id === stationId) {
+            return {
+              ...station,
+              online_count,
+            };
+          }
+          return station;
+        }),
+      };
+    }
+
     default:
       return state;
   }
