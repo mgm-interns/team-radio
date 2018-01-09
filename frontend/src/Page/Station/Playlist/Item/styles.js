@@ -26,9 +26,22 @@ export default ({ spacing, palette, typography }) => ({
     fontSize: '0.8em',
     fontWeight: 'bold',
   },
-  uploader: {
+  creator: {
     ...typography.caption,
     fontSize: '0.8em',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+  },
+  creatorAvatar: {
+    marginLeft: spacing.baseMargin,
+    width: '1.8em',
+    height: '1.8em',
+    border: '1px solid #ccc',
+    borderRadius: '50%',
+    objectFit: 'contain',
+    cursor: 'pointer',
   },
   actions: {
     textAlign: 'center',
