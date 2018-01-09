@@ -32,6 +32,7 @@ export default router => {
             token: token,
             userId: user._id,
             name: user.name,
+            avatar_url: user.avatar_url,
           });
         });
       }
@@ -72,6 +73,7 @@ export default router => {
             token: token,
             userId: user._id,
             name: user.name,
+            avatar_url: user.avatar_url,
           });
         }
       }
@@ -81,13 +83,11 @@ export default router => {
   });
   router.post('/signupWithSocialAccount', async (req, res) => {
     try {
-      await userController.createUserWithSocialAccount(
+      const user = await userController.createUserWithSocialAccount(
         req.body.email,
         req.body.googleId,
         req.body.facebookId,
-        req.body.name,
       );
-      const user = await User.findOne({ email: req.body.email });
       const payload = {
         email: user.email,
         name: user.name,
@@ -100,9 +100,10 @@ export default router => {
           message: 'signup success',
           token: token,
           userId: user._id,
-          googleId: user.google_ID,
-          facebookId: user.facebook_ID,
+          googleId: user.google_id,
+          facebookId: user.facebook_id,
           name: user.name,
+          avatar_url: user.avatar_url,
         },
       });
     } catch (err) {
@@ -113,7 +114,16 @@ export default router => {
   router.post('/isExistUser', async (req, res) => {
     try {
       const alreadyUser = await User.getUserByEmail(req.body.email);
-      console.log(alreadyUser);
+      if (alreadyUser) res.json({ data: { isExist: true } });
+      else res.json({ data: { isExist: false } });
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  router.post('/isExistName', async (req, res) => {
+    try {
+      const alreadyUser = await User.getUserByName(req.body.name);
       if (alreadyUser) res.json({ data: { isExist: true } });
       else res.json({ data: { isExist: false } });
     } catch (err) {
