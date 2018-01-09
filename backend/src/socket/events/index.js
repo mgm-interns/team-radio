@@ -4,6 +4,7 @@ import leaveStationHandler from './leaveStation';
 import addSongHandler from './addSong';
 import voteSongHandler from './voteSong';
 import checkExistUserHandler from './checkExistUser';
+import skipSongHandler from './skipSongHandler';
 
 export default {
   createStationHandler,
@@ -12,4 +13,5 @@ export default {
   addSongHandler,
   voteSongHandler,
   checkExistUserHandler,
+  skipSongHandler,
 };

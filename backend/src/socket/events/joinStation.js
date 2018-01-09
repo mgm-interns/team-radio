@@ -3,8 +3,10 @@ import * as stationController from '../../controllers/station';
 import * as userController from '../../controllers/user';
 import * as players from '../../players';
 import { countOnlineUserOfStation } from '../managers/onlineUserManager';
+import createEmitter from '../managers/createEmitter';
 
-export default async (emitter, userId, stationId, socket, io) => {
+export default async (io, socket, userId, stationId) => {
+  const emitter = createEmitter(socket, io);
   let station;
 
   // Join station
@@ -41,6 +43,7 @@ export default async (emitter, userId, stationId, socket, io) => {
   if (station) {
     try {
       const { name } = await userController.getUserById(userId);
+      socket.userId = userId;
       emitter.broadcastToStation(stationId, EVENTS.SERVER_NEW_USER_JOINED, {
         user: name,
       });
@@ -76,6 +79,7 @@ const _leaveAllAndJoinStation = (socket, stationId) => {
 
   Promise.all(leaveStationPromises).then(() => {
     socket.join(stationId);
+    socket.inStation = stationId;
     console.log('Join accept: ' + socket.id + ' joined to ' + stationId);
   });
 };
