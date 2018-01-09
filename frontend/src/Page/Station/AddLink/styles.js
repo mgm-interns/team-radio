@@ -42,16 +42,15 @@ export default theme => {
       marginBottom: baseMargin,
     },
 
-    sendIcon: {
-      marginLeft: baseMargin,
-      fontSize: doubleBaseMargin,
-    },
-
     addLinkBoxRight: {
       paddingLeft: '30px !important',
       [breakpoints.down('md')]: {
         paddingLeft: '8px !important',
       },
+    },
+
+    previewRightContainer: {
+      position: 'relative',
     },
 
     previewTitle: {
@@ -60,6 +59,23 @@ export default theme => {
       [breakpoints.down('sm')]: {
         fontSize: '1rem',
       },
+    },
+
+    volume: {
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+    },
+
+    sendBtn: {
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+    },
+
+    sendIcon: {
+      marginLeft: baseMargin,
+      fontSize: doubleBaseMargin,
     },
 
     content: {
@@ -74,14 +90,19 @@ export default theme => {
     },
 
     emptyCollection: {
-      width: 200,
+      width: '100%',
+      height: 200,
       margin: 'auto',
     },
 
     emptyImg: {
       width: '100%',
       height: '100%',
-      objectFit: 'cover',
+      objectFit: 'contain',
+    },
+
+    notFound: {
+      width: '40%',
     },
 
     /* Search */
@@ -96,6 +117,8 @@ export default theme => {
       left: 0,
       right: 0,
       zIndex: 9999,
+      maxHeight: 240,
+      overflowY: 'auto',
     },
     suggestion: {
       display: 'block',
@@ -108,9 +131,17 @@ export default theme => {
     textField: {
       width: '100%',
     },
+    input: {
+      paddingRight: 50,
+    },
     searchItemImg: {
       height: '100%',
       marginRight: baseMargin,
+    },
+    closeIcon: {
+      position: 'absolute',
+      top: '-25%',
+      right: 0,
     },
     /* End search */
   };

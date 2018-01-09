@@ -64,7 +64,7 @@ class FacebookLogin extends Component {
   }
 
   setFbAsyncInit() {
-    const { appId, xfbml, cookie, version, autoLoad } = this.props;
+    const { xfbml, cookie, version, autoLoad } = this.props;
     window.fbAsyncInit = () => {
       window.FB.init({
         version: `v${version}`,
@@ -158,7 +158,6 @@ class FacebookLogin extends Component {
     this.setState({ isProcessing: true });
     const {
       scope,
-      // appId,
       onClick,
       reAuthenticate,
       returnScopes,
@@ -276,7 +275,6 @@ class FacebookLogin extends Component {
 FacebookLogin.propTypes = {
   isDisabled: PropTypes.bool,
   onSuccess: PropTypes.func.isRequired,
-  // appId: PropTypes.string.isRequired,
   xfbml: PropTypes.bool,
   cookie: PropTypes.bool,
   reAuthenticate: PropTypes.bool,

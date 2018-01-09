@@ -8,6 +8,14 @@ import {
   white,
   black,
   transparent,
+  fullBlack,
+  darkBlack,
+  lightBlack,
+  minBlack,
+  faintBlack,
+  fullWhite,
+  darkWhite,
+  lightWhite,
 } from './Color';
 
 export default createMuiTheme({
@@ -22,6 +30,14 @@ export default createMuiTheme({
     white,
     black,
     transparent,
+    fullBlack,
+    darkBlack,
+    lightBlack,
+    minBlack,
+    faintBlack,
+    fullWhite,
+    darkWhite,
+    lightWhite,
   },
   typography: {
     fontFamily: `'Roboto Slab', sans-serif`,

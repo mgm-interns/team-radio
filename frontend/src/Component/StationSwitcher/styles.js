@@ -3,10 +3,8 @@ export default ({ breakpoints, spacing }) => ({
     margin: 'auto',
     overflowX: 'auto',
     minHeight: 120,
-    [breakpoints.up('lg')]: {
-      minWidth: 1024,
-      maxWidth: 1280,
-      minHeight: 135,
+    [breakpoints.up('md')]: {
+      minHeight: 140,
       paddingLeft: spacing.doubleBaseMargin,
       paddingRight: spacing.doubleBaseMargin,
     },
@@ -46,6 +44,7 @@ export default ({ breakpoints, spacing }) => ({
   stationAvatar: {
     width: 90,
     height: 90,
+    objectFit: 'cover',
   },
   stationInfo: {
     width: 90,

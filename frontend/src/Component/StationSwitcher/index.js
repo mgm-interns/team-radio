@@ -5,27 +5,16 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import withStyles from 'material-ui/styles/withStyles';
-import Tooltip from 'material-ui/Tooltip';
-import { joinStation } from 'Redux/api/currentStation/actions';
+import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
+import { setPreviewVideo } from 'Redux/page/station/actions';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { transformText } from 'Transformer';
 import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
+import SwitcherItem from './Item';
 import styles from './styles';
 
+/* eslint-disable no-shadow */
 class StationSwitcher extends Component {
-  static propTypes = {
-    classes: PropTypes.any,
-    currentStation: PropTypes.object,
-    history: PropTypes.object,
-    joinStationRequest: PropTypes.func,
-    stations: PropTypes.any,
-    stationList: PropTypes.array,
-    fetchStations: PropTypes.func,
-    match: PropTypes.object,
-    notification: PropTypes.object,
-  };
-
   constructor(props) {
     super(props);
 
@@ -38,12 +27,20 @@ class StationSwitcher extends Component {
       match: { params: { stationId } },
       history,
       joinStationRequest,
+      leaveStationRequest,
+      setPreviewVideo,
       notification,
+      userId,
     } = this.props;
     // Only change to new station if the id has changed
-    if (station.id !== stationId) {
-      history.replace(`/station/${station.id}`);
-      joinStationRequest(station.id);
+    if (station.station_id !== stationId) {
+      // Leave current station
+      leaveStationRequest({ userId, stationId });
+
+      // Join in selected station
+      history.push(`/station/${station.station_id}`);
+      joinStationRequest({ userId, stationId: station.station_id });
+      setPreviewVideo();
       // Scroll to left after switch successful
       this.scrollBar.scrollToLeft();
     }
@@ -63,11 +60,14 @@ class StationSwitcher extends Component {
     const filteredStations = stations.map(station => ({
       ...station,
       isActive:
-        (currentStation.station && currentStation.station.id) === station.id,
-      avatar: Images.fixture.avatar1,
+        (currentStation.station && currentStation.station.station_id) ===
+        station.station_id,
+      avatar: Images.stationDefault,
     }));
     // Move the current station to the first position of array
-    filteredStations.sort(({ id }) => (id === stationId ? -1 : 1));
+    filteredStations.sort(
+      ({ station_id }) => (station_id === stationId ? -1 : 1),
+    );
 
     return (
       <Scrollbars
@@ -78,25 +78,11 @@ class StationSwitcher extends Component {
         }}
       >
         {filteredStations.map((station, index) => (
-          <div
+          <SwitcherItem
             key={index}
-            className={`${classes.stationWrapper} ${station.isActive &&
-              classes.activeStation}`}
-            onClick={() => this._goToStationPage(station)}
-          >
-            <img src={station.avatar} className={classes.stationAvatar} />
-            <div className={classes.stationInfo}>
-              <Tooltip
-                id={station.id}
-                title={station.station_name}
-                placement={'right'}
-              >
-                <span className={classes.stationTitle}>
-                  {transformText.reduceByCharacters(station.station_name, 10)}
-                </span>
-              </Tooltip>
-            </div>
-          </div>
+            {...station}
+            goToStationPage={() => this._goToStationPage(station)}
+          />
         ))}
       </Scrollbars>
     );
@@ -157,13 +143,31 @@ class StationSwitcher extends Component {
   }
 }
 
+StationSwitcher.propTypes = {
+  classes: PropTypes.any,
+  currentStation: PropTypes.object,
+  history: PropTypes.object,
+  joinStationRequest: PropTypes.func,
+  leaveStationRequest: PropTypes.func,
+  stations: PropTypes.any,
+  stationList: PropTypes.array,
+  fetchStations: PropTypes.func,
+  match: PropTypes.object,
+  notification: PropTypes.object,
+  setPreviewVideo: PropTypes.func,
+  userId: PropTypes.string,
+};
+
 const mapStateToProps = ({ api }) => ({
   stations: api.stations.data,
   currentStation: api.currentStation,
+  userId: api.user.data.userId,
 });
 
 const mapDispatchToProps = dispatch => ({
-  joinStationRequest: stationId => dispatch(joinStation(stationId)),
+  joinStationRequest: option => dispatch(joinStation(option)),
+  leaveStationRequest: option => dispatch(leaveStation(option)),
+  setPreviewVideo: () => dispatch(setPreviewVideo()),
 });
 
 export default compose(

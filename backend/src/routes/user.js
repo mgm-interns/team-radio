@@ -20,6 +20,7 @@ export default router => {
           const payload = {
             email: newUser.email,
             name: newUser.name,
+            userId: newUser._id,
           };
 
           user = await User.findOne({ email: req.body.email });
@@ -62,6 +63,7 @@ export default router => {
           const payload = {
             email: user.email,
             name: user.name,
+            userId: user._id,
           };
 
           const token = jwt.sign(payload, req.app.get('superSecret'), {
@@ -92,20 +94,19 @@ export default router => {
       const payload = {
         email: user.email,
         name: user.name,
+        userId: user._id,
       };
       const token = jwt.sign(payload, req.app.get('superSecret'), {
         expiresIn: 1440 * 7, // expires in 24 hours
       });
       res.json({
-        data: {
-          message: 'signup success',
-          token: token,
-          userId: user._id,
-          googleId: user.google_id,
-          facebookId: user.facebook_id,
-          name: user.name,
-          avatar_url: user.avatar_url,
-        },
+        message: 'signup success',
+        token: token,
+        userId: user._id,
+        googleId: user.google_id,
+        facebookId: user.facebook_id,
+        name: user.name,
+        avatar_url: user.avatar_url,
       });
     } catch (err) {
       throw err;
@@ -138,24 +139,12 @@ export default router => {
         // verifies secret and checks exp
         jwt.verify(token, req.app.get('superSecret'), (err, decoded) => {
           if (err) {
-            return res.json({
-              success: false,
-            });
+            return res.status(400).json({ tokenError: 'Verify token failed.' });
           }
-          return res.json({
-            data: {
-              userId: decoded.userId,
-              success: true,
-            },
-          });
-        });
-      } else {
-        return res.json({
-          data: {
-            success: false,
-          },
+          return res.json(decoded);
         });
       }
+      return res.status(400).json({ tokenError: 'No token provided.' });
     } catch (err) {
       throw err;
     }

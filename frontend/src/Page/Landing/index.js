@@ -8,18 +8,19 @@ import { withNotification } from 'Component/Notification';
 import Backdrop from './Backdrop';
 import SectionCover from './SectionCover';
 import SectionContent from './SectionContent';
+import Stations from './Stations';
 
 class Landing extends Component {
   componentWillReceiveProps(nextProps) {
     const { history } = this.props;
     const currentStationId =
       this.props.currentStation.station &&
-      this.props.currentStation.station._id;
+      this.props.currentStation.station.station_id;
     const nextStationId =
-      nextProps.currentStation.station && nextProps.currentStation.station._id;
+      nextProps.currentStation.station &&
+      nextProps.currentStation.station.station_id;
     if (currentStationId !== nextStationId) {
-      const { stationName } = nextProps.currentStation.station;
-      history.push(`/station/${stationName}`);
+      history.push(`/station/${nextStationId}`);
     }
   }
 
@@ -27,9 +28,10 @@ class Landing extends Component {
     return [
       <NavBar key={1} />,
       <Backdrop key={2} />,
-      <SectionCover key={3} />,
-      <SectionContent key={4} />,
-      <Footer key={5} />,
+      <Stations key={3} />,
+      <SectionCover key={4} />,
+      <SectionContent key={5} />,
+      <Footer key={6} />,
     ];
   }
 }

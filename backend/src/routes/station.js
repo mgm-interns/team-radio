@@ -10,6 +10,11 @@ export default router => {
     console.log('add stations');
     station.addStation(req, res);
   });
+  router.put('/stations', function(req, res) {
+    //   res.send('Ok');
+    console.log('add stations');
+    station.deleteStation(req, res);
+  });
   router.get('/stations/:id', function(req, res) {
     //   res.send('Ok');
     station.getStation(req, res);
@@ -29,6 +34,10 @@ export default router => {
   });
   router.get('/stations/playlist/:id', function(req, res) {
     station.getListSong(req, res);
+  });
+  router.get('/stations/get/all', function(req, res) {
+    console.log('router ');
+    station.getAllAvailableStations(req, res);
   });
   router.put('/stations/upvote/:id', function(req, res) {
     station.upVote(req, res);

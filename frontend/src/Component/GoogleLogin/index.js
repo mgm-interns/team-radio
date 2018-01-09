@@ -69,14 +69,17 @@ class Login extends Component {
       window.gapi.load('auth2', () => {
         this.enableButton();
         if (!window.gapi.auth2.getAuthInstance()) {
-          window.gapi.auth2.init(params).then(
-            res => {
-              if (isSignedIn && res.isSignedIn.get()) {
-                this._handleSigninSuccess(res.currentUser.get());
-              }
-            },
-            err => onFailure(err),
-          );
+          window.gapi.auth2
+            .init(params)
+            .then
+            // res => {
+            //   if (isSignedIn && res.isSignedIn.get()) {
+            //     console.log(res.isSignedIn.get());
+            //     this._handleSigninSuccess(res.currentUser.get());
+            //   }
+            // },
+            // err => onFailure(err),
+            ();
         }
         if (autoLoad) {
           this.signIn();
@@ -128,19 +131,21 @@ class Login extends Component {
     */
     const basicProfile = res.getBasicProfile();
     const authResponse = res.getAuthResponse();
-    res.authResponse = {
+    const returnObject = {};
+    returnObject.authResponse = {
       googleId: basicProfile.getId(),
       tokenObj: authResponse,
       tokenId: authResponse.id_token,
       accessToken: authResponse.access_token,
     };
-    res.profileObj = {
+    returnObject.profileObj = {
       googleId: basicProfile.getId(),
       imageUrl: basicProfile.getImageUrl(),
       email: basicProfile.getEmail(),
       name: basicProfile.getName(),
     };
-    this.props.onSuccess(res);
+    console.log(returnObject);
+    this.props.onSuccess(returnObject);
   }
 
   renderOwnButton() {
@@ -215,7 +220,7 @@ class Login extends Component {
 
 Login.propTypes = {
   onSuccess: PropTypes.func.isRequired,
-  onFailure: PropTypes.func.isRequired,
+  onFailure: PropTypes.func, // required if we need
   onRequest: PropTypes.func,
   buttonText: PropTypes.string,
   scope: PropTypes.string,
@@ -242,7 +247,7 @@ Login.propTypes = {
 Login.defaultProps = {
   type: 'button',
   tag: 'button',
-  buttonText: 'Sign up with Google',
+  buttonText: 'Login with Google',
   scope: 'profile email',
   prompt: '',
   cookiePolicy: 'single_host_origin',

@@ -1,6 +1,5 @@
-import { loadAuthenticationState } from 'Config';
-
 const INITIAL_STATE = {
+  // data: localTokenToData(),
   data: {},
   error: null,
   loading: false,
@@ -70,6 +69,28 @@ const user = (state = INITIAL_STATE, action) => {
       };
 
     case 'ADD_USER_WITH_SOCIAL_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+        isAuthenticated: false,
+      };
+    case 'VERIFY_TOKEN':
+      return {
+        data: {},
+        error: null,
+        loading: true,
+        isAuthenticated: false,
+      };
+    case 'VERIFY_TOKEN_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+        isAuthenticated: true,
+      };
+
+    case 'VERIFY_TOKEN_FAILURE':
       return {
         ...state,
         loading: false,

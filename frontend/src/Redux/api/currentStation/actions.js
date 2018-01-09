@@ -6,30 +6,53 @@ import {
   CLIENT_LEAVE_STATION,
 } from 'Redux/actions';
 
-const DEFAULT_STATION_ID = 'default_station';
+const DEFAULT_USER_ID = '0';
 
 // Client action creator
-export const joinStation = (stationId = DEFAULT_STATION_ID) => ({
+export const joinStation = ({ stationId, userId = DEFAULT_USER_ID }) => ({
   type: CLIENT_JOIN_STATION,
-  payload: { userId: 0, stationId },
+  payload: { userId, stationId },
 });
 
-export const leaveStation = (stationId = DEFAULT_STATION_ID) => ({
+export const leaveStation = ({ stationId, userId = DEFAULT_USER_ID }) => ({
   type: CLIENT_LEAVE_STATION,
-  payload: { userId: 0, stationId },
+  payload: { userId, stationId },
 });
 
-export const addSong = ({ userId, stationId, songUrl }) => ({
+export const addSong = ({
+  userId = DEFAULT_USER_ID,
+  stationId,
+  songUrl,
+  title,
+  thumbnail,
+}) => ({
   type: CLIENT_ADD_SONG,
-  payload: { userId, stationId, songUrl },
+  payload: {
+    userId,
+    stationId,
+    songUrl,
+    title,
+    thumbnail,
+    is_played: false,
+    up_vote: [],
+    down_vote: [],
+  },
 });
 
-export const upVoteSong = ({ userId, stationId, songId }) => ({
+export const upVoteSong = ({
+  userId = DEFAULT_USER_ID,
+  stationId,
+  songId,
+}) => ({
   type: CLIENT_UPVOTE_SONG,
   payload: { userId, stationId, songId },
 });
 
-export const downVoteSong = ({ userId, stationId, songId }) => ({
+export const downVoteSong = ({
+  userId = DEFAULT_USER_ID,
+  stationId,
+  songId,
+}) => ({
   type: CLIENT_DOWNVOTE_SONG,
   payload: { userId, stationId, songId },
 });

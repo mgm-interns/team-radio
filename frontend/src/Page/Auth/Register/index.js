@@ -1,52 +1,36 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Grid from 'material-ui/Grid';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+
 import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import Icon from 'material-ui/Icon';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
-import { withStyles } from 'material-ui/styles';
-import { addUser } from 'Redux/api/user/actions';
-import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
 import { FormHelperText } from 'material-ui/Form';
+import { withStyles } from 'material-ui/styles';
+
+import { addUser } from 'Redux/api/user/actions';
+import { Field, reduxForm } from 'redux-form';
+
 import { NavBar } from 'Component';
+import { withNotification } from 'Component/Notification';
+
 import { saveAuthenticationState } from 'Config';
+import {
+  customValidate,
+  required,
+  email,
+  minLength6,
+  maxLength15,
+} from 'Util/validate';
 
 import styles from './styles';
 import TextView from '../TextView';
-
-const validate = values => {
-  const errors = {};
-  if (!values.name) {
-    errors.name = 'Name is required';
-  } else if (values.name.length > 15) {
-    errors.name = 'Must be 15 characters or less';
-  }
-
-  if (!values.email) {
-    errors.email = 'Email is required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address';
-  }
-
-  if (!values.password) {
-    errors.password = 'Password is required';
-  } else if (values.password.length < 6) {
-    errors.password = 'Must be at least 6 characters';
-  }
-
-  if (!values.confirmPassword) {
-    errors.confirmPassword = 'Confirm Password is required';
-  } else if (values.password !== values.confirmPassword) {
-    errors.confirmPassword = 'Password and confirm password does not match';
-  }
-
-  return errors;
-};
 
 class Register extends Component {
   constructor(props) {
@@ -61,25 +45,157 @@ class Register extends Component {
         'See some information of the past activities',
       ],
     };
+
+    this._showNotification = this._showNotification.bind(this);
+    this._renderGuidline = this._renderGuidline.bind(this);
+    this._renderHeadline = this._renderHeadline.bind(this);
+    this._renderLoginLocalForm = this._renderLoginLocalForm.bind(this);
+    this._renderLoginLocalActions = this._renderLoginLocalActions.bind(this);
+    this._renderBackground = this._renderBackground.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    const response = nextProps.addUserResponse;
-    // console.log(response);
-    const { error } = response;
-    if (error != null) {
+    const { addUserResponse: { error, data, isAuthenticated } } = nextProps;
+
+    if (error !== null) {
       this.setState({
         asyncError: error.response.message,
       });
-    } else if (response.data.token) {
-      saveAuthenticationState(response.data);
+    } else if (data.token || isAuthenticated) {
+      this._showNotification('Registration successful!');
+      saveAuthenticationState(data);
       this.props.history.push('/');
     }
   }
 
+  _showNotification(content) {
+    const { notification } = this.props;
+
+    notification.app.success({
+      message: content,
+    });
+    // notification.browser.success({
+    //   message: content,
+    // });
+  }
+
+  _renderGuidline() {
+    const { classes } = this.props;
+    return (
+      <CardContent>
+        <Typography type="headline" component="h2" className={classes.text}>
+          A registered user can:
+        </Typography>
+        <ul className={classes.listWrapper}>
+          {this.state.benefits.map((benefit, index) => (
+            <li key={index} className={classes.listItem}>
+              <Icon>done</Icon>
+              <span className={classes.listText}>{benefit}</span>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    );
+  }
+
+  _renderHeadline() {
+    return (
+      <Grid style={{ paddingBottom: '2em' }}>
+        <Typography type="headline" component="h2">
+          Sign Up
+        </Typography>
+        <Typography component="p">to get the most out of Team Radio</Typography>
+      </Grid>
+    );
+  }
+
+  _renderLoginLocalForm() {
+    const { classes, submitSucceeded } = this.props;
+    return [
+      <Field
+        key={1}
+        name="name"
+        placeholder="Enter your name"
+        type="text"
+        component={TextView}
+        label="Name"
+        validate={[required, maxLength15]}
+      />,
+      <Field
+        key={2}
+        name="email"
+        placeholde="hello@example.com"
+        type="text"
+        component={TextView}
+        label="Email"
+        validate={[required, email]}
+      />,
+      <Field
+        key={3}
+        name="password"
+        placeholder="Must be at least 6 characters"
+        type="password"
+        component={TextView}
+        label="Password"
+        validate={[required, minLength6]}
+      />,
+      <Field
+        key={4}
+        name="confirmPassword"
+        placeholder="Re-enter your password"
+        type="password"
+        component={TextView}
+        label="Confirm Password"
+        validate={[required]}
+      />,
+      <FormHelperText key={5} className={classes.error}>
+        {submitSucceeded && this.state.asyncError}
+      </FormHelperText>,
+    ];
+  }
+
+  _renderLoginLocalActions() {
+    const { classes, loading } = this.props;
+    return (
+      <Grid container>
+        <Grid item xs={12}>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Button
+              raised
+              color="primary"
+              type="submit"
+              className={classes.buttonSend}
+            >
+              Sign up
+            </Button>
+          )}
+
+          <FormHelperText className={classes.callout}>
+            <span>Already have an account?</span>
+            <Link to="/auth/login">Login</Link>
+          </FormHelperText>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  _renderBackground() {
+    const { classes } = this.props;
+    return (
+      <Grid item xs className={classes.backgroundImg}>
+        <img
+          src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=2250&q=80"
+          alt="Team Radio - Cover"
+          className={classes.backgroundImg}
+        />
+      </Grid>
+    );
+  }
+
   render() {
-    const { classes, loading, handleSubmit, submitting } = this.props;
-    const { benefits } = this.state;
+    const { classes, handleSubmit } = this.props;
     return (
       <div>
         <NavBar />
@@ -94,103 +210,20 @@ class Register extends Component {
                 classes.cardInfoWrapper,
               ])}
             >
-              <Card className={classes.cardInfo}>
-                <CardContent>
-                  <Typography
-                    type="headline"
-                    component="h2"
-                    className={classes.text}
-                  >
-                    A registered user can:
-                  </Typography>
-                  <ul className={classes.listWrapper}>
-                    {benefits.map((benefit, index) => (
-                      <li key={index} className={classes.listItem}>
-                        <Icon>done</Icon>
-                        <span className={classes.listText}>{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+              <Card className={classes.cardInfo}>{this._renderGuidline()}</Card>
             </Grid>
             <Grid item xs={11} sm={5} className={classes.cardWrapper}>
               <Card raised className={classes.cardForm}>
                 <form onSubmit={handleSubmit}>
                   <CardContent>
-                    <Grid style={{ paddingBottom: '2em' }}>
-                      <Typography type="headline" component="h2">
-                        Sign Up
-                      </Typography>
-                      <Typography component="p">
-                        to get the most out of Team Radio
-                      </Typography>
-                    </Grid>
-                    <Field
-                      name="name"
-                      placeholder="Enter your name"
-                      type="text"
-                      component={TextView}
-                      label="Name"
-                    />
-                    <Field
-                      name="email"
-                      placeholde="hello@example.com"
-                      type="text"
-                      component={TextView}
-                      label="Email"
-                    />
-                    <Field
-                      name="password"
-                      placeholder="Must be at least 6 characters"
-                      type="password"
-                      component={TextView}
-                      label="Password"
-                    />
-                    <Field
-                      name="confirmPassword"
-                      placeholder="Re-enter your password"
-                      type="password"
-                      component={TextView}
-                      label="Confirm Password"
-                    />
-                    <FormHelperText className={classes.error}>
-                      {this.state.asyncError}
-                    </FormHelperText>
+                    {this._renderHeadline()}
+                    {this._renderLoginLocalForm()}
                   </CardContent>
-                  <CardActions>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        {loading ? (
-                          <CircularProgress />
-                        ) : (
-                          <Button
-                            raised
-                            color="primary"
-                            type="submit"
-                            className={classes.buttonSend}
-                          >
-                            Sign up
-                          </Button>
-                        )}
-
-                        <FormHelperText className={classes.callout}>
-                          <span>Already have an account?</span>
-                          <Link to="/auth/login">Login</Link>
-                        </FormHelperText>
-                      </Grid>
-                    </Grid>
-                  </CardActions>
+                  <CardActions>{this._renderLoginLocalActions()}</CardActions>
                 </form>
               </Card>
             </Grid>
-            <Grid item xs className={classes.backgroundImg}>
-              <img
-                src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=2250&q=80"
-                alt="Team Radio - Cover"
-                className={classes.backgroundImg}
-              />
-            </Grid>
+            {this._renderBackground()}
           </Grid>
         </Grid>
       </div>
@@ -204,7 +237,7 @@ Register.propTypes = {
   classes: PropTypes.any,
   loading: PropTypes.bool,
   handleSubmit: PropTypes.any,
-  submitting: PropTypes.any,
+  submitSucceeded: PropTypes.any,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -217,9 +250,12 @@ const mapStateToProps = state => ({
   addUserResponse: state.api.user,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
   reduxForm({
     form: 'registerForm',
-    validate,
-  })(withStyles(styles)(Register)),
-);
+    validate: customValidate,
+  }),
+  withStyles(styles),
+  withNotification,
+)(Register);

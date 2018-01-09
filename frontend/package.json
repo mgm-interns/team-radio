@@ -9,14 +9,22 @@
   "engines": {
     "node": "8.x"
   },
+  "lock": false,
+  "scripts": {
+    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "copy-env:dev": "cp .env.development .env",
+    "copy-env:production": "cp .env.production .env",
+    "postinstall": "run-s copy-env:production build"
+  },
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.17.1",
     "classnames": "^2.2.5",
-    "font-awesome": "^4.7.0",
-    "graphql": "^0.11.7",
-    "immutable": "^3.8.2",
-    "material-ui": "^1.0.0-beta.23",
+    "material-ui": "^1.0.0-beta.26",
     "moment": "^2.19.4",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
@@ -25,6 +33,7 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.2.0",
     "react-flexbox-grid": "^2.0.0",
+    "react-icons": "^2.2.7",
     "react-notification-system": "^0.2.16",
     "react-player": "^0.25.3",
     "react-redux": "^5.0.6",
@@ -34,20 +43,7 @@
     "redux-form": "^7.2.0",
     "redux-socket.io": "^1.4.0",
     "redux-thunk": "^2.2.0",
-    "socket.io-client": "^2.0.4",
-    "subscriptions-transport-ws": "^0.9.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "dev": "react-scripts start",
-    "build": "react-scripts build",
-    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "copy-env:dev": "cp .env.development .env",
-    "copy-env:production": "cp .env.production .env",
-    "postinstall": "run-s copy-env:production build"
+    "socket.io-client": "^2.0.4"
   },
   "devDependencies": {
     "babel-plugin-root-import": "^5.1.0",

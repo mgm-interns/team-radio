@@ -9,6 +9,8 @@ const images = {
   },
   drummer: require('../Images/drummer.png'),
   notFound: require('../Images/not_found.png'),
+  loadingSong: require('../Images/loading_song.png'),
+  stationDefault: require('../Images/station_default_cover.png'),
   landing: require('../Images/logo/landing.png'),
   windows: {
     stations: require('../Images/windows/stations.png'),

@@ -3,7 +3,7 @@ const getVideoId = require('get-video-id');
 const request = require('request-promise');
 const cheerio = require('cheerio');
 
-export const getSongDetails = async function(songUrl) {
+export default async songUrl => {
   const songInput = getVideoId(songUrl);
   if (songInput === undefined) {
     // The songUrl is invalid
@@ -30,8 +30,8 @@ export const getSongDetails = async function(songUrl) {
   return null;
 };
 
-function fetchVideoPage(videoId) {
-  return request({
+const fetchVideoPage = videoId =>
+  request({
     url: 'https://www.youtube.com/watch?v=' + videoId,
     jar: true,
     headers: {
@@ -44,9 +44,8 @@ function fetchVideoPage(videoId) {
       'Cache-Control': 'max-age=0',
     },
   });
-}
 
-function parseVideoInfo(body, videoId) {
+const parseVideoInfo = (body, videoId) => {
   const $ = cheerio.load(body);
   const url = extractValue($('.watch-main-col link[itemprop="url"]'), 'href');
   const title = extractValue(
@@ -130,20 +129,20 @@ function parseVideoInfo(body, videoId) {
     views: views,
     regionsAllowed: regionsAllowed,
   };
-}
+};
 
-function extractValue($, attribute) {
+const extractValue = ($, attribute) => {
   if ($ && $.length) {
     return $.attr(attribute) || undefined;
   }
   return undefined;
-}
+};
 
-function parseDuration(raw) {
+const parseDuration = raw => {
   const m = /^[a-z]*(?:(\d+)M)?(\d+)S$/i.exec(raw);
   if (!m) return -1;
 
   const minutes = m[1] ? parseInt(m[1], 10) : 0;
   const seconds = m[2] ? parseInt(m[2], 10) : 0;
   return minutes * 60 + seconds;
-}
+};

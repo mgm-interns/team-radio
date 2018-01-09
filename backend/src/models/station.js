@@ -1,71 +1,36 @@
 /* eslint-disable */
 import mongoose from 'mongoose';
-import station from '../routes/station';
-mongoose.Promise = require('bluebird');
-//const ObjectId = mongoose.Schema.Types.ObjectId;
+import { type } from 'os';
+
 const stationSchema = mongoose.Schema({
-  station_name: {
-    type: String,
-    require: true,
-  },
-  id: {
-    type: String,
-    require: true,
-  },
-  owner_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: null,
-  },
-  starting_time: {
-    type: Number,
-    default: 0,
-  },
-  playlist: [
+  station_name: { type: String, require: true, },
+  station_id: { type: String, require: true, },
+  is_private: { type: Boolean, default: false },
+  owner_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users', default: null, },
+  starting_time: { type: Number, default: 0, },
+  playlist:
     {
-      song_id: {
-        type: Number,
-        require: true,
-      },
-      is_played: {
-        type: Boolean,
-      },
-      url: {
-        type: String,
-        required: true,
-      },
-      title: {
-        type: String,
-      },
-      thumbnail: {
-        type: String,
-      },
-      duration: {
-        type: Number,
-        min: 0,
-      },
-      creator_id: {
-        type: mongoose.Schema.Types.ObjectId,
-      },
-      up_vote: [
+      type: [
         {
-          type: mongoose.Schema.Types.ObjectId, // userID
-        }
+          song_id: { type: Number, require: true, },
+          is_played: { type: Boolean, },
+          url: { type: String, required: true, },
+          title: { type: String, },
+          thumbnail: { type: String, },
+          duration: { type: Number, min: 0, },
+          creator: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+          created_date: { type: Number, default: true, },
+          up_vote: [
+            { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
+          ],
+          down_vote: [
+            { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
+          ],
+        },
       ],
-      down_vote: [
-        {
-          type: mongoose.Schema.Types.ObjectId, // userID
-        }
-      ],
-      created_day: {
-        type: Number,
-        default: new Date().getTime(),
-      },
+      default: []
     },
-  ],
-  created_day: {
-    type: Number,
-    default: new Date().getTime(),
-  },
+  created_date: { type: Number, default: new Date().getTime(), },
 });
 
 var Station = (module.exports = mongoose.model('Stations', stationSchema));
@@ -73,7 +38,7 @@ var Station = (module.exports = mongoose.model('Stations', stationSchema));
  * Station
  */
 
-// add station
+// Add station
 module.exports.addStation = station => {
   try {
     return Station.create(station);
@@ -81,31 +46,51 @@ module.exports.addStation = station => {
     console.log('err : ' + err);
   }
 };
+// Remove station
+module.exports.deleteStation = (stationId, userId) => {
+  try {
+    return Station.deleteOne({ owner_id: userId, station_id: stationId });
+  } catch (err) {
+    throw err;
+  }
+};
 
-// get all station
+// Get all station
 module.exports.getStations = (limit) => {
-  return Station.find({}, { station_name: 1, created_day: 1, id: 1, _id: 0 }).limit(limit);
+  return Station.find({}, { station_name: 1, created_date: 1, station_id: 1, _id: 0 }).limit(limit);
 };
 // 
-// get all station
-module.exports.getStationDetails = (limit) => {
-  return Station.find().limit(limit);
+// Get all station
+module.exports.getStationDetails = limit => {
+  return Station.find()
+    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
+    .limit(limit)
+    .exec();
 };
 
-// get station from name
+// Get station by name
 module.exports.getStationByName = stationNameToFind => {
-  return Station.findOne({ station_name: stationNameToFind });
+  return Station.findOne({ station_name: stationNameToFind })
+    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
+    .exec();
 };
 
-// get station from url
+// Get station by url
 module.exports.getStationById = idToFind => {
-  return Station.findOne({ id: idToFind });
+  return Station.findOne({ station_id: idToFind })
+    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
+    .exec();
 };
 
-// The function update a field in db
+// Get station by user_id
+module.exports.getStationsByUserId = userId => {
+  return Station.find({ owner_id: userId });
+};
+
+// The function update a field starting_time in db
 module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
   try {
-    let query = { id: stationId };
+    let query = { station_id: stationId };
     return Station.update(query, {
       $set: {
         starting_time: valueNeedUpdate,
@@ -116,13 +101,26 @@ module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
   }
 };
 
+// The function update a field isPrivate in db
+module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) => {
+  try {
+    let query = { station_id: stationId, owner_id: userId };
+    return Station.update(query, {
+      $set: {
+        isPrivate: valueNeedUpdate,
+      },
+    });
+  } catch (err) {
+    console.log('Err updateTimeStartingOfStation models : ' + err);
+  }
+};
 /**
  * A song
  */
 
 // add song to playlist of station
 module.exports.addSong = (stationId, song) => {
-  let query = { id: stationId };
+  let query = { station_id: stationId };
   return Station.update(query, {
     $addToSet: {
       playlist: song,
@@ -133,7 +131,7 @@ module.exports.addSong = (stationId, song) => {
 //Get a song in station
 module.exports.getAsongInStation = async (stationId, songId) => {
   let query = {
-    id: stationId,
+    station_id: stationId,
   };
   return (await Station.findOne(query, {
     playlist: {
@@ -147,7 +145,7 @@ module.exports.getAsongInStation = async (stationId, songId) => {
 module.exports.updateValueOfUpvote = (stationId, songId, valueNeedUpdate) => {
   //let query = { id: stationId };
   return Station.update(
-    { id: stationId, 'playlist.song_id': songId },
+    { station_id: stationId, 'playlist.song_id': songId },
     { $set: { 'playlist.$.up_vote': valueNeedUpdate } },
   );
 };
@@ -155,7 +153,7 @@ module.exports.updateValueOfUpvote = (stationId, songId, valueNeedUpdate) => {
 module.exports.updateValueOfDownvote = (stationId, songId, valueNeedUpdate) => {
   //let query = { id: stationId };
   return Station.update(
-    { id: stationId, 'playlist.song_id': songId },
+    { station_id: stationId, 'playlist.song_id': songId },
     { $set: { 'playlist.$.down_vote': valueNeedUpdate } },
   );
 };
@@ -165,7 +163,7 @@ module.exports.updateValueOfDownvote = (stationId, songId, valueNeedUpdate) => {
 
 // The function update a field playlist in db
 module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
-  let query = { id: stationId };
+  let query = { station_id: stationId };
   return Station.update(query, {
     $set: {
       playlist: valueNeedUpdate,
@@ -175,6 +173,18 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
 
 //get playlist of station
 module.exports.getPlaylistOfStation = stationId => {
-  let query = { id: stationId };
-  return Station.findOne(query, { playlist: true, _id: false });
+  let query = { station_id: stationId };
+  return Station.findOne(query, { playlist: true, _id: false })
+    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
+    .exec();
+};
+
+// Get list song by User ID
+module.exports.getLisSongByUserId = (stationId, userId) => {
+  // TODO :
+  return Station.find({ station_id: stationId }, {
+    playlist: {
+      creator: userId
+    }
+  });
 };

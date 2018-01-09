@@ -2,7 +2,7 @@ import _ from 'lodash';
 import * as stationController from './controllers/station';
 import * as EVENTS from './const/actions';
 
-const _players = {};
+const _players = [];
 const TIME_BUFFER = 5000;
 let io = null;
 
@@ -11,18 +11,21 @@ class Player {
     song_id: 0,
     url: '',
     starting_time: 0,
+    thumbnail: '',
   };
 
   constructor(station) {
-    this.stationId = station.id;
+    this.stationId = station.station_id;
     this.updatePlaylist(station);
   }
 
   getNowPlaying = () => ({
+    song_id: this.nowPlaying.song_id,
     url: this.nowPlaying.url,
     starting_time: this.nowPlaying.starting_time
       ? Date.now() - this.nowPlaying.starting_time
       : 0,
+    thumbnail: this.nowPlaying.thumbnail,
   });
 
   updatePlaylist = async (station = null) => {
@@ -50,9 +53,10 @@ class Player {
   };
 
   _emitStationState = async () => {
+    // console.log('_emitStationState ' + this.stationId + ' : ' + Date.now());
     this._emitNowPlaying();
     this._emitPlaylist();
-  }
+  };
 
   _emit = (eventName, payload) => {
     io.to(this.stationId).emit('action', {
@@ -61,6 +65,15 @@ class Player {
     });
   };
 
+  _resetNowPlaying = () => {
+    this.nowPlaying = {
+      song_id: 0,
+      url: '',
+      starting_time: 0,
+      thumbnail: '',
+    };
+    this._emitStationState();
+  }
   _startSong = async song => {
     try {
       this._emitStationState();
@@ -80,7 +93,7 @@ class Player {
 
   _nextSongByTimeout = timeout => {
     setTimeout(async () => {
-      const playlist = await stationController.setPlayedSongs(this.stationId, [
+      await stationController.setPlayedSongs(this.stationId, [
         this.nowPlaying.song_id,
       ]);
       this._setPlayableSong();
@@ -88,11 +101,6 @@ class Player {
   };
   // TODO: [start server, add new song to empty station, next song nomarly]
   _setPlayableSong = async (station = null) => {
-    /*
-          get nextSong
-          get list of songs will be change is_played to true
-          update this.nowPlaying
-        */
     if (!station) {
       // Get the station if it is not available
       station = await stationController.getStation(this.stationId);
@@ -101,13 +109,40 @@ class Player {
     // Filter songs wasn't played and is not the current playing song
     const filteredPlaylist = _.filter(
       playlist,
-      song => !song.is_played && song.song_id !== this.nowPlaying.song_id,
+      song => !song.is_played,
     );
-    // Sort the filteredPlaylist by time (current the song_id is the song added time)
-    const sortedPlaylist = _.sortBy(filteredPlaylist, ['song_id']);
+    filteredPlaylist.forEach((song, i) => {
+      song.votes = song.up_vote.length - song.down_vote.length;
+    });
+
+    // console.log('Playlist with votes:', filteredPlaylist, Date.now());
+    // Sort the filteredPlaylist by votes and time (current the song_id is the song added time)
+    const sortedPlaylist = _.orderBy(
+      filteredPlaylist,
+      ['votes', 'song_id'],
+      ['desc', 'asc'],
+    );
+    // Reset nowPlaying when the station is done
+    if (sortedPlaylist.length === 0){
+      this._resetNowPlaying();
+      return;
+    }
+    // When the player is playing
+    if (this.nowPlaying.song_id) {
+      // Update nowPlaying song
+      const song = sortedPlaylist[0];
+      this.nowPlaying.song_id = song.song_id;
+      this.nowPlaying.url = song.url;
+      this.nowPlaying.starting_time = Date.now();
+      this.nowPlaying.thumbnail = song.thumbnail;
+      // play the song
+      this._startSong(song);
+      return;
+    }
+
     const currentTime = Date.now();
     let preStartingTime = station.starting_time;
-    const playedSongs = this.nowPlaying.song_id ? [this.nowPlaying.song_id] : [];
+    const playedSongs = [];
     // TODO: explain clearly in comments
     // TODO: stationController.setPlayedSongs to ids
     // DO NOT use foreach (can't be stop the loop)
@@ -116,57 +151,65 @@ class Player {
       // current the song_id is song added time
       song.added_time = song.song_id;
       // Check the song is new or not
-      if (song.added_time + song.duration > currentTime) {
+      if (song.added_time + song.duration + TIME_BUFFER > currentTime) {
         // Update is_played of the playedSongs to true
-        await stationController.setPlayedSongs(this.stationId, playedSongs);
+        stationController.setPlayedSongs(this.stationId, playedSongs);
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
-        this.nowPlaying.starting_time = this.nowPlaying.song_id ? Date.now() : song.added_time;
+        this.nowPlaying.thumbnail = song.thumbnail;
+        this.nowPlaying.starting_time = song.added_time;
         // play the song
         this._startSong(song);
         return;
-      } else if (preStartingTime + song.duration > currentTime) {
+      } else if (preStartingTime + song.duration + TIME_BUFFER > currentTime) {
         // Update is_played of the playedSongs to true
-        await stationController.setPlayedSongs(this.stationId, playedSongs);
+
+        stationController.setPlayedSongs(this.stationId, playedSongs);
         // Update nowPlaying song
         this.nowPlaying.song_id = song.song_id;
         this.nowPlaying.url = song.url;
-        this.nowPlaying.starting_time = this.nowPlaying.song_id ? Date.now() : preStartingTime;
+        this.nowPlaying.thumbnail = song.thumbnail;
+        this.nowPlaying.starting_time = preStartingTime;
         // play the song
         this._startSong(song);
         return;
       }
       // Move the song to next song for checking
-      preStartingTime += song.duration;
+      preStartingTime += song.duration + TIME_BUFFER;
       playedSongs.push(song.song_id);
-    };
+    }
 
     // The available song is not existed
     // Update is_played of the song in the sortedPlaylist to true
-    await stationController.setPlayedSongs(this.stationId, playedSongs);
+    stationController.setPlayedSongs(this.stationId, playedSongs);
     // Update nowPlaying song is not available
-    this.nowPlaying.song_id = 0;
-    this.nowPlaying.url = '';
-    this.nowPlaying.starting_time = 0;
-    this._emitStationState();
+    this._resetNowPlaying();
   };
 }
 
 export const init = async () => {
-  const stations = await stationController.getAllStationDetails();
-  stations.forEach(station => {
-    _players[station.id] = new Player(station);
-  });
+  try {
+    const stations = await stationController.getAllStationDetails();
+    // console.log('stations: ', stations);
+    stations.forEach((station, i) => {
+      station = station.toObject();
+      _players[station.station_id] = new Player(station);
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const attachWebSocket = _io => {
-  console.log('attchWebSocket');
   io = _io;
   init();
 };
 
-export const getPlayer = async function getPlayer(stationId) {
+export const getPlayer = async stationId => {
+  if (!stationId) {
+    throw new Error(`The station id can't be empty`);
+  }
   if (!_players[stationId]) {
     const station = await stationController.getStation(stationId);
     // check the stationdId is available or not
