@@ -7,6 +7,9 @@ import {
   SERVER_NEW_USER_JOINED,
   SERVER_DOWNVOTE_SONG_FAILURE,
   SERVER_UPVOTE_SONG_FAILURE,
+  SERVER_JOINED_STATION_FAILURE,
+  CLIENT_LEAVE_STATION,
+  CLIENT_JOIN_STATION,
 } from 'Redux/actions';
 import { appNotificationInstance } from 'Component/Notification/AppNotification';
 
@@ -18,6 +21,7 @@ const INITIAL_STATE = {
     starting_time: 0,
   },
   tempPlaylist: [],
+  joined: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -28,6 +32,25 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         station: action.payload.station,
         playlist: action.payload.station.playlist,
+        joined: true,
+      };
+
+    case SERVER_JOINED_STATION_FAILURE:
+      return {
+        ...INITIAL_STATE,
+      };
+
+    case CLIENT_JOIN_STATION:
+      return {
+        ...INITIAL_STATE,
+        station: {
+          id: action.payload.stationId,
+        },
+      };
+
+    case CLIENT_LEAVE_STATION:
+      return {
+        ...INITIAL_STATE,
       };
 
     case SERVER_UPDATE_PLAYLIST:

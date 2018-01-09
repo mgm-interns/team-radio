@@ -47,7 +47,7 @@ class StationSharing extends Component {
   componentWillReceiveProps(nextProps) {
     if (
       (this.props.currentStation && this.props.currentStation.id) !==
-      nextProps.currentStation.id
+      (nextProps.currentStation && nextProps.currentStation.id)
     ) {
       this.setState({
         copied: false,

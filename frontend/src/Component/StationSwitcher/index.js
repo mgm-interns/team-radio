@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import withStyles from 'material-ui/styles/withStyles';
-import { joinStation } from 'Redux/api/currentStation/actions';
+import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
 import { setPreviewVideo } from 'Redux/page/station/actions';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Images from 'Theme/Images';
@@ -27,13 +27,18 @@ class StationSwitcher extends Component {
       match: { params: { stationId } },
       history,
       joinStationRequest,
+      leaveStationRequest,
       setPreviewVideo,
       notification,
       userId,
     } = this.props;
     // Only change to new station if the id has changed
     if (station.id !== stationId) {
-      history.replace(`/station/${station.id}`);
+      // Leave current station
+      leaveStationRequest({ userId, stationId });
+
+      // Join in selected station
+      history.push(`/station/${station.id}`);
       joinStationRequest({ userId, stationId: station.id });
       setPreviewVideo();
       // Scroll to left after switch successful
@@ -140,6 +145,7 @@ StationSwitcher.propTypes = {
   currentStation: PropTypes.object,
   history: PropTypes.object,
   joinStationRequest: PropTypes.func,
+  leaveStationRequest: PropTypes.func,
   stations: PropTypes.any,
   stationList: PropTypes.array,
   fetchStations: PropTypes.func,
@@ -157,6 +163,7 @@ const mapStateToProps = ({ api }) => ({
 
 const mapDispatchToProps = dispatch => ({
   joinStationRequest: option => dispatch(joinStation(option)),
+  leaveStationRequest: option => dispatch(leaveStation(option)),
   setPreviewVideo: () => dispatch(setPreviewVideo()),
 });
 
