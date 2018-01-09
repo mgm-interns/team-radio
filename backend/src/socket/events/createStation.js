@@ -21,7 +21,7 @@ export default async (emitter, userId, stationName) => {
   //  If station is created, create player
   if (station) {
     try {
-      const player = await players.getPlayer(station.id);
+      const player = await players.getPlayer(station.station_id);
     } catch (err) {
       console.error('Players error: ' + err.message);
     }

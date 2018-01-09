@@ -1,8 +1,10 @@
 import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
 import { countOnlineUserOfStation } from '../managers/onlineUserManager';
+import createEmitter from '../managers/createEmitter';
 
-export default async (emitter, userId, stationId, socket, io) => {
+export default async (io, socket, userId, stationId) => {
+  const emitter = createEmitter(socket, io);
   try {
     const { userName } = await userController.getUserById(userId);
     _leaveAllAndEmit(socket, io, stationId, emitter, userName);
@@ -25,6 +27,8 @@ const _leaveAllAndEmit = (socket, io, stationId, emitter, userName) => {
     emitter.emitToStation(stationId, EVENTS.SERVER_USER_LEFT, {
       user: userName,
     });
+    socket.inStation = undefined;
+    socket.userId = undefined;
     _updateOnlineUser(stationId, emitter, io);
   });
 };
