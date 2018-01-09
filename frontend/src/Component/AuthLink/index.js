@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
 import { withNotification } from 'Component/Notification';
-import { loadAuthenticationState, removeAuthenticationState } from 'Config';
+import { removeAuthenticationState } from 'Config';
 import { logout } from 'Redux/api/user/actions';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -17,8 +17,6 @@ class AuthLink extends Component {
     super(props);
 
     this._logout = this._logout.bind(this);
-    this._handleClick = this._handleClick.bind(this);
-    this._handleOutsideClick = this._handleOutsideClick.bind(this);
     this.state = {
       anchorEl: null,
     };
@@ -31,25 +29,10 @@ class AuthLink extends Component {
     });
     removeAuthenticationState();
     this.props.dispatch(logout());
-    this.forceUpdate();
-  }
-
-  _handleOutsideClick(e) {
-    if (this.node.contains(e.target)) {
-      return;
-    }
-
-    this._handleClick(e);
   }
 
   _handleClick = event => {
-    if (!this.state.anchorEl) {
-      document.addEventListener('click', this._handleOutsideClick, false);
-      this.setState({ anchorEl: event.currentTarget });
-    } else {
-      document.removeEventListener('click', this._handleOutsideClick, false);
-      this.setState({ anchorEl: null });
-    }
+    this.setState({ anchorEl: event.currentTarget });
   };
 
   _handleClose = () => {
@@ -74,11 +57,7 @@ class AuthLink extends Component {
           </Fragment>
         )}
         {user.isAuthenticated && (
-          <div
-            ref={node => {
-              this.node = node;
-            }}
-          >
+          <div>
             <div
               className={classes.menuItem}
               aria-owns={anchorEl ? 'simple-menu' : null}
@@ -87,7 +66,7 @@ class AuthLink extends Component {
             >
               <img
                 className={classes.avatar}
-                src="http://i.pravatar.cc/50"
+                src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
                 alt="avatar"
               />
               <Icon className={classes.dropdownIcon}>arrow_drop_down</Icon>

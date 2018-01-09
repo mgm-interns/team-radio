@@ -1,5 +1,7 @@
 export default () => ({
   avatar: {
+    width: 50,
+    height: 50,
     marginLeft: '16px',
     borderRadius: '50px',
   },
