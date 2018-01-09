@@ -46,8 +46,8 @@ class StationSharing extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (
-      (this.props.currentStation && this.props.currentStation.id) !==
-      (nextProps.currentStation && nextProps.currentStation.id)
+      (this.props.currentStation && this.props.currentStation.station_id) !==
+      (nextProps.currentStation && nextProps.currentStation.station_id)
     ) {
       this.setState({
         copied: false,
@@ -60,7 +60,7 @@ class StationSharing extends Component {
   setStationUrl(nextProps = {}) {
     if (nextProps.currentStation) {
       this.setState({
-        url: StationSharing._transformUrl(nextProps.currentStation.id),
+        url: StationSharing._transformUrl(nextProps.currentStation.station_id),
       });
     }
   }

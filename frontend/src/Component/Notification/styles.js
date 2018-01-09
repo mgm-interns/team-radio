@@ -1,13 +1,8 @@
 export default theme => ({
-  NotificationItem: {
-    DefaultStyle: {
-      minHeight: '100px',
-    },
-  },
+  NotificationItem: {},
   Title: {
     DefaultStyle: {
       ...theme.typography.body1,
-      fontWeight: 'bold',
     },
   },
 });

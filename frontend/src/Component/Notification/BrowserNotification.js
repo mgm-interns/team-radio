@@ -40,8 +40,7 @@ class BrowserNotification {
     /* eslint-disable array-callback-return */
     Object.keys(levels).map(key => {
       const level = levels[key];
-      const title = capitalizeFirstLetter(`${level} !`);
-      this[level] = notification => this.notify({ title, ...notification });
+      this[level] = notification => this.notify(notification);
     });
   }
 

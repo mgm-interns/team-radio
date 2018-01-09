@@ -8,6 +8,7 @@
     "dev": "nodemon ./bin/start",
     "test": "mocha --recursive './test/*Test.js' --compilers js:babel-core/register"
   },
+  "lock": false,
   "dependencies": {
     "khong-dau": "^2.0.0",
     "babel-core": "^6.25.0",
