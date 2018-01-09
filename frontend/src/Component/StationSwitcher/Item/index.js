@@ -26,9 +26,9 @@ class SwitcherItem extends Component {
       station_id,
       currentStation: { station, nowPlaying },
     } = this.props;
-    let { avatar, online_count } = this.props;
+    let { thumbnail, online_count } = this.props;
     if ((station && station.station_id) === station_id) {
-      avatar = (nowPlaying && nowPlaying.thumbnail) || avatar;
+      thumbnail = (nowPlaying && nowPlaying.thumbnail) || thumbnail;
       online_count = this.props.currentStation.online_count; // eslint-disable-line
     }
     return (
@@ -40,7 +40,7 @@ class SwitcherItem extends Component {
       >
         <div
           className={classes.stationAvatar}
-          style={{ backgroundImage: `url(${avatar})` }}
+          style={{ backgroundImage: `url(${thumbnail})` }}
         >
           <div className={classes.stationOnlineCountWrapper}>
             {online_count > 0 ? (
@@ -74,7 +74,7 @@ class SwitcherItem extends Component {
 SwitcherItem.propTypes = {
   goToStationPage: PropTypes.any,
   classes: PropTypes.any,
-  avatar: PropTypes.any,
+  thumbnail: PropTypes.any,
   isActive: PropTypes.any,
   station_name: PropTypes.any,
   currentStation: PropTypes.object,
