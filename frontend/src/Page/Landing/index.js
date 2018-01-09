@@ -15,12 +15,12 @@ class Landing extends Component {
     const { history } = this.props;
     const currentStationId =
       this.props.currentStation.station &&
-      this.props.currentStation.station._id;
+      this.props.currentStation.station.station_id;
     const nextStationId =
-      nextProps.currentStation.station && nextProps.currentStation.station._id;
+      nextProps.currentStation.station &&
+      nextProps.currentStation.station.station_id;
     if (currentStationId !== nextStationId) {
-      const { stationName } = nextProps.currentStation.station;
-      history.push(`/station/${stationName}`);
+      history.push(`/station/${nextStationId}`);
     }
   }
 
