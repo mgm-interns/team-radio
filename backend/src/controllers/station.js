@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { ObjectId } from 'mongodb';
 import deleteDiacriticMarks from 'khong-dau';
-import * as songController from './song';
+import getSongDetails from './song';
 import * as players from '../players';
 import * as stationModels from './../models/station';
 
@@ -93,7 +93,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
     });
   }
 
-  const songDetail = await songController.getSongDetails(songUrl);
+  const songDetail = await getSongDetails(songUrl);
   if (!songDetail) {
     throw new Error('Song url is incorrect!');
   }
