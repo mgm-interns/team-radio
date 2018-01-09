@@ -119,12 +119,23 @@ const _newConnectionHandler = async (socket, fnIo) => {
 };
 
 const updateStationList = async (stations, emitter, fnIo) => {
-  const data = await onlineManager.countOnlineUserOfAllStations(stations, fnIo);
+  const onlineCountData = await onlineManager.countOnlineUserOfAllStations(
+    stations,
+    fnIo,
+  );
   emitter.emit(EVENTS.SERVER_UPDATE_STATIONS, {
-    stations: stations,
-    onlineCount: data,
+    stations: mergeOnlineCountToStation(stations, onlineCountData),
   });
 };
+
+const mergeOnlineCountToStation = (stations, onlineCountData) =>
+  stations.map((station, index) => {
+    const { onlineCount } = onlineCountData[index];
+    return {
+      ...station,
+      onlineCount,
+    };
+  });
 
 players.attachWebSocket(io);
 
