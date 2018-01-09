@@ -44,6 +44,10 @@ const _updateOnlineUser = async (stationId, emitter, io) => {
     emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
       online_count: onlineUsers,
     });
+    emitter.emitAll(EVENTS.SERVER_STATION_CHANGE_ONLINE_USERS, {
+      stationId: stationId,
+      online_count: onlineUsers,
+    });
   } catch (err) {
     console.log('Online manager error: ' + err.message);
   }

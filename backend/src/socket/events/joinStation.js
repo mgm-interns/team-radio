@@ -62,6 +62,10 @@ export default async (io, socket, userId, stationId) => {
       emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
         online_count: onlineUsers,
       });
+      emitter.emitAll(EVENTS.SERVER_STATION_CHANGE_ONLINE_USERS, {
+        stationId: stationId,
+        online_count: onlineUsers,
+      });
     } catch (err) {
       console.log('Update online user fail: ' + err.message);
     }
