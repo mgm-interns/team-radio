@@ -60,7 +60,7 @@ export default async (io, socket, userId, stationId) => {
     try {
       const onlineUsers = await countOnlineUserOfStation(stationId, io);
       emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
-        onlineCount: onlineUsers,
+        online_count: onlineUsers,
       });
     } catch (err) {
       console.log('Update online user fail: ' + err.message);
