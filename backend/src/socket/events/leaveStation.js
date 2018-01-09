@@ -42,7 +42,7 @@ const _updateOnlineUser = async (stationId, emitter, io) => {
   try {
     const onlineUsers = await countOnlineUserOfStation(stationId, io);
     emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
-      onlineCount: onlineUsers,
+      online_count: onlineUsers,
     });
   } catch (err) {
     console.log('Online manager error: ' + err.message);
