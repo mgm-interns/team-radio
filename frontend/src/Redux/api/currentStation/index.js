@@ -8,8 +8,8 @@ import {
   SERVER_DOWNVOTE_SONG_FAILURE,
   SERVER_UPVOTE_SONG_FAILURE,
   SERVER_JOINED_STATION_FAILURE,
-  CLIENT_LEAVE_STATION,
   CLIENT_JOIN_STATION,
+  SERVER_LEAVE_STATION_SUCCESS,
 } from 'Redux/actions';
 import { appNotificationInstance } from 'Component/Notification/AppNotification';
 
@@ -48,7 +48,7 @@ export default (state = INITIAL_STATE, action) => {
         },
       };
 
-    case CLIENT_LEAVE_STATION:
+    case SERVER_LEAVE_STATION_SUCCESS:
       return {
         ...INITIAL_STATE,
       };
