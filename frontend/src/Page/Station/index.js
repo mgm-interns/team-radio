@@ -126,7 +126,7 @@ class StationPage extends Component {
               <Grid container>
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <Typography type={'display1'}>
-                    {(station && station.name) || STATION_NAME_DEFAULT}
+                    {(station && station.station_name) || STATION_NAME_DEFAULT}
                   </Typography>
                   <div className={classes.nowPlayingActions}>
                     {!nowPlaying.url ? null : (

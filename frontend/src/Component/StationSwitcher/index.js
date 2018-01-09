@@ -64,6 +64,11 @@ class StationSwitcher extends Component {
         station.station_id,
       thumbnail: station.thumbnail || Images.stationDefault,
     }));
+    // Sort by number of online users
+    filteredStations.sort(
+      (stationA, stationB) =>
+        stationA.online_count > stationB.online_count ? 1 : -1,
+    );
     // Move the current station to the first position of array
     filteredStations.sort(
       ({ station_id }) => (station_id === stationId ? -1 : 1),

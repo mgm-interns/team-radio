@@ -1,5 +1,6 @@
 import {
   CLIENT_CREATE_STATION,
+  SERVER_CHANGE_STATION_THUMBNAIL,
   SERVER_CREATE_STATION_SUCCESS,
   SERVER_STATION_CHANGE_ONLINE_USERS,
   SERVER_UPDATE_STATIONS,
@@ -35,6 +36,21 @@ export default (state = INITIAL_STATE, action) => {
             return {
               ...station,
               online_count,
+            };
+          }
+          return station;
+        }),
+      };
+    }
+    case SERVER_CHANGE_STATION_THUMBNAIL: {
+      return {
+        ...state,
+        data: state.data.map(station => {
+          const { stationId, thumbnailUrl } = action.payload;
+          if (station.station_id === stationId) {
+            return {
+              ...station,
+              thumbnail: thumbnailUrl,
             };
           }
           return station;
