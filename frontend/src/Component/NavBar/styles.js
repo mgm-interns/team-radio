@@ -11,7 +11,7 @@ export default ({ breakpoints, spacing }) => ({
     },
   },
   wrapper: {
-    margin: '8px 16px',
+    margin: '5px',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
@@ -22,7 +22,7 @@ export default ({ breakpoints, spacing }) => ({
     justifyContent: 'flex-start',
   },
   img: {
-    height: '3em',
+    height: '2.5em',
   },
   logoName: {
     fontSize: '1.5rem',
