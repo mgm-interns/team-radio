@@ -34,6 +34,7 @@ class StationPage extends Component {
       switchToHistory: false,
     };
 
+    this._renderListSongs = this._renderListSongs.bind(this);
     this._onVolumeClick = this._onVolumeClick.bind(this);
     this._onPlaylistClick = this._onPlaylistClick.bind(this);
     this._onHistoryClick = this._onHistoryClick.bind(this);
@@ -131,18 +132,62 @@ class StationPage extends Component {
     });
   }
 
+  _renderListSongs() {
+    const { classes } = this.props;
+    const { playlist, history, switchToPlaylist, switchToHistory } = this.state;
+    return (
+      <Grid container>
+        <Grid item xs={12}>
+          <Grid
+            container
+            justify="space-between"
+            className={classes.playlistHeader}
+          >
+            <Typography
+              type={'display1'}
+              className={classNames([classes.playlistMenuItem], {
+                [classes.switchedTitle]: switchToPlaylist,
+              })}
+              onClick={this._onPlaylistClick}
+            >
+              Playlist ({playlist.length})
+            </Typography>
+            <div className={classes.nowPlayingHeader}>
+              <Typography
+                type={'display1'}
+                className={classNames([classes.playlistMenuItem], {
+                  [classes.switchedTitle]: switchToHistory,
+                })}
+                onClick={this._onHistoryClick}
+              >
+                History ({history.length})
+              </Typography>
+              {/* <IconButton color="default">play_arrow</IconButton> */}
+            </div>
+          </Grid>
+        </Grid>
+        {switchToHistory ? (
+          <History
+            className={classNames(classes.content, {
+              [classes.emptyPlaylist]: !history,
+            })}
+            history={history}
+          />
+        ) : (
+          <Playlist
+            className={classNames(classes.content, {
+              [classes.emptyPlaylist]: !playlist,
+            })}
+            playlist={playlist}
+          />
+        )}
+      </Grid>
+    );
+  }
+
   render() {
     const { classes, currentStation: { station, nowPlaying } } = this.props;
-    const {
-      muted,
-      playlist,
-      history,
-      switchToPlaylist,
-      switchToHistory,
-    } = this.state;
-    const volumeIconClass = classNames({
-      volume: nowPlaying.url !== '',
-    });
+    const { muted, playlist } = this.state;
 
     return [
       <NavBar key={1} color="primary" />,
@@ -169,7 +214,9 @@ class StationPage extends Component {
                     {!nowPlaying.url ? null : (
                       <IconButton
                         onClick={this._onVolumeClick}
-                        className={volumeIconClass}
+                        className={classNames({
+                          [classes.volume]: nowPlaying.url !== '',
+                        })}
                         color="default"
                       >
                         {muted ? 'volume_off' : 'volume_up'}
@@ -219,52 +266,7 @@ class StationPage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Grid
-                    container
-                    justify="space-between"
-                    className={classes.playlistHeader}
-                  >
-                    <Typography
-                      type={'display1'}
-                      className={classNames([classes.playlistMenuItem], {
-                        [classes.switchedTitle]: switchToPlaylist,
-                      })}
-                      onClick={this._onPlaylistClick}
-                    >
-                      Playlist ({playlist.length})
-                    </Typography>
-                    <div className={classes.nowPlayingHeader}>
-                      <Typography
-                        type={'display1'}
-                        className={classNames([classes.playlistMenuItem], {
-                          [classes.switchedTitle]: switchToHistory,
-                        })}
-                        onClick={this._onHistoryClick}
-                      >
-                        History ({history.length})
-                      </Typography>
-                      {/* <IconButton color="default">play_arrow</IconButton> */}
-                    </div>
-                  </Grid>
-                </Grid>
-                {switchToHistory ? (
-                  <History
-                    className={classNames(classes.content, {
-                      [classes.emptyPlaylist]: !history,
-                    })}
-                    history={history}
-                  />
-                ) : (
-                  <Playlist
-                    className={classNames(classes.content, {
-                      [classes.emptyPlaylist]: !playlist,
-                    })}
-                    playlist={playlist}
-                  />
-                )}
-              </Grid>
+              {this._renderListSongs()}
             </Grid>
             <Grid item xs={12}>
               <AddLink />
