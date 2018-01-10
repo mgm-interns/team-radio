@@ -49,33 +49,33 @@ class HistoryItem extends Component {
   render() {
     const { thumbnail, title, creator, classes } = this.props;
     return (
-      <Grid container className={classNames(classes.container)}>
+      <Grid container className={classes.container}>
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} />
         </Grid>
-        <Grid item xs={9} className={classes.info}>
-          <Grid container>
-            <Grid item xs={9}>
-              <div className={classes.name}>{title}</div>
-              {creator && (
-                <div className={classes.creator}>
-                  Added by
-                  <Tooltip placement={'bottom'} title={creator.name}>
-                    <img
-                      src={creator.avatar_url || Images.avatar.default}
-                      className={classes.creatorAvatar}
-                      onClick={this._onCreatorIconClicked}
-                    />
-                  </Tooltip>
-                </div>
-              )}
-            </Grid>
-            <Grid item xs={3} className={classes.replayContainer}>
-              <IconButton color="default" onClick={this._onReplayClick}>
-                replay
-              </IconButton>
-            </Grid>
-          </Grid>
+        <Grid item xs={8} className={classes.info}>
+          <div className={classes.name}>{title}</div>
+          {creator && (
+            <div className={classes.creator}>
+              Added by
+              <Tooltip placement={'bottom'} title={creator.name}>
+                <img
+                  src={creator.avatar_url || Images.avatar.default}
+                  className={classes.creatorAvatar}
+                  onClick={this._onCreatorIconClicked}
+                />
+              </Tooltip>
+            </div>
+          )}
+        </Grid>
+        <Grid item xs={1} className={classes.actions}>
+          <IconButton
+            className={classes.action}
+            color="default"
+            onClick={this._onReplayClick}
+          >
+            replay
+          </IconButton>
         </Grid>
       </Grid>
     );
