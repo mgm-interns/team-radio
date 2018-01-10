@@ -19,6 +19,16 @@ class Player {
     this.updatePlaylist(station);
   }
 
+  skipNowPlayingSong = async songId => {
+    if (songId !== this.nowPlaying.song_id) {
+      throw new Error(`The song id (${songId}) is not the now playing song id`);
+    }
+    await stationController.setPlayedSongs(this.stationId, [
+      this.nowPlaying.song_id,
+    ]);
+    this._setPlayableSong();
+  };
+
   getNowPlaying = () => ({
     song_id: this.nowPlaying.song_id,
     url: this.nowPlaying.url,
@@ -83,7 +93,7 @@ class Player {
           this.stationId,
           this.nowPlaying.starting_time,
         );
-        this._nextSongByTimeout(song.duration + TIME_BUFFER);
+        this._nextSongByTimeout(song.duration + TIME_BUFFER, this.nowPlaying.song_id);
       }
     } catch (err) {
       console.error(err);
@@ -91,12 +101,14 @@ class Player {
     }
   };
 
-  _nextSongByTimeout = timeout => {
+  _nextSongByTimeout = (timeout, playingSongId) => {
     setTimeout(async () => {
-      await stationController.setPlayedSongs(this.stationId, [
-        this.nowPlaying.song_id,
-      ]);
-      this._setPlayableSong();
+      if (playingSongId === this.nowPlaying.song_id) {
+        await stationController.setPlayedSongs(this.stationId, [
+          this.nowPlaying.song_id,
+        ]);
+        this._setPlayableSong();
+      }
     }, timeout);
   };
   // TODO: [start server, add new song to empty station, next song nomarly]
