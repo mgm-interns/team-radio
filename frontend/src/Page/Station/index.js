@@ -5,12 +5,18 @@ import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
+import Tabs, { Tab } from 'material-ui/Tabs';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
-import { StationSwitcher, NavBar, Footer } from 'Component';
+import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
-import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
+import {
+  muteNowPlaying,
+  mutePreview,
+  savePlaylist,
+  saveHistory,
+} from 'Redux/page/station/actions';
 import AlertIcon from 'react-icons/lib/go/alert';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
@@ -30,14 +36,12 @@ class StationPage extends Component {
       muted: false,
       playlist: [],
       history: [],
-      switchToPlaylist: true,
-      switchToHistory: false,
+      tabValue: 0,
     };
 
-    this._renderListSongs = this._renderListSongs.bind(this);
     this._onVolumeClick = this._onVolumeClick.bind(this);
-    this._onPlaylistClick = this._onPlaylistClick.bind(this);
-    this._onHistoryClick = this._onHistoryClick.bind(this);
+    this._renderTabs = this._renderTabs.bind(this);
+    this._handleTabChange = this._handleTabChange.bind(this);
   }
 
   componentWillMount() {
@@ -93,15 +97,6 @@ class StationPage extends Component {
     });
   }
 
-  // static getPlaylistLength(playlist) {
-  //   if (!playlist) {
-  //     return false;
-  //   }
-  //   const filteredPlaylist = playlist.filter(song => song.is_played === false);
-
-  //   return filteredPlaylist.length;
-  // }
-
   _onVolumeClick() {
     const { mutePreview, muteNowPlaying, mutedNowPlaying } = this.props;
     muteNowPlaying(!mutedNowPlaying);
@@ -109,70 +104,44 @@ class StationPage extends Component {
     mutePreview(true);
   }
 
-  _onPlaylistClick() {
-    this.setState({
-      switchToPlaylist: true,
-      switchToHistory: false,
-    });
+  _handleTabChange(e, value) {
+    this.setState({ tabValue: value });
   }
 
-  _onHistoryClick() {
-    this.setState({
-      switchToPlaylist: false,
-      switchToHistory: true,
-    });
-  }
-
-  _renderListSongs() {
+  _renderTabs() {
     const { classes } = this.props;
-    const { playlist, history, switchToPlaylist, switchToHistory } = this.state;
+    const { playlist, history, tabValue } = this.state;
     return (
-      <Grid container>
-        <Grid item xs={12}>
-          <Grid
-            container
-            justify="space-between"
-            className={classes.playlistHeader}
-          >
-            <Typography
-              type={'display1'}
-              className={classNames([classes.playlistMenuItem], {
-                [classes.switchedTitle]: switchToPlaylist,
+      <div>
+        <Tabs
+          value={tabValue}
+          onChange={this._handleTabChange}
+          indicatorColor="primary"
+        >
+          <Tab label={`Playlist (${playlist.length})`} />
+          <Tab label="History" />
+        </Tabs>
+        {tabValue === 0 && (
+          <TabContainer>
+            <Playlist
+              className={classNames(classes.content, {
+                [classes.emptyPlaylist]: !playlist,
               })}
-              onClick={this._onPlaylistClick}
-            >
-              Playlist ({playlist.length})
-            </Typography>
-            <div className={classes.nowPlayingHeader}>
-              <Typography
-                type={'display1'}
-                className={classNames([classes.playlistMenuItem], {
-                  [classes.switchedTitle]: switchToHistory,
-                })}
-                onClick={this._onHistoryClick}
-              >
-                History
-              </Typography>
-              {/* <IconButton color="default">play_arrow</IconButton> */}
-            </div>
-          </Grid>
-        </Grid>
-        {switchToHistory ? (
-          <History
-            className={classNames(classes.content, {
-              [classes.emptyPlaylist]: !history,
-            })}
-            history={history}
-          />
-        ) : (
-          <Playlist
-            className={classNames(classes.content, {
-              [classes.emptyPlaylist]: !playlist,
-            })}
-            playlist={playlist}
-          />
+              playlist={playlist}
+            />
+          </TabContainer>
         )}
-      </Grid>
+        {tabValue === 1 && (
+          <TabContainer>
+            <History
+              className={classNames(classes.content, {
+                [classes.emptyPlaylist]: !history,
+              })}
+              history={history}
+            />
+          </TabContainer>
+        )}
+      </div>
     );
   }
 
@@ -257,7 +226,7 @@ class StationPage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>
-              {this._renderListSongs()}
+              <Grid container>{this._renderTabs()}</Grid>
             </Grid>
             <Grid item xs={12}>
               <AddLink />
@@ -283,6 +252,8 @@ StationPage.propTypes = {
   mutedNowPlaying: PropTypes.bool,
   mutedPreview: PropTypes.bool,
   preview: PropTypes.object,
+  savePlaylist: PropTypes.func,
+  saveHistory: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -298,6 +269,8 @@ const mapDispatchToProps = dispatch => ({
   leaveStation: option => dispatch(leaveStation(option)),
   muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
   mutePreview: muted => dispatch(mutePreview(muted)),
+  savePlaylist: playlist => dispatch(savePlaylist(playlist)),
+  saveHistory: history => dispatch(saveHistory(history)),
 });
 
 export default compose(
