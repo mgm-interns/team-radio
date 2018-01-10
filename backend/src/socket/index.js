@@ -54,36 +54,24 @@ io.on('connection', async function(socket) {
 
       case EVENTS.CLIENT_UPVOTE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_UPVOTE_SONG);
-        if (action.payload.userId !== '0') {
-          eventHandlers.voteSong(
-            createEmitter(socket, io),
-            1,
-            action.payload.userId,
-            action.payload.stationId,
-            action.payload.songId,
-          );
-        } else {
-          socket.emit(EVENTS.SERVER_UPVOTE_SONG_FAILURE, {
-            message: 'Anonymous users can not vote song',
-          });
-        }
+        eventHandlers.voteSong(
+          createEmitter(socket, io),
+          1,
+          action.payload.userId,
+          action.payload.stationId,
+          action.payload.songId,
+        );
         break;
 
       case EVENTS.CLIENT_DOWNVOTE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_DOWNVOTE_SONG);
-        if (action.payload.userId !== '0') {
-          eventHandlers.voteSong(
-            createEmitter(socket, io),
-            -1,
-            action.payload.userId,
-            action.payload.stationId,
-            action.payload.songId,
-          );
-        } else {
-          socket.emit(EVENTS.SERVER_DOWNVOTE_SONG_FAILURE, {
-            message: 'Anonymous users can not vote song',
-          });
-        }
+        eventHandlers.voteSong(
+          createEmitter(socket, io),
+          -1,
+          action.payload.userId,
+          action.payload.stationId,
+          action.payload.songId,
+        );
         break;
 
       case EVENTS.CLIENT_CHECK_EXISTS_EMAIL:
@@ -107,11 +95,7 @@ io.on('connection', async function(socket) {
   });
 
   socket.on('disconnect', () => {
-    // Check if socket is in any station
-    socket.leaveAll();
-    if (socket.inStation) {
-      eventHandlers.socketDisconnect(io, socket);
-    }
+    eventHandlers.socketDisconnect(io, socket);
     console.log('Disconnect with ' + socket.id);
   });
 });

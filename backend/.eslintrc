@@ -4,12 +4,13 @@
     "dot-notation": ["off"],
     "func-names": ["off"],
     "prefer-template": ["off"],
-    "no-use-before-define":"warn",
+    "no-use-before-define":"off",
     "prefer-arrow-callback": ["off"],
     "object-shorthand":"off",
     "no-var":"off",
     "vars-on-top": "off",
-    "no-param-reassign": "warn",
-    "linebreak-style": 0
+    "no-param-reassign": "off",
+    "linebreak-style": "off",
+    "no-console": "off"
   }
 }
