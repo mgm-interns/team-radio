@@ -11,7 +11,7 @@ export default ({ breakpoints, spacing }) => ({
     },
   },
   wrapper: {
-    margin: '5px',
+    margin: 0,
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
