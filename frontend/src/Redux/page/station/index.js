@@ -3,7 +3,9 @@ import {
   SET_PREVIEW_VIDEO,
   MUTE_NOW_PLAYING,
   MUTE_PREVIEW,
-  SAVE_SEARCH_INPUT,
+  SAVE_PLAYLIST,
+  SAVE_HISTORY,
+  REPLAY_REQUEST,
 } from './actions';
 
 const INITIAL_STATE = {
@@ -11,7 +13,9 @@ const INITIAL_STATE = {
   preview: null,
   mutedNowPlaying: false,
   mutedPreview: false,
-  searchInput: '',
+  playlist: [],
+  history: [],
+  replayed: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -36,10 +40,20 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         mutedPreview: action.payload,
       };
-    case SAVE_SEARCH_INPUT:
+    case SAVE_PLAYLIST:
       return {
         ...state,
-        searchInput: action.payload,
+        playlist: action.payload,
+      };
+    case SAVE_HISTORY:
+      return {
+        ...state,
+        history: action.payload,
+      };
+    case REPLAY_REQUEST:
+      return {
+        ...state,
+        replayed: true,
       };
     default:
       return state;
