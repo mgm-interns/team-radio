@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import NotificationSystem from 'react-notification-system';
 import withTheme from 'material-ui/styles/withTheme';
-import { capitalizeFirstLetter } from 'material-ui/utils/helpers';
 import sleep from 'Util/sleep';
 import { levels } from 'react-notification-system/src/constants';
 import getStyles from './styles';

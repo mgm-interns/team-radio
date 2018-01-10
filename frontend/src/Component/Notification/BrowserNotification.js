@@ -1,5 +1,4 @@
 import Images from 'Theme/Images';
-import { capitalizeFirstLetter } from 'material-ui/utils/helpers';
 import { levels } from 'react-notification-system/src/constants';
 
 const NOTIFICATION_DURATION = 5000;

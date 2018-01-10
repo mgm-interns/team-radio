@@ -17,6 +17,26 @@ const images = {
     addSongs: require('../Images/windows/add-songs.png'),
     link: require('../Images/windows/link.png'),
   },
+  avatar: {
+    //
+    male01: require('../Images/avatar/male-01.png'),
+    male02: require('../Images/avatar/male-02.png'),
+    male03: require('../Images/avatar/male-03.png'),
+    male04: require('../Images/avatar/male-04.png'),
+    male05: require('../Images/avatar/male-05.png'),
+    male06: require('../Images/avatar/male-06.png'),
+    male07: require('../Images/avatar/male-07.png'),
+    male08: require('../Images/avatar/male-08.png'),
+    //
+    female01: require('../Images/avatar/female-01.png'),
+    female02: require('../Images/avatar/female-02.png'),
+    female03: require('../Images/avatar/female-03.png'),
+    female04: require('../Images/avatar/female-04.png'),
+    female05: require('../Images/avatar/female-05.png'),
+    female06: require('../Images/avatar/female-06.png'),
+    female07: require('../Images/avatar/female-07.png'),
+    female08: require('../Images/avatar/female-08.png'),
+  },
 };
 
 export default images;

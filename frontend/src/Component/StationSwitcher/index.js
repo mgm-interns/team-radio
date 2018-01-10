@@ -27,7 +27,7 @@ class StationSwitcher extends Component {
       match: { params: { stationId } },
       history,
       joinStationRequest,
-      leaveStationRequest,
+      // leaveStationRequest,
       setPreviewVideo,
       notification,
       userId,
@@ -35,7 +35,7 @@ class StationSwitcher extends Component {
     // Only change to new station if the id has changed
     if (station.station_id !== stationId) {
       // Leave current station
-      leaveStationRequest({ userId, stationId });
+      // leaveStationRequest({ userId, stationId });
 
       // Join in selected station
       history.push(`/station/${station.station_id}`);
@@ -62,8 +62,13 @@ class StationSwitcher extends Component {
       isActive:
         (currentStation.station && currentStation.station.station_id) ===
         station.station_id,
-      avatar: Images.stationDefault,
+      thumbnail: station.thumbnail || Images.stationDefault,
     }));
+    // Sort by number of online users
+    filteredStations.sort(
+      (stationA, stationB) =>
+        stationA.online_count > stationB.online_count ? 1 : -1,
+    );
     // Move the current station to the first position of array
     filteredStations.sort(
       ({ station_id }) => (station_id === stationId ? -1 : 1),

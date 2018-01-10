@@ -2,12 +2,16 @@ import * as stationController from '../../controllers/station';
 import * as players from '../../players';
 import * as EVENTS from '../../const/actions';
 
-export default async (emitter, userId, stationName) => {
+export default async (emitter, userId, stationName, isPrivate) => {
   let station;
 
   // Create station and emit that station for user
   try {
-    station = await stationController.addStation(stationName, userId);
+    station = await stationController.addStation(
+      stationName,
+      userId,
+      isPrivate,
+    );
     emitter.emit(EVENTS.SERVER_CREATE_STATION_SUCCESS, {
       station: station,
     });
@@ -21,7 +25,7 @@ export default async (emitter, userId, stationName) => {
   //  If station is created, create player
   if (station) {
     try {
-      const player = await players.getPlayer(station.id);
+      await players.getPlayer(station.station_id);
     } catch (err) {
       console.error('Players error: ' + err.message);
     }

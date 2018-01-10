@@ -9,6 +9,7 @@ import Grid from 'material-ui/Grid';
 import ImageCropper from './ImageCropper';
 import LoginSocial from './LoginSocial';
 import Notification from './Notification';
+import ImageUploader from './ImageUploader';
 import { NavBar } from 'Component';
 
 function TabContainer(props) {
@@ -48,6 +49,7 @@ class DemoPage extends Component {
         <div className={classes.root}>
           <AppBar position="static" color="default">
             <Tabs value={this.state.value} onChange={this.handleChange}>
+              <Tab label="Image Uploader" />
               <Tab label="Image Cropper" />
               <Tab label="Login Social" />
               <Tab label="Notifcation" />
@@ -55,15 +57,20 @@ class DemoPage extends Component {
           </AppBar>
           {this.state.value === 0 && (
             <TabContainer>
-              <ImageCropper />
+              <ImageUploader />
             </TabContainer>
           )}
           {this.state.value === 1 && (
             <TabContainer>
-              <LoginSocial />
+              <ImageCropper />
             </TabContainer>
           )}
           {this.state.value === 2 && (
+            <TabContainer>
+              <LoginSocial />
+            </TabContainer>
+          )}
+          {this.state.value === 3 && (
             <TabContainer>
               <Notification />
             </TabContainer>

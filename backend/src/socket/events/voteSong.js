@@ -11,6 +11,13 @@ export default (emitter, action, userId, stationId, songId) => {
 };
 
 const _upVoteSong = async (emitter, userId, stationId, songId) => {
+  if (userId === '0') {
+    emitter.emit(EVENTS.SERVER_UPVOTE_SONG_FAILURE, {
+      message: 'Anonymous users can not vote song',
+    });
+    return;
+  }
+
   try {
     // Check if userId is exist, allow vote song
     // If not, throw an error and emit message to user
@@ -28,6 +35,13 @@ const _upVoteSong = async (emitter, userId, stationId, songId) => {
 };
 
 const _downVoteSong = async (emitter, userId, stationId, songId) => {
+  if (userId === '0') {
+    emitter.emit(EVENTS.SERVER_DOWNVOTE_SONG_FAILURE, {
+      message: 'Anonymous users can not vote song',
+    });
+    return;
+  }
+
   try {
     // Check if userId is exist, allow vote song
     // If not, throw an error and emit message to user

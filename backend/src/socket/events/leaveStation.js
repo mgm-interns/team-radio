@@ -1,8 +1,9 @@
 import * as userController from '../../controllers/user';
-import * as EVENTS from '../../const/actions';
-import { countOnlineUserOfStation } from '../managers/onlineUserManager';
+import createEmitter from '../managers/createEmitter';
+import { leaveNotification } from '../managers/onlineUserManager';
 
-export default async (emitter, userId, stationId, socket, io) => {
+export default async (io, socket, userId, stationId) => {
+  const emitter = createEmitter(socket, io);
   try {
     const { userName } = await userController.getUserById(userId);
     _leaveAllAndEmit(socket, io, stationId, emitter, userName);
@@ -21,11 +22,8 @@ const _leaveAllAndEmit = (socket, io, stationId, emitter, userName) => {
   });
 
   Promise.all(leaveStationPromises).then(() => {
-    emitter.emit(EVENTS.SERVER_LEAVE_STATION_SUCCESS, {});
-    emitter.emitToStation(stationId, EVENTS.SERVER_USER_LEFT, {
-      user: userName,
-    });
-    _updateOnlineUser(stationId, emitter, io);
+    socket.inStation = undefined;
+    leaveNotification(stationId, userName, emitter, io);
   });
 };
 
@@ -33,14 +31,3 @@ const _leaveStation = (socket, station) =>
   new Promise(resolve => {
     socket.leave(station, resolve);
   });
-
-const _updateOnlineUser = async (stationId, emitter, io) => {
-  try {
-    const onlineUsers = await countOnlineUserOfStation(stationId, io);
-    emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
-      onlineCount: onlineUsers,
-    });
-  } catch (err) {
-    console.log('Online manager error: ' + err.message);
-  }
-};

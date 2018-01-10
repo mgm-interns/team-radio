@@ -14,12 +14,12 @@ import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
 import AlertIcon from 'react-icons/lib/go/alert';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
+import History from './History';
 import NowPlaying from './NowPlaying';
 import styles from './styles';
 import StationSharing from './Sharing';
 
 const STATION_NAME_DEFAULT = 'Station Name';
-const JOIN_STATION_DELAY = 5000; // 5 seconds
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -28,12 +28,17 @@ class StationPage extends Component {
 
     this.state = {
       muted: false,
+      playlist: [],
+      history: [],
+      switchToPlaylist: true,
+      switchToHistory: false,
     };
 
+    this._renderListSongs = this._renderListSongs.bind(this);
     this._onVolumeClick = this._onVolumeClick.bind(this);
+    this._onPlaylistClick = this._onPlaylistClick.bind(this);
+    this._onHistoryClick = this._onHistoryClick.bind(this);
   }
-
-  joinStationInterval = null;
 
   componentWillMount() {
     // Get station id from react-router
@@ -43,18 +48,12 @@ class StationPage extends Component {
       userId,
       // mutedNowPlaying,
     } = this.props;
-    if (stationId) {
+    if (stationId && stationId !== 'null' && stationId !== 'undefined') {
       this.props.joinStation({ stationId, userId });
-      this.joinStationInterval = setInterval(() => {
-        this.props.joinStation({ stationId, userId });
-      }, JOIN_STATION_DELAY);
     } else {
       // Go to landing page
       history.replace(`/`);
     }
-
-    // watch volume
-    // this.setState({ muted: mutedNowPlaying });
   }
 
   componentWillUnmount() {
@@ -63,18 +62,21 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { currentStation, mutedNowPlaying } = nextProps;
+    const { mutedNowPlaying, currentStation: { playlist } } = nextProps;
+
+    // Get playlist & history
+    this.setState({
+      playlist: playlist.filter(item => item.is_played === false),
+      history: playlist.filter(item => item.is_played === true),
+    });
 
     this.setState({ muted: mutedNowPlaying });
-
-    // Clear the interval if join station request has success
-    if (currentStation.joined === true) {
-      clearInterval(this.joinStationInterval);
-    }
   }
 
   componentDidMount() {
     const { muteNowPlaying, mutePreview } = this.props;
+
+    // Handle volume
     const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus')) || [];
     volumeStatus.forEach(item => {
       switch (item.player) {
@@ -90,14 +92,15 @@ class StationPage extends Component {
       }
     });
   }
-  static getPlaylistLength(playlist) {
-    if (!playlist) {
-      return false;
-    }
-    const filteredPlaylist = playlist.filter(song => song.is_played === false);
 
-    return filteredPlaylist.length;
-  }
+  // static getPlaylistLength(playlist) {
+  //   if (!playlist) {
+  //     return false;
+  //   }
+  //   const filteredPlaylist = playlist.filter(song => song.is_played === false);
+
+  //   return filteredPlaylist.length;
+  // }
 
   _onVolumeClick() {
     const { mutePreview, muteNowPlaying, mutedNowPlaying } = this.props;
@@ -106,15 +109,76 @@ class StationPage extends Component {
     mutePreview(true);
   }
 
-  render() {
-    const {
-      classes,
-      currentStation: { station, playlist, nowPlaying },
-    } = this.props;
-    const { muted } = this.state;
-    const volumeIconClass = classNames({
-      volume: nowPlaying.url !== '',
+  _onPlaylistClick() {
+    this.setState({
+      switchToPlaylist: true,
+      switchToHistory: false,
     });
+  }
+
+  _onHistoryClick() {
+    this.setState({
+      switchToPlaylist: false,
+      switchToHistory: true,
+    });
+  }
+
+  _renderListSongs() {
+    const { classes } = this.props;
+    const { playlist, history, switchToPlaylist, switchToHistory } = this.state;
+    return (
+      <Grid container>
+        <Grid item xs={12}>
+          <Grid
+            container
+            justify="space-between"
+            className={classes.playlistHeader}
+          >
+            <Typography
+              type={'display1'}
+              className={classNames([classes.playlistMenuItem], {
+                [classes.switchedTitle]: switchToPlaylist,
+              })}
+              onClick={this._onPlaylistClick}
+            >
+              Playlist ({playlist.length})
+            </Typography>
+            <div className={classes.nowPlayingHeader}>
+              <Typography
+                type={'display1'}
+                className={classNames([classes.playlistMenuItem], {
+                  [classes.switchedTitle]: switchToHistory,
+                })}
+                onClick={this._onHistoryClick}
+              >
+                History ({history.length})
+              </Typography>
+              {/* <IconButton color="default">play_arrow</IconButton> */}
+            </div>
+          </Grid>
+        </Grid>
+        {switchToHistory ? (
+          <History
+            className={classNames(classes.content, {
+              [classes.emptyPlaylist]: !history,
+            })}
+            history={history}
+          />
+        ) : (
+          <Playlist
+            className={classNames(classes.content, {
+              [classes.emptyPlaylist]: !playlist,
+            })}
+            playlist={playlist}
+          />
+        )}
+      </Grid>
+    );
+  }
+
+  render() {
+    const { classes, currentStation: { station, nowPlaying } } = this.props;
+    const { muted, playlist } = this.state;
 
     return [
       <NavBar key={1} color="primary" />,
@@ -135,13 +199,15 @@ class StationPage extends Component {
               <Grid container>
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <Typography type={'display1'}>
-                    {(station && station.name) || STATION_NAME_DEFAULT}
+                    {(station && station.station_name) || STATION_NAME_DEFAULT}
                   </Typography>
                   <div className={classes.nowPlayingActions}>
                     {!nowPlaying.url ? null : (
                       <IconButton
                         onClick={this._onVolumeClick}
-                        className={volumeIconClass}
+                        className={classNames({
+                          [classes.volume]: nowPlaying.url !== '',
+                        })}
                         color="default"
                       >
                         {muted ? 'volume_off' : 'volume_up'}
@@ -150,7 +216,7 @@ class StationPage extends Component {
                     <StationSharing />
                   </div>
                 </Grid>
-                {StationPage.getPlaylistLength(playlist) ? (
+                {playlist.length > 0 ? (
                   <NowPlaying
                     className={classNames(
                       [classes.content, classes.nowPlaying],
@@ -191,20 +257,7 @@ class StationPage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography type={'display1'}>
-                    Playlist ({StationPage.getPlaylistLength(playlist)})
-                  </Typography>
-                </Grid>
-                {!!StationPage.getPlaylistLength(playlist) && (
-                  <Playlist
-                    className={classNames(classes.content, {
-                      [classes.emptyPlaylist]: !playlist,
-                    })}
-                  />
-                )}
-              </Grid>
+              {this._renderListSongs()}
             </Grid>
             <Grid item xs={12}>
               <AddLink />

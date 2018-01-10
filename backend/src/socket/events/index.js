@@ -1,15 +1,23 @@
-import createStationHandler from './createStation';
-import joinStationHandler from './joinStation';
-import leaveStationHandler from './leaveStation';
-import addSongHandler from './addSong';
-import voteSongHandler from './voteSong';
-import checkExistUserHandler from './checkExistUser';
+import createStation from './createStation';
+import joinStation from './joinStation';
+import leaveStation from './leaveStation';
+import addSong from './addSong';
+import addMultiSong from './addMultiSong';
+import voteSong from './voteSong';
+import checkExistUser from './checkExistUser';
+import skipSong from './skipSong';
+import socketDisconnect from './socketDisconnect';
+import socketConnect from './socketConnect';
 
 export default {
-  createStationHandler,
-  joinStationHandler,
-  leaveStationHandler,
-  addSongHandler,
-  voteSongHandler,
-  checkExistUserHandler,
+  socketConnect,
+  createStation,
+  joinStation,
+  leaveStation,
+  addSong,
+  addMultiSong,
+  voteSong,
+  skipSong,
+  checkExistUser,
+  socketDisconnect,
 };
