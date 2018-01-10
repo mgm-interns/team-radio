@@ -75,7 +75,7 @@ class NavBar extends Component {
           <Grid item xs={4}>
             <Grid container className={classes.logo}>
               <Grid item xs>
-                <Link to="/">
+                <Link to="/" replace>
                   <img
                     src={fixture.logo}
                     alt="Team Radio"
@@ -95,6 +95,7 @@ class NavBar extends Component {
                       key={index}
                       to={MENUS[key].url}
                       className={classes.navItem}
+                      replace
                     >
                       {title}
                     </Link>
