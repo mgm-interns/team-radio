@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
 import { ObjectId } from 'mongodb';
@@ -16,8 +17,10 @@ const userSchema = mongoose.Schema({
   name: {
     type: String,
   },
-  avatar_Url: {
+  avatar_url: {
     type: String,
+    default:
+      'http://res.cloudinary.com/vampire/image/upload/v1515458123/default_avatar.png',
   },
   reputation: {
     type: Number,
@@ -28,13 +31,10 @@ const userSchema = mongoose.Schema({
     default: 'Little chick',
     enum: ['Little chick'],
   },
-  facebook_ID: {
+  facebook_id: {
     type: String,
   },
-  google_ID: {
-    type: String,
-  },
-  twitter_ID: {
+  google_id: {
     type: String,
   },
 });
@@ -49,7 +49,7 @@ userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-// create the model for users and expose it ti our app
+// create the model for users and expose it to our app
 
 var user = (module.exports = mongoose.model('users', userSchema));
 
@@ -57,12 +57,30 @@ module.exports.getUserByEmail = async email => {
   const query = { email: email };
   return user.findOne(query);
 };
+
+module.exports.getUserByName = async name => {
+  const query = { name: name };
+  return user.findOne(query);
+};
+
 module.exports.getUserById = async userId =>
   user.findOne({ _id: _safeObjectId(userId) });
 
-module.exports.setSocialAccount = async (email, googleId, facebookId) =>
+module.exports.setFacebookId = async (email, facebookId) =>
+  user.update({ email: email }, { facebook_id: facebookId }, { multi: true });
+
+module.exports.setGoogleId = async (email, googleId) =>
+  user.update({ email: email }, { google_id: googleId }, { multi: true });
+
+module.exports.setName = async (email, name) =>
+  user.update({ email: email }, { name: name }, { multi: true });
+
+module.exports.setAvatarUrl = async (email, avatar_url) =>
+  user.update({ email: email }, { avatar_url: avatar_url }, { multi: true });
+
+module.exports.setAvatar = async (userId, avatarUrl) =>
   user.update(
-    { email: email },
-    { facebook_ID: facebookId, google_ID: googleId },
+    { _id: _safeObjectId(userId) },
+    { avatar_url: avatarUrl },
     { multi: true },
   );

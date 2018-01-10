@@ -8,7 +8,7 @@ import * as stationModels from './../models/station';
 
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 
-export const addStation = async (stationName, userId) => {
+export const addStation = async (stationName, userId, isPrivate) => {
   const currentStationName = stationName.trim();
   if (!currentStationName) {
     throw new Error('The station name can not be empty!');
@@ -24,7 +24,7 @@ export const addStation = async (stationName, userId) => {
           station_name: currentStationName,
           station_id: stationId,
           playlist: [],
-          isPrivate: false,
+          is_private: isPrivate,
           owner_id: _safeObjectId(userId),
         });
         return currentStation;
@@ -37,10 +37,15 @@ export const addStation = async (stationName, userId) => {
 };
 
 // Set private/public of station
-// export const setIsPrivateOfStation = (stationId,userId)
-// {
-//    const resut l
-// }
+export const setIsPrivateOfStation = async (stationId, userId, value) => {
+  // TODO : 
+  try {
+    const result = await stationModels.updateIsPrivateOfStation(stationId, userId, value);
+    return result;
+  } catch (error) {
+    throw err;
+  }
+}
 
 export const deleteStation = async (stationId, userId) => {
   try {
@@ -127,6 +132,8 @@ export const addSong = async (stationId, songUrl, userId = null) => {
   }
 };
 
+
+
 export const updateStartingTime = async (stationId, time) => {
   const available = await stationModels.updateTimeStartingOfStation(
     stationId,
@@ -153,10 +160,18 @@ export const setPlayedSongs = async (stationId, songIds) => {
   );
   return playlist;
 };
-
+/**
+ * The fucntion get info :
+ * station_name,
+ * station_id,
+ * created_date,
+ * thumbnail
+ * of all station
+ * 
+ */
 export const getAllAvailableStations = async () => {
   try {
-    const stations = await stationModels.getStations();
+    const stations = await stationModels.getAllAvailableStations();
     let player;
     // Can't use forEach because can't use await..
     for (let i = 0; i < stations.length; i++) {
@@ -169,16 +184,32 @@ export const getAllAvailableStations = async () => {
     throw err;
   }
 };
-
+/**
+ * The fucntion get all info of all station
+ */
 export const getAllStationDetails = async () => {
   const stations = await stationModels.getStationDetails();
   return stations;
 };
 
+export const getListSongHistory = async stationId => {
+  //TODO 
+  try {
+    const listSong = await stationModels.getListSongHistory(stationId);
+    return listSong;
+  } catch (error) {
+    throw err;
+  }
+}
+
 export const getListSong = async stationId => {
-  const playList = (await stationModels.getPlaylistOfStation(stationId))
-    .playlist;
-  return playList;
+  try {
+    const playList = (await stationModels.getPlaylistOfStation(stationId));
+    return playList;
+  } catch (err) {
+    throw err;
+  }
+
 };
 /**
  * Upvote

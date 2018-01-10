@@ -56,8 +56,8 @@ module.exports.deleteStation = (stationId, userId) => {
 };
 
 // Get all station
-module.exports.getStations = (limit) => {
-  return Station.find({}, { station_name: 1, created_date: 1, station_id: 1, _id: 0 }).limit(limit);
+module.exports.getAllAvailableStations = (limit) => {
+  return Station.find({ is_private: false }, { station_name: 1, created_date: 1, station_id: 1, _id: 0 }).limit(limit);
 };
 // 
 // Get all station
@@ -78,7 +78,7 @@ module.exports.getStationByName = stationNameToFind => {
 // Get station by url
 module.exports.getStationById = idToFind => {
   return Station.findOne({ station_id: idToFind })
-    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
+    .populate('playlist.creator', { id: 1, name: 1, avatar_url: 1 })
     .exec();
 };
 
@@ -101,13 +101,17 @@ module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
   }
 };
 
-// The function update a field isPrivate in db
+/**
+ * The function update a field isPrivate in db
+ * valueNeedUpdate : false => station is public
+ * valueNeedUpdate : true => station is private
+ */
 module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) => {
   try {
     let query = { station_id: stationId, owner_id: userId };
     return Station.update(query, {
       $set: {
-        isPrivate: valueNeedUpdate,
+        is_private: valueNeedUpdate,
       },
     });
   } catch (err) {
@@ -172,11 +176,11 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
 };
 
 //get playlist of station
-module.exports.getPlaylistOfStation = stationId => {
+module.exports.getPlaylistOfStation = async stationId => {
   let query = { station_id: stationId };
-  return Station.findOne(query, { playlist: true, _id: false })
-    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
-    .exec();
+  const station = await Station.findOne(query, { playlist: true, _id: false })
+    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 });
+  return station.playlist;
 };
 
 // Get list song by User ID
@@ -188,3 +192,14 @@ module.exports.getLisSongByUserId = (stationId, userId) => {
     }
   });
 };
+
+module.exports.getListSongHistory = async stationId => {
+  // TODO : 
+  console.log('stationId : ' + stationId);
+  let query = {
+    station_id: stationId
+  };
+  const station = await Station.findOne(query, { playlist: true, _id: false })
+    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 });
+  return station.playlist;
+}
