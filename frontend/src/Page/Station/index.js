@@ -5,21 +5,27 @@ import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
+import Tabs, { Tab } from 'material-ui/Tabs';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
-import { StationSwitcher, NavBar, Footer } from 'Component';
+import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
-import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
+import {
+  muteNowPlaying,
+  mutePreview,
+  savePlaylist,
+  saveHistory,
+} from 'Redux/page/station/actions';
 import AlertIcon from 'react-icons/lib/go/alert';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
+import History from './History';
 import NowPlaying from './NowPlaying';
 import styles from './styles';
 import StationSharing from './Sharing';
 
 const STATION_NAME_DEFAULT = 'Station Name';
-const JOIN_STATION_DELAY = 5000; // 5 seconds
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -28,12 +34,15 @@ class StationPage extends Component {
 
     this.state = {
       muted: false,
+      playlist: [],
+      history: [],
+      tabValue: 0,
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
+    this._renderTabs = this._renderTabs.bind(this);
+    this._handleTabChange = this._handleTabChange.bind(this);
   }
-
-  joinStationInterval = null;
 
   componentWillMount() {
     // Get station id from react-router
@@ -43,18 +52,12 @@ class StationPage extends Component {
       userId,
       // mutedNowPlaying,
     } = this.props;
-    if (stationId) {
+    if (stationId && stationId !== 'null' && stationId !== 'undefined') {
       this.props.joinStation({ stationId, userId });
-      this.joinStationInterval = setInterval(() => {
-        this.props.joinStation({ stationId, userId });
-      }, JOIN_STATION_DELAY);
     } else {
       // Go to landing page
       history.replace(`/`);
     }
-
-    // watch volume
-    // this.setState({ muted: mutedNowPlaying });
   }
 
   componentWillUnmount() {
@@ -63,18 +66,21 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { currentStation, mutedNowPlaying } = nextProps;
+    const { mutedNowPlaying, currentStation: { playlist } } = nextProps;
+
+    // Get playlist & history
+    this.setState({
+      playlist: playlist.filter(item => item.is_played === false),
+      history: playlist.filter(item => item.is_played === true),
+    });
 
     this.setState({ muted: mutedNowPlaying });
-
-    // Clear the interval if join station request has success
-    if (currentStation.joined === true) {
-      clearInterval(this.joinStationInterval);
-    }
   }
 
   componentDidMount() {
     const { muteNowPlaying, mutePreview } = this.props;
+
+    // Handle volume
     const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus')) || [];
     volumeStatus.forEach(item => {
       switch (item.player) {
@@ -90,14 +96,6 @@ class StationPage extends Component {
       }
     });
   }
-  static getPlaylistLength(playlist) {
-    if (!playlist) {
-      return false;
-    }
-    const filteredPlaylist = playlist.filter(song => song.is_played === false);
-
-    return filteredPlaylist.length;
-  }
 
   _onVolumeClick() {
     const { mutePreview, muteNowPlaying, mutedNowPlaying } = this.props;
@@ -106,15 +104,50 @@ class StationPage extends Component {
     mutePreview(true);
   }
 
+  _handleTabChange(e, value) {
+    this.setState({ tabValue: value });
+  }
+
+  _renderTabs() {
+    const { classes } = this.props;
+    const { playlist, history, tabValue } = this.state;
+    return (
+      <div>
+        <Tabs
+          value={tabValue}
+          onChange={this._handleTabChange}
+          indicatorColor="primary"
+        >
+          <Tab label={`Playlist (${playlist.length})`} />
+          <Tab label="History" />
+        </Tabs>
+        {tabValue === 0 && (
+          <TabContainer>
+            <Playlist
+              className={classNames(classes.content, {
+                [classes.emptyPlaylist]: !playlist,
+              })}
+              playlist={playlist}
+            />
+          </TabContainer>
+        )}
+        {tabValue === 1 && (
+          <TabContainer>
+            <History
+              className={classNames(classes.content, {
+                [classes.emptyPlaylist]: !history,
+              })}
+              history={history}
+            />
+          </TabContainer>
+        )}
+      </div>
+    );
+  }
+
   render() {
-    const {
-      classes,
-      currentStation: { station, playlist, nowPlaying },
-    } = this.props;
-    const { muted } = this.state;
-    const volumeIconClass = classNames({
-      volume: nowPlaying.url !== '',
-    });
+    const { classes, currentStation: { station, nowPlaying } } = this.props;
+    const { muted, playlist } = this.state;
 
     return [
       <NavBar key={1} color="primary" />,
@@ -135,13 +168,15 @@ class StationPage extends Component {
               <Grid container>
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <Typography type={'display1'}>
-                    {(station && station.name) || STATION_NAME_DEFAULT}
+                    {(station && station.station_name) || STATION_NAME_DEFAULT}
                   </Typography>
                   <div className={classes.nowPlayingActions}>
                     {!nowPlaying.url ? null : (
                       <IconButton
                         onClick={this._onVolumeClick}
-                        className={volumeIconClass}
+                        className={classNames({
+                          [classes.volume]: nowPlaying.url !== '',
+                        })}
                         color="default"
                       >
                         {muted ? 'volume_off' : 'volume_up'}
@@ -150,7 +185,7 @@ class StationPage extends Component {
                     <StationSharing />
                   </div>
                 </Grid>
-                {StationPage.getPlaylistLength(playlist) ? (
+                {playlist.length > 0 ? (
                   <NowPlaying
                     className={classNames(
                       [classes.content, classes.nowPlaying],
@@ -191,20 +226,7 @@ class StationPage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography type={'display1'}>
-                    Playlist ({StationPage.getPlaylistLength(playlist)})
-                  </Typography>
-                </Grid>
-                {!!StationPage.getPlaylistLength(playlist) && (
-                  <Playlist
-                    className={classNames(classes.content, {
-                      [classes.emptyPlaylist]: !playlist,
-                    })}
-                  />
-                )}
-              </Grid>
+              <Grid container>{this._renderTabs()}</Grid>
             </Grid>
             <Grid item xs={12}>
               <AddLink />
@@ -230,6 +252,8 @@ StationPage.propTypes = {
   mutedNowPlaying: PropTypes.bool,
   mutedPreview: PropTypes.bool,
   preview: PropTypes.object,
+  savePlaylist: PropTypes.func,
+  saveHistory: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -245,6 +269,8 @@ const mapDispatchToProps = dispatch => ({
   leaveStation: option => dispatch(leaveStation(option)),
   muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
   mutePreview: muted => dispatch(mutePreview(muted)),
+  savePlaylist: playlist => dispatch(savePlaylist(playlist)),
+  saveHistory: history => dispatch(saveHistory(history)),
 });
 
 export default compose(

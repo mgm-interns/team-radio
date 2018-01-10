@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 import Landing from '../Page/Landing';
 import Station from '../Page/Station';
+import Profile from '../Page/Profile';
 import Auth from '../Page/Auth/';
 import Login from '../Page/Auth/Login/';
 import Register from '../Page/Auth/Register/';
@@ -21,6 +22,10 @@ const routes = [
   {
     path: '/station/:stationId?',
     component: Station,
+  },
+  {
+    path: '/profile',
+    component: Profile,
   },
   {
     path: '/auth/login',

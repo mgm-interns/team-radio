@@ -15,14 +15,13 @@ import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
 import { fetchUser, addUserWithSocialAccount } from 'Redux/api/user/actions';
 
-import { NavBar, GoogleLogin, FacebookLogin } from 'Component';
+import { NavBar, GoogleLogin, FacebookLogin, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
 
 import { saveAuthenticationState, loadAuthenticationState } from 'Config';
 import { email, required } from 'Util/validate';
 
 import styles from './styles';
-import TextView from '../TextView';
 
 class Login extends Component {
   constructor(props) {
@@ -45,7 +44,7 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { fetchUserResponse: { error, data, isAuthenticated } } = nextProps;
-    console.log(this.props);
+
     if (error !== null) {
       this.setState({
         formErrors: { message: error.response.message },

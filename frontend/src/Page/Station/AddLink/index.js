@@ -62,9 +62,10 @@ class AddLink extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { preview, mutedPreview, mutedNowPlaying } = nextProps;
+    const { mutedPreview, mutedNowPlaying, currentStation } = nextProps;
     this.setState({ muted: mutedPreview });
 
+    // Save volume status into local storage for reloading the page
     const volumeStatus = [
       {
         player: 'nowPlaying',
@@ -75,10 +76,10 @@ class AddLink extends Component {
         muted: mutedPreview,
       },
     ];
-
     localStorage.setItem('volumeStatus', JSON.stringify(volumeStatus));
 
-    if (preview === null) {
+    // Reset add link box when navigating to another station
+    if (this.props.currentStation._id !== currentStation._id) {
       this.setState({ searchText: '' });
     }
   }
@@ -241,11 +242,11 @@ class AddLink extends Component {
   }
 
   _onSuggestionSelected(e, { suggestion }) {
-    const { nowPlaying } = this.props;
+    const { nowPlaying, setPreviewVideo } = this.props;
     if (!nowPlaying.url) {
       this.setState({ isMute: true });
     }
-    this.props.setPreviewVideo(suggestion);
+    setPreviewVideo(suggestion);
     this.previewVideo = suggestion;
     this.setState({
       isDisableButton: false,
@@ -258,7 +259,10 @@ class AddLink extends Component {
   /* Handle add link events */
   _clearSearchInput() {
     const { setPreviewVideo, muteNowPlaying, mutePreview } = this.props;
-    this.setState({ searchText: '', notFoundSearchResults: false });
+    this.setState({
+      searchText: '',
+      notFoundSearchResults: false,
+    });
     setPreviewVideo();
     muteNowPlaying();
     mutePreview(true);
@@ -266,6 +270,7 @@ class AddLink extends Component {
 
   _onChange(e) {
     const result = e.target.value;
+    const { setPreviewVideo } = this.props;
     this.setState({ searchText: result });
     if (result === '') {
       setPreviewVideo();
@@ -305,7 +310,11 @@ class AddLink extends Component {
       stationId,
       userId,
     });
-    this.setState({ searchText: '', isDisableButton: true, isMute: true });
+    this.setState({
+      searchText: '',
+      isDisableButton: true,
+      isMute: true,
+    });
   }
   /* End of handle add link events */
 
@@ -486,7 +495,9 @@ AddLink.propTypes = {
   mutedPreview: PropTypes.bool,
   mutedNowPlaying: PropTypes.bool,
   isAuthenticated: PropTypes.bool,
+  joinedStation: PropTypes.bool,
   notification: PropTypes.object,
+  currentStation: PropTypes.object,
 };
 
 const mapStateToProps = ({ page, api }) => ({
@@ -496,6 +507,8 @@ const mapStateToProps = ({ page, api }) => ({
   userId: api.user.data.userId,
   nowPlaying: api.currentStation.nowPlaying,
   isAuthenticated: api.user.isAuthenticated,
+  joinedStation: page.station.joinedStation,
+  currentStation: api.currentStation.station,
 });
 
 const mapDispatchToProps = dispatch => ({

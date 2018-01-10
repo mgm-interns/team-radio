@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
 import List from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
+import orderBy from 'lodash/orderBy';
 import Item from './Item';
 import styles from './styles';
 
@@ -19,31 +20,27 @@ class Playlist extends Component {
     return song.up_vote.length - song.down_vote.length;
   }
 
+  /**
+   * Filter all song that have not been played
+   * Then order the list by:
+   * - now playing will be on top
+   * - higher score higher position
+   * - created date
+   *
+   * @returns {Array}
+   */
   getFilteredPlaylist() {
     const { playlist, nowPlaying } = this.props;
-    // Filter all song that have not been played
-    const sortedPlaylist = playlist
-      ? playlist.filter(song => song.is_played === false)
-      : [];
-    // Sort the list
-    sortedPlaylist.sort((songA, songB) => {
-      // Push now playing to the first position
-      if (songA.song_id === nowPlaying.song_id) {
-        return -2;
-      }
-      const scoreA = Playlist.getSongScore(songA);
-      const scoreB = Playlist.getSongScore(songB);
-      // Compare the rest songs based on scores
-      if (scoreA > scoreB) {
-        return -1;
-      }
-      if (scoreA < scoreB) {
-        return 1;
-      }
-      // when score is equal
-      return songA.created_day > songB.created_day ? 1 : -1;
-    });
-    return sortedPlaylist;
+
+    return orderBy(
+      playlist.filter(song => song.is_played === false),
+      [
+        ({ song_id }) => (song_id === nowPlaying.song_id ? -1 : 1),
+        Playlist.getSongScore,
+        'created_date',
+      ],
+      ['asc', 'desc', 'asc'],
+    );
   }
 
   render() {

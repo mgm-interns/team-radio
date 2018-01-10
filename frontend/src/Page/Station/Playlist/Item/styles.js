@@ -18,34 +18,48 @@ export default ({ spacing, palette, typography }) => ({
   },
   name: {
     ...typography.body2,
-    fontSize: '1em',
+    fontSize: '0.825em',
     fontWeight: 'bold',
   },
   singer: {
     ...typography.body2,
-    fontSize: '0.8em',
-    fontWeight: 'bold',
+    fontSize: '0.725em',
   },
-  uploader: {
+  creator: {
     ...typography.caption,
-    fontSize: '0.8em',
+    fontSize: '0.725em',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+  },
+  creatorAvatar: {
+    marginLeft: spacing.baseMargin,
+    width: '1.6em',
+    height: '1.6em',
+    border: '1px solid #ccc',
+    borderRadius: '50%',
+    objectFit: 'contain',
+    cursor: 'pointer',
   },
   actions: {
     textAlign: 'center',
     alignSelf: 'center',
+    paddingLeft: '0 !important',
+    paddingRight: '0 !important',
   },
   action: {
-    width: spacing.baseMargin * 5,
-    height: spacing.baseMargin * 5,
+    width: spacing.baseMargin * 3,
+    height: spacing.baseMargin * 3,
     '& .material-icons': {
-      fontSize: spacing.baseMargin * 5,
+      fontSize: spacing.baseMargin * 3,
     },
   },
   score: {
     ...typography.body2,
     margin: 'auto',
-    width: spacing.baseMargin * 5,
-    fontSize: 20,
+    width: spacing.baseMargin * 3,
+    fontSize: '0.825em',
     color: palette.secondary['500'],
     '&.active': {
       color: palette.primary['500'],

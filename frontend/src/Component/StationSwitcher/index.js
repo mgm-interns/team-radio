@@ -10,6 +10,7 @@ import { setPreviewVideo } from 'Redux/page/station/actions';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
+import orderBy from 'lodash/orderBy';
 import SwitcherItem from './Item';
 import styles from './styles';
 
@@ -27,7 +28,7 @@ class StationSwitcher extends Component {
       match: { params: { stationId } },
       history,
       joinStationRequest,
-      leaveStationRequest,
+      // leaveStationRequest,
       setPreviewVideo,
       notification,
       userId,
@@ -35,7 +36,7 @@ class StationSwitcher extends Component {
     // Only change to new station if the id has changed
     if (station.station_id !== stationId) {
       // Leave current station
-      leaveStationRequest({ userId, stationId });
+      // leaveStationRequest({ userId, stationId });
 
       // Join in selected station
       history.push(`/station/${station.station_id}`);
@@ -62,11 +63,23 @@ class StationSwitcher extends Component {
       isActive:
         (currentStation.station && currentStation.station.station_id) ===
         station.station_id,
-      avatar: Images.stationDefault,
+      thumbnail: station.thumbnail || Images.stationDefault,
     }));
-    // Move the current station to the first position of array
-    filteredStations.sort(
-      ({ station_id }) => (station_id === stationId ? -1 : 1),
+
+    /**
+     * Ordered stations
+     * - Current station always be on top
+     * - higher online users higher position
+     */
+    const orderedStations = orderBy(
+      filteredStations,
+      [
+        // Current station always be on top
+        ({ station_id }) => (station_id === stationId ? -1 : 1),
+        // Sort by number of online users
+        'online_count',
+      ],
+      ['asc', 'desc'],
     );
 
     return (
@@ -77,7 +90,7 @@ class StationSwitcher extends Component {
           this.scrollBar = ref;
         }}
       >
-        {filteredStations.map((station, index) => (
+        {orderedStations.map((station, index) => (
           <SwitcherItem
             key={index}
             {...station}

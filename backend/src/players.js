@@ -13,11 +13,26 @@ class Player {
     starting_time: 0,
     thumbnail: '',
   };
-
+  // isPopular needs to be false, but now it is true to test
+  isPopular = true;
   constructor(station) {
     this.stationId = station.station_id;
     this.updatePlaylist(station);
   }
+
+  setPopular = status => {
+    this.isPopular = status ? true : false;
+  }
+
+  skipNowPlayingSong = async songId => {
+    if (songId !== this.nowPlaying.song_id) {
+      throw new Error(`The song id (${songId}) is not the now playing song id`);
+    }
+    await stationController.setPlayedSongs(this.stationId, [
+      this.nowPlaying.song_id,
+    ]);
+    this._setPlayableSong();
+  };
 
   getNowPlaying = () => ({
     song_id: this.nowPlaying.song_id,
@@ -53,9 +68,11 @@ class Player {
   };
 
   _emitStationState = async () => {
-    // console.log('_emitStationState ' + this.stationId + ' : ' + Date.now());
     this._emitNowPlaying();
     this._emitPlaylist();
+    if (this.isPopular){
+      this._emitThumbnail();
+    }
   };
 
   _emit = (eventName, payload) => {
@@ -64,7 +81,18 @@ class Player {
       payload: payload,
     });
   };
-
+  _emitThumbnail = () => {
+    this._emitAll(EVENTS.SERVER_CHANGE_STATION_THUMBNAIL, {
+      station_id: this.stationId,
+      thumbnail: this.nowPlaying.thumbnail,
+    });
+  }
+  _emitAll = (eventName, payload) => {
+    io.emit('action', {
+      type: eventName,
+      payload: payload,
+    });
+  };
   _resetNowPlaying = () => {
     this.nowPlaying = {
       song_id: 0,
@@ -83,7 +111,7 @@ class Player {
           this.stationId,
           this.nowPlaying.starting_time,
         );
-        this._nextSongByTimeout(song.duration + TIME_BUFFER);
+        this._nextSongByTimeout(song.duration + TIME_BUFFER, this.nowPlaying.song_id);
       }
     } catch (err) {
       console.error(err);
@@ -91,12 +119,14 @@ class Player {
     }
   };
 
-  _nextSongByTimeout = timeout => {
+  _nextSongByTimeout = (timeout, playingSongId) => {
     setTimeout(async () => {
-      await stationController.setPlayedSongs(this.stationId, [
-        this.nowPlaying.song_id,
-      ]);
-      this._setPlayableSong();
+      if (playingSongId === this.nowPlaying.song_id) {
+        await stationController.setPlayedSongs(this.stationId, [
+          this.nowPlaying.song_id,
+        ]);
+        this._setPlayableSong();
+      }
     }, timeout);
   };
   // TODO: [start server, add new song to empty station, next song nomarly]
