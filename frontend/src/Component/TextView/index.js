@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
+import { withStyles } from 'material-ui/styles';
+
+import styles from './styles';
 
 class TextView extends Component {
   render() {
-    const { input, label, type, placeholder } = this.props;
+    const { input, label, type, placeholder, classes, border } = this.props;
     const { touched, error } = this.props.meta;
     return (
       <TextField
@@ -16,6 +19,21 @@ class TextView extends Component {
         helperText={touched && error}
         {...input}
         style={{ marginBottom: '20px' }}
+        InputProps={
+          border && {
+            disableUnderline: true,
+            classes: {
+              root: classes.textFieldRoot,
+              input: classes.textFieldInput,
+            },
+          }
+        }
+        InputLabelProps={
+          border && {
+            shrink: true,
+            className: classes.textFieldFormLabel,
+          }
+        }
       />
     );
   }
@@ -29,6 +47,7 @@ TextView.propTypes = {
   touched: PropTypes.any,
   error: PropTypes.any,
   meta: PropTypes.any,
+  border: PropTypes.bool,
 };
 
-export default TextView;
+export default withStyles(styles)(TextView);
