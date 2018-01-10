@@ -50,7 +50,7 @@ class Playlist extends Component {
         item
         xs={12}
         className={className}
-        style={{ ...style, overflowY: 'auto', paddingTop: 16 }}
+        style={{ ...style, overflowY: 'auto' }}
       >
         <List style={{ paddingTop: 0, paddingBottom: 0 }}>
           {this.getFilteredPlaylist().map((video, index) => (
