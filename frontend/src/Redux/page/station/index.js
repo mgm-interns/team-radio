@@ -1,25 +1,21 @@
 import { SERVER_JOINED_STATION_SUCCESS } from 'Redux/actions';
 import {
-  SAVE_SEARCH_INPUT,
   SET_PREVIEW_VIDEO,
   MUTE_NOW_PLAYING,
   MUTE_PREVIEW,
+  SAVE_SEARCH_INPUT,
 } from './actions';
 
 const INITIAL_STATE = {
+  joinedStation: false,
   preview: null,
-  searchInput: '',
   mutedNowPlaying: false,
   mutedPreview: false,
+  searchInput: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case SAVE_SEARCH_INPUT:
-      return {
-        ...state,
-        searchInput: action.payload,
-      };
     case SET_PREVIEW_VIDEO:
       return {
         ...state,
@@ -28,6 +24,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_JOINED_STATION_SUCCESS:
       return {
         ...state,
+        joinedStation: true,
       };
     case MUTE_NOW_PLAYING:
       return {
@@ -38,6 +35,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         mutedPreview: action.payload,
+      };
+    case SAVE_SEARCH_INPUT:
+      return {
+        ...state,
+        searchInput: action.payload,
       };
     default:
       return state;
