@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
+import Tooltip from 'material-ui/Tooltip';
 import withStyles from 'material-ui/styles/withStyles';
 import classNames from 'classnames';
+import { Images } from 'Theme';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
 /* eslint-disable camelcase */
 class HistoryItem extends Component {
   render() {
-    const { thumbnail, title, singer, playing, classes } = this.props;
-
+    const { thumbnail, title, singer, playing, creator, classes } = this.props;
     return (
       <Grid container className={classNames(classes.container, { playing })}>
         <Grid item xs={3} className={classes.thumbnail}>
@@ -19,7 +20,18 @@ class HistoryItem extends Component {
         <Grid item xs={7} className={classes.info}>
           <div className={classes.name}>{title}</div>
           <div className={classes.singer}>{singer}</div>
-          {/* <div className={classes.uploader}>Added by {uploader}</div> */}
+          {creator && (
+            <div className={classes.creator}>
+              Added by
+              <Tooltip placement={'bottom'} title={creator.name}>
+                <img
+                  src={creator.avatar_url || Images.avatar.default}
+                  className={classes.creatorAvatar}
+                  onClick={this._onCreatorIconClicked}
+                />
+              </Tooltip>
+            </div>
+          )}
         </Grid>
       </Grid>
     );
@@ -34,7 +46,7 @@ HistoryItem.propTypes = {
   singer: PropTypes.string,
   thumbnail: PropTypes.string,
   title: PropTypes.any,
-  uploader: PropTypes.string,
+  creator: PropTypes.object,
   name: PropTypes.string,
 };
 

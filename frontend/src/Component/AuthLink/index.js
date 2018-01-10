@@ -2,11 +2,12 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { withNotification } from 'Component/Notification';
 import { removeAuthenticationState } from 'Config';
 import { logout } from 'Redux/api/user/actions';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
+import { Images } from 'Theme';
 import Icon from 'material-ui/Icon';
 import Menu, { MenuItem } from 'material-ui/Menu';
 
@@ -66,7 +67,7 @@ class AuthLink extends Component {
             >
               <img
                 className={classes.avatar}
-                src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+                src={Images.avatar.default}
                 alt="avatar"
               />
               <Icon className={classes.dropdownIcon}>arrow_drop_down</Icon>

@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
+import { Images } from 'Theme';
 import { upVoteSong, downVoteSong } from 'Redux/api/currentStation/actions';
 import { withNotification } from 'Component/Notification';
 import styles from './styles';
@@ -142,7 +143,7 @@ class PlaylistItem extends Component {
               Added by
               <Tooltip placement={'bottom'} title={creator.name}>
                 <img
-                  src={creator.avatar_url}
+                  src={creator.avatar_url || Images.avatar.default}
                   className={classes.creatorAvatar}
                   onClick={this._onCreatorIconClicked}
                 />
