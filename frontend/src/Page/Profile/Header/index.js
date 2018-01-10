@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import classNames from 'classnames';
-
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
-import Avatar from 'material-ui/Avatar';
 import Typography from 'material-ui/Typography';
 import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
-
-import { Images } from 'Theme';
+import ImageUploader from 'Component/ImageUploader';
 import styles from './styles';
 
 class Header extends Component {
@@ -27,11 +23,7 @@ class Header extends Component {
       <Grid item xs={12} md={7} xl={8} className={classes.coverWrapper}>
         <div className={classes.coverBackground}>
           <div className={classes.userInformation}>
-            <Avatar
-              // TODO: alt="Remy Sharp"
-              src={Images.avatar.male01}
-              className={classNames(classes.avatar, classes.bigAvatar)}
-            />
+            <ImageUploader />
             <div>
               <Typography type="headline" className={classes.text}>
                 mars
