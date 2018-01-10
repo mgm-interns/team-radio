@@ -17,7 +17,7 @@ class HistoryItem extends Component {
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} alt="" />
         </Grid>
-        <Grid item xs={7} className={classes.info}>
+        <Grid item xs={8} className={classes.info}>
           <div className={classes.name}>{title}</div>
           <div className={classes.singer}>{singer}</div>
           {creator && (
