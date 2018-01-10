@@ -13,10 +13,14 @@ class Player {
     starting_time: 0,
     thumbnail: '',
   };
-
+  isPopular = false;
   constructor(station) {
     this.stationId = station.station_id;
     this.updatePlaylist(station);
+  }
+
+  setPopular = status => {
+    this.isPopular = status ? true : false;
   }
 
   skipNowPlayingSong = async songId => {
@@ -63,9 +67,11 @@ class Player {
   };
 
   _emitStationState = async () => {
-    // console.log('_emitStationState ' + this.stationId + ' : ' + Date.now());
     this._emitNowPlaying();
     this._emitPlaylist();
+    if (this.isPopular){
+      this._emitThumbnail();
+    }
   };
 
   _emit = (eventName, payload) => {
@@ -74,7 +80,18 @@ class Player {
       payload: payload,
     });
   };
-
+  _emitThumbnail = () => {
+    this._emitAll(EVENTS.SERVER_CHANGE_STATION_THUMBNAIL, {
+      station_id: this.stationId,
+      thumbnail: this.nowPlaying.thumbnail,
+    });
+  }
+  _emitAll = (eventName, payload) => {
+    io.emit('action', {
+      type: eventName,
+      payload: payload,
+    });
+  };
   _resetNowPlaying = () => {
     this.nowPlaying = {
       song_id: 0,
