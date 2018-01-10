@@ -45,10 +45,12 @@ export default router => {
   router.put('/stations/downvote/:id', function(req, res) {
     station.downVote(req, res);
   });
-  router.get('/stations/history/:id', function(req, res) {
+  router.get('/stations/listhistory/:id', function(req, res) {
     station.getListSongHistory(req, res);
   });
-
+  router.get('/stations/listavailable/:id', function(req, res) {
+    station.getAvailableListSong(req, res);
+  });
   router.put('/stations/setisprivate/:id', function(req, res) {
     station.setIsPrivateOfStation(req, res);
   });

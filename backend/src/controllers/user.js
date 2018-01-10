@@ -30,7 +30,7 @@ export const getUserById = async userId => {
     }
 };
 
-export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null,) => {
+export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null,name) => {
     try {
         let user = await userModels.getUserByEmail(email);
         if (user) {
@@ -45,9 +45,10 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
                 email : email,
                 google_id : googleId,
                 facebook_id : facebookId,
+                name: name
             });
             await user.save();
-            await userModels.setName(email, user._id.toString());
+            await userModels.setUsername(email, user._id.toString());
             if (avatar_url)
                 await userModels.setAvatarUrl(email, avatar_url);
         }
@@ -57,3 +58,35 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
         throw err;
     }
 };
+export const createUser = async (email,password,name) => {
+    try{
+        let user = await new userModels({
+            email : email,
+            name: name,
+        });
+
+        user.password = user.generateHash(password)
+        await user.save();
+        await userModels.setUsername(email, user._id.toString());
+
+        user = await userModels.getUserByEmail(email);
+        return user;
+    } catch(err) {
+        throw err;
+    }
+}
+export const getUserProfile = async (username) => {
+    try{
+        return await userModels.getUserByUsername(username);
+    } catch (err) {
+        throw err
+    }
+}
+export const setAvatar = async (userId, avatar_url) => {
+    try{
+        await userModels.setAvatar(userId, avatar_url);
+        return await userModels.getUserById(userId);
+    }catch(err){
+        throw err;
+    }
+}

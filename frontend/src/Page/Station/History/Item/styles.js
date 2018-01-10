@@ -21,11 +21,6 @@ export default ({ spacing, palette, typography }) => ({
     fontSize: '0.825em',
     fontWeight: 'bold',
   },
-  singer: {
-    ...typography.body2,
-    fontSize: '0.725em',
-  },
-
   creator: {
     ...typography.caption,
     fontSize: '0.725em',
@@ -46,6 +41,8 @@ export default ({ spacing, palette, typography }) => ({
   actions: {
     textAlign: 'center',
     alignSelf: 'center',
+    paddingLeft: '0 !important',
+    paddingRight: '0 !important',
   },
   action: {
     width: spacing.baseMargin * 3,
@@ -57,7 +54,7 @@ export default ({ spacing, palette, typography }) => ({
   score: {
     ...typography.body2,
     margin: 'auto',
-    width: spacing.baseMargin * 5,
+    width: spacing.baseMargin * 3,
     fontSize: '0.825em',
     color: palette.secondary['500'],
     '&.active': {

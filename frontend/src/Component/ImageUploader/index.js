@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-// import { Image, CloudinaryContext, Transformation } from 'cloudinary-react';
-// import Dropzone from 'react-dropzone';
-// import request from 'superagent';
 import Cropper from 'react-cropper';
 import withStyles from 'material-ui/styles/withStyles';
 import Icon from 'material-ui/Icon';
@@ -11,11 +8,12 @@ import Button from 'material-ui/Button';
 import Card, { CardContent, CardHeader, CardActions } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import PropTypes from 'prop-types';
+import Avatar from 'material-ui/Avatar';
+import { Images } from 'Theme';
 import styles from './styles';
 
-const CLOUDINARY_UPLOAD_PRESET = 'hoangnam';
-const CLOUDINARY_UPLOAD_URL =
-  'https://api.cloudinary.com/v1_1/cocacode2/upload';
+const CLOUDINARY_UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_UPLOAD_URL = process.env.REACT_APP_CLOUDINARY_UPLOAD_URL;
 
 class ImageUploader extends Component {
   constructor(props) {
@@ -25,12 +23,9 @@ class ImageUploader extends Component {
       open: false,
       uploading: false,
       uploadedFile: null,
-      size: {
-        width: 200,
-        height: 200,
-      },
-      uploadedFileCloudinaryUrl:
-        'https://res.cloudinary.com/cocacode2/image/upload/v1515550702/wwsqbsi7kxcz0zgj70j6.png',
+      // avatarUrl:
+      //   'https://res.cloudinary.com/cocacode2/image/upload/v1515550702/wwsqbsi7kxcz0zgj70j6.png',
+      avatarUrl: null,
     };
 
     this._openFilePickerDialog = this._openFilePickerDialog.bind(this);
@@ -43,26 +38,10 @@ class ImageUploader extends Component {
     });
   }
 
-  // onImageDrop(files) {
-  //   console.log(files[0]);
-  //   this.setState({
-  //     uploadedFile: files[0],
-  //     uploadedFileUrl: files[0].preview,
-  //   });
-
-  // this.handleImageUpload(files[0]);
-  // }
-
   _crop() {
-    // image in dataUrl
-    // console.log('cropping');
-    // console.log(b64toBlob(this.cropper.getCroppedCanvas().toDataURL()));
     this.setState({
-      dataUrl: this.cropper.getCroppedCanvas().toDataURL(),
+      avatarUrl: this.cropper.getCroppedCanvas().toDataURL(),
     });
-
-    // console.log(file);
-    // this.refs.cropper.getCroppedCanvas().toDataURL();
   }
 
   upload() {
@@ -86,19 +65,12 @@ class ImageUploader extends Component {
           uploading: false,
           open: false,
         });
-        // Create a thumbnail of the uploaded image, with 150px width
-        // const tokens = url.split('/');
-        // tokens.splice(-2, 0, 'w_150,c_scale');
-        // const img = new Image(); // HTML5 Constructor
-        // img.src = tokens.join('/');
-        // img.alt = response.public_id;
-        // document.body.appendChild(img);
       }
     };
 
     fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
     fd.append('tags', 'browser_upload'); // Optional - add tag for image admin in Cloudinary
-    fd.append('file', this.state.dataUrl);
+    fd.append('file', this.state.avatarUrl);
     xhr.send(fd);
   }
 
@@ -109,7 +81,6 @@ class ImageUploader extends Component {
 
   async _onImagePicked(event) {
     const file = event.target.files[0];
-    console.log(file);
     const base64 = await toBase64(file);
     await this.setStateAsync({ uploadedFileUrl: base64 });
 
@@ -128,39 +99,21 @@ class ImageUploader extends Component {
     const { classes } = this.props;
     return (
       <div>
-        {/* <form>
-          <div className="FileUpload">
-            <Dropzone
-              onDrop={this.onImageDrop.bind(this)}
-              multiple={false}
-              accept="image/*"
-            >
-              <div>
-                {this.state.uploadedFileCloudinaryUrl === '' ? null : (
-                  <div>
-                    <img
-                      style={{ width: 200, height: 200 }}
-                      src={this.state.uploadedFileCloudinaryUrl}
-                    />
-                  </div>
-                )}
-              </div>
-            </Dropzone>
-          </div>
-        </form> */}
-        <div className={classes.avatar} style={this.state.size}>
+        <div className={classes.avatarContainer} style={this.state.size}>
           <div className="hoverButton" onClick={this._openFilePickerDialog}>
             <Icon className={classes.uploadIcon}>camera_alt</Icon>
-            <p>Upload profile photo</p>
+            <p style={{ textAlign: 'center' }}>Upload profile photo</p>
           </div>
-          {this.state.uploadedFileCloudinaryUrl === '' ? null : (
-            <div>
-              <img
-                style={this.state.size}
-                src={this.state.uploadedFileCloudinaryUrl}
-              />
-            </div>
-          )}
+          <div>
+            <Avatar
+              className={classes.avatar}
+              src={
+                this.state.avatarUrl === null
+                  ? Images.avatar.male01
+                  : this.state.avatarUrl
+              }
+            />
+          </div>
         </div>
         <input
           key={2}
@@ -202,23 +155,6 @@ class ImageUploader extends Component {
               <CircularProgress className={classes.loadingIcon} />
             </div>
           </Card>
-          {/* <div>
-            <Button onClick={this.upload.bind(this)}> Apply </Button>
-            <Cropper
-              ref={node => {
-                this.cropper = node;
-              }}
-              src={this.state.uploadedFileUrl}
-              style={{
-                height: 400,
-                width: 400,
-              }}
-              // Cropper.js options
-              aspectRatio={1 / 1}
-              guides={false}
-              crop={this._crop.bind(this)}
-            />
-          </div> */}
         </Modal>
       </div>
     );

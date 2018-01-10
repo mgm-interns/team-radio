@@ -57,7 +57,15 @@ station.getListSongHistory = async function (req, res) {
     console.log("getListSongHistory")
     //  var station = await stationController.addStation(req.body.station_name);
     let station = await stationController.getListSongHistory(req.params.id);
-    console.log('resolve : ' + station)
+   // console.log('resolve : ' + station)
+    res.status(200).json(station);
+
+};
+station.getAvailableListSong = async function (req, res) {
+    console.log("getAvailableListSong")
+    //  var station = await stationController.addStation(req.body.station_name);
+    let station = await stationController.getAvailableListSong(req.params.id);
+   // console.log('resolve : ' + station)
     res.status(200).json(station);
 
 };
