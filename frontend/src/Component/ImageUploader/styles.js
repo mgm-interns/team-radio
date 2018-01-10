@@ -1,6 +1,7 @@
 export default () => ({
-  avatar: {
+  avatarContainer: {
     position: 'relative',
+    margin: 10,
     '& .hoverButton': {
       display: 'none',
       color: '#fff',
@@ -10,13 +11,14 @@ export default () => ({
       width: '100%',
       height: '100%',
       position: 'absolute',
-      content: ' ',
       top: 0,
       left: 0,
       backgroundColor: 'rgba(0,0,0,0.7)',
       display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
+      zIndex: '1000',
     },
   },
 
@@ -45,5 +47,9 @@ export default () => ({
     color: 'white',
     width: 100,
     height: 100,
+  },
+  avatar: {
+    width: 150,
+    height: 150,
   },
 });

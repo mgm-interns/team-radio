@@ -21,11 +21,6 @@ export default ({ spacing, palette, typography }) => ({
     fontSize: '0.825em',
     fontWeight: 'bold',
   },
-  singer: {
-    ...typography.body2,
-    fontSize: '0.725em',
-  },
-
   creator: {
     ...typography.caption,
     fontSize: '0.725em',
@@ -46,6 +41,8 @@ export default ({ spacing, palette, typography }) => ({
   actions: {
     textAlign: 'center',
     alignSelf: 'center',
+    paddingLeft: '0 !important',
+    paddingRight: '0 !important',
   },
   action: {
     width: spacing.baseMargin * 3,
