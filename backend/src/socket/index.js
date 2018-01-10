@@ -19,6 +19,7 @@ io.on('connection', async function(socket) {
           createEmitter(socket, io),
           action.payload.userId,
           action.payload.stationName,
+          action.payload.isPrivate,
         );
         break;
 
