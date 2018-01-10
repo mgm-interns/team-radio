@@ -151,7 +151,7 @@ class StationPage extends Component {
                 })}
                 onClick={this._onHistoryClick}
               >
-                History ({history.length})
+                History
               </Typography>
               {/* <IconButton color="default">play_arrow</IconButton> */}
             </div>

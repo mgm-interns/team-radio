@@ -21,11 +21,6 @@ export default ({ spacing, palette, typography }) => ({
     fontSize: '0.825em',
     fontWeight: 'bold',
   },
-  singer: {
-    ...typography.body2,
-    fontSize: '0.725em',
-  },
-
   creator: {
     ...typography.caption,
     fontSize: '0.725em',
@@ -63,5 +58,11 @@ export default ({ spacing, palette, typography }) => ({
     '&.active': {
       color: palette.primary['500'],
     },
+  },
+  replayContainer: {
+    padding: 0,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
 });
