@@ -52,6 +52,16 @@ io.on('connection', async function(socket) {
         );
         break;
 
+      case EVENTS.CLIENT_ADD_MULTI_SONG:
+        console.log('Action received: ' + EVENTS.CLIENT_ADD_MULTI_SONG);
+        eventHandlers.addMultiSong(
+          createEmitter(socket, io),
+          action.payload.userId,
+          action.payload.stationId,
+          action.payload.songList,
+        );
+        break;
+
       case EVENTS.CLIENT_UPVOTE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_UPVOTE_SONG);
         eventHandlers.voteSong(

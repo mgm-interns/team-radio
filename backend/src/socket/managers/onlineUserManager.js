@@ -24,7 +24,7 @@ export const countOnlineUserOfStation = async (stationId, io) =>
 
 export const leaveNotification = async (stationId, name, emitter, io) => {
   const count = await countOnlineUserOfStation(stationId, io);
-  emitter.emitToStation(stationId, EVENTS.SERVER_USER_LEFT, {
+  emitter.broadcastToStation(stationId, EVENTS.SERVER_USER_LEFT, {
     user: name,
   });
   emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
@@ -38,7 +38,7 @@ export const leaveNotification = async (stationId, name, emitter, io) => {
 
 export const joinNotification = async (stationId, name, emitter, io) => {
   const count = await countOnlineUserOfStation(stationId, io);
-  emitter.emitToStation(stationId, EVENTS.SERVER_NEW_USER_JOINED, {
+  emitter.broadcastToStation(stationId, EVENTS.SERVER_NEW_USER_JOINED, {
     user: name,
   });
   emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
