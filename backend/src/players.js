@@ -4,34 +4,88 @@ import * as EVENTS from './const/actions';
 
 const _players = [];
 const TIME_BUFFER = 5000;
+const PERCENT_SKIP_SONG = 50;
 let io = null;
 
 class Player {
+  userIds = [];
   nowPlaying = {
     song_id: 0,
     url: '',
     starting_time: 0,
     thumbnail: '',
   };
+  skippedSongs = new Set();
   // isPopular needs to be false, but now it is true to test
   isPopular = true;
+
   constructor(station) {
     this.stationId = station.station_id;
     this.updatePlaylist(station);
   }
+  updateOnlineUsers = async userIds => {
+    // Save the user ids
+    this.userIds = userIds;
+    const playlist = await stationController.getListSong(this.stationId);
+    console.log('userIds: ', userIds);
+    // Check songs will be skipped
+    playlist.forEach(song => {
+      // Dem so vote co user
+      // Dem so downvote co user
+      let points = 0;
+      song.up_vote.forEach(user => {
+        userIds.forEach(childUser => {
+          if (user === childUser.toString()) {
+            points += 1;
+          }
+        });
+      });
+      song.down_vote.forEach(user => {
+        userIds.forEach(childUser => {
+          if (user === childUser.toString()) {
+            points -= 1;
+          }
+        });
+      });
+      if (-points / 2 > PERCENT_SKIP_SONG / 100) {
+        this.addSkippedSong(song.song_id);
+      } else {
+        this.removeSkippedSong(song.song_id);
+      }
+    });
+  }
+  addSkippedSong = songId => {
+    if (songId === this.nowPlaying.song_id){
+      this.skipNowPlayingSong();
+    } else {
+      this.skippedSongs.add(songId);
+    }
+    // TODO: check this.nowPlaying.song_id
+  };
+  removeSkippedSong = songId => {
+    this.skippedSongs.delete(songId);
+  };
 
   setPopular = status => {
     this.isPopular = status ? true : false;
   }
 
-  skipNowPlayingSong = async songId => {
-    if (songId !== this.nowPlaying.song_id) {
-      throw new Error(`The song id (${songId}) is not the now playing song id`);
-    }
+  skipNowPlayingSong = async () => {
+    // Maybe dot not need to call the below statement
+    this.skippedSongs.delete(this.nowPlaying.song_id);
+    // Make sure the nowPlaying song is set to be is_played
     await stationController.setPlayedSongs(this.stationId, [
       this.nowPlaying.song_id,
     ]);
-    this._setPlayableSong();
+    // TODO: setSkippedSong not working well now
+    await stationController.setSkippedSong(
+      this.stationId,
+      this.nowPlaying.song_id,
+    );
+    this._emitSkippedSong();
+    // when the rest time of the now playing song is less than 2 * TIME_BUFFER
+    // Them timeout for next song will is the less time
+    this._nextSongByTimeout(2 * TIME_BUFFER, this.nowPlaying.song_id);
   };
 
   getNowPlaying = () => ({
@@ -93,6 +147,9 @@ class Player {
       payload: payload,
     });
   };
+  _emitSkippedSong = () => {
+    this._emit(EVENTS.SERVER_SKIP_SONG, this.getNowPlaying());
+  }
   _resetNowPlaying = () => {
     this.nowPlaying = {
       song_id: 0,
@@ -104,14 +161,30 @@ class Player {
   };
   _startSong = async song => {
     try {
-      this._emitStationState();
-      if (song) {
+      if (!song) {
+        this._emitStationState();
+        return;
+      }
+      if (this.skippedSongs.has(song.song_id)) {
+        // The song needs to skipped
+        // delete the song in skippedSongs
+        this.skippedSongs.delete(song.song_id);
+        // TODO: setSkippedSong not working well now
+        await stationController.setSkippedSong(this.stationId, song.song_id);
+        // send _emit
+        this._emitSkippedSong();
+        this._nextSongByTimeout(TIME_BUFFER, this.nowPlaying.song_id);
+      } else {
+        this._emitStationState();
         // Update starting time in the station
         stationController.updateStartingTime(
           this.stationId,
           this.nowPlaying.starting_time,
         );
-        this._nextSongByTimeout(song.duration + TIME_BUFFER, this.nowPlaying.song_id);
+        this._nextSongByTimeout(
+          song.duration + TIME_BUFFER,
+          this.nowPlaying.song_id,
+        );
       }
     } catch (err) {
       console.error(err);

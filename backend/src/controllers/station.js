@@ -352,6 +352,9 @@ export const downVote = async (stationId, songId, userId) => {
 
 };
 
+export const setSkippedSong = async (stationId, songId) => {
+  // TODO: set the song to skipped and update the song to played
+}
 // Covert string to ObjectId
 const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
 
