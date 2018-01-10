@@ -41,6 +41,8 @@ export default ({ spacing, palette, typography }) => ({
   actions: {
     textAlign: 'center',
     alignSelf: 'center',
+    paddingLeft: '0 !important',
+    paddingRight: '0 !important',
   },
   action: {
     width: spacing.baseMargin * 3,
@@ -58,11 +60,5 @@ export default ({ spacing, palette, typography }) => ({
     '&.active': {
       color: palette.primary['500'],
     },
-  },
-  replayContainer: {
-    padding: 0,
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
   },
 });
