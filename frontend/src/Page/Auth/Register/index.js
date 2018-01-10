@@ -17,7 +17,7 @@ import { withStyles } from 'material-ui/styles';
 import { addUser } from 'Redux/api/user/actions';
 import { Field, reduxForm } from 'redux-form';
 
-import { NavBar } from 'Component';
+import { NavBar, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
 
 import { saveAuthenticationState } from 'Config';
@@ -30,7 +30,6 @@ import {
 } from 'Util/validate';
 
 import styles from './styles';
-import TextView from '../TextView';
 
 class Register extends Component {
   constructor(props) {
@@ -49,8 +48,10 @@ class Register extends Component {
     this._showNotification = this._showNotification.bind(this);
     this._renderGuidline = this._renderGuidline.bind(this);
     this._renderHeadline = this._renderHeadline.bind(this);
-    this._renderLoginLocalForm = this._renderLoginLocalForm.bind(this);
-    this._renderLoginLocalActions = this._renderLoginLocalActions.bind(this);
+    this._renderRegisterLocalForm = this._renderRegisterLocalForm.bind(this);
+    this._renderRegisterLocalActions = this._renderRegisterLocalActions.bind(
+      this,
+    );
     this._renderBackground = this._renderBackground.bind(this);
   }
 
@@ -109,16 +110,16 @@ class Register extends Component {
     );
   }
 
-  _renderLoginLocalForm() {
+  _renderRegisterLocalForm() {
     const { classes, submitSucceeded } = this.props;
     return [
       <Field
         key={1}
         name="name"
-        placeholder="Enter your name"
+        placeholder="Enter your full name"
         type="text"
         component={TextView}
-        label="Name"
+        label="Full name"
         validate={[required, maxLength15]}
       />,
       <Field
@@ -154,7 +155,7 @@ class Register extends Component {
     ];
   }
 
-  _renderLoginLocalActions() {
+  _renderRegisterLocalActions() {
     const { classes, loading } = this.props;
     return (
       <Grid container>
@@ -217,9 +218,11 @@ class Register extends Component {
                 <form onSubmit={handleSubmit}>
                   <CardContent>
                     {this._renderHeadline()}
-                    {this._renderLoginLocalForm()}
+                    {this._renderRegisterLocalForm()}
                   </CardContent>
-                  <CardActions>{this._renderLoginLocalActions()}</CardActions>
+                  <CardActions>
+                    {this._renderRegisterLocalActions()}
+                  </CardActions>
                 </form>
               </Card>
             </Grid>

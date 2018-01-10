@@ -27,10 +27,6 @@ class Playlist extends Component {
       : [];
     // Sort the list
     sortedPlaylist.sort((songA, songB) => {
-      // Push now playing to the first position
-      if (songA.url === nowPlaying.url) {
-        return -2;
-      }
       const scoreA = Playlist.getSongScore(songA);
       const scoreB = Playlist.getSongScore(songB);
       // Compare the rest songs based on scores
@@ -43,8 +39,6 @@ class Playlist extends Component {
       // when score is equal
       return songA.created_day > songB.created_day ? 1 : -1;
     });
-    console.log(sortedPlaylist);
-    console.log(nowPlaying);
     // Push now playing to the first position
     sortedPlaylist.sort(song => (song.song_id === nowPlaying.song_id ? -1 : 1));
 

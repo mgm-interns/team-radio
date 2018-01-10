@@ -8,56 +8,14 @@ const CLOUDINARY_UPLOAD_PRESET = 'hoangnam';
 const CLOUDINARY_UPLOAD_URL =
   'https://api.cloudinary.com/v1_1/cocacode2/upload';
 
-const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
-  const byteCharacters = atob(b64Data.split(',')[1]);
-  const byteArrays = [];
-
-  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-    const byteNumbers = new Array(slice.length);
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-
-    const byteArray = new Uint8Array(byteNumbers);
-
-    byteArrays.push(byteArray);
-  }
-
-  const blob = new Blob(byteArrays, { type: contentType });
-  return blob;
-};
-
-function dataURItoBlob(dataURI) {
-  // convert base64 to raw binary data held in a string
-  const byteString = atob(dataURI.split(',')[1]);
-
-  // separate out the mime component
-  const mimeString = dataURI
-    .split(',')[0]
-    .split(':')[1]
-    .split(';')[0];
-
-  // write the bytes of the string to an ArrayBuffer
-  const arrayBuffer = new ArrayBuffer(byteString.length);
-  const _ia = new Uint8Array(arrayBuffer);
-  for (let i = 0; i < byteString.length; i++) {
-    _ia[i] = byteString.charCodeAt(i);
-  }
-
-  const dataView = new DataView(arrayBuffer);
-  const blob = new Blob([dataView], { type: mimeString });
-  return blob;
-}
-
 class ImageUploader extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       uploadedFile: null,
-      uploadedFileCloudinaryUrl: '',
+      uploadedFileCloudinaryUrl:
+        'https://res.cloudinary.com/cocacode2/image/upload/v1515550702/wwsqbsi7kxcz0zgj70j6.png',
     };
   }
 
@@ -65,21 +23,22 @@ class ImageUploader extends Component {
     console.log(files[0]);
     this.setState({
       uploadedFile: files[0],
+      uploadedFileUrl: files[0].preview,
     });
 
-    this.handleImageUpload(files[0]);
+    // this.handleImageUpload(files[0]);
   }
 
   _crop() {
     // image in dataUrl
-    console.log('cropping');
-    console.log(b64toBlob(this.cropper.getCroppedCanvas().toDataURL()));
+    // console.log('cropping');
+    // console.log(b64toBlob(this.cropper.getCroppedCanvas().toDataURL()));
+    this.setState({
+      dataUrl: this.cropper.getCroppedCanvas().toDataURL(),
+    });
+
+    // console.log(file);
     // this.refs.cropper.getCroppedCanvas().toDataURL();
-    // request
-    //   .get(this.refs.cropper.getCroppedCanvas().toDataURL())
-    //   .end((err, res) => {
-    //     console.log(res.blob());
-    //   });
   }
 
   handleImageUpload(file) {
@@ -100,7 +59,36 @@ class ImageUploader extends Component {
       }
     });
   }
+  upload() {
+    const xhr = new XMLHttpRequest();
+    const fd = new FormData();
+    xhr.open('POST', CLOUDINARY_UPLOAD_URL, true);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // File uploaded successfully
+        const response = JSON.parse(xhr.responseText);
+        // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
+
+        this.setState({
+          uploadedFileCloudinaryUrl: response.secure_url,
+        });
+        // Create a thumbnail of the uploaded image, with 150px width
+        // const tokens = url.split('/');
+        // tokens.splice(-2, 0, 'w_150,c_scale');
+        // const img = new Image(); // HTML5 Constructor
+        // img.src = tokens.join('/');
+        // img.alt = response.public_id;
+        // document.body.appendChild(img);
+      }
+    };
+
+    fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    fd.append('tags', 'browser_upload'); // Optional - add tag for image admin in Cloudinary
+    fd.append('file', this.state.dataUrl);
+    xhr.send(fd);
+  }
   render() {
     return (
       <div>
@@ -111,30 +99,35 @@ class ImageUploader extends Component {
               multiple={false}
               accept="image/*"
             >
-              <div>Drop an image or click to select a file to upload.</div>
+              <div> Drop an image or click to select a file to upload. </div>{' '}
             </Dropzone>
           </div>
-
           <div>
+            {' '}
             {this.state.uploadedFileCloudinaryUrl === '' ? null : (
               <div>
-                <p>{this.state.uploadedFile.name}</p>
-                <img src={this.state.uploadedFileCloudinaryUrl} />
+                {' '}
+                {/* <p> {this.state.uploadedFile.name} </p>{' '} */}
+                <img src={this.state.uploadedFileCloudinaryUrl} />{' '}
               </div>
-            )}
-          </div>
-        </form>
+            )}{' '}
+          </div>{' '}
+        </form>{' '}
+        <button onClick={this.upload.bind(this)}> Upload </button>{' '}
         <Cropper
           ref={node => {
             this.cropper = node;
           }}
-          src="https://res.cloudinary.com/cocacode2/image/upload/v1515481163/a2dv4amchfitkfiizl3q.jpg"
-          style={{ height: 400, width: '100%' }}
+          src={this.state.uploadedFileUrl}
+          style={{
+            height: 400,
+            width: 400,
+          }}
           // Cropper.js options
-          aspectRatio={16 / 9}
+          aspectRatio={1 / 1}
           guides={false}
           crop={this._crop.bind(this)}
-        />
+        />{' '}
       </div>
     );
   }
