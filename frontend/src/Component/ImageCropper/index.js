@@ -52,7 +52,7 @@ class ImageCropper extends Component {
    */
   _crop() {
     return this.setStateAsync({
-      croppedData: this.cropper.getCroppedCanvas().toDataURL(),
+      // croppedData: this.cropper.getCroppedCanvas().toDataURL(),
     });
   }
 

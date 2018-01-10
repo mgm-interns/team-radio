@@ -13,7 +13,8 @@ class Player {
     starting_time: 0,
     thumbnail: '',
   };
-  isPopular = false;
+  // isPopular needs to be false, but now it is true to test
+  isPopular = true;
   constructor(station) {
     this.stationId = station.station_id;
     this.updatePlaylist(station);

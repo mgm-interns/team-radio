@@ -9,8 +9,9 @@ import {
   SERVER_UPVOTE_SONG_FAILURE,
   SERVER_JOINED_STATION_FAILURE,
   CLIENT_JOIN_STATION,
-  SERVER_LEAVE_STATION_SUCCESS,
   SERVER_UPDATE_ONLINE_USERS,
+  CLIENT_LEAVE_STATION,
+  SERVER_USER_LEFT,
 } from 'Redux/actions';
 import { appNotificationInstance } from 'Component/Notification/AppNotification';
 
@@ -52,7 +53,7 @@ export default (state = INITIAL_STATE, action) => {
         },
       };
 
-    case SERVER_LEAVE_STATION_SUCCESS:
+    case CLIENT_LEAVE_STATION:
       return {
         ...INITIAL_STATE,
       };
@@ -84,7 +85,12 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SERVER_NEW_USER_JOINED:
       appNotificationInstance.info({
-        message: action.payload && `${action.payload.user} has joined!`,
+        message: action.payload && `User ${action.payload.user} has joined!`,
+      });
+      return state;
+    case SERVER_USER_LEFT:
+      appNotificationInstance.info({
+        message: action.payload && `User ${action.payload.user} has left!`,
       });
       return state;
     /**

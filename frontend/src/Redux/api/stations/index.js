@@ -4,11 +4,13 @@ import {
   SERVER_CREATE_STATION_SUCCESS,
   SERVER_STATION_CHANGE_ONLINE_USERS,
   SERVER_UPDATE_STATIONS,
+  SERVER_CREATE_STATION_FAILURE,
 } from 'Redux/actions';
 
 const INITIAL_STATE = {
   station: null,
   data: [],
+  message: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -21,6 +23,13 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         station: action.payload.station,
+        message: '',
+      };
+    case SERVER_CREATE_STATION_FAILURE:
+      return {
+        ...state,
+        station: null,
+        message: action.payload.message,
       };
     case SERVER_UPDATE_STATIONS:
       return {
@@ -31,8 +40,8 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         data: state.data.map(station => {
-          const { stationId, online_count } = action.payload;
-          if (station.station_id === stationId) {
+          const { station_id, online_count } = action.payload;
+          if (station.station_id === station_id) {
             return {
               ...station,
               online_count,
@@ -46,8 +55,8 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         data: state.data.map(station => {
-          const { stationId, thumbnailUrl } = action.payload;
-          if (station.station_id === stationId) {
+          const { station_id, thumbnailUrl } = action.payload;
+          if (station.station_id === station_id) {
             return {
               ...station,
               thumbnail: thumbnailUrl,

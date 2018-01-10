@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
+import { Images } from 'Theme';
 import { upVoteSong, downVoteSong } from 'Redux/api/currentStation/actions';
 import { withNotification } from 'Component/Notification';
 import styles from './styles';
@@ -134,7 +135,7 @@ class PlaylistItem extends Component {
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} alt="" />
         </Grid>
-        <Grid item xs={7} className={classes.info}>
+        <Grid item xs={8} className={classes.info}>
           <div className={classes.name}>{title}</div>
           <div className={classes.singer}>{singer}</div>
           {creator && (
@@ -142,7 +143,7 @@ class PlaylistItem extends Component {
               Added by
               <Tooltip placement={'bottom'} title={creator.name}>
                 <img
-                  src={creator.avatar_url}
+                  src={creator.avatar_url || Images.avatar.default}
                   className={classes.creatorAvatar}
                   onClick={this._onCreatorIconClicked}
                 />
@@ -150,7 +151,7 @@ class PlaylistItem extends Component {
             </div>
           )}
         </Grid>
-        <Grid item xs={2} className={classes.actions}>
+        <Grid item xs={1} className={classes.actions}>
           <IconButton
             onClick={this.upVoteSong}
             className={classes.action}

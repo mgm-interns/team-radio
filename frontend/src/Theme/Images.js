@@ -18,6 +18,7 @@ const images = {
     link: require('../Images/windows/link.png'),
   },
   avatar: {
+    default: require('../Images/avatar/default.png'),
     //
     male01: require('../Images/avatar/male-01.png'),
     male02: require('../Images/avatar/male-02.png'),
