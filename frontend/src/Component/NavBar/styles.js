@@ -3,6 +3,7 @@ export default ({ breakpoints, spacing }) => ({
     margin: 'auto',
     zIndex: '10',
     width: '100%',
+    height: 56,
     position: 'fixed',
     fontFamily: 'Lato',
     transition: 'all 0.3s',
