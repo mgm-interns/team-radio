@@ -193,13 +193,18 @@ module.exports.getLisSongByUserId = (stationId, userId) => {
   });
 };
 
-module.exports.getListSongHistory = async stationId => {
-  // TODO : 
-  console.log('stationId : ' + stationId);
-  let query = {
-    station_id: stationId
-  };
-  const station = await Station.findOne(query, { playlist: true, _id: false })
-    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 });
-  return station.playlist;
-}
+// module.exports.getListSongHistory = async stationId => {
+//   // TODO : 
+
+
+//   const station = await Station.aggregate(
+//     { $match: { station_id: 'bac-test' } },
+//     { $unwind: '$playlist' },
+//     { $match: { 'playlist.is_played': { $eq: false } } },
+//     { $group: { _id: '$_id', playlist: { $push: '$playlist' } } })
+//   //.populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 });
+
+//   console.log('station : ' + JSON.stringify(station));
+//   return station[0].playlist;
+// }
+
