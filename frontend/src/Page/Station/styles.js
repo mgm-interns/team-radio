@@ -14,7 +14,7 @@ export default ({ breakpoints, palette, spacing }) => ({
   switcherContainer: {
     margin: 'auto',
     padding: '0 !important',
-    marginTop: 70,
+    marginTop: 60,
     background: palette.lightGrey['500'],
   },
   switcherContent: {
