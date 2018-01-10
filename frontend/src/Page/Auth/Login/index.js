@@ -44,7 +44,7 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { fetchUserResponse: { error, data, isAuthenticated } } = nextProps;
-    console.log(this.props);
+
     if (error !== null) {
       this.setState({
         formErrors: { message: error.response.message },

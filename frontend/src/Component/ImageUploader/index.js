@@ -13,9 +13,7 @@ import { CircularProgress } from 'material-ui/Progress';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
-const CLOUDINARY_UPLOAD_PRESET = 'hoangnam';
-const CLOUDINARY_UPLOAD_URL =
-  'https://api.cloudinary.com/v1_1/cocacode2/upload';
+const { CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_UPLOAD_URL } = process.env;
 
 class ImageUploader extends Component {
   constructor(props) {
