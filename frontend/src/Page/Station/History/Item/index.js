@@ -9,10 +9,10 @@ import styles from './styles';
 /* eslint-disable camelcase */
 class HistoryItem extends Component {
   render() {
-    const { thumbnail, title, singer, playing, classes } = this.props;
+    const { thumbnail, title, singer, classes } = this.props;
 
     return (
-      <Grid container className={classNames(classes.container, { playing })}>
+      <Grid container className={classNames(classes.container)}>
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} alt="" />
         </Grid>
@@ -29,7 +29,6 @@ class HistoryItem extends Component {
 HistoryItem.propTypes = {
   classes: PropTypes.any,
   song_id: PropTypes.any,
-  playing: PropTypes.bool,
   score: PropTypes.number,
   singer: PropTypes.string,
   thumbnail: PropTypes.string,
