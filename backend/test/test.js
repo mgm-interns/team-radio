@@ -7,12 +7,12 @@ module.exports = station;
 
 station.addStation = async function (req, res) {
     //  var station = await stationController.addStation(req.body.station_name);
-    let station = await stationController.addStation(req.body.station_name, req.body.user_id);
+    let station = await stationController.addStation(req.body.station_name, req.body.user_id,req.body.is_private);
     res.status(200).json(station);
 
 };
 
-station.getAllAvailableStations = async function (req, res) {
+station.getAllStationDetails = async function (req, res) {
     let station = await stationController.getAllStationDetails();
     res.status(200).json(station);
 }
@@ -36,7 +36,7 @@ station.getListSong = async function (req, res) {
     res.status(200).json(playlist);
 
 };
-station.getStations = async function (req, res) {
+station.getAllAvailableStations = async function (req, res) {
     console.log("getStations")
     //  var station = await stationController.addStation(req.body.station_name);
     let station = await stationController.getAllAvailableStations();
@@ -44,7 +44,23 @@ station.getStations = async function (req, res) {
     res.status(200).json(station);
 
 };
+station.setIsPrivateOfStation = async function (req, res) {
+    console.log("setIsPrivateOfStation")
+    //  var station = await stationController.addStation(req.body.station_name);
+    let station = await stationController.setIsPrivateOfStation(req.params.id,req.body.user_id,req.body.value);
+    console.log('setIsPrivateOfStation : ' + station)
+    res.status(200).json(station);
 
+};
+
+station.getListSongHistory = async function (req, res) {
+    console.log("getListSongHistory")
+    //  var station = await stationController.addStation(req.body.station_name);
+    let station = await stationController.getListSongHistory(req.params.id);
+    console.log('resolve : ' + station)
+    res.status(200).json(station);
+
+};
 station.addSong = async function (req, res) {
     //  var station = await stationController.addStation(req.body.station_name);
     console.log('res.body.user_i' );

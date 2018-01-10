@@ -62,16 +62,7 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      currentStation,
-      mutedNowPlaying,
-      currentStation: { playlist },
-    } = nextProps;
-
-    // Clear the interval if join station request has success
-    if (currentStation.joined === true) {
-      clearInterval(this.joinStationInterval);
-    }
+    const { mutedNowPlaying, currentStation: { playlist } } = nextProps;
 
     // Get playlist & history
     this.setState({

@@ -30,19 +30,26 @@ export default router => {
   });
   router.get('/stations', function(req, res) {
     console.log("getStations")
-    station.getStations(req, res);
+    station.getAllAvailableStations(req, res);
   });
   router.get('/stations/playlist/:id', function(req, res) {
     station.getListSong(req, res);
   });
   router.get('/stations/get/all', function(req, res) {
     console.log('router ');
-    station.getAllAvailableStations(req, res);
+    station.getAllStationDetails(req, res);
   });
   router.put('/stations/upvote/:id', function(req, res) {
     station.upVote(req, res);
   });
   router.put('/stations/downvote/:id', function(req, res) {
     station.downVote(req, res);
+  });
+  router.get('/stations/history/:id', function(req, res) {
+    station.getListSongHistory(req, res);
+  });
+
+  router.put('/stations/setisprivate/:id', function(req, res) {
+    station.setIsPrivateOfStation(req, res);
   });
 };

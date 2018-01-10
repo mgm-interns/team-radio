@@ -27,7 +27,7 @@ class StationSwitcher extends Component {
       match: { params: { stationId } },
       history,
       joinStationRequest,
-      leaveStationRequest,
+      // leaveStationRequest,
       setPreviewVideo,
       notification,
       userId,
@@ -35,7 +35,7 @@ class StationSwitcher extends Component {
     // Only change to new station if the id has changed
     if (station.station_id !== stationId) {
       // Leave current station
-      leaveStationRequest({ userId, stationId });
+      // leaveStationRequest({ userId, stationId });
 
       // Join in selected station
       history.push(`/station/${station.station_id}`);
