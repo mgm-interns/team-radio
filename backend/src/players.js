@@ -21,7 +21,7 @@ class Player {
 
   setPopular = status => {
     this.isPopular = status ? true : false;
-  }
+  };
 
   skipNowPlayingSong = async songId => {
     if (songId !== this.nowPlaying.song_id) {
@@ -69,7 +69,7 @@ class Player {
   _emitStationState = async () => {
     this._emitNowPlaying();
     this._emitPlaylist();
-    if (this.isPopular){
+    if (this.isPopular) {
       this._emitThumbnail();
     }
   };
@@ -85,7 +85,7 @@ class Player {
       station_id: this.stationId,
       thumbnail: this.nowPlaying.thumbnail,
     });
-  }
+  };
   _emitAll = (eventName, payload) => {
     io.emit('action', {
       type: eventName,
@@ -110,7 +110,10 @@ class Player {
           this.stationId,
           this.nowPlaying.starting_time,
         );
-        this._nextSongByTimeout(song.duration + TIME_BUFFER, this.nowPlaying.song_id);
+        this._nextSongByTimeout(
+          song.duration + TIME_BUFFER,
+          this.nowPlaying.song_id,
+        );
       }
     } catch (err) {
       console.error(err);
