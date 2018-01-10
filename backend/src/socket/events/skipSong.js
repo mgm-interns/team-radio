@@ -16,5 +16,5 @@ export default (io, socket, userId, songId, stationId) => {
 
 const _skipSong = async (stationId, songId) => {
   const player = await players.getPlayer(stationId);
-  player.skipNowPlayingSong(songId);
+  player.skipSong(songId);
 };

@@ -27,7 +27,6 @@ class Player {
     // Save the user ids
     this.userIds = userIds;
     const playlist = await stationController.getListSong(this.stationId);
-    console.log('userIds: ', userIds);
     // Check songs will be skipped
     playlist.forEach(song => {
       // Dem so vote co user
@@ -35,27 +34,27 @@ class Player {
       let points = 0;
       song.up_vote.forEach(user => {
         userIds.forEach(childUser => {
-          if (user === childUser.toString()) {
+          if (user.toString() === childUser.toString()) {
             points += 1;
           }
         });
       });
       song.down_vote.forEach(user => {
         userIds.forEach(childUser => {
-          if (user === childUser.toString()) {
+          if (user.toString() === childUser.toString()) {
             points -= 1;
           }
         });
       });
-      if (-points / 2 > PERCENT_SKIP_SONG / 100) {
+      if (-points / userIds.size > PERCENT_SKIP_SONG / 100) {
         this.addSkippedSong(song.song_id);
       } else {
         this.removeSkippedSong(song.song_id);
       }
     });
-  }
+  };
   addSkippedSong = songId => {
-    if (songId === this.nowPlaying.song_id){
+    if (songId === this.nowPlaying.song_id) {
       this.skipNowPlayingSong();
     } else {
       this.skippedSongs.add(songId);
@@ -67,7 +66,7 @@ class Player {
   };
 
   setPopular = status => {
-    this.isPopular = status ? true : false;
+    this.isPopular = status;
   };
 
   skipNowPlayingSong = async () => {
@@ -149,7 +148,7 @@ class Player {
   };
   _emitSkippedSong = () => {
     this._emit(EVENTS.SERVER_SKIP_SONG, this.getNowPlaying());
-  }
+  };
   _resetNowPlaying = () => {
     this.nowPlaying = {
       song_id: 0,
