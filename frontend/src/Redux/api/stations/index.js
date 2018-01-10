@@ -31,8 +31,8 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         data: state.data.map(station => {
-          const { stationId, online_count } = action.payload;
-          if (station.station_id === stationId) {
+          const { station_id, online_count } = action.payload;
+          if (station.station_id === station_id) {
             return {
               ...station,
               online_count,
@@ -46,8 +46,8 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         data: state.data.map(station => {
-          const { stationId, thumbnailUrl } = action.payload;
-          if (station.station_id === stationId) {
+          const { station_id, thumbnailUrl } = action.payload;
+          if (station.station_id === station_id) {
             return {
               ...station,
               thumbnail: thumbnailUrl,
