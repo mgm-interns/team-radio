@@ -19,12 +19,7 @@ export const isExistUserHandler = async email => {
 
 export const getUserById = async userId => {
     try {
-        let user = await userModels.getUserById(userId);
-        if (user) {
-            return user;
-        } else {
-            throw new Error('User ID is not exist!');
-        }
+        return await userModels.getUserById(userId);
     } catch (err) {
         throw err;
     }
@@ -88,5 +83,28 @@ export const setAvatar = async (userId, avatar_url) => {
         return await userModels.getUserById(userId);
     }catch(err){
         throw err;
+    }
+}
+export const setUsername = async (email, username) => {
+    try{
+        await userModels.setUsername(email, username);
+        return await userModels.getUserByEmail(email);
+    }catch(err){
+        throw err;
+    }
+}
+export const isVerifidedToken = async (userId, token, superSecret) => {
+    try{
+        let result = false;
+        if (token) {
+            // const decoded = await jwt.verify(token, superSecret);
+            // if (decoded && decoded.userId ===userId) return true;
+            jwt.verify(token, superSecret, (err, decoded) => {
+                if (!err && decoded.userId === userId) result = true;
+            })
+        }
+        return result;
+    } catch (err) {
+        throw err
     }
 }

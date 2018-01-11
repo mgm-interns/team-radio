@@ -128,7 +128,7 @@ export default router => {
       throw err;
     }
   });
-  router.post('/verifyToken', async (req, res) => {
+  router.post('/isVerifidedToken', async (req, res) => {
     try {
       const token = req.body.token;
       if (token) {
@@ -147,25 +147,30 @@ export default router => {
   });
 
   router.get('/Profile/:username', async (req, res) => {
+    // INPUT  : req.headers['access-token'], req.params.username
+    // OUTPUT :
+    // Return res.json({
+    //     message: 'Success',
+    //     isOwner: isOwner,  true if return user have userId match with userId in token
+    //                        false if invalid token or return user have userId not match with userId in token
+    //     user: user,
+    // }); if username is exist
+    // Return res.json({
+    //     message: 'User not found!',
+    // }); if username is not exist
     try {
       const user = await userController.getUserProfile(req.params.username);
       const token = req.headers['access-token'];
       if (user) {
         // verify token
-        if (token) {
-          jwt.verify(token, req.app.get('superSecret'), (err, decoded) => {
-            if (!err && user._id.toString() === decoded.userId) {
-              return res.json({
-                message: true,
-                isOwner: true,
-                user: user,
-              });
-            }
-          });
-        }
+        const isOwner = await userController.isVerifidedToken(
+          user._id.toString(),
+          token,
+          req.app.get('superSecret'),
+        );
         return res.json({
-          message: true,
-          isOwner: false,
+          message: 'Success',
+          isOwner: isOwner,
           user: user,
         });
       }
@@ -178,12 +183,77 @@ export default router => {
   });
 
   router.post('/setAvatar', async (req, res) => {
+    // INPUT  : req.headers['access-token'], req.body.userId, req.body.avatar_url
+    // OUTPUT :
+    // Return res.json({
+    //     message: 'Success',
+    //     user: user,
+    // }); if updating success
+    // Return res.json({
+    //     message: 'Can not update avatar!',
+    // }); if updating fail
     try {
-      const user = await userController.setAvatar(
-        req.body.userId,
-        req.body.avatar_url,
-      );
-      res.json({ user: user });
+      let user = await userController.getUserById(req.body.userId);
+      const token = req.headers['access-token'];
+      if (user) {
+        // verify token
+        const isOwner = await userController.isVerifidedToken(
+          user._id.toString(),
+          token,
+          req.app.get('superSecret'),
+        );
+        if (isOwner) {
+          user = await userController.setAvatar(
+            req.body.userId,
+            req.body.avatar_url,
+          );
+          return res.json({
+            message: 'Success',
+            user: user,
+          });
+        }
+      }
+      return res.json({
+        message: 'Can not update avatar!',
+      });
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  router.post('/setUsername', async (req, res) => {
+    // INPUT  : req.headers['access-token'], req.body.userId, req.body.username
+    // OUTPUT :
+    // Return res.json({
+    //     message: 'Success',
+    //     user: user,
+    // }); if updating success
+    // Return res.json({
+    //     message: 'Can not update username!',
+    // }); if updating fail
+    try {
+      let user = await userController.getUserById(req.body.userId);
+      const token = req.headers['access-token'];
+      if (user) {
+        const isOwner = await userController.isVerifidedToken(
+          user._id.toString(),
+          token,
+          req.app.get('superSecret'),
+        );
+        if (isOwner) {
+          user = await userController.setUsername(
+            user.email,
+            req.body.username,
+          );
+          return res.json({
+            message: 'Success',
+            user: user,
+          });
+        }
+      }
+      return res.json({
+        message: 'Can not update username!',
+      });
     } catch (err) {
       throw err;
     }
