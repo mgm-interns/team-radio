@@ -53,6 +53,18 @@ class Player {
         this.removeSkippedSong(song.song_id);
       }
     });
+    // compare current skipped and preSkippedSongs
+    if (this.skippedSongs.size === preSkippedSongs.size) {
+      for(let i = 0; i < preSkippedSongs.size; i++){
+        if (!this.skippedSongs.has(preSkippedSongs[i])){
+          this._emitSkippedSongs();
+          break;
+        }
+      }
+    }
+  };
+  _emitSkippedSongs = () => {
+    this._emit(EVENTS.SERVER_UPDATE_SKIPPED_SONGS, this.skippedSongs);
   };
   addSkippedSong = songId => {
     if (songId === this.nowPlaying.song_id) {
@@ -120,10 +132,17 @@ class Player {
       playlist: playlist,
     });
   };
+  _emitHistory = async () => {
+    const history = await stationController.getListSongHistory(this.stationId);
+    this._emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
+      playlist: history,
+    });
+  };
 
   _emitStationState = async () => {
     this._emitNowPlaying();
     this._emitPlaylist();
+    this._emitHistory();
     if (this.isPopular) {
       this._emitThumbnail();
     }
@@ -155,6 +174,7 @@ class Player {
       now_playing: this.getNowPlaying(),
     });
     this._emitPlaylist();
+    this._emitHistory();
     if (this.isPopular) {
       this._emitThumbnail();
     }
