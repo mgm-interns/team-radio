@@ -3,6 +3,7 @@ const INITIAL_STATE = {
   error: null,
   loading: false,
   isAuthenticated: !!localStorage.getItem('token'),
+  isOwner: false,
 };
 
 const user = (state = INITIAL_STATE, action) => {
@@ -95,6 +96,23 @@ const user = (state = INITIAL_STATE, action) => {
         loading: false,
         error: { ...action.payload },
         isAuthenticated: false,
+      };
+
+    case 'NAVIGATE_PROFILE':
+      return {
+        data: {},
+      };
+    case 'NAVIGATE_PROFILE_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+      };
+
+    case 'NAVIGATE_PROFILE_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
       };
 
     case 'LOGOUT_REQUEST':

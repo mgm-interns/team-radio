@@ -87,6 +87,8 @@ class StationSwitcher extends Component {
 
     return (
       <Scrollbars
+        autoHide
+        autoHideTimeout={1000}
         className={classes.container}
         renderView={() => <div className={classes.scrollArea} />}
         ref={ref => {

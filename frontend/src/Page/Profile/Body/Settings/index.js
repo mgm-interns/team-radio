@@ -12,6 +12,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Modal from 'material-ui/Modal';
 import { FormHelperText } from 'material-ui/Form';
 import Typography from 'material-ui/Typography';
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { ImageCropper, TextView, TabContainer } from 'Component';
 
@@ -57,8 +58,11 @@ class Settings extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this._renderChangeInformationForm = this._renderChangeInformationForm.bind(this);
+    this._renderChangeInformationForm = this._renderChangeInformationForm.bind(
+      this,
+    );
     this._renderChangePasswordForm = this._renderChangePasswordForm.bind(this);
+    this._getMe = this._getMe.bind(this);
   }
 
   handleChange(event, value) {
@@ -82,27 +86,38 @@ class Settings extends Component {
     );
   }
 
-  _renderChangeInformationForm() {
+  _getMe(loading, me) {
+    return loading
+      ? null
+      : {
+          fullname: 'test',
+          // username: me.username,
+        };
+  }
+
+  _renderChangeInformationForm(user) {
     const { classes, submitSucceeded } = this.props;
+    // const data = user.data.user;
+
     return [
       <Field
         key={1}
-        name="fullname"
-        placeholder="Full name"
-        type="text"
-        component={TextView}
-        label="Full name"
-        validate={[required, maxLength15]}
-        border
-      />,
-      <Field
-        key={2}
         name="username"
         placeholder="Your username"
         type="text"
         component={TextView}
         label="Username"
         validate={[required]}
+        border
+      />,
+      <Field
+        key={2}
+        name="name"
+        placeholder="Display name"
+        type="text"
+        component={TextView}
+        label="Display name"
+        validate={[required, maxLength15]}
         border
       />,
       <FormHelperText key={5} className={classes.error}>
@@ -141,7 +156,9 @@ class Settings extends Component {
   }
 
   render() {
-    const { classes, handleSubmit } = this.props;
+    const { classes, handleSubmit, user } = this.props;
+    // const { data: { me, loading } } = this.props;
+
     const SecondButton = this._renderSecondItem();
     return [
       <Button
@@ -151,7 +168,7 @@ class Settings extends Component {
         // disabled={!this.state.stationName}
         key={1}
       >
-        <Icon>settings</Icon>
+        <Icon className={classes.icon}>edit</Icon>
       </Button>,
       <Modal
         aria-labelledby="simple-modal-title"
@@ -180,11 +197,6 @@ class Settings extends Component {
             {this.state.value === 0 && (
               <TabContainer>
                 <Grid item xs={12} className={classes.content}>
-                  <ImageCropper
-                    buttonComponent={<SecondButton />}
-                    onCrop={secondSource => this.setState({ secondSource })}
-                    aspectRatio={1}
-                  />
                   <form
                     onSubmit={handleSubmit}
                     className={classes.formInformation}
@@ -233,12 +245,12 @@ class Settings extends Component {
 
 Settings.propTypes = {
   classes: PropTypes.any,
+  user: PropTypes.object,
 };
 
 export default compose(
   withStyles(styles),
   reduxForm({
     form: 'editProfileForm',
-    // validate: customValidate,
   }),
 )(Settings);

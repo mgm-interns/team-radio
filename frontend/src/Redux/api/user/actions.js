@@ -65,3 +65,15 @@ export const updateAvatar = avatar_url => ({
 export const logout = () => ({
   type: 'LOGOUT_REQUEST',
 });
+
+export const fetchUserWithUsername = username => ({
+  [CALL_API]: {
+    types: ['FETCH_USER_PROFILE', 'FETCH_USER_SUCCESS', 'FETCH_USER_FAILURE'],
+    endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/Profile/${username}`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'access-token': localStorage.getItem('token'),
+    },
+  },
+});
