@@ -84,7 +84,6 @@ class StationSwitcher extends Component {
       ],
       ['asc', 'desc', 'asc'],
     );
-    console.log(orderedStations);
 
     return (
       <Scrollbars
