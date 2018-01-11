@@ -24,7 +24,7 @@ const routes = [
     component: Station,
   },
   {
-    path: '/profile',
+    path: '/profile/:username?',
     component: Profile,
   },
   {

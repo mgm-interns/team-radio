@@ -24,6 +24,7 @@ class Player {
     this.updatePlaylist(station);
   }
   updateOnlineUsers = async userIds => {
+    const preSkippedSongs = new Set(this.skippedSongs);
     // Save the user ids
     this.userIds = userIds;
     const playlist = await stationController.getListSong(this.stationId);
@@ -52,6 +53,18 @@ class Player {
         this.removeSkippedSong(song.song_id);
       }
     });
+    // compare current skipped and preSkippedSongs
+    if (this.skippedSongs.size === preSkippedSongs.size) {
+      for(let i = 0; i < preSkippedSongs.size; i++){
+        if (!this.skippedSongs.has(preSkippedSongs[i])){
+          this._emitSkippedSongs();
+          break;
+        }
+      }
+    }
+  };
+  _emitSkippedSongs = () => {
+    this._emit(EVENTS.SERVER_UPDATE_SKIPPED_SONGS, this.skippedSongs);
   };
   addSkippedSong = songId => {
     if (songId === this.nowPlaying.song_id) {
@@ -70,7 +83,8 @@ class Player {
   };
 
   skipNowPlayingSong = async () => {
-    // Maybe dot not need to call the below statement
+    this._emitSkippedSong(2 * TIME_BUFFER);
+    // Maybe do not need to call the below statement
     this.skippedSongs.delete(this.nowPlaying.song_id);
     // Make sure the nowPlaying song is set to be is_played
     await stationController.setPlayedSongs(this.stationId, [
@@ -81,7 +95,6 @@ class Player {
       this.stationId,
       this.nowPlaying.song_id,
     );
-    this._emitSkippedSong();
     // when the rest time of the now playing song is less than 2 * TIME_BUFFER
     // Them timeout for next song will is the less time
     this._nextSongByTimeout(2 * TIME_BUFFER, this.nowPlaying.song_id);
@@ -114,15 +127,24 @@ class Player {
   };
 
   _emitPlaylist = async () => {
-    const playlist = await stationController.getListSong(this.stationId);
+    const playlist = await stationController.getAvailableListSong(
+      this.stationId,
+    );
     this._emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
       playlist: playlist,
+    });
+  };
+  _emitHistory = async () => {
+    const history = await stationController.getListSongHistory(this.stationId);
+    this._emit(EVENTS.SERVER_UPDATE_HISTORY, {
+      history: history,
     });
   };
 
   _emitStationState = async () => {
     this._emitNowPlaying();
     this._emitPlaylist();
+    this._emitHistory();
     if (this.isPopular) {
       this._emitThumbnail();
     }
@@ -146,8 +168,18 @@ class Player {
       payload: payload,
     });
   };
-  _emitSkippedSong = () => {
-    this._emit(EVENTS.SERVER_SKIP_SONG, this.getNowPlaying());
+  _emitSkippedSong = delay => {
+    // Take here to current station working
+    this._emitNowPlaying();
+    this._emit(EVENTS.SERVER_SKIP_SONG, {
+      delay: delay,
+      now_playing: this.getNowPlaying(),
+    });
+    this._emitPlaylist();
+    this._emitHistory();
+    if (this.isPopular) {
+      this._emitThumbnail();
+    }
   };
   _resetNowPlaying = () => {
     this.nowPlaying = {
@@ -171,7 +203,7 @@ class Player {
         // TODO: setSkippedSong not working well now
         await stationController.setSkippedSong(this.stationId, song.song_id);
         // send _emit
-        this._emitSkippedSong();
+        this._emitSkippedSong(TIME_BUFFER);
         this._nextSongByTimeout(TIME_BUFFER, this.nowPlaying.song_id);
       } else {
         this._emitStationState();
@@ -214,7 +246,6 @@ class Player {
       song.votes = song.up_vote.length - song.down_vote.length;
     });
 
-    // console.log('Playlist with votes:', filteredPlaylist, Date.now());
     // Sort the filteredPlaylist by votes and time (current the song_id is the song added time)
     const sortedPlaylist = _.orderBy(
       filteredPlaylist,
@@ -290,13 +321,13 @@ class Player {
 export const init = async () => {
   try {
     const stations = await stationController.getAllStationDetails();
-    // console.log('stations: ', stations);
     stations.forEach((station, i) => {
       station = station.toObject();
       _players[station.station_id] = new Player(station);
     });
   } catch (err) {
     console.log(err);
+    throw err;
   }
 };
 

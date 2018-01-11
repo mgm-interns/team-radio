@@ -18,6 +18,7 @@ class AuthLink extends Component {
     super(props);
 
     this._logout = this._logout.bind(this);
+    // this._navigateToProfile = this._navigateToProfile.bind(this);
     this.state = {
       anchorEl: null,
     };
@@ -34,6 +35,9 @@ class AuthLink extends Component {
 
   _handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
+    document
+      .getElementsByTagName('body')[0]
+      .setAttribute('style', 'padding-right:0;');
   };
 
   _handleClose = () => {
@@ -75,12 +79,15 @@ class AuthLink extends Component {
 
             <Menu
               id="simple-menu"
+              className={classes.menuPopover}
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={this._handleClose}
             >
-              <MenuItem>{user.data.name}</MenuItem>
-              <MenuItem>My account</MenuItem>
+              {/* <MenuItem>{user.data.name}</MenuItem> */}
+              <MenuItem>
+                <Link to={`/profile/${user.data.username}`}>My Profile</Link>
+              </MenuItem>
               <MenuItem>
                 <a onClick={this._logout}>Logout</a>
               </MenuItem>
@@ -97,12 +104,17 @@ AuthLink.propTypes = {
   dispatch: PropTypes.any,
   notification: PropTypes.object,
   user: PropTypes.any,
+  history: PropTypes.any,
+  navigateToProfile: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
   user: state.api.user,
 });
 
-export default compose(withNotification, connect(mapStateToProps, undefined))(
-  withStyles(styles)(AuthLink),
-);
+const mapDispatchToProps = dispatch => ({});
+
+export default compose(
+  withNotification,
+  connect(mapStateToProps, mapDispatchToProps),
+)(withStyles(styles)(AuthLink));

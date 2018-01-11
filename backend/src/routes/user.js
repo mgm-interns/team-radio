@@ -129,19 +129,23 @@ export default router => {
     }
   });
 
-  router.post('/isVerifidedToken', async (req, res) => {
+  router.post('/isVerifidedToken', (req, res) => {
     try {
       const token = req.body.token;
       if (token) {
         // verifies secret and checks exp
-        jwt.verify(token, req.app.get('superSecret'), (err, decoded) => {
+        jwt.verify(token, req.app.get('superSecret'), async (err, decoded) => {
           if (err) {
             return res.status(400).json({ tokenError: 'Verify token failed.' });
           }
-          return res.json(decoded);
+          const user = await userController.getUserById(decoded.userId);
+          const userRes = { ...user._doc, userId: user._id };
+          return res.json(userRes);
+          // return res.json(decoded);
         });
+      } else {
+        return res.status(400).json({ tokenError: 'No token provided.' });
       }
-      return res.status(400).json({ tokenError: 'No token provided.' });
     } catch (err) {
       throw err;
     }
@@ -208,10 +212,7 @@ export default router => {
             req.body.userId,
             req.body.avatar_url,
           );
-          return res.json({
-            message: 'Success',
-            user: user,
-          });
+          return res.json(user);
         }
       }
       return res.json({

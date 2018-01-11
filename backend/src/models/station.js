@@ -34,11 +34,14 @@ const stationSchema = mongoose.Schema({
 });
 
 var Station = (module.exports = mongoose.model('Stations', stationSchema));
-/**
- * Station
- */
 
-// Add station
+/******************** STATION **************************/
+
+/**
+ * Add station
+ * 
+ * @param {{}} station 
+ */
 module.exports.addStation = station => {
   try {
     return Station.create(station);
@@ -46,7 +49,13 @@ module.exports.addStation = station => {
     console.log('err : ' + err);
   }
 };
-// Remove station
+
+/**
+ * Delete station 
+ * 
+ * @param {string} stationId 
+ * @param {string} userId 
+ */
 module.exports.deleteStation = (stationId, userId) => {
   try {
     return Station.deleteOne({ owner_id: userId, station_id: stationId });
@@ -55,12 +64,20 @@ module.exports.deleteStation = (stationId, userId) => {
   }
 };
 
-// Get all station
+/**
+ * Get all station has is_private : fasle (station is public)
+ * 
+ * @param {number} limit 
+ */
 module.exports.getAllAvailableStations = (limit) => {
   return Station.find({ is_private: false }, { station_name: 1, created_date: 1, station_id: 1, _id: 0 }).limit(limit);
 };
-// 
-// Get all station
+
+/**
+ * Get all info station 
+ * 
+ * @param {number} limit 
+ */
 module.exports.getStationDetails = limit => {
   return Station.find()
     .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
@@ -68,26 +85,44 @@ module.exports.getStationDetails = limit => {
     .exec();
 };
 
-// Get station by name
+/**
+ * Get station by name
+ * 
+ * @param {string} stationNameToFind 
+ */
 module.exports.getStationByName = stationNameToFind => {
   return Station.findOne({ station_name: stationNameToFind })
     .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
     .exec();
 };
 
-// Get station by url
+/**
+ * Get station by id
+ * 
+ * @param {string} idToFind 
+ */
 module.exports.getStationById = idToFind => {
   return Station.findOne({ station_id: idToFind })
     .populate('playlist.creator', { id: 1, name: 1, avatar_url: 1 })
     .exec();
 };
 
-// Get station by user_id
+/**
+ * Get station by id
+ * 
+ * @param {string} userId 
+ */
 module.exports.getStationsByUserId = userId => {
   return Station.find({ owner_id: userId });
 };
 
-// The function update a field starting_time in db
+
+/**
+ * The function update a field starting_time in db
+ * 
+ * @param {string} stationId 
+ * @param {boolean} valueNeedUpdate 
+ */
 module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
   try {
     let query = { station_id: stationId };
@@ -105,6 +140,11 @@ module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
  * The function update a field isPrivate in db
  * valueNeedUpdate : false => station is public
  * valueNeedUpdate : true => station is private
+ *
+ * 
+ * @param {string} stationId 
+ * @param {string} userId 
+ * @param {boolean} valueNeedUpdate 
  */
 module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) => {
   try {
@@ -118,11 +158,15 @@ module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) =
     console.log('Err updateTimeStartingOfStation models : ' + err);
   }
 };
-/**
- * A song
- */
 
-// add song to playlist of station
+/******************** A SONG**************************/
+
+/**
+ * Add a song
+ * 
+ * @param {string} stationId
+ * @param {{}} song
+ */
 module.exports.addSong = (stationId, song) => {
   let query = { station_id: stationId };
   return Station.update(query, {
@@ -132,7 +176,12 @@ module.exports.addSong = (stationId, song) => {
   });
 };
 
-//Get a song in station
+/**
+ * Get a song in station
+ * 
+ * @param {string} stationId 
+ * @param {string} songId 
+ */
 module.exports.getAsongInStation = async (stationId, songId) => {
   let query = {
     station_id: stationId,
@@ -145,27 +194,42 @@ module.exports.getAsongInStation = async (stationId, songId) => {
     },
   })).playlist;
 };
-// Update a field of up vote in a song
+
+/**
+ * Update a field of up vote in a song
+ * 
+ * @param {string} stationId 
+ * @param {string} songId 
+ * @param {[]} valueNeedUpdate 
+ */
 module.exports.updateValueOfUpvote = (stationId, songId, valueNeedUpdate) => {
-  //let query = { id: stationId };
   return Station.update(
     { station_id: stationId, 'playlist.song_id': songId },
     { $set: { 'playlist.$.up_vote': valueNeedUpdate } },
   );
 };
 
+/**
+ * Update a field of down vote in a song
+ * 
+ * @param {string} stationId 
+ * @param {string} songId 
+ * @param {[]} valueNeedUpdate 
+ */
 module.exports.updateValueOfDownvote = (stationId, songId, valueNeedUpdate) => {
-  //let query = { id: stationId };
   return Station.update(
     { station_id: stationId, 'playlist.song_id': songId },
     { $set: { 'playlist.$.down_vote': valueNeedUpdate } },
   );
 };
-/**
- * Playlist (songs)
- */
+/*********************** Playlist (songs) ********************/
 
-// The function update a field playlist in db
+/**
+ * The function update a field playlist in db
+ * 
+ * @param {string} stationId
+ * @param {[]} valueNeedUpdate
+ */
 module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
   let query = { station_id: stationId };
   return Station.update(query, {
@@ -175,7 +239,11 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
   });
 };
 
-//get playlist of station
+/**
+ * Get playlist of station
+ * 
+ * @param {string} stationId 
+ */
 module.exports.getPlaylistOfStation = async stationId => {
   let query = { station_id: stationId };
   const station = await Station.findOne(query, { playlist: true, _id: false })
@@ -183,7 +251,12 @@ module.exports.getPlaylistOfStation = async stationId => {
   return station.playlist;
 };
 
-// Get list song by User ID
+/**
+ * Get list song by User ID
+ * 
+ * @param {string} stationId 
+ * @param {string} userId 
+ */
 module.exports.getLisSongByUserId = (stationId, userId) => {
   // TODO :
   return Station.find({ station_id: stationId }, {
@@ -195,8 +268,6 @@ module.exports.getLisSongByUserId = (stationId, userId) => {
 
 // module.exports.getListSongHistory = async stationId => {
 //   // TODO : 
-
-
 //   const station = await Station.aggregate(
 //     { $match: { station_id: 'bac-test' } },
 //     { $unwind: '$playlist' },

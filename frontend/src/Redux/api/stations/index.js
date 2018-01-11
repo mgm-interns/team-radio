@@ -55,12 +55,9 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         data: state.data.map(station => {
-          const { station_id, thumbnailUrl } = action.payload;
+          const { station_id, thumbnail } = action.payload;
           if (station.station_id === station_id) {
-            return {
-              ...station,
-              thumbnail: thumbnailUrl,
-            };
+            return { ...station, thumbnail };
           }
           return station;
         }),

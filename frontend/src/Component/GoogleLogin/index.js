@@ -140,7 +140,7 @@ class Login extends Component {
     };
     returnObject.profileObj = {
       googleId: basicProfile.getId(),
-      imageUrl: basicProfile.getImageUrl(),
+      avatar_url: basicProfile.getImageUrl(),
       email: basicProfile.getEmail(),
       name: basicProfile.getName(),
     };

@@ -4,11 +4,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { addSong } from 'Redux/api/currentStation/actions';
-import {
-  setPreviewVideo,
-  mutePreview,
-  muteNowPlaying,
-} from 'Redux/page/station/actions';
+import { setPreviewVideo, muteVideoRequest } from 'Redux/page/station/actions';
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
@@ -43,6 +39,7 @@ class AddLink extends Component {
       isDisableButton: true,
       isAddLinkProgress: false,
       muted: true,
+      userDid: false,
     };
     this._onChange = this._onChange.bind(this);
     this._onAddClick = this._onAddClick.bind(this);
@@ -62,20 +59,16 @@ class AddLink extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { mutedPreview, mutedNowPlaying, currentStation } = nextProps;
-    this.setState({ muted: mutedPreview });
+    const { mutePreview, muteNowPlaying, userDid, currentStation } = nextProps;
+
+    this.setState({ muted: mutePreview });
 
     // Save volume status into local storage for reloading the page
-    const volumeStatus = [
-      {
-        player: 'nowPlaying',
-        muted: mutedNowPlaying,
-      },
-      {
-        player: 'preview',
-        muted: mutedPreview,
-      },
-    ];
+    const volumeStatus = {
+      muteNowPlaying,
+      mutePreview,
+      userDid,
+    };
     localStorage.setItem('volumeStatus', JSON.stringify(volumeStatus));
 
     // Reset add link box when navigating to another station
@@ -258,14 +251,12 @@ class AddLink extends Component {
 
   /* Handle add link events */
   _clearSearchInput() {
-    const { setPreviewVideo, muteNowPlaying, mutePreview } = this.props;
+    const { setPreviewVideo } = this.props;
     this.setState({
       searchText: '',
       notFoundSearchResults: false,
     });
     setPreviewVideo();
-    muteNowPlaying();
-    mutePreview();
   }
 
   _onChange(e) {
@@ -287,8 +278,9 @@ class AddLink extends Component {
       preview,
       addSong,
       setPreviewVideo,
+      muteVideoRequest,
       muteNowPlaying,
-      mutePreview,
+      userDid,
       match: { params: { stationId } },
       userId,
       notification,
@@ -303,8 +295,10 @@ class AddLink extends Component {
     }
     // If authenticated
     setPreviewVideo();
-    muteNowPlaying();
-    mutePreview();
+    muteVideoRequest({
+      muteNowPlaying: userDid ? muteNowPlaying : false,
+      userDid,
+    });
     addSong({
       songUrl: this._getVideoUrl(preview),
       title: preview.snippet.title,
@@ -322,10 +316,17 @@ class AddLink extends Component {
 
   /* Handle preview volume */
   _onVolumeClick() {
-    const { mutePreview, muteNowPlaying, mutedPreview } = this.props;
-    // mute now playing if user want to unmute preview
-    mutePreview(!mutedPreview);
-    muteNowPlaying(mutedPreview);
+    const {
+      muteVideoRequest,
+      userDid,
+      muteNowPlaying,
+      mutePreview,
+    } = this.props;
+    muteVideoRequest({
+      muteNowPlaying: userDid && muteNowPlaying ? muteNowPlaying : mutePreview,
+      mutePreview: !mutePreview,
+      userDid: !!(userDid && muteNowPlaying),
+    });
   }
 
   /* Render loading while waiting for load data */
@@ -492,10 +493,10 @@ AddLink.propTypes = {
   nowPlaying: PropTypes.object,
   match: PropTypes.any,
   userId: PropTypes.any,
-  mutePreview: PropTypes.func,
-  muteNowPlaying: PropTypes.func,
-  mutedPreview: PropTypes.bool,
-  mutedNowPlaying: PropTypes.bool,
+  muteVideoRequest: PropTypes.func,
+  mutePreview: PropTypes.bool,
+  muteNowPlaying: PropTypes.bool,
+  userDid: PropTypes.bool,
   isAuthenticated: PropTypes.bool,
   joinedStation: PropTypes.bool,
   notification: PropTypes.object,
@@ -504,8 +505,9 @@ AddLink.propTypes = {
 
 const mapStateToProps = ({ page, api }) => ({
   preview: page.station.preview,
-  mutedPreview: page.station.mutedPreview,
-  mutedNowPlaying: page.station.mutedNowPlaying,
+  mutePreview: page.station.mutePreview,
+  muteNowPlaying: page.station.muteNowPlaying,
+  userDid: page.station.userDid,
   userId: api.user.data.userId,
   nowPlaying: api.currentStation.nowPlaying,
   isAuthenticated: api.user.isAuthenticated,
@@ -516,8 +518,8 @@ const mapStateToProps = ({ page, api }) => ({
 const mapDispatchToProps = dispatch => ({
   addSong: option => dispatch(addSong(option)),
   setPreviewVideo: video => dispatch(setPreviewVideo(video)),
-  mutePreview: muted => dispatch(mutePreview(muted)),
-  muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
+  muteVideoRequest: ({ muteNowPlaying, mutePreview, userDid }) =>
+    dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
 });
 
 export default compose(

@@ -1,6 +1,5 @@
 export const SET_PREVIEW_VIDEO = 'SET_PREVIEW_VIDEO';
-export const MUTE_NOW_PLAYING = 'MUTE_NOW_PLAYING';
-export const MUTE_PREVIEW = 'MUTE_PREVIEW';
+export const MUTE_VIDEO_REQUEST = 'MUTE_VIDEO_REQUEST';
 export const SAVE_HISTORY = 'SAVE_HISTORY';
 export const SAVE_PLAYLIST = 'SAVE_PLAYLIST';
 export const REPLAY_REQUEST = 'REPLAY_REQUEST';
@@ -10,14 +9,17 @@ export const setPreviewVideo = (value = null) => ({
   payload: value,
 });
 
-export const muteNowPlaying = (muted = false) => ({
-  type: MUTE_NOW_PLAYING,
-  payload: muted,
-});
-
-export const mutePreview = (muted = true) => ({
-  type: MUTE_PREVIEW,
-  payload: muted,
+export const muteVideoRequest = ({
+  muteNowPlaying = false,
+  mutePreview = true,
+  userDid = false,
+}) => ({
+  type: MUTE_VIDEO_REQUEST,
+  payload: {
+    muteNowPlaying,
+    mutePreview,
+    userDid,
+  },
 });
 
 export const savePlaylist = (playlist = []) => ({

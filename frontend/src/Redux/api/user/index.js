@@ -3,6 +3,7 @@ const INITIAL_STATE = {
   error: null,
   loading: false,
   isAuthenticated: !!localStorage.getItem('token'),
+  isOwner: false,
 };
 
 const user = (state = INITIAL_STATE, action) => {
@@ -97,11 +98,46 @@ const user = (state = INITIAL_STATE, action) => {
         isAuthenticated: false,
       };
 
+    case 'NAVIGATE_PROFILE':
+      return {
+        data: {},
+      };
+    case 'NAVIGATE_PROFILE_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+      };
+
+    case 'NAVIGATE_PROFILE_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+      };
+
     case 'LOGOUT_REQUEST':
       return {
         ...state,
         data: {},
         isAuthenticated: false,
+      };
+
+    case 'UPDATE_AVATAR':
+      return {
+        ...state,
+      };
+    case 'UPDATE_AVATAR_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'UPDATE_AVATAR_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
       };
     default:
       return state;

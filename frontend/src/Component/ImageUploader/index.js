@@ -10,6 +10,10 @@ import { CircularProgress } from 'material-ui/Progress';
 import PropTypes from 'prop-types';
 import Avatar from 'material-ui/Avatar';
 import { Images } from 'Theme';
+import { connect } from 'react-redux';
+import { updateAvatar } from 'Redux/api/user/actions';
+import { withNotification } from 'Component/Notification';
+import { compose } from 'redux';
 import styles from './styles';
 
 const CLOUDINARY_UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
@@ -65,6 +69,8 @@ class ImageUploader extends Component {
           uploading: false,
           open: false,
         });
+
+        this.props.updateAvatar(response.secure_url);
       }
     };
 
@@ -80,11 +86,18 @@ class ImageUploader extends Component {
   }
 
   async _onImagePicked(event) {
+    const { notification } = this.props;
     const file = event.target.files[0];
-    const base64 = await toBase64(file);
-    await this.setStateAsync({ uploadedFileUrl: base64 });
+    if (file.size / 1024 / 1024 > 2) {
+      notification.app.warning({
+        message: `The picture size can not exceed 2MB.`,
+      });
+    } else {
+      const base64 = await toBase64(file);
+      await this.setStateAsync({ uploadedFileUrl: base64 });
 
-    this.setState({ open: true });
+      this.setState({ open: true });
+    }
   }
 
   handleOpen = () => {
@@ -94,6 +107,11 @@ class ImageUploader extends Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  componentWillReceiveProps(nextProps) {
+    const { userData } = nextProps;
+    this.setState({ avatarUrl: userData.avatar_url });
+  }
 
   render() {
     const { classes } = this.props;
@@ -128,7 +146,10 @@ class ImageUploader extends Component {
 
         <Modal open={this.state.open} onClose={this.handleClose}>
           <Card className={classes.modalContainer}>
-            <CardHeader title="Crop your new profile photo" />
+            <CardHeader
+              className={classes.cardHeader}
+              title="Crop your new profile photo"
+            />
             <CardContent className={classes.cardContent}>
               <Cropper
                 ref={node => {
@@ -145,8 +166,15 @@ class ImageUploader extends Component {
                 crop={this._crop.bind(this)}
               />
             </CardContent>
-            <CardActions>
-              <Button onClick={this.upload.bind(this)}> Apply </Button>
+            <CardActions className={classes.cardActions}>
+              <Button
+                raised
+                // color={}
+                className={classes.button}
+                onClick={this.upload.bind(this)}
+              >
+                Apply
+              </Button>
             </CardActions>
 
             <div
@@ -164,6 +192,19 @@ class ImageUploader extends Component {
 
 ImageUploader.propTypes = {
   classes: PropTypes.any,
+  userData: PropTypes.any,
+  updateAvatar: PropTypes.any,
 };
 
-export default withStyles(styles)(ImageUploader);
+const mapStateToProps = state => ({
+  userData: state.api.user.data,
+});
+
+const mapDispatchToProps = dispatch => ({
+  updateAvatar: avatar_url => dispatch(updateAvatar(avatar_url)),
+});
+
+export default compose(
+  withNotification,
+  connect(mapStateToProps, mapDispatchToProps),
+)(withStyles(styles)(ImageUploader));
