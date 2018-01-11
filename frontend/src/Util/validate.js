@@ -17,14 +17,21 @@ export const maxLength = max => value =>
 export const minLength6 = minLength(6);
 export const maxLength15 = maxLength(15);
 
-export const customValidate = values => {
+export const registerValidate = values => {
   const errors = {};
 
-  if (!values.confirmPassword) {
-    errors.confirmPassword = 'Confirm Password is required';
-  } else if (values.password !== values.confirmPassword) {
+  if (values.password !== values.confirmPassword) {
     errors.confirmPassword = 'Password and confirm password does not match';
   }
 
+  return errors;
+};
+
+export const settingsValidate = values => {
+  const errors = {};
+
+  if (values.newPassword !== values.confirmPassword) {
+    errors.confirmPassword = 'Password and confirm password does not match';
+  }
   return errors;
 };
