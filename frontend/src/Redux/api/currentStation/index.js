@@ -110,12 +110,12 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SERVER_NEW_USER_JOINED:
       appNotificationInstance.info({
-        message: action.payload && `${action.payload.user} has joined!`,
+        message: `${action.payload.user} has joined!`,
       });
       return state;
     case SERVER_USER_LEFT:
       appNotificationInstance.info({
-        message: action.payload && `${action.payload.user} has left!`,
+        message: `${action.payload.user} has left!`,
       });
       return state;
     /**
@@ -123,12 +123,12 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SERVER_UPVOTE_SONG_FAILURE:
       appNotificationInstance.info({
-        message: action.payload && action.payload.message,
+        message: action.payload.message,
       });
       return state;
     case SERVER_DOWNVOTE_SONG_FAILURE:
       appNotificationInstance.info({
-        message: action.payload && action.payload.message,
+        message: action.payload.message,
       });
       return state;
     /**
@@ -147,7 +147,7 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SERVER_ADD_SONG_FAILURE:
       appNotificationInstance.warning({
-        message: action.payload && action.payload.message,
+        message: action.payload.message,
       });
       return {
         ...state,
