@@ -5,6 +5,8 @@ import * as EVENTS from '../const/actions';
 import createEmitter from './managers/createEmitter';
 
 const io = SocketIO();
+export const UPVOTE_ACTION = 1;
+export const DOWNVOTE_ACTION = -1;
 
 io.on('connection', async function(socket) {
   console.log('Connected with ' + socket.id);
@@ -66,8 +68,9 @@ io.on('connection', async function(socket) {
       case EVENTS.CLIENT_UPVOTE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_UPVOTE_SONG);
         eventHandlers.voteSong(
-          createEmitter(socket, io),
-          1,
+          UPVOTE_ACTION,
+          io,
+          socket,
           action.payload.userId,
           action.payload.stationId,
           action.payload.songId,
@@ -77,27 +80,12 @@ io.on('connection', async function(socket) {
       case EVENTS.CLIENT_DOWNVOTE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_DOWNVOTE_SONG);
         eventHandlers.voteSong(
-          createEmitter(socket, io),
-          -1,
-          action.payload.userId,
-          action.payload.stationId,
-          action.payload.songId,
-        );
-        break;
-
-      case EVENTS.CLIENT_CHECK_EXISTS_EMAIL:
-        console.log('Action received: ' + EVENTS.CLIENT_CHECK_EXISTS_EMAIL);
-        eventHandlers.checkExistUser(io, socket, action.payload.email);
-        break;
-
-      case EVENTS.CLIENT_SKIP_SONG:
-        console.log('Action received: ' + EVENTS.CLIENT_SKIP_SONG);
-        eventHandlers.skipSong(
+          DOWNVOTE_ACTION,
           io,
           socket,
           action.payload.userId,
-          action.payload.songId,
           action.payload.stationId,
+          action.payload.songId,
         );
         break;
       default:

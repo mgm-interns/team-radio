@@ -1,7 +1,7 @@
 export default () => ({
   avatar: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     marginLeft: '16px',
     borderRadius: '40px',
   },
@@ -42,5 +42,8 @@ export default () => ({
     textDecoration: 'none',
     color: 'white',
     fontSize: '1rem',
+  },
+  menuPopover: {
+    marginTop: 30,
   },
 });

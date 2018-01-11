@@ -45,6 +45,8 @@ export default ({ spacing, palette, typography }) => ({
   actions: {
     textAlign: 'center',
     alignSelf: 'center',
+    paddingLeft: '0 !important',
+    paddingRight: '0 !important',
   },
   action: {
     width: spacing.baseMargin * 3,

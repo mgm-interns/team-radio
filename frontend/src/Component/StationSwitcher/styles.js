@@ -1,10 +1,12 @@
 export default ({ breakpoints, spacing, palette }) => ({
   container: {
+    paddingBottom: 8,
     margin: 'auto',
     overflowX: 'auto',
-    minHeight: 120,
+    minHeight: 110,
+    width: 'auto !important',
     [breakpoints.up('md')]: {
-      minHeight: 130,
+      minHeight: 200,
       paddingLeft: spacing.doubleBaseMargin,
       paddingRight: spacing.doubleBaseMargin,
     },
@@ -25,17 +27,19 @@ export default ({ breakpoints, spacing, palette }) => ({
   },
   stationWrapper: {
     display: 'flex !important',
-    padding: spacing.baseMargin,
+    padding: spacing.doubleBaseMargin,
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'left',
     cursor: 'pointer',
   },
   stationTitle: {
-    marginTop: spacing.smallMargin,
-    fontWeight: 'bold',
-    fontSize: '0.825em',
-    textAlign: 'center',
+    marginTop: spacing.baseMargin,
+    fontSize: '1em',
+    textAlign: 'left',
     display: 'block',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
   },
   stationSubtitle: {
     color: 'grey',
@@ -44,8 +48,8 @@ export default ({ breakpoints, spacing, palette }) => ({
   stationAvatar: {
     display: 'flex',
     flexFlow: 'column-reverse',
-    width: 90,
-    height: 90,
+    width: 150,
+    height: 150,
     backgroundSize: 'cover',
   },
   stationOnlineCountWrapper: {
@@ -71,7 +75,7 @@ export default ({ breakpoints, spacing, palette }) => ({
     color: palette.white,
   },
   stationInfo: {
-    width: 90,
+    width: 150,
   },
   activeStation: {
     background: 'white',
@@ -93,6 +97,9 @@ export default ({ breakpoints, spacing, palette }) => ({
     alignItems: 'center',
   },
   [breakpoints.down('sm')]: {
+    stationWrapper: {
+      padding: spacing.baseMargin,
+    },
     stationAvatar: {
       width: 80,
       height: 80,
@@ -102,6 +109,7 @@ export default ({ breakpoints, spacing, palette }) => ({
     },
     stationTitle: {
       fontSize: '0.75em',
+      marginTop: spacing.smallMargin,
     },
     stationSubtitle: {
       color: 'grey',

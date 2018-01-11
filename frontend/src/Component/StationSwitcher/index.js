@@ -70,6 +70,7 @@ class StationSwitcher extends Component {
      * Ordered stations
      * - Current station always be on top
      * - higher online users higher position
+     * - Active station
      */
     const orderedStations = orderBy(
       filteredStations,
@@ -78,8 +79,10 @@ class StationSwitcher extends Component {
         ({ station_id }) => (station_id === stationId ? -1 : 1),
         // Sort by number of online users
         'online_count',
+        // Sort by is active station
+        'isActive',
       ],
-      ['asc', 'desc'],
+      ['asc', 'desc', 'asc'],
     );
 
     return (

@@ -3,6 +3,7 @@ export default ({ breakpoints, spacing }) => ({
     margin: 'auto',
     zIndex: '10',
     width: '100%',
+    height: 56,
     position: 'fixed',
     fontFamily: 'Lato',
     transition: 'all 0.3s',
@@ -11,7 +12,7 @@ export default ({ breakpoints, spacing }) => ({
     },
   },
   wrapper: {
-    margin: '5px',
+    margin: 0,
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,

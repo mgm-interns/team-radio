@@ -1,8 +1,7 @@
 import { SERVER_JOINED_STATION_SUCCESS } from 'Redux/actions';
 import {
   SET_PREVIEW_VIDEO,
-  MUTE_NOW_PLAYING,
-  MUTE_PREVIEW,
+  MUTE_VIDEO_REQUEST,
   SAVE_PLAYLIST,
   SAVE_HISTORY,
   REPLAY_REQUEST,
@@ -11,8 +10,9 @@ import {
 const INITIAL_STATE = {
   joinedStation: false,
   preview: null,
-  mutedNowPlaying: false,
-  mutedPreview: false,
+  muteNowPlaying: false,
+  mutePreview: true,
+  userDid: false,
   playlist: [],
   history: [],
   replayed: false,
@@ -30,15 +30,12 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         joinedStation: true,
       };
-    case MUTE_NOW_PLAYING:
+    case MUTE_VIDEO_REQUEST:
       return {
         ...state,
-        mutedNowPlaying: action.payload,
-      };
-    case MUTE_PREVIEW:
-      return {
-        ...state,
-        mutedPreview: action.payload,
+        muteNowPlaying: action.payload.muteNowPlaying,
+        mutePreview: action.payload.mutePreview,
+        userDid: action.payload.userDid,
       };
     case SAVE_PLAYLIST:
       return {

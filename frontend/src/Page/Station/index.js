@@ -5,12 +5,17 @@ import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
+import Tabs, { Tab } from 'material-ui/Tabs';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
-import { StationSwitcher, NavBar, Footer } from 'Component';
+import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
-import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
+import {
+  muteVideoRequest,
+  savePlaylist,
+  saveHistory,
+} from 'Redux/page/station/actions';
 import AlertIcon from 'react-icons/lib/go/alert';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
@@ -30,24 +35,17 @@ class StationPage extends Component {
       muted: false,
       playlist: [],
       history: [],
-      switchToPlaylist: true,
-      switchToHistory: false,
+      tabValue: 0,
     };
 
-    this._renderListSongs = this._renderListSongs.bind(this);
     this._onVolumeClick = this._onVolumeClick.bind(this);
-    this._onPlaylistClick = this._onPlaylistClick.bind(this);
-    this._onHistoryClick = this._onHistoryClick.bind(this);
+    this._renderTabs = this._renderTabs.bind(this);
+    this._handleTabChange = this._handleTabChange.bind(this);
   }
 
   componentWillMount() {
     // Get station id from react-router
-    const {
-      match: { params: { stationId } },
-      history,
-      userId,
-      // mutedNowPlaying,
-    } = this.props;
+    const { match: { params: { stationId } }, history, userId } = this.props;
     if (stationId && stationId !== 'null' && stationId !== 'undefined') {
       this.props.joinStation({ stationId, userId });
     } else {
@@ -62,7 +60,7 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { mutedNowPlaying, currentStation: { playlist } } = nextProps;
+    const { muteNowPlaying, currentStation: { playlist } } = nextProps;
 
     // Get playlist & history
     this.setState({
@@ -70,110 +68,78 @@ class StationPage extends Component {
       history: playlist.filter(item => item.is_played === true),
     });
 
-    this.setState({ muted: mutedNowPlaying });
+    this.setState({ muted: muteNowPlaying });
   }
 
   componentDidMount() {
-    const { muteNowPlaying, mutePreview } = this.props;
+    const { muteVideoRequest } = this.props;
 
-    // Handle volume
-    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus')) || [];
-    volumeStatus.forEach(item => {
-      switch (item.player) {
-        case 'nowPlaying':
-          muteNowPlaying(item.muted);
-          this.setState({ muted: item.muted });
-          break;
-        case 'preview':
-          mutePreview(item.muted);
-          break;
-        default:
-          break;
-      }
+    // Handle volume after the page is reloaded
+    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus')) || {};
+    muteVideoRequest({
+      muteNowPlaying: volumeStatus.muteNowPlaying,
+      mutePreview: volumeStatus.mutePreview,
+      userDid: volumeStatus.userDid,
     });
   }
-
-  // static getPlaylistLength(playlist) {
-  //   if (!playlist) {
-  //     return false;
-  //   }
-  //   const filteredPlaylist = playlist.filter(song => song.is_played === false);
-
-  //   return filteredPlaylist.length;
-  // }
 
   _onVolumeClick() {
-    const { mutePreview, muteNowPlaying, mutedNowPlaying } = this.props;
-    muteNowPlaying(!mutedNowPlaying);
-    // always mute preview even any video is playing or not
-    mutePreview(true);
-  }
-
-  _onPlaylistClick() {
-    this.setState({
-      switchToPlaylist: true,
-      switchToHistory: false,
+    const { muteVideoRequest, muteNowPlaying } = this.props;
+    muteVideoRequest({
+      muteNowPlaying: !muteNowPlaying,
+      userDid: true,
     });
   }
 
-  _onHistoryClick() {
-    this.setState({
-      switchToPlaylist: false,
-      switchToHistory: true,
-    });
+  _handleTabChange(e, value) {
+    this.setState({ tabValue: value });
   }
 
-  _renderListSongs() {
+  _renderTabs() {
     const { classes } = this.props;
-    const { playlist, history, switchToPlaylist, switchToHistory } = this.state;
-    return (
-      <Grid container>
-        <Grid item xs={12}>
-          <Grid
-            container
-            justify="space-between"
-            className={classes.playlistHeader}
-          >
-            <Typography
-              type={'display1'}
-              className={classNames([classes.playlistMenuItem], {
-                [classes.switchedTitle]: switchToPlaylist,
-              })}
-              onClick={this._onPlaylistClick}
-            >
-              Playlist ({playlist.length})
-            </Typography>
-            <div className={classes.nowPlayingHeader}>
-              <Typography
-                type={'display1'}
-                className={classNames([classes.playlistMenuItem], {
-                  [classes.switchedTitle]: switchToHistory,
-                })}
-                onClick={this._onHistoryClick}
-              >
-                History
-              </Typography>
-              {/* <IconButton color="default">play_arrow</IconButton> */}
-            </div>
-          </Grid>
-        </Grid>
-        {switchToHistory ? (
-          <History
-            className={classNames(classes.content, {
-              [classes.emptyPlaylist]: !history,
-            })}
-            history={history}
-          />
-        ) : (
+    const { playlist, history, tabValue } = this.state;
+    return [
+      <Tabs
+        key={1}
+        fullWidth
+        value={tabValue}
+        onChange={this._handleTabChange}
+        indicatorColor="primary"
+      >
+        <Tab
+          classes={{
+            label: classes.tabLabel,
+          }}
+          label={`Playlist (${playlist.length})`}
+        />
+        <Tab
+          classes={{
+            label: classes.tabLabel,
+          }}
+          label="History"
+        />
+      </Tabs>,
+      tabValue === 0 && (
+        <TabContainer key={2}>
           <Playlist
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !playlist,
             })}
             playlist={playlist}
           />
-        )}
-      </Grid>
-    );
+        </TabContainer>
+      ),
+      tabValue === 1 && (
+        <TabContainer key={3}>
+          <History
+            className={classNames(classes.content, {
+              [classes.emptyPlaylist]: !history,
+            })}
+            history={history}
+          />
+        </TabContainer>
+      ),
+    ];
   }
 
   render() {
@@ -257,7 +223,7 @@ class StationPage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>
-              {this._renderListSongs()}
+              {this._renderTabs()}
             </Grid>
             <Grid item xs={12}>
               <AddLink />
@@ -278,16 +244,17 @@ StationPage.propTypes = {
   history: PropTypes.any,
   currentStation: PropTypes.any,
   userId: PropTypes.string,
-  muteNowPlaying: PropTypes.func,
-  mutePreview: PropTypes.func,
-  mutedNowPlaying: PropTypes.bool,
+  muteVideoRequest: PropTypes.func,
+  muteNowPlaying: PropTypes.bool,
   mutedPreview: PropTypes.bool,
   preview: PropTypes.object,
+  savePlaylist: PropTypes.func,
+  saveHistory: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
   currentStation: api.currentStation,
-  mutedNowPlaying: page.station.mutedNowPlaying,
+  muteNowPlaying: page.station.muteNowPlaying,
   mutedPreview: page.station.mutedPreview,
   preview: page.station.preview,
   userId: api.user.data.userId,
@@ -296,8 +263,10 @@ const mapStateToProps = ({ api, page }) => ({
 const mapDispatchToProps = dispatch => ({
   joinStation: stationId => dispatch(joinStation(stationId)),
   leaveStation: option => dispatch(leaveStation(option)),
-  muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
-  mutePreview: muted => dispatch(mutePreview(muted)),
+  muteVideoRequest: ({ muteNowPlaying, mutePreview, userDid }) =>
+    dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
+  savePlaylist: playlist => dispatch(savePlaylist(playlist)),
+  saveHistory: history => dispatch(saveHistory(history)),
 });
 
 export default compose(
