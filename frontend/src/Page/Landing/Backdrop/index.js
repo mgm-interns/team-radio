@@ -46,7 +46,7 @@ class Backdrop extends Component {
   }
 
   _submit() {
-    createStation(this.state.stationName);
+    this.props.createStation(this.state.stationName);
   }
 
   render() {
