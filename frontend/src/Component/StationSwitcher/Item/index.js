@@ -7,7 +7,6 @@ import CircleOIcon from 'react-icons/lib/fa/circle-o';
 import CircleIcon from 'react-icons/lib/fa/circle';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
 import { withNotification } from 'Component/Notification';
 import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
@@ -77,22 +76,15 @@ SwitcherItem.propTypes = {
   currentStation: PropTypes.object,
   station_id: PropTypes.any,
   online_count: PropTypes.any,
-  muteNowPlaying: PropTypes.func,
-  mutePreview: PropTypes.func,
 };
 
 const mapStateToProps = ({ api }) => ({
   currentStation: api.currentStation,
 });
 
-const mapDispatchToProps = dispatch => ({
-  muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
-  mutePreview: muted => dispatch(mutePreview(muted)),
-});
-
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, undefined),
   withRouter,
   withNotification,
 )(SwitcherItem);
