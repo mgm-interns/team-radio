@@ -12,22 +12,27 @@ import {
   SERVER_UPDATE_ONLINE_USERS,
   CLIENT_LEAVE_STATION,
   SERVER_USER_LEFT,
+  SERVER_SKIP_SONG,
 } from 'Redux/actions';
 import { appNotificationInstance } from 'Component/Notification/AppNotification';
 
 const INITIAL_STATE = {
   station: null,
   playlist: [],
+  tempPlaylist: [],
   nowPlaying: {
     url: '',
     starting_time: 0,
   },
-  tempPlaylist: [],
+  skip: {
+    _id: new Date().getTime(),
+    delay: 0,
+  },
+  online_count: 0,
   joined: {
     loading: false,
     success: false,
   },
-  online_count: 0,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -86,6 +91,19 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         nowPlaying: action.payload,
+      };
+
+    /**
+     * Skip song
+     */
+    case SERVER_SKIP_SONG:
+      return {
+        ...state,
+        skip: {
+          _id: new Date().getTime(),
+          delay: action.payload.delay,
+          thumbnail: action.payload.now_playing.thumbnail,
+        },
       };
     /**
      * Notify when a new user join
