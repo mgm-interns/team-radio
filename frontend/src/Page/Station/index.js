@@ -120,7 +120,7 @@ class StationPage extends Component {
         />
       </Tabs>,
       tabValue === 0 && (
-        <TabContainer>
+        <TabContainer key={2}>
           <Playlist
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !playlist,
@@ -130,7 +130,7 @@ class StationPage extends Component {
         </TabContainer>
       ),
       tabValue === 1 && (
-        <TabContainer>
+        <TabContainer key={3}>
           <History
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !history,
