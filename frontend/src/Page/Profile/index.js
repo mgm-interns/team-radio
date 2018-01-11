@@ -27,17 +27,16 @@ class Profile extends Component {
     this._renderLoading = this._renderLoading.bind(this);
   }
 
-  // componentWillMount() {
-  //   // Get station id from react-router
-  //   const { match: { params: { username } }, history } = this.props;
-  //   if (username !== 'undefined') {
-  //     this.props.fetchUserWithUsername(username);
-  //   } else {
-  //     // Go to landing page
-  //     console.log('redirect landing');
-  //     history.push('/');
-  //   }
-  // }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.loading === false) {
+      const { match: { params: { username } }, history } = this.props;
+      if (username !== nextProps.user.username) {
+        // Go to landing page
+        console.log('redirect landing');
+        history.push('/');
+      }
+    }
+  }
 
   _renderLoading() {
     return <CircularProgress />;
@@ -73,6 +72,7 @@ Profile.propTypes = {
 
 const mapStateToProps = state => ({
   user: state.api.user.data,
+  loading: state.api.user.loading,
 });
 
 const mapDispatchToProps = dispatch => ({
