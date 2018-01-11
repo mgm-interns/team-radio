@@ -22,7 +22,7 @@ export default router => {
           userId: newUser._id,
         };
         const token = jwt.sign(payload, req.app.get('superSecret'), {
-          expiresIn: 1440 * 7, // expires in 24 hours
+          expiresIn: 604800,
         });
         res.json({
           message: 'signup success',
@@ -60,7 +60,7 @@ export default router => {
           };
 
           const token = jwt.sign(payload, req.app.get('superSecret'), {
-            expiresIn: 1440,
+            expiresIn: 604800,
           });
           res.json({
             success: true,
@@ -92,7 +92,7 @@ export default router => {
         userId: user._id,
       };
       const token = jwt.sign(payload, req.app.get('superSecret'), {
-        expiresIn: 1440 * 7, // expires in 24 hours
+        expiresIn: 604800,
       });
       res.json({
         message: 'signup success',
@@ -247,6 +247,50 @@ export default router => {
           user = await userController.setUsername(
             user.email,
             req.body.username,
+          );
+          return res.json({
+            message: 'Success',
+            user: user,
+          });
+        }
+      }
+      return res.json({
+        message: 'Can not update username!',
+      });
+    } catch (err) {
+      throw err;
+    }
+  });
+  router.post('/setPassword', async (req, res) => {
+    // INPUT  : req.headers['access-token'], req.body.userId, req.body.oldPassword, req.body.newPassword
+    // OUTPUT :
+    // Return res.json({
+    //     message: 'Success',
+    // }); if updating success
+    // Return res.json({
+    //     message: 'Old password is wrong!',
+    // }); if password not true
+    // Return res.json({
+    //     message: 'Can not update password!',
+    // }); if password not true
+    try {
+      let user = await userController.getUserById(req.body.userId);
+      const token = req.headers['access-token'];
+      if (user) {
+        const isOwner = await userController.isVerifidedToken(
+          user._id.toString(),
+          token,
+          req.app.get('superSecret'),
+        );
+        if (isOwner) {
+          if (!user.validPassword(req.body.oldPassword)) {
+            return res.status(401).json({
+              message: 'Old password is wrong!',
+            });
+          }
+          user = await userController.setPassword(
+            user.email,
+            req.body.newPassword,
           );
           return res.json({
             message: 'Success',

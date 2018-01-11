@@ -93,12 +93,18 @@ export const setUsername = async (email, username) => {
         throw err;
     }
 }
+export const setPassword = async (email, password) => {
+    try{
+        await userModels.setPassword(email, password);
+        return await userModels.getUserByEmail(email);
+    }catch(err){
+        throw err;
+    }
+}
 export const isVerifidedToken = async (userId, token, superSecret) => {
     try{
         let result = false;
         if (token) {
-            // const decoded = await jwt.verify(token, superSecret);
-            // if (decoded && decoded.userId ===userId) return true;
             jwt.verify(token, superSecret, (err, decoded) => {
                 if (!err && decoded.userId === userId) result = true;
             })
