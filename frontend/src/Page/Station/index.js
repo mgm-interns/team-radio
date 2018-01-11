@@ -58,7 +58,7 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { muteNowPlaying, currentStation: { playlist } } = nextProps;
+    const { muteNowPlaying } = nextProps;
     this.setState({ muted: muteNowPlaying });
   }
 
@@ -89,11 +89,14 @@ class StationPage extends Component {
   _renderTabs() {
     const {
       classes,
-      currentStation: { playlist, updatedPlaylist, updatedHistory },
+      currentStation: {
+        playlist,
+        updatedPlaylist,
+        updatedHistory,
+        isUpdatePlaylist,
+      },
     } = this.props;
     const { tabValue } = this.state;
-
-    console.log(updatedPlaylist.length);
 
     return [
       <Tabs
@@ -108,7 +111,7 @@ class StationPage extends Component {
             label: classes.tabLabel,
           }}
           label={`Playlist (${
-            updatedPlaylist.length === 0
+            !isUpdatePlaylist
               ? playlist.filter(item => item.is_played === false).length
               : updatedPlaylist.length
           })`}
@@ -124,10 +127,10 @@ class StationPage extends Component {
         <TabContainer key={2}>
           <Playlist
             className={classNames(classes.content, {
-              [classes.emptyPlaylist]: !playlist,
+              [classes.emptyPlaylist]: !updatedPlaylist,
             })}
             playlist={
-              updatedPlaylist.length === 0
+              !isUpdatePlaylist
                 ? playlist.filter(item => item.is_played === false)
                 : updatedPlaylist
             }
@@ -141,7 +144,7 @@ class StationPage extends Component {
               [classes.emptyPlaylist]: !updatedHistory,
             })}
             history={
-              updatedHistory.length === 0
+              !isUpdatePlaylist
                 ? playlist.filter(item => item.is_played === true)
                 : updatedHistory
             }

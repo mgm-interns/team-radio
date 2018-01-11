@@ -19,6 +19,7 @@ import { appNotificationInstance } from 'Component/Notification/AppNotification'
 const INITIAL_STATE = {
   station: null,
   playlist: [],
+  isUpdatePlaylist: false,
   updatedPlaylist: [],
   updatedHistory: [],
   nowPlaying: {
@@ -46,6 +47,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_JOINED_STATION_FAILURE:
       return {
         ...INITIAL_STATE,
+        joined: false,
       };
 
     case CLIENT_JOIN_STATION:
@@ -72,6 +74,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_UPDATE_PLAYLIST:
       return {
         ...state,
+        isUpdatePlaylist: true,
         updatedPlaylist: action.payload.playlist,
       };
     /**

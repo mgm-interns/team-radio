@@ -45,8 +45,8 @@ export default ({ spacing, palette, typography }) => ({
     paddingRight: '0 !important',
   },
   action: {
-    width: spacing.baseMargin * 3,
-    height: spacing.baseMargin * 3,
+    width: spacing.baseMargin * 5,
+    height: spacing.baseMargin * 5,
     '& .material-icons': {
       fontSize: spacing.baseMargin * 3,
     },
