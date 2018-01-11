@@ -11,7 +11,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
 import orderBy from 'lodash/orderBy';
-import SwitcherItem from './Item';
+import { StationItem } from 'Component';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -96,7 +96,7 @@ class StationSwitcher extends Component {
         }}
       >
         {orderedStations.map((station, index) => (
-          <SwitcherItem
+          <StationItem
             key={index}
             {...station}
             goToStationPage={() => this._goToStationPage(station)}

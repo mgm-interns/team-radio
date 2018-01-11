@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { withNotification } from 'Component/Notification';
 import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
-import styles from '../styles';
+import styles from './styles';
 
 /* eslint-disable camelcase */
 /* eslint-disable no-shadow */
@@ -23,6 +23,7 @@ class SwitcherItem extends Component {
       station_name,
       station_id,
       currentStation: { station, nowPlaying },
+      disableOnlineCount,
     } = this.props;
     let { thumbnail, online_count } = this.props;
     if ((station && station.station_id) === station_id) {
@@ -40,22 +41,24 @@ class SwitcherItem extends Component {
           className={classes.stationAvatar}
           style={{ backgroundImage: `url(${thumbnail})` }}
         >
-          <div className={classes.stationOnlineCountWrapper}>
-            {online_count > 0 ? (
-              <CircleIcon
-                className={classNames(classes.onlineIcon, 'active')}
-              />
-            ) : (
-              <CircleOIcon className={classNames(classes.onlineIcon)} />
-            )}
-            <Typography
-              type={'caption'}
-              align={'left'}
-              className={classes.stationOnlineCountText}
-            >
-              {online_count || 0} online
-            </Typography>
-          </div>
+          {!disableOnlineCount && (
+            <div className={classes.stationOnlineCountWrapper}>
+              {online_count > 0 ? (
+                <CircleIcon
+                  className={classNames(classes.onlineIcon, 'active')}
+                />
+              ) : (
+                <CircleOIcon className={classNames(classes.onlineIcon)} />
+              )}
+              <Typography
+                type={'caption'}
+                align={'left'}
+                className={classes.stationOnlineCountText}
+              >
+                {online_count || 0} online
+              </Typography>
+            </div>
+          )}
         </div>
         <div className={classes.stationInfo}>
           <Tooltip id={station_id} title={station_name} placement={'right'}>
@@ -70,6 +73,7 @@ class SwitcherItem extends Component {
 SwitcherItem.propTypes = {
   goToStationPage: PropTypes.any,
   classes: PropTypes.any,
+  disableOnlineCount: PropTypes.bool,
   thumbnail: PropTypes.any,
   isActive: PropTypes.any,
   station_name: PropTypes.any,
