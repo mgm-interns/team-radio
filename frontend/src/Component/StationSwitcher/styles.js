@@ -1,4 +1,4 @@
-export default ({ breakpoints, spacing, palette }) => ({
+export default ({ breakpoints, spacing }) => ({
   container: {
     paddingBottom: 8,
     margin: 'auto',
@@ -10,7 +10,6 @@ export default ({ breakpoints, spacing, palette }) => ({
       paddingLeft: spacing.doubleBaseMargin,
       paddingRight: spacing.doubleBaseMargin,
     },
-    // height: calc(100vh - 7.4rem) !important;
   },
   scrollArea: {
     display: 'flex',
