@@ -12,7 +12,7 @@ const INITIAL_STATE = {
   joinedStation: false,
   preview: null,
   mutedNowPlaying: false,
-  mutedPreview: false,
+  mutedPreview: true,
   playlist: [],
   history: [],
   replayed: false,
