@@ -1,5 +1,6 @@
 import * as userController from '../../controllers/user';
 import createEmitter from '../managers/createEmitter';
+import skipDecider from '../managers/skipDecider';
 import { leaveNotification } from '../managers/onlineUserManager';
 
 export default async (io, socket) => {
@@ -11,8 +12,10 @@ export default async (io, socket) => {
     try {
       const { name } = await userController.getUserById(socket.userId);
       leaveNotification(stationId, name, emitter, io);
+      skipDecider(io, stationId);
     } catch (err) {
       leaveNotification(stationId, 'Anonymous', emitter, io);
+      skipDecider(io, stationId);
     }
   }
 };

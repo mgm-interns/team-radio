@@ -6,35 +6,31 @@ import * as userController from '../controllers/user';
 export default router => {
   router.post('/signup', async (req, res) => {
     try {
-      let user = await User.findOne({ email: req.body.email });
+      const user = await User.findOne({ email: req.body.email });
       if (user) {
         res.status(400).json({ message: 'This email has already been taken.' });
       } else {
-        const newUser = new User();
-        newUser.email = req.body.email;
-        newUser.name = req.body.name;
-        newUser.password = newUser.generateHash(req.body.password);
+        const newUser = await userController.createUser(
+          req.body.email,
+          req.body.password,
+          req.body.name,
+        );
 
-        newUser.save(async err => {
-          if (err) throw err;
-          const payload = {
-            email: newUser.email,
-            name: newUser.name,
-            userId: newUser._id,
-          };
-
-          user = await User.findOne({ email: req.body.email });
-
-          const token = jwt.sign(payload, req.app.get('superSecret'), {
-            expiresIn: 1440 * 7, // expires in 24 hours
-          });
-          res.json({
-            message: 'signup success',
-            token: token,
-            userId: user._id,
-            name: user.name,
-            avatar_url: user.avatar_url,
-          });
+        const payload = {
+          email: newUser.email,
+          name: newUser.name,
+          userId: newUser._id,
+        };
+        const token = jwt.sign(payload, req.app.get('superSecret'), {
+          expiresIn: 1440 * 7, // expires in 24 hours
+        });
+        res.json({
+          message: 'signup success',
+          token: token,
+          userId: newUser._id,
+          name: newUser.name,
+          avatar_url: newUser.avatar_url,
+          username: newUser.username,
         });
       }
     } catch (err) {
@@ -57,9 +53,6 @@ export default router => {
             message: 'Incorrect email or password',
           });
         } else {
-          // if user is found and password is right
-          // create a token with only our given payload
-          // we don't want to pass in the entrie user since that has the password
           const payload = {
             email: user.email,
             name: user.name,
@@ -67,7 +60,7 @@ export default router => {
           };
 
           const token = jwt.sign(payload, req.app.get('superSecret'), {
-            expiresIn: 1440, // expires in 24 hours *****************************
+            expiresIn: 1440,
           });
           res.json({
             success: true,
@@ -76,6 +69,7 @@ export default router => {
             userId: user._id,
             name: user.name,
             avatar_url: user.avatar_url,
+            username: user.username,
           });
         }
       }
@@ -90,6 +84,7 @@ export default router => {
         req.body.googleId,
         req.body.facebookId,
         req.body.avatar_url,
+        req.body.name,
       );
       const payload = {
         email: user.email,
@@ -107,6 +102,7 @@ export default router => {
         facebookId: user.facebook_id,
         name: user.name,
         avatar_url: user.avatar_url,
+        username: user.username,
       });
     } catch (err) {
       throw err;
@@ -123,16 +119,16 @@ export default router => {
     }
   });
 
-  router.post('/isExistName', async (req, res) => {
+  router.post('/isExistUsername', async (req, res) => {
     try {
-      const alreadyUser = await User.getUserByName(req.body.name);
+      const alreadyUser = await User.getUserByUsername(req.body.username);
       if (alreadyUser) res.json({ data: { isExist: true } });
       else res.json({ data: { isExist: false } });
     } catch (err) {
       throw err;
     }
   });
-  router.post('/verifyToken', async (req, res) => {
+  router.post('/isVerifidedToken', async (req, res) => {
     try {
       const token = req.body.token;
       if (token) {
@@ -149,7 +145,123 @@ export default router => {
       throw err;
     }
   });
-  //router.use(authController);
+
+  router.get('/Profile/:username', async (req, res) => {
+    // INPUT  : req.headers['access-token'], req.params.username
+    // OUTPUT :
+    // Return res.json({
+    //     message: 'Success',
+    //     isOwner: isOwner,  true if return user have userId match with userId in token
+    //                        false if invalid token or return user have userId not match with userId in token
+    //     user: user,
+    // }); if username is exist
+    // Return res.json({
+    //     message: 'User not found!',
+    // }); if username is not exist
+    try {
+      const user = await userController.getUserProfile(req.params.username);
+      const token = req.headers['access-token'];
+      if (user) {
+        // verify token
+        const isOwner = await userController.isVerifidedToken(
+          user._id.toString(),
+          token,
+          req.app.get('superSecret'),
+        );
+        return res.json({
+          message: 'Success',
+          isOwner: isOwner,
+          user: user,
+        });
+      }
+      return res.json({
+        message: 'User not found!',
+      });
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  router.post('/setAvatar', async (req, res) => {
+    // INPUT  : req.headers['access-token'], req.body.userId, req.body.avatar_url
+    // OUTPUT :
+    // Return res.json({
+    //     message: 'Success',
+    //     user: user,
+    // }); if updating success
+    // Return res.json({
+    //     message: 'Can not update avatar!',
+    // }); if updating fail
+    try {
+      let user = await userController.getUserById(req.body.userId);
+      const token = req.headers['access-token'];
+      if (user) {
+        // verify token
+        const isOwner = await userController.isVerifidedToken(
+          user._id.toString(),
+          token,
+          req.app.get('superSecret'),
+        );
+        if (isOwner) {
+          user = await userController.setAvatar(
+            req.body.userId,
+            req.body.avatar_url,
+          );
+          return res.json({
+            message: 'Success',
+            user: user,
+          });
+        }
+      }
+      return res.json({
+        message: 'Can not update avatar!',
+      });
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  router.post('/setUsername', async (req, res) => {
+    // INPUT  : req.headers['access-token'], req.body.userId, req.body.username
+    // OUTPUT :
+    // Return res.json({
+    //     message: 'Success',
+    //     user: user,
+    // }); if updating success
+    // Return res.json({
+    //     message: 'Can not update username!',
+    // }); if updating fail
+    try {
+      let user = await userController.getUserById(req.body.userId);
+      const AlreadyUser = await userController.getUserProfile(
+        req.body.username,
+      );
+      const token = req.headers['access-token'];
+      if ((!AlreadyUser || AlreadyUser.username === user.username) && user) {
+        const isOwner = await userController.isVerifidedToken(
+          user._id.toString(),
+          token,
+          req.app.get('superSecret'),
+        );
+        if (isOwner) {
+          user = await userController.setUsername(
+            user.email,
+            req.body.username,
+          );
+          return res.json({
+            message: 'Success',
+            user: user,
+          });
+        }
+      }
+      return res.json({
+        message: 'Can not update username!',
+      });
+    } catch (err) {
+      throw err;
+    }
+  });
+  router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

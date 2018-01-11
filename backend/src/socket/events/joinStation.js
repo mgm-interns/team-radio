@@ -7,6 +7,7 @@ import {
   joinNotification,
   leaveNotification,
 } from '../managers/onlineUserManager';
+import skipDecider from '../managers/skipDecider';
 
 export default async (io, socket, userId, stationId) => {
   const emitter = createEmitter(socket, io);
@@ -65,8 +66,10 @@ const _joinStationProcess = async (socket, io, userId, stationId) => {
   if (stationJoined) {
     try {
       const { name } = await userController.getUserById(socket.userId);
+      skipDecider(io, stationJoined);
       leaveNotification(stationJoined, name, emitter, io);
     } catch (err) {
+      skipDecider(io, stationJoined);
       leaveNotification(stationJoined, 'Anonymous', emitter, io);
     }
   }
@@ -77,8 +80,10 @@ const _joinStationProcess = async (socket, io, userId, stationId) => {
   try {
     const { name } = await userController.getUserById(userId);
     socket.userId = userId;
+    skipDecider(io, stationId);
     joinNotification(stationId, name, emitter, io);
   } catch (err) {
+    skipDecider(io, stationId);
     joinNotification(stationId, 'Anonymous', emitter, io);
   }
   console.log('Join accept: ' + socket.id + ' joined to ' + stationId);

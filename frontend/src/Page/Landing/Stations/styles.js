@@ -7,8 +7,6 @@ export default ({ typography, breakpoints, palette }) => ({
   switcherContainer: {
     margin: 'auto',
     padding: '0 !important',
-    // marginTop: 85,
-    paddingBottom: 10,
     background: palette.lightGrey['200'],
   },
   switcherContent: {

@@ -111,38 +111,48 @@ class StationPage extends Component {
   _renderTabs() {
     const { classes } = this.props;
     const { playlist, history, tabValue } = this.state;
-    return (
-      <div>
-        <Tabs
-          value={tabValue}
-          onChange={this._handleTabChange}
-          indicatorColor="primary"
-        >
-          <Tab label={`Playlist (${playlist.length})`} />
-          <Tab label="History" />
-        </Tabs>
-        {tabValue === 0 && (
-          <TabContainer>
-            <Playlist
-              className={classNames(classes.content, {
-                [classes.emptyPlaylist]: !playlist,
-              })}
-              playlist={playlist}
-            />
-          </TabContainer>
-        )}
-        {tabValue === 1 && (
-          <TabContainer>
-            <History
-              className={classNames(classes.content, {
-                [classes.emptyPlaylist]: !history,
-              })}
-              history={history}
-            />
-          </TabContainer>
-        )}
-      </div>
-    );
+    return [
+      <Tabs
+        key={1}
+        fullWidth
+        value={tabValue}
+        onChange={this._handleTabChange}
+        indicatorColor="primary"
+      >
+        <Tab
+          classes={{
+            label: classes.tabLabel,
+          }}
+          label={`Playlist (${playlist.length})`}
+        />
+        <Tab
+          classes={{
+            label: classes.tabLabel,
+          }}
+          label="History"
+        />
+      </Tabs>,
+      tabValue === 0 && (
+        <TabContainer>
+          <Playlist
+            className={classNames(classes.content, {
+              [classes.emptyPlaylist]: !playlist,
+            })}
+            playlist={playlist}
+          />
+        </TabContainer>
+      ),
+      tabValue === 1 && (
+        <TabContainer>
+          <History
+            className={classNames(classes.content, {
+              [classes.emptyPlaylist]: !history,
+            })}
+            history={history}
+          />
+        </TabContainer>
+      ),
+    ];
   }
 
   render() {
@@ -226,7 +236,7 @@ class StationPage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>
-              <Grid container>{this._renderTabs()}</Grid>
+              {this._renderTabs()}
             </Grid>
             <Grid item xs={12}>
               <AddLink />

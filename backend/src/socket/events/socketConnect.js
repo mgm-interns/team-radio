@@ -11,7 +11,7 @@ const updateStationList = async (io, socket) => {
   const emitter = createEmitter(socket, io);
   try {
     const allStations = await stationController.getAllAvailableStations();
-    const allOnlineUser = await onlineManager.countOnlineUserOfAllStations(
+    const allOnlineUser = await onlineManager.countOnlineOfAllStations(
       allStations,
       io,
     );

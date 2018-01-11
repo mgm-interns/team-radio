@@ -10,6 +10,7 @@ const userSchema = mongoose.Schema({
   email: {
     type: String,
     require: [true, 'Email can not be empty'],
+    unique: true,
   },
   password: {
     type: String,
@@ -17,10 +18,17 @@ const userSchema = mongoose.Schema({
   name: {
     type: String,
   },
+  username: {
+    type: String,
+    unique: true,
+  },
   avatar_url: {
     type: String,
-    default:
-      'http://res.cloudinary.com/vampire/image/upload/v1515458123/default_avatar.png',
+    default: null,
+  },
+  cover_url: {
+    type: String,
+    default: null,
   },
   reputation: {
     type: Number,
@@ -53,18 +61,14 @@ userSchema.methods.validPassword = function(password) {
 
 var user = (module.exports = mongoose.model('users', userSchema));
 
-module.exports.getUserByEmail = async email => {
-  const query = { email: email };
-  return user.findOne(query);
-};
+module.exports.getUserByEmail = async email =>
+  user.findOne({ email: email }, { password: 0 });
 
-module.exports.getUserByName = async name => {
-  const query = { name: name };
-  return user.findOne(query);
-};
+module.exports.getUserByUsername = async username =>
+  user.findOne({ username: username }, { password: 0 });
 
 module.exports.getUserById = async userId =>
-  user.findOne({ _id: _safeObjectId(userId) });
+  user.findOne({ _id: _safeObjectId(userId) }, { password: 0 });
 
 module.exports.setFacebookId = async (email, facebookId) =>
   user.update({ email: email }, { facebook_id: facebookId }, { multi: true });
@@ -72,8 +76,8 @@ module.exports.setFacebookId = async (email, facebookId) =>
 module.exports.setGoogleId = async (email, googleId) =>
   user.update({ email: email }, { google_id: googleId }, { multi: true });
 
-module.exports.setName = async (email, name) =>
-  user.update({ email: email }, { name: name }, { multi: true });
+module.exports.setUsername = async (email, username) =>
+  user.update({ email: email }, { username: username }, { multi: true });
 
 module.exports.setAvatarUrl = async (email, avatar_url) =>
   user.update({ email: email }, { avatar_url: avatar_url }, { multi: true });

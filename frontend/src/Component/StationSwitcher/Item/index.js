@@ -5,7 +5,6 @@ import Tooltip from 'material-ui/Tooltip';
 import Typography from 'material-ui/Typography';
 import CircleOIcon from 'react-icons/lib/fa/circle-o';
 import CircleIcon from 'react-icons/lib/fa/circle';
-import { transformText } from 'Transformer';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { muteNowPlaying, mutePreview } from 'Redux/page/station/actions';
@@ -61,9 +60,7 @@ class SwitcherItem extends Component {
         </div>
         <div className={classes.stationInfo}>
           <Tooltip id={station_id} title={station_name} placement={'right'}>
-            <span className={classes.stationTitle}>
-              {transformText.reduceByCharacters(station_name, 10)}
-            </span>
+            <span className={classes.stationTitle}>{station_name}</span>
           </Tooltip>
         </div>
       </div>
