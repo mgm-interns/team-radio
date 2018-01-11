@@ -1,4 +1,4 @@
-export default () => ({
+export default ({ palette }) => ({
   avatarContainer: {
     position: 'relative',
     margin: 10,
@@ -52,5 +52,16 @@ export default () => ({
   avatar: {
     width: 150,
     height: 150,
+  },
+  button: {
+    color: 'white',
+    backgroundColor: palette.primary['500'],
+  },
+  cardActions: {
+    flexDirection: 'column',
+  },
+  cardHeader: {
+    display: 'flex',
+    justifyContent: 'center',
   },
 });

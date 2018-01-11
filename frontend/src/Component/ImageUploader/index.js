@@ -146,7 +146,10 @@ class ImageUploader extends Component {
 
         <Modal open={this.state.open} onClose={this.handleClose}>
           <Card className={classes.modalContainer}>
-            <CardHeader title="Crop your new profile photo" />
+            <CardHeader
+              className={classes.cardHeader}
+              title="Crop your new profile photo"
+            />
             <CardContent className={classes.cardContent}>
               <Cropper
                 ref={node => {
@@ -163,8 +166,15 @@ class ImageUploader extends Component {
                 crop={this._crop.bind(this)}
               />
             </CardContent>
-            <CardActions>
-              <Button onClick={this.upload.bind(this)}> Apply </Button>
+            <CardActions className={classes.cardActions}>
+              <Button
+                raised
+                // color={}
+                className={classes.button}
+                onClick={this.upload.bind(this)}
+              >
+                Apply
+              </Button>
             </CardActions>
 
             <div
