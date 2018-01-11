@@ -138,7 +138,8 @@ export default router => {
             return res.status(400).json({ tokenError: 'Verify token failed.' });
           }
           const user = await userController.getUserById(decoded.userId);
-          return res.json(user);
+          const userRes = { ...user._doc, userId: user._id };
+          return res.json(userRes);
           // return res.json(decoded);
         });
       } else {

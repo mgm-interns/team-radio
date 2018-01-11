@@ -43,4 +43,7 @@ export default () => ({
     color: 'white',
     fontSize: '1rem',
   },
+  menuPopover: {
+    marginTop: 30,
+  },
 });

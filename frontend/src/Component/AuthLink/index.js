@@ -34,6 +34,9 @@ class AuthLink extends Component {
 
   _handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
+    document
+      .getElementsByTagName('body')[0]
+      .setAttribute('style', 'padding-right:0;');
   };
 
   _handleClose = () => {
@@ -75,6 +78,7 @@ class AuthLink extends Component {
 
             <Menu
               id="simple-menu"
+              className={classes.menuPopover}
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={this._handleClose}
