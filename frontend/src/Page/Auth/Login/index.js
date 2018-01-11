@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -52,7 +52,8 @@ class Login extends Component {
     } else if (data.token || isAuthenticated) {
       this._showNotification('Login successful!');
       saveAuthenticationState(data);
-      this.props.history.replace('/');
+      this.props.history.go(-1);
+      // this.props.history.replace('/');
     }
     if (!loadAuthenticationState()) {
       this.setState({ isLoggedIn: false });
