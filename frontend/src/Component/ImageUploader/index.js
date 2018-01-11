@@ -36,6 +36,10 @@ class ImageUploader extends Component {
     this._onImagePicked = this._onImagePicked.bind(this);
   }
 
+  componentDidMount() {
+    this.setState({ avatarUrl: this.props.avatarUrl });
+  }
+
   setStateAsync(state) {
     return new Promise(resolve => {
       this.setState(state, resolve);
@@ -108,13 +112,8 @@ class ImageUploader extends Component {
     this.setState({ open: false });
   };
 
-  componentWillReceiveProps(nextProps) {
-    const { userData } = nextProps;
-    this.setState({ avatarUrl: userData.avatar_url });
-  }
-
   render() {
-    const { classes } = this.props;
+    const { classes, avatarUrl } = this.props;
     return (
       <div>
         <div className={classes.avatarContainer} style={this.state.size}>
@@ -125,11 +124,7 @@ class ImageUploader extends Component {
           <div>
             <Avatar
               className={classes.avatar}
-              src={
-                this.state.avatarUrl === null
-                  ? Images.avatar.male01
-                  : this.state.avatarUrl
-              }
+              src={avatarUrl === null ? Images.avatar.male01 : avatarUrl}
             />
           </div>
         </div>
@@ -192,19 +187,18 @@ class ImageUploader extends Component {
 
 ImageUploader.propTypes = {
   classes: PropTypes.any,
-  userData: PropTypes.any,
+  avatarUrl: PropTypes.any,
   updateAvatar: PropTypes.any,
 };
 
-const mapStateToProps = state => ({
-  userData: state.api.user.data,
-});
+// const mapStateToProps = state => ({
+//   userData: state.api.user.data,
+// });
 
 const mapDispatchToProps = dispatch => ({
   updateAvatar: avatar_url => dispatch(updateAvatar(avatar_url)),
 });
 
-export default compose(
-  withNotification,
-  connect(mapStateToProps, mapDispatchToProps),
-)(withStyles(styles)(ImageUploader));
+export default compose(withNotification, connect(null, mapDispatchToProps))(
+  withStyles(styles)(ImageUploader),
+);

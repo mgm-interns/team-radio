@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, Form } from 'redux-form';
 import classNames from 'classnames';
 
 import { withStyles } from 'material-ui/styles';
@@ -26,6 +26,7 @@ import {
 
 import { Images } from 'Theme';
 import styles from './styles';
+import { connect } from 'react-redux';
 
 function getModalStyle() {
   const top = 50;
@@ -56,25 +57,34 @@ class Settings extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this._onOpenModal = this._onOpenModal.bind(this);
+    this._onCloseModal = this._onCloseModal.bind(this);
     this._renderChangeInformationForm = this._renderChangeInformationForm.bind(
       this,
     );
     this._renderChangePasswordForm = this._renderChangePasswordForm.bind(this);
-    this._getMe = this._getMe.bind(this);
+    this._onSaveChangesButtonClick = this._onSaveChangesButtonClick.bind(this);
+    this._onCancelButtonClick = this._onCancelButtonClick.bind(this);
   }
 
   handleChange(event, value) {
     this.setState({ value });
   }
 
-  handleOpen() {
+  _onOpenModal() {
     this.setState({ open: true });
   }
 
-  handleClose() {
+  _onCloseModal() {
     this.setState({ open: false });
+  }
+
+  _onSaveChangesButtonClick() {
+    console.log('_onSaveChangesButtonClick');
+  }
+
+  _onCancelButtonClick() {
+    console.log('_onCancelButtonClick');
   }
 
   _renderSecondItem() {
@@ -86,18 +96,8 @@ class Settings extends Component {
     );
   }
 
-  _getMe(loading, me) {
-    return loading
-      ? null
-      : {
-          fullname: 'test',
-          // username: me.username,
-        };
-  }
-
   _renderChangeInformationForm(user) {
     const { classes, submitSucceeded } = this.props;
-    // const data = user.data.user;
 
     return [
       <Field
@@ -109,6 +109,7 @@ class Settings extends Component {
         label="Username"
         validate={[required]}
         border
+        initialValues={'test'}
       />,
       <Field
         key={2}
@@ -120,19 +121,39 @@ class Settings extends Component {
         validate={[required, maxLength15]}
         border
       />,
+      <Field
+        key={3}
+        name="email"
+        placeholder="Email"
+        type="email"
+        component={TextView}
+        label="Email"
+        border
+        disabled
+      />,
+      <Field
+        key={4}
+        name="level"
+        placeholder="Level"
+        type="text"
+        component={TextView}
+        label="Level"
+        border
+        disabled
+      />,
       <FormHelperText key={5} className={classes.error}>
         {submitSucceeded && this.state.asyncError}
       </FormHelperText>,
     ];
   }
 
-  _renderChangePasswordForm() {
+  _renderChangePasswordForm(user) {
     const { classes, submitSucceeded } = this.props;
     return [
       <Field
         key={1}
         name="password"
-        placeholder="Your password"
+        placeholder="Old password"
         type="password"
         component={TextView}
         label="Your password"
@@ -140,9 +161,19 @@ class Settings extends Component {
         border
       />,
       <Field
-        key={2}
+        key={3}
+        name="password"
+        placeholder="New password"
+        type="password"
+        component={TextView}
+        label="Your password"
+        validate={[required, maxLength15]}
+        border
+      />,
+      <Field
+        key={4}
         name="confirmPassword"
-        placeholder="Confirm password"
+        placeholder="New password confirm"
         type="password"
         component={TextView}
         label="Confirm password"
@@ -155,16 +186,23 @@ class Settings extends Component {
     ];
   }
 
+  _renderLoading() {
+    return <CircularProgress />;
+  }
+
   render() {
     const { classes, handleSubmit, user } = this.props;
-    // const { data: { me, loading } } = this.props;
+
+    if (!user) {
+      return this._renderLoading();
+    }
 
     const SecondButton = this._renderSecondItem();
     return [
       <Button
         // raised
         // color={}
-        onClick={this.handleOpen}
+        onClick={this._onOpenModal}
         // disabled={!this.state.stationName}
         key={1}
       >
@@ -174,7 +212,7 @@ class Settings extends Component {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         open={this.state.open}
-        onClose={this.handleClose}
+        onClose={this._onCloseModal}
         key={2}
       >
         <div style={getModalStyle()}>
@@ -194,15 +232,16 @@ class Settings extends Component {
                 <Tab label="Security" />
               </Tabs>
             </Grid>,
+            {/* <form onSubmit={handleSubmit} className={classes.formInformation}> */}
             {this.state.value === 0 && (
               <TabContainer>
                 <Grid item xs={12} className={classes.content}>
-                  <form
+                  <Form
                     onSubmit={handleSubmit}
                     className={classes.formInformation}
                   >
-                    {this._renderChangeInformationForm()}
-                  </form>
+                    {this._renderChangeInformationForm(user)}
+                  </Form>
                 </Grid>
               </TabContainer>
             )}
@@ -212,26 +251,26 @@ class Settings extends Component {
                   onSubmit={handleSubmit}
                   className={classes.formInformation}
                 >
-                  {this._renderChangePasswordForm()}
+                  {this._renderChangePasswordForm(user)}
                 </form>
               </TabContainer>
             )}
+            {/* </form>, */}
             <Grid item xs={12} className={classes.modalFooter}>
               <Button
-              // raised
-              // color={}
-              // onClick={this.handleOpen}
-              // className={classes.buttonCover}
-              // disabled={!this.state.stationName}
+                raised
+                // color={'#808080'}
+                onClick={this._onCancelButtonClick}
+                // className={classes.buttonCover}
+                // disabled={!this.state.stationName}
               >
                 Cancel
               </Button>
               <Button
-              // raised
-              // color={}
-              // onClick={this.handleOpen}
-              // className={classes.buttonCover}
-              // disabled={!this.state.stationName}
+                // raised
+                onClick={this._onSaveChangesButtonClick}
+                // className={classes.buttonCover}
+                // disabled={!this.state.stationName}
               >
                 Save changes
               </Button>
@@ -242,6 +281,9 @@ class Settings extends Component {
     ];
   }
 }
+const mapStateToProps = state => ({
+  initialValues: state.api.user.data,
+});
 
 Settings.propTypes = {
   classes: PropTypes.any,
@@ -250,7 +292,9 @@ Settings.propTypes = {
 
 export default compose(
   withStyles(styles),
+  connect(mapStateToProps),
   reduxForm({
     form: 'editProfileForm',
+    enableReinitialize: true,
   }),
 )(Settings);

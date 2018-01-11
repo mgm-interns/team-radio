@@ -12,8 +12,6 @@ import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
 import styles from './styles';
 
-/* eslint-disable camelcase */
-/* eslint-disable no-shadow */
 class SwitcherItem extends Component {
   render() {
     const {

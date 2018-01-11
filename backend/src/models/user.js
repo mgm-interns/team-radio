@@ -48,12 +48,13 @@ const userSchema = mongoose.Schema({
 });
 
 // generation a hash
-userSchema.methods.generateHash = function(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+userSchema.methods.generateHash = function(pwd) {
+  return bcrypt.hashSync(pwd, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
 userSchema.methods.validPassword = function(password) {
+  console.log(this.password);
   return bcrypt.compareSync(password, this.password);
 };
 
@@ -83,11 +84,7 @@ module.exports.setAvatarUrl = async (email, avatar_url) =>
   user.update({ email: email }, { avatar_url: avatar_url }, { multi: true });
 
 module.exports.setPassword = async (email, password) =>
-  user.update(
-    { email: email },
-    { password: this.generateHash(password) },
-    { multi: true },
-  );
+  user.update({ email: email }, { password: password }, { multi: true });
 
 module.exports.setAvatar = async (userId, avatarUrl) =>
   user.update(

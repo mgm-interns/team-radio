@@ -6,10 +6,8 @@ import { FormControl, FormHelperText } from 'material-ui/Form';
 import Input, { InputLabel } from 'material-ui/Input';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
-// import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { redirectToStationPageRequest } from 'Redux/page/landing/actions';
 import { withStyles } from 'material-ui/styles';
 import fixture from 'Fixture/landing';
 import { createStation } from 'Redux/api/stations/actions';
@@ -30,7 +28,6 @@ class Backdrop extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { redirectToStationPageRequest } = this.props;
     const { history } = this.props;
     const { station, message } = nextProps;
 
@@ -40,7 +37,6 @@ class Backdrop extends Component {
     // Redirect to the created station page
     if (station && station.station_id) {
       history.replace(`/station/${station.station_id}`);
-      redirectToStationPageRequest();
     }
   }
 
@@ -50,9 +46,7 @@ class Backdrop extends Component {
   }
 
   _submit() {
-    const { createStation, redirectToStationPageRequest } = this.props;
-    createStation(this.state.stationName);
-    redirectToStationPageRequest(true);
+    this.props.createStation(this.state.stationName);
   }
 
   render() {
@@ -108,7 +102,6 @@ class Backdrop extends Component {
 Backdrop.propTypes = {
   classes: PropTypes.any,
   createStation: PropTypes.func,
-  redirectToStationPageRequest: PropTypes.func,
   station: PropTypes.object,
   history: PropTypes.object,
   message: PropTypes.string,
@@ -121,8 +114,6 @@ const mapStateToProps = ({ api: { stations } }) => ({
 
 const mapDispatchToProps = dispatch => ({
   createStation: stationName => dispatch(createStation({ stationName })),
-  redirectToStationPageRequest: isRedirect =>
-    dispatch(redirectToStationPageRequest(isRedirect)),
 });
 
 export default compose(

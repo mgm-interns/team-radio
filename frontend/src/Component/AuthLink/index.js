@@ -7,9 +7,9 @@ import { compose } from 'redux';
 import { withNotification } from 'Component/Notification';
 import { removeAuthenticationState } from 'Config';
 import { logout } from 'Redux/api/user/actions';
-import { Images } from 'Theme';
 import Icon from 'material-ui/Icon';
 import Menu, { MenuItem } from 'material-ui/Menu';
+import { Images } from 'Theme';
 
 import styles from './styles';
 
@@ -18,7 +18,6 @@ class AuthLink extends Component {
     super(props);
 
     this._logout = this._logout.bind(this);
-    // this._navigateToProfile = this._navigateToProfile.bind(this);
     this.state = {
       anchorEl: null,
     };
@@ -71,7 +70,11 @@ class AuthLink extends Component {
             >
               <img
                 className={classes.avatar}
-                src={Images.avatar.default}
+                src={
+                  user.data.avatar_url === null
+                    ? Images.avatar.male01
+                    : user.data.avatar_url
+                }
                 alt="avatar"
               />
               <Icon className={classes.dropdownIcon}>arrow_drop_down</Icon>
