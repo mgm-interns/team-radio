@@ -233,8 +233,11 @@ export default router => {
     // }); if updating fail
     try {
       let user = await userController.getUserById(req.body.userId);
+      const AlreadyUser = await userController.getUserProfile(
+        req.body.username,
+      );
       const token = req.headers['access-token'];
-      if (user) {
+      if ((!AlreadyUser || AlreadyUser.username === user.username) && user) {
         const isOwner = await userController.isVerifidedToken(
           user._id.toString(),
           token,

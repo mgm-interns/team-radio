@@ -15,7 +15,7 @@ export const muteNowPlaying = (muted = false) => ({
   payload: muted,
 });
 
-export const mutePreview = (muted = false) => ({
+export const mutePreview = (muted = true) => ({
   type: MUTE_PREVIEW,
   payload: muted,
 });
