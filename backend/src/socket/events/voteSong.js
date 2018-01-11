@@ -1,15 +1,16 @@
 import * as stationController from '../../controllers/station';
 import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
+import * as VOTE from '../index';
 import skipDecider from '../managers/skipDecider';
 import createEmitter from '../managers/createEmitter';
 
 export default (action, io, socket, userId, stationId, songId) => {
-  if (action === 1) {
+  if (action === VOTE.UPVOTE_ACTION) {
     _upVoteSong(io, socket, userId, stationId, songId);
-  } else if (action === -1) {
+  } else if (action === VOTE.DOWNVOTE_ACTION) {
     _downVoteSong(io, socket, userId, stationId, songId);
-  } else console.log('Action Unknow!');
+  } else console.log('Vote Action Unknow!');
 };
 
 const _upVoteSong = async (io, socket, userId, stationId, songId) => {

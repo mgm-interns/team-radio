@@ -121,6 +121,7 @@ class ImageUploader extends Component {
           ref={ref => {
             this.input = ref;
           }}
+          accept="image/*"
           style={{ display: 'none' }}
           onChange={this._onImagePicked}
         />

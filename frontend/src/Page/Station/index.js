@@ -101,7 +101,7 @@ class StationPage extends Component {
     const { mutePreview, muteNowPlaying, mutedNowPlaying } = this.props;
     muteNowPlaying(!mutedNowPlaying);
     // always mute preview even any video is playing or not
-    mutePreview(true);
+    mutePreview();
   }
 
   _handleTabChange(e, value) {

@@ -1,11 +1,13 @@
 import * as stationController from '../../controllers/station';
+import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
 import * as players from '../../players';
 
 export default async (emitter, userId, stationId, songUrl) => {
   let playlist;
   try {
-    // Addsong and return playlist
+    await userController.getUserById(userId);
+    // Addsong
     playlist = await stationController.addSong(stationId, songUrl, userId);
     emitter.emit(EVENTS.SERVER_ADD_SONG_SUCCESS, {});
   } catch (err) {

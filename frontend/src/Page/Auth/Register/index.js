@@ -65,7 +65,8 @@ class Register extends Component {
     } else if (data.token || isAuthenticated) {
       this._showNotification('Registration successful!');
       saveAuthenticationState(data);
-      this.props.history.push('/');
+      this.props.history.go(-1);
+      // this.props.history.push('/');
     }
   }
 

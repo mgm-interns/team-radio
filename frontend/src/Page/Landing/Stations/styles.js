@@ -1,8 +1,10 @@
-export default ({ typography, breakpoints, palette }) => ({
+export default ({ breakpoints, palette }) => ({
   containerWrapper: {
     width: '100%',
     margin: 0,
-    paddingBottom: 100, // Footer height
+    [breakpoints.up('lg')]: {
+      paddingBottom: 100, // Footer height
+    },
   },
   switcherContainer: {
     margin: 'auto',

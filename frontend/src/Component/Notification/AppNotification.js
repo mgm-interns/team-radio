@@ -7,14 +7,15 @@ import { levels } from 'react-notification-system/src/constants';
 import getStyles from './styles';
 
 const DEFAULT_NOTIFICATION = {
-  position: 'br',
+  position: 'tr',
   autoDismiss: 5,
 };
 
 let notificationRef = null;
 
 /**
- * All methods have to sleep because notificationRef only get assigned
+ * All methods have to call sleep() method
+ * because notificationRef only get assigned
  * until AppNotification finish rendering
  *
  * @type {{add: function({duration?: *, others: *}), remove: function({others: *}), edit: function({others: *}), clear: function()}}

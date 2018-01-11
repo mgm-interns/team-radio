@@ -265,7 +265,7 @@ class AddLink extends Component {
     });
     setPreviewVideo();
     muteNowPlaying();
-    mutePreview(true);
+    mutePreview();
   }
 
   _onChange(e) {
@@ -287,6 +287,7 @@ class AddLink extends Component {
       preview,
       addSong,
       setPreviewVideo,
+      muteNowPlaying,
       mutePreview,
       match: { params: { stationId } },
       userId,
@@ -302,7 +303,8 @@ class AddLink extends Component {
     }
     // If authenticated
     setPreviewVideo();
-    mutePreview(true);
+    muteNowPlaying();
+    mutePreview();
     addSong({
       songUrl: this._getVideoUrl(preview),
       title: preview.snippet.title,
