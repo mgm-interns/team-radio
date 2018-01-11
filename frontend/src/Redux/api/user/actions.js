@@ -46,6 +46,22 @@ export const verifyToken = () => ({
   },
 });
 
+export const updateAvatar = avatar_url => ({
+  [CALL_API]: {
+    types: ['UPDATE_AVATAR', 'UPDATE_AVATAR_SUCCESS', 'UPDATE_AVATAR_FAILURE'],
+    endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/setAvatar`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'access-token': localStorage.getItem('token'),
+    },
+    body: JSON.stringify({
+      userId: localStorage.getItem('userId'),
+      avatar_url,
+    }),
+  },
+});
+
 export const logout = () => ({
   type: 'LOGOUT_REQUEST',
 });
