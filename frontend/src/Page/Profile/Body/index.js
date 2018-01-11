@@ -5,8 +5,8 @@ import classNames from 'classnames';
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
-import Typography from 'material-ui/Typography';
 import Tabs, { Tab } from 'material-ui/Tabs';
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { TabContainer } from 'Component';
 
@@ -30,8 +30,17 @@ class Body extends Component {
     this.setState({ value });
   }
 
+  _renderLoading() {
+    return <CircularProgress />;
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, user } = this.props;
+
+    if (!user) {
+      return this._renderLoading();
+    }
+
     return (
       <Grid container className={classes.container}>
         <Grid item xs={12} md={7} xl={8}>
@@ -50,7 +59,7 @@ class Body extends Component {
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} xl={4} className={classes.buttonEditProfile}>
-          <Settings />
+          <Settings user={user} />
         </Grid>
         {this.state.value === 0 && (
           <TabContainer>

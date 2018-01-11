@@ -18,7 +18,6 @@ class AuthLink extends Component {
     super(props);
 
     this._logout = this._logout.bind(this);
-    // this._navigateToProfile = this._navigateToProfile.bind(this);
     this.state = {
       anchorEl: null,
     };
@@ -71,7 +70,7 @@ class AuthLink extends Component {
             >
               <img
                 className={classes.avatar}
-                src={Images.avatar.default}
+                src={user.data.avatar_url}
                 alt="avatar"
               />
               <Icon className={classes.dropdownIcon}>arrow_drop_down</Icon>

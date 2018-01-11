@@ -27,28 +27,28 @@ class Profile extends Component {
     this._renderLoading = this._renderLoading.bind(this);
   }
 
-  componentWillMount() {
-    // Get station id from react-router
-    const { match: { params: { username } }, history } = this.props;
-    if (username !== 'undefined') {
-      this.props.fetchUserWithUsername(username);
-    } else {
-      // Go to landing page
-      console.log('redirect landing');
-      history.push('/');
-    }
-  }
+  // componentWillMount() {
+  //   // Get station id from react-router
+  //   const { match: { params: { username } }, history } = this.props;
+  //   if (username !== 'undefined') {
+  //     this.props.fetchUserWithUsername(username);
+  //   } else {
+  //     // Go to landing page
+  //     console.log('redirect landing');
+  //     history.push('/');
+  //   }
+  // }
 
-  _renderLoading(loading) {
-    if (loading) return <CircularProgress />;
-    return null;
+  _renderLoading() {
+    return <CircularProgress />;
   }
 
   render() {
     const { classes, user } = this.props;
-    const { loading } = this.state;
-    console.log(loading);
 
+    if (!user) {
+      this._renderLoading();
+    }
     return [
       <NavBar key={1} color="primary" />,
       <Grid
@@ -59,7 +59,6 @@ class Profile extends Component {
       >
         <Header user={user} />
         <Body user={user} />
-        {this._renderLoading(loading)}
       </Grid>,
       <Footer key={3} />,
     ];
@@ -73,7 +72,7 @@ Profile.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  user: state.api.user,
+  user: state.api.user.data,
 });
 
 const mapDispatchToProps = dispatch => ({

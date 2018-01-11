@@ -98,17 +98,17 @@ const user = (state = INITIAL_STATE, action) => {
         isAuthenticated: false,
       };
 
-    case 'NAVIGATE_PROFILE':
+    case 'FETCH_USER_PROFILE':
       return {
         data: {},
       };
-    case 'NAVIGATE_PROFILE_SUCCESS':
+    case 'FETCH_USER_PROFILE_SUCCESS':
       return {
         ...state,
         data: action.payload,
       };
 
-    case 'NAVIGATE_PROFILE_FAILURE':
+    case 'FETCH_USER_PROFILE_FAILURE':
       return {
         ...state,
         loading: false,
