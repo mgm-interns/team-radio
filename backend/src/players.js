@@ -134,8 +134,8 @@ class Player {
   };
   _emitHistory = async () => {
     const history = await stationController.getListSongHistory(this.stationId);
-    this._emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
-      playlist: history,
+    this._emit(EVENTS.SERVER_UPDATE_HISTORY, {
+      history: history,
     });
   };
 
