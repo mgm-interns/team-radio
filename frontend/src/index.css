@@ -13,3 +13,83 @@ h5,
 h6 {
     font-family: 'Pacifico', sans-serif;
 }
+
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('Fonts/bebasneue-webfont.woff2') format('woff2'), url('Fonts/bebasneue-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Bebas Neue";
+  src: url("Fonts/bebasneue-webfont.woff2") format("woff2"), url("Fonts/bebasneue-webfont.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('Fonts/RobotoSlab-Bold.woff2') format('woff2'), url('Fonts/RobotoSlab-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('Fonts/RobotoSlab-Regular.woff2') format('woff2'), url('Fonts/RobotoSlab-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('Fonts/RobotoSlab-Thin.woff2') format('woff2'), url('Fonts/RobotoSlab-Thin.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('Fonts/RobotoSlab-Light.woff2') format('woff2'), url('Fonts/RobotoSlab-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pacifico';
+  src: url('Fonts/Pacifico-Regular.woff2') format('woff2'),
+  url('Fonts/Pacifico-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(Fonts/MaterialIcons-Regular.eot);
+  /* For IE6-8 */
+  src: local('Material Icons'), local('Fonts/MaterialIcons-Regular'), url(Fonts/MaterialIcons-Regular.woff2) format('woff2'), url(Fonts/MaterialIcons-Regular.woff) format('woff'), url(Fonts/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
