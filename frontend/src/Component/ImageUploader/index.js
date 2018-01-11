@@ -12,6 +12,8 @@ import Avatar from 'material-ui/Avatar';
 import { Images } from 'Theme';
 import { connect } from 'react-redux';
 import { updateAvatar } from 'Redux/api/user/actions';
+import { withNotification } from 'Component/Notification';
+import { compose } from 'redux';
 import styles from './styles';
 
 const CLOUDINARY_UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
@@ -84,11 +86,18 @@ class ImageUploader extends Component {
   }
 
   async _onImagePicked(event) {
+    const { notification } = this.props;
     const file = event.target.files[0];
-    const base64 = await toBase64(file);
-    await this.setStateAsync({ uploadedFileUrl: base64 });
+    if (file.size / 1024 / 1024 > 2) {
+      notification.app.warning({
+        message: `The picture size can not exceed 2MB.`,
+      });
+    } else {
+      const base64 = await toBase64(file);
+      await this.setStateAsync({ uploadedFileUrl: base64 });
 
-    this.setState({ open: true });
+      this.setState({ open: true });
+    }
   }
 
   handleOpen = () => {
@@ -174,6 +183,7 @@ class ImageUploader extends Component {
 ImageUploader.propTypes = {
   classes: PropTypes.any,
   userData: PropTypes.any,
+  updateAvatar: PropTypes.any,
 };
 
 const mapStateToProps = state => ({
@@ -184,6 +194,7 @@ const mapDispatchToProps = dispatch => ({
   updateAvatar: avatar_url => dispatch(updateAvatar(avatar_url)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(ImageUploader),
-);
+export default compose(
+  withNotification,
+  connect(mapStateToProps, mapDispatchToProps),
+)(withStyles(styles)(ImageUploader));
