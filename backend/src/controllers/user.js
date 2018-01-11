@@ -43,7 +43,8 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
                 name: name
             });
             await user.save();
-            await userModels.setUsername(email, user._id.toString());
+            const username = user.generateHash(user._id.toString())
+            await userModels.setUsername(email, username);
             if (avatar_url)
                 await userModels.setAvatarUrl(email, avatar_url);
         }
@@ -62,7 +63,8 @@ export const createUser = async (email,password,name) => {
 
         user.password = user.generateHash(password)
         await user.save();
-        await userModels.setUsername(email, user._id.toString());
+        const username = user.generateHash(user._id.toString())
+        await userModels.setUsername(email, username);
 
         user = await userModels.getUserByEmail(email);
         return user;

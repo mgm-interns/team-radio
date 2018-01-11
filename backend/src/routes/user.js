@@ -128,6 +128,7 @@ export default router => {
       throw err;
     }
   });
+
   router.post('/isVerifidedToken', async (req, res) => {
     try {
       const token = req.body.token;
@@ -261,7 +262,8 @@ export default router => {
       throw err;
     }
   });
-  router.post('/setPassword', async (req, res) => {
+
+  router.post('/updatePassword', async (req, res) => {
     // INPUT  : req.headers['access-token'], req.body.userId, req.body.oldPassword, req.body.newPassword
     // OUTPUT :
     // Return res.json({
@@ -274,7 +276,7 @@ export default router => {
     //     message: 'Can not update password!',
     // }); if password not true
     try {
-      let user = await userController.getUserById(req.body.userId);
+      let user = await User.findOne({ _id: req.body.userId });
       const token = req.headers['access-token'];
       if (user) {
         const isOwner = await userController.isVerifidedToken(
@@ -283,15 +285,16 @@ export default router => {
           req.app.get('superSecret'),
         );
         if (isOwner) {
-          if (!user.validPassword(req.body.oldPassword)) {
-            return res.status(401).json({
+          if (user.password && !user.validPassword(req.body.oldPassword)) {
+            return res.json({
               message: 'Old password is wrong!',
             });
           }
-          user = await userController.setPassword(
+          await userController.setPassword(
             user.email,
-            req.body.newPassword,
+            user.generateHash(req.body.newPassword),
           );
+          user = await User.findOne({ _id: req.body.userId });
           return res.json({
             message: 'Success',
             user: user,
@@ -299,7 +302,7 @@ export default router => {
         }
       }
       return res.json({
-        message: 'Can not update username!',
+        message: 'Can not update password!',
       });
     } catch (err) {
       throw err;
