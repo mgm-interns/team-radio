@@ -4,10 +4,16 @@ import deleteDiacriticMarks from 'khong-dau';
 import getSongDetails from './song';
 import * as players from '../players';
 import * as stationModels from './../models/station';
+import { Error } from 'mongoose';
 
 
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
-
+/**
+ * 
+ * @param {string} stationName
+ * @param {string} userId 
+ * @param {boolean} isPrivate - If false then station is public, if true then station is private
+ */
 export const addStation = async (stationName, userId, isPrivate) => {
   const currentStationName = stationName.trim();
   if (!currentStationName) {
@@ -36,18 +42,38 @@ export const addStation = async (stationName, userId, isPrivate) => {
   }
 };
 
-// Set private/public of station
+/**
+ * Set station is private public/private
+ * 
+ * @param {string} stationId 
+ * @param {string} userId 
+ * @param {boolean} value -  If false then station is public, if true then station is private
+ */
 export const setIsPrivateOfStation = async (stationId, userId, value) => {
   // TODO : 
   try {
-    const result = await stationModels.updateIsPrivateOfStation(stationId, userId, value);
-    return result;
+    const stationsOfUser = await stationModels.getStationsByUserId(_safeObjectId(userId));
+    if (!stationsOfUser) {
+      throw new Error(`User ${userId} is not owner`);
+    }
+    if (_isStringOfArray(stationId, stationsOfUser) === true) {
+      const result = await stationModels.updateIsPrivateOfStation(stationId, userId, value);
+      return result;
+    } else {
+      throw new Error(`User ${userId} is not owner`);
+    }
   } catch (error) {
-    throw err;
+    throw error;
   }
 }
 
+/**
+ * 
+ * @param {string} stationId 
+ * @param {string} userId 
+ */
 export const deleteStation = async (stationId, userId) => {
+  // TODO :
   try {
     const resolve = await stationModels.deleteStation(stationId, userId);
     return resolve;
@@ -57,7 +83,11 @@ export const deleteStation = async (stationId, userId) => {
   }
 }
 
-// get a statio by id
+/**
+ * Get a statio by id
+ * 
+ * @param {string} stationId 
+ */
 export const getStation = async stationId => {
   const station = await stationModels.getStationById(stationId);
   if (!station) {
@@ -67,7 +97,11 @@ export const getStation = async stationId => {
   }
 };
 
-// get list station by user_id
+/**
+ * Get station by user id
+ * 
+ * @param {string} userId 
+ */
 export const getStationsByUserId = async userId => {
   try {
     const stations = stationModels.getStationsByUserId(_safeObjectId(userId));
@@ -78,7 +112,13 @@ export const getStationsByUserId = async userId => {
   }
 }
 
-// Add a song of station
+/**
+ * Add a song
+ * 
+ * @param {string} stationId 
+ * @param {string} songUrl 
+ * @param {string} userId 
+ */
 export const addSong = async (stationId, songUrl, userId = null) => {
   let station;
   try {
@@ -131,43 +171,59 @@ export const addSong = async (stationId, songUrl, userId = null) => {
     throw err;
   }
 };
-
-
-
+/**
+ * Update time starting of station
+ * 
+ * @param {string} stationId 
+ * @param {number} time 
+ */
 export const updateStartingTime = async (stationId, time) => {
-  const available = await stationModels.updateTimeStartingOfStation(
-    stationId,
-    time,
-  );
-  return available;
+  try {
+    const available = await stationModels.updateTimeStartingOfStation(
+      stationId,
+      time,
+    );
+    return available;
+  } catch (error) {
+    throw error;
+  }
 };
 
-// To stationId and set songIds from false to true
+/**
+ * The song played will be set to true
+ * 
+ * @param {string} stationId 
+ * @param {string} songIds 
+ */
 export const setPlayedSongs = async (stationId, songIds) => {
-  const currentPlaylist = await getListSong(stationId);
-  if (currentPlaylist) {
-    for (let i = 0; i < songIds.length; i++) {
-      for (let j = 0; j < currentPlaylist.length; j++) {
-        if (currentPlaylist[j].song_id === songIds[i]) {
-          currentPlaylist[j].is_played = true;
+  try {
+    const currentPlaylist = await getListSong(stationId);
+    if (currentPlaylist) {
+      for (let i = 0; i < songIds.length; i++) {
+        for (let j = 0; j < currentPlaylist.length; j++) {
+          if (currentPlaylist[j].song_id === songIds[i]) {
+            currentPlaylist[j].is_played = true;
+          }
         }
       }
     }
+    const playlist = await stationModels.updatePlaylistOfStation(
+      stationId,
+      currentPlaylist,
+    );
+    return playlist;
+  } catch (error) {
+    throw err;
   }
-  const playlist = await stationModels.updatePlaylistOfStation(
-    stationId,
-    currentPlaylist,
-  );
-  return playlist;
 };
+
 /**
- * The fucntion get info :
- * station_name,
- * station_id,
- * created_date,
- * thumbnail
+ * The function get info :
+ * - station_name
+ * - station_id,
+ * - created_date
+ * - thumbnail
  * of all station
- * 
  */
 export const getAllAvailableStations = async () => {
   try {
@@ -184,14 +240,20 @@ export const getAllAvailableStations = async () => {
     throw err;
   }
 };
+
 /**
- * The fucntion get all info of all station
+ * The function get all info of all station
  */
 export const getAllStationDetails = async () => {
   const stations = await stationModels.getStationDetails();
   return stations;
 };
 
+/**
+ * The function get all info of history playlist
+ * 
+ * @param {string} stationId 
+ */
 export const getListSongHistory = async stationId => {
   try {
     const listSong = await stationModels.getPlaylistOfStation(stationId);
@@ -207,6 +269,11 @@ export const getListSongHistory = async stationId => {
   }
 }
 
+/**
+ * The func
+ * 
+ * @param {string} stationId 
+ */
 export const getAvailableListSong = async stationId => {
   try {
     const listSong = await stationModels.getPlaylistOfStation(stationId);
@@ -222,6 +289,11 @@ export const getAvailableListSong = async stationId => {
   }
 }
 
+/**
+ * Get list all infor song of station
+ * 
+ * @param {string} stationId 
+ */
 export const getListSong = async stationId => {
   try {
     const playList = (await stationModels.getPlaylistOfStation(stationId));
@@ -231,18 +303,21 @@ export const getListSong = async stationId => {
   }
 
 };
+
+
 /**
- * Upvote
- * userId : String
-*/
+ * @param {string} stationId 
+ * @param {string} songId 
+ * @param {string} userId 
+ */
 export const upVote = async (stationId, songId, userId) => {
-  const currentSong = (await stationModels.getAsongInStation(
-    stationId,
-    songId,
-  ))[0];
-  const upVoteArray = currentSong.up_vote;
-  const downVoteArray = currentSong.down_vote;
   try {
+    const currentSong = (await stationModels.getAsongInStation(
+      stationId,
+      songId,
+    ))[0];
+    const upVoteArray = currentSong.up_vote;
+    const downVoteArray = currentSong.down_vote;
     if (upVoteArray.length > 0) {
       for (let i = 0; i < upVoteArray.length; i++) {
 
@@ -300,19 +375,22 @@ export const upVote = async (stationId, songId, userId) => {
     throw new Error("Can not vote song !");
   }
 };
+
 /**
- * DownVote
- * userId : String
-*/
+ * 
+ * @param {string} stationId 
+ * @param {string} songId 
+ * @param {string} userId 
+ */
 export const downVote = async (stationId, songId, userId) => {
-  const currentSong = (await stationModels.getAsongInStation(
-    stationId,
-    songId,
-  ))[0];
-  const upVoteArray = currentSong.up_vote;
-  const downVoteArray = currentSong.down_vote;
-  const _userId = _safeObjectId(userId);
   try {
+    const currentSong = (await stationModels.getAsongInStation(
+      stationId,
+      songId,
+    ))[0];
+    const upVoteArray = currentSong.up_vote;
+    const downVoteArray = currentSong.down_vote;
+    const _userId = _safeObjectId(userId);
     if (downVoteArray.length > 0) {
 
       for (let i = 0; i < downVoteArray.length; i++) {
@@ -393,5 +471,14 @@ async function _createStationId(stationName) {
     station = await stationModels.getStationById(currentId);
   }
   return currentId;
+
 }
 
+function _isStringOfArray(str, array) {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i].station_id === str) {
+      return true;
+    }
+  }
+  return false;
+}
