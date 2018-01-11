@@ -78,6 +78,7 @@ class Body extends Component {
 
 Body.propTypes = {
   classes: PropTypes.any,
+  user: PropTypes.any,
 };
 
 export default compose(withStyles(styles))(Body);

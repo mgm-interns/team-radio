@@ -23,13 +23,14 @@ class Header extends Component {
 
   _renderHeader(user) {
     const { classes } = this.props;
+    // console.log(user.avatar_url);
     // const data = user.data.user;
 
     return (
       <Grid item xs={12} md={7} xl={8} className={classes.coverWrapper}>
         <div className={classes.coverBackground}>
           <div className={classes.userInformation}>
-            <ImageUploader />
+            <ImageUploader avatarUrl={user.avatar_url} />
             <div>
               <Typography type="headline" className={classes.text}>
                 {user.name}
