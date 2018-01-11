@@ -85,12 +85,12 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SERVER_NEW_USER_JOINED:
       appNotificationInstance.info({
-        message: action.payload && `User ${action.payload.user} has joined!`,
+        message: action.payload && `${action.payload.user} has joined!`,
       });
       return state;
     case SERVER_USER_LEFT:
       appNotificationInstance.info({
-        message: action.payload && `User ${action.payload.user} has left!`,
+        message: action.payload && `${action.payload.user} has left!`,
       });
       return state;
     /**
