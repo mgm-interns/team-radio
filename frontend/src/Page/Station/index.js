@@ -12,8 +12,7 @@ import classNames from 'classnames';
 import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
 import {
-  muteNowPlaying,
-  mutePreview,
+  muteVideoRequest,
   savePlaylist,
   saveHistory,
 } from 'Redux/page/station/actions';
@@ -46,12 +45,7 @@ class StationPage extends Component {
 
   componentWillMount() {
     // Get station id from react-router
-    const {
-      match: { params: { stationId } },
-      history,
-      userId,
-      // mutedNowPlaying,
-    } = this.props;
+    const { match: { params: { stationId } }, history, userId } = this.props;
     if (stationId && stationId !== 'null' && stationId !== 'undefined') {
       this.props.joinStation({ stationId, userId });
     } else {
@@ -66,7 +60,7 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { mutedNowPlaying, currentStation: { playlist } } = nextProps;
+    const { muteNowPlaying, currentStation: { playlist } } = nextProps;
 
     // Get playlist & history
     this.setState({
@@ -74,34 +68,27 @@ class StationPage extends Component {
       history: playlist.filter(item => item.is_played === true),
     });
 
-    this.setState({ muted: mutedNowPlaying });
+    this.setState({ muted: muteNowPlaying });
   }
 
   componentDidMount() {
-    const { muteNowPlaying, mutePreview } = this.props;
+    const { muteVideoRequest } = this.props;
 
-    // Handle volume
-    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus')) || [];
-    volumeStatus.forEach(item => {
-      switch (item.player) {
-        case 'nowPlaying':
-          muteNowPlaying(item.muted);
-          this.setState({ muted: item.muted });
-          break;
-        case 'preview':
-          mutePreview(item.muted);
-          break;
-        default:
-          break;
-      }
+    // Handle volume after the page is reloaded
+    const volumeStatus = JSON.parse(localStorage.getItem('volumeStatus')) || {};
+    muteVideoRequest({
+      muteNowPlaying: volumeStatus.muteNowPlaying,
+      mutePreview: volumeStatus.mutePreview,
+      userDid: volumeStatus.userDid,
     });
   }
 
   _onVolumeClick() {
-    const { mutePreview, muteNowPlaying, mutedNowPlaying } = this.props;
-    muteNowPlaying(!mutedNowPlaying);
-    // always mute preview even any video is playing or not
-    mutePreview();
+    const { muteVideoRequest, muteNowPlaying } = this.props;
+    muteVideoRequest({
+      muteNowPlaying: !muteNowPlaying,
+      userDid: true,
+    });
   }
 
   _handleTabChange(e, value) {
@@ -257,9 +244,8 @@ StationPage.propTypes = {
   history: PropTypes.any,
   currentStation: PropTypes.any,
   userId: PropTypes.string,
-  muteNowPlaying: PropTypes.func,
-  mutePreview: PropTypes.func,
-  mutedNowPlaying: PropTypes.bool,
+  muteVideoRequest: PropTypes.func,
+  muteNowPlaying: PropTypes.bool,
   mutedPreview: PropTypes.bool,
   preview: PropTypes.object,
   savePlaylist: PropTypes.func,
@@ -268,7 +254,7 @@ StationPage.propTypes = {
 
 const mapStateToProps = ({ api, page }) => ({
   currentStation: api.currentStation,
-  mutedNowPlaying: page.station.mutedNowPlaying,
+  muteNowPlaying: page.station.muteNowPlaying,
   mutedPreview: page.station.mutedPreview,
   preview: page.station.preview,
   userId: api.user.data.userId,
@@ -277,8 +263,8 @@ const mapStateToProps = ({ api, page }) => ({
 const mapDispatchToProps = dispatch => ({
   joinStation: stationId => dispatch(joinStation(stationId)),
   leaveStation: option => dispatch(leaveStation(option)),
-  muteNowPlaying: muted => dispatch(muteNowPlaying(muted)),
-  mutePreview: muted => dispatch(mutePreview(muted)),
+  muteVideoRequest: ({ muteNowPlaying, mutePreview, userDid }) =>
+    dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
   savePlaylist: playlist => dispatch(savePlaylist(playlist)),
   saveHistory: history => dispatch(saveHistory(history)),
 });
