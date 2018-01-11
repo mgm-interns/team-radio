@@ -2,11 +2,11 @@ export default ({ palette, breakpoints }) => ({
   container: {
     zIndex: 10,
     width: '100%',
-    paddingBottom: '50px',
+    paddingBottom: 50,
   },
   wrapper: {
     display: 'flex',
-    alignTtems: 'center',
+    alignItems: 'center',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,

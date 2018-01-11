@@ -1,8 +1,24 @@
-export default theme => ({
+export default ({ spacing, typography }) => ({
   NotificationItem: {},
+  Containers: {
+    tr: {
+      top: 50,
+      right: spacing.baseMargin * -1,
+    },
+    br: {
+      right: spacing.baseMargin * -1,
+    },
+    tl: {
+      top: 50,
+      right: spacing.baseMargin,
+    },
+    bl: {
+      right: spacing.baseMargin,
+    },
+  },
   Title: {
     DefaultStyle: {
-      ...theme.typography.body1,
+      ...typography.body1,
     },
   },
 });
