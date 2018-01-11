@@ -9,6 +9,8 @@
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
 
+import {appNotificationInstance} from "Component/Notification/AppNotification";
+
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -51,19 +53,34 @@ function registerValidSW(swUrl) {
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {
-          if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
-              // At this point, the old content will have been purged and
-              // the fresh content will have been added to the cache.
-              // It's the perfect time to display a "New content is
-              // available; please refresh." message in your web app.
-              console.log('New content is available; please refresh.');
-            } else {
-              // At this point, everything has been precached.
-              // It's the perfect time to display a
-              // "Content is cached for offline use." message.
-              console.log('Content is cached for offline use.');
-            }
+          switch (installingWorker.state) {
+            case 'installed':
+              if (navigator.serviceWorker.controller) {
+                // At this point, the old content will have been purged and
+                // the fresh content will have been added to the cache.
+                // It's the perfect time to display a "New content is
+                // available; please refresh." message in your web app.
+                console.log('New content is available; please refresh.');
+                appNotificationInstance.warning({
+                  message: 'Our application has released new update. Please refresh (F5) the page to the latest version.',
+                  dismissible: false,
+                  autoDismiss: 0,
+                  position: 'br'
+                })
+              } else {
+                // At this point, everything has been precached.
+                // It's the perfect time to display a
+                // "Content is cached for offline use." message.
+                console.log('Content is cached for offline use.');
+                appNotificationInstance.error({
+                  message: 'The network is not available. Switch to offline mode.',
+                  autoDismiss: 5,
+                  position: 'br'
+                })
+              }
+              break;
+            default:
+              return;
           }
         };
       };

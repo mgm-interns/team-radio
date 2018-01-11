@@ -103,6 +103,24 @@ const user = (state = INITIAL_STATE, action) => {
         data: {},
         isAuthenticated: false,
       };
+
+    case 'UPDATE_AVATAR':
+      return {
+        ...state,
+      };
+    case 'UPDATE_AVATAR_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'UPDATE_AVATAR_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+      };
     default:
       return state;
   }

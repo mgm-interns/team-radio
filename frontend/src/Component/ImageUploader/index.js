@@ -10,6 +10,8 @@ import { CircularProgress } from 'material-ui/Progress';
 import PropTypes from 'prop-types';
 import Avatar from 'material-ui/Avatar';
 import { Images } from 'Theme';
+import { connect } from 'react-redux';
+import { updateAvatar } from 'Redux/api/user/actions';
 import styles from './styles';
 
 const CLOUDINARY_UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
@@ -65,6 +67,8 @@ class ImageUploader extends Component {
           uploading: false,
           open: false,
         });
+
+        this.props.updateAvatar(response.secure_url);
       }
     };
 
@@ -95,6 +99,11 @@ class ImageUploader extends Component {
     this.setState({ open: false });
   };
 
+  componentWillReceiveProps(nextProps) {
+    const { userData } = nextProps;
+    this.setState({ avatarUrl: userData.avatar_url });
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -121,6 +130,7 @@ class ImageUploader extends Component {
           ref={ref => {
             this.input = ref;
           }}
+          accept="image/*"
           style={{ display: 'none' }}
           onChange={this._onImagePicked}
         />
@@ -163,6 +173,17 @@ class ImageUploader extends Component {
 
 ImageUploader.propTypes = {
   classes: PropTypes.any,
+  userData: PropTypes.any,
 };
 
-export default withStyles(styles)(ImageUploader);
+const mapStateToProps = state => ({
+  userData: state.api.user.data,
+});
+
+const mapDispatchToProps = dispatch => ({
+  updateAvatar: avatar_url => dispatch(updateAvatar(avatar_url)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(styles)(ImageUploader),
+);

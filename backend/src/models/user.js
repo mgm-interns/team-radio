@@ -82,6 +82,13 @@ module.exports.setUsername = async (email, username) =>
 module.exports.setAvatarUrl = async (email, avatar_url) =>
   user.update({ email: email }, { avatar_url: avatar_url }, { multi: true });
 
+module.exports.setPassword = async (email, password) =>
+  user.update(
+    { email: email },
+    { password: this.generateHash(password) },
+    { multi: true },
+  );
+
 module.exports.setAvatar = async (userId, avatarUrl) =>
   user.update(
     { _id: _safeObjectId(userId) },

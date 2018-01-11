@@ -39,10 +39,26 @@ export const addUserWithSocialAccount = data => ({
 export const verifyToken = () => ({
   [CALL_API]: {
     types: ['VERIFY_TOKEN', 'VERIFY_TOKEN_SUCCESS', 'VERIFY_TOKEN_FAILURE'],
-    endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/verifyToken`,
+    endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/isVerifidedToken`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token: localStorage.getItem('token') }),
+  },
+});
+
+export const updateAvatar = avatar_url => ({
+  [CALL_API]: {
+    types: ['UPDATE_AVATAR', 'UPDATE_AVATAR_SUCCESS', 'UPDATE_AVATAR_FAILURE'],
+    endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/setAvatar`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'access-token': localStorage.getItem('token'),
+    },
+    body: JSON.stringify({
+      userId: localStorage.getItem('userId'),
+      avatar_url,
+    }),
   },
 });
 

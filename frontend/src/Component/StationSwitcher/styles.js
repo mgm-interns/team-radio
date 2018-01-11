@@ -4,6 +4,7 @@ export default ({ breakpoints, spacing, palette }) => ({
     margin: 'auto',
     overflowX: 'auto',
     minHeight: 110,
+    width: 'auto !important',
     [breakpoints.up('md')]: {
       minHeight: 200,
       paddingLeft: spacing.doubleBaseMargin,

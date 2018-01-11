@@ -52,7 +52,8 @@ class Login extends Component {
     } else if (data.token || isAuthenticated) {
       this._showNotification('Login successful!');
       saveAuthenticationState(data);
-      this.props.history.replace('/');
+      this.props.history.go(-1);
+      // this.props.history.replace('/');
     }
     if (!loadAuthenticationState()) {
       this.setState({ isLoggedIn: false });

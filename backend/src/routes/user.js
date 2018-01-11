@@ -22,7 +22,7 @@ export default router => {
           userId: newUser._id,
         };
         const token = jwt.sign(payload, req.app.get('superSecret'), {
-          expiresIn: 1440 * 7, // expires in 24 hours
+          expiresIn: 604800,
         });
         res.json({
           message: 'signup success',
@@ -60,7 +60,7 @@ export default router => {
           };
 
           const token = jwt.sign(payload, req.app.get('superSecret'), {
-            expiresIn: 1440,
+            expiresIn: 604800,
           });
           res.json({
             success: true,
@@ -92,7 +92,7 @@ export default router => {
         userId: user._id,
       };
       const token = jwt.sign(payload, req.app.get('superSecret'), {
-        expiresIn: 1440 * 7, // expires in 24 hours
+        expiresIn: 604800,
       });
       res.json({
         message: 'signup success',
@@ -128,19 +128,22 @@ export default router => {
       throw err;
     }
   });
-  router.post('/isVerifidedToken', async (req, res) => {
+  router.post('/isVerifidedToken', (req, res) => {
     try {
       const token = req.body.token;
       if (token) {
         // verifies secret and checks exp
-        jwt.verify(token, req.app.get('superSecret'), (err, decoded) => {
+        jwt.verify(token, req.app.get('superSecret'), async (err, decoded) => {
           if (err) {
             return res.status(400).json({ tokenError: 'Verify token failed.' });
           }
-          return res.json(decoded);
+          const user = await userController.getUserById(decoded.userId);
+          return res.json(user);
+          // return res.json(decoded);
         });
+      } else {
+        return res.status(400).json({ tokenError: 'No token provided.' });
       }
-      return res.status(400).json({ tokenError: 'No token provided.' });
     } catch (err) {
       throw err;
     }
@@ -207,10 +210,7 @@ export default router => {
             req.body.userId,
             req.body.avatar_url,
           );
-          return res.json({
-            message: 'Success',
-            user: user,
-          });
+          return res.json(user);
         }
       }
       return res.json({
@@ -247,6 +247,50 @@ export default router => {
           user = await userController.setUsername(
             user.email,
             req.body.username,
+          );
+          return res.json({
+            message: 'Success',
+            user: user,
+          });
+        }
+      }
+      return res.json({
+        message: 'Can not update username!',
+      });
+    } catch (err) {
+      throw err;
+    }
+  });
+  router.post('/setPassword', async (req, res) => {
+    // INPUT  : req.headers['access-token'], req.body.userId, req.body.oldPassword, req.body.newPassword
+    // OUTPUT :
+    // Return res.json({
+    //     message: 'Success',
+    // }); if updating success
+    // Return res.json({
+    //     message: 'Old password is wrong!',
+    // }); if password not true
+    // Return res.json({
+    //     message: 'Can not update password!',
+    // }); if password not true
+    try {
+      let user = await userController.getUserById(req.body.userId);
+      const token = req.headers['access-token'];
+      if (user) {
+        const isOwner = await userController.isVerifidedToken(
+          user._id.toString(),
+          token,
+          req.app.get('superSecret'),
+        );
+        if (isOwner) {
+          if (!user.validPassword(req.body.oldPassword)) {
+            return res.status(401).json({
+              message: 'Old password is wrong!',
+            });
+          }
+          user = await userController.setPassword(
+            user.email,
+            req.body.newPassword,
           );
           return res.json({
             message: 'Success',

@@ -19,6 +19,7 @@ export default () => ({
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: '1000',
+      borderRadius: 150,
     },
   },
 
