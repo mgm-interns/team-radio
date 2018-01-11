@@ -23,7 +23,10 @@ const INITIAL_STATE = {
     starting_time: 0,
   },
   tempPlaylist: [],
-  joined: false,
+  joined: {
+    loading: false,
+    success: false,
+  },
   online_count: 0,
 };
 
@@ -32,26 +35,30 @@ export default (state = INITIAL_STATE, action) => {
     /**
      * Station information actions
      */
+    case CLIENT_JOIN_STATION:
+      return {
+        ...state,
+        station: {
+          station_id: action.payload.stationId,
+        },
+        joined: {
+          loading: true,
+          success: false,
+        },
+      };
     case SERVER_JOINED_STATION_SUCCESS:
       return {
         ...state,
         station: action.payload.station,
         playlist: action.payload.station.playlist,
-        joined: true,
+        joined: {
+          loading: false,
+          success: true,
+        },
       };
 
     case SERVER_JOINED_STATION_FAILURE:
-      return {
-        ...INITIAL_STATE,
-      };
-
-    case CLIENT_JOIN_STATION:
-      return {
-        ...INITIAL_STATE,
-        station: {
-          id: action.payload.stationId,
-        },
-      };
+      return { ...INITIAL_STATE };
 
     case CLIENT_LEAVE_STATION:
       return {

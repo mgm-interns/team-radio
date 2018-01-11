@@ -45,12 +45,24 @@ class StationPage extends Component {
 
   componentWillMount() {
     // Get station id from react-router
-    const { match: { params: { stationId } }, history, userId } = this.props;
-    if (stationId && stationId !== 'null' && stationId !== 'undefined') {
-      this.props.joinStation({ stationId, userId });
+    const {
+      match: { params: { stationId } },
+      history,
+      userId,
+      currentStation: { joined },
+    } = this.props;
+    console.log(stationId);
+    // Station must be a valid string
+    if (stationId) {
+      if (
+        // Only dispatch if NOT in joining state
+        joined.loading === false &&
+        joined.success === false
+      ) {
+        this.props.joinStation({ stationId, userId });
+      }
     } else {
-      // Go to landing page
-      history.replace(`/`);
+      history.replace('/');
     }
   }
 
