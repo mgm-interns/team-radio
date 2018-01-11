@@ -3,7 +3,7 @@ export default ({ breakpoints, spacing, palette }) => ({
     paddingBottom: 8,
     margin: 'auto',
     overflowX: 'auto',
-    minHeight: 120,
+    minHeight: 110,
     [breakpoints.up('md')]: {
       minHeight: 200,
       paddingLeft: spacing.doubleBaseMargin,
@@ -33,10 +33,12 @@ export default ({ breakpoints, spacing, palette }) => ({
   },
   stationTitle: {
     marginTop: spacing.baseMargin,
-    // fontWeight: 'nora',
     fontSize: '1em',
     textAlign: 'left',
     display: 'block',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
   },
   stationSubtitle: {
     color: 'grey',
@@ -72,7 +74,7 @@ export default ({ breakpoints, spacing, palette }) => ({
     color: palette.white,
   },
   stationInfo: {
-    width: 90,
+    width: 150,
   },
   activeStation: {
     background: 'white',
@@ -94,6 +96,9 @@ export default ({ breakpoints, spacing, palette }) => ({
     alignItems: 'center',
   },
   [breakpoints.down('sm')]: {
+    stationWrapper: {
+      padding: spacing.baseMargin,
+    },
     stationAvatar: {
       width: 80,
       height: 80,
@@ -103,6 +108,7 @@ export default ({ breakpoints, spacing, palette }) => ({
     },
     stationTitle: {
       fontSize: '0.75em',
+      marginTop: spacing.smallMargin,
     },
     stationSubtitle: {
       color: 'grey',
