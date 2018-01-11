@@ -55,8 +55,8 @@ class Player {
     });
     // compare current skipped and preSkippedSongs
     if (this.skippedSongs.size === preSkippedSongs.size) {
-      for(let i = 0; i < preSkippedSongs.size; i++){
-        if (!this.skippedSongs.has(preSkippedSongs[i])){
+      for (let i = 0; i < preSkippedSongs.size; i++) {
+        if (!this.skippedSongs.has(preSkippedSongs[i])) {
           this._emitSkippedSongs();
           break;
         }
