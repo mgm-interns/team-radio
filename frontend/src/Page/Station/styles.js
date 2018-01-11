@@ -14,8 +14,9 @@ export default ({ breakpoints, palette, spacing }) => ({
   switcherContainer: {
     margin: 'auto',
     padding: '0 !important',
-    marginTop: 60,
+    marginTop: 56,
     background: palette.lightGrey['500'],
+    marginBottom: 20,
   },
   switcherContent: {
     width: '100%',
@@ -71,5 +72,12 @@ export default ({ breakpoints, palette, spacing }) => ({
   },
   switchedTitle: {
     color: palette.primary['500'],
+  },
+  tabLabel: {
+    fontSize: '1.425rem',
+    fontFamily: 'Lato',
+    // fontWeight: 'bold',
+    color: 'rgba(0,0,0,0.54)',
+    textTransform: 'none',
   },
 });

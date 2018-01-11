@@ -7,13 +7,13 @@ export default ({ breakpoints, palette }) => ({
   coverWrapper: {
     margin: 'auto',
     // padding: '0 !important',
-    marginTop: 100,
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
     },
   },
   coverBackground: {
+    paddingTop: 56,
     height: 250,
     display: 'flex',
     alignItems: 'center',

@@ -1,10 +1,11 @@
 export default ({ breakpoints, spacing, palette }) => ({
   container: {
+    paddingBottom: 8,
     margin: 'auto',
     overflowX: 'auto',
     minHeight: 120,
     [breakpoints.up('md')]: {
-      minHeight: 130,
+      minHeight: 200,
       paddingLeft: spacing.doubleBaseMargin,
       paddingRight: spacing.doubleBaseMargin,
     },
@@ -25,16 +26,16 @@ export default ({ breakpoints, spacing, palette }) => ({
   },
   stationWrapper: {
     display: 'flex !important',
-    padding: spacing.baseMargin,
+    padding: spacing.doubleBaseMargin,
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'left',
     cursor: 'pointer',
   },
   stationTitle: {
-    marginTop: spacing.smallMargin,
-    fontWeight: 'bold',
-    fontSize: '0.825em',
-    textAlign: 'center',
+    marginTop: spacing.baseMargin,
+    // fontWeight: 'nora',
+    fontSize: '1em',
+    textAlign: 'left',
     display: 'block',
   },
   stationSubtitle: {
@@ -44,8 +45,8 @@ export default ({ breakpoints, spacing, palette }) => ({
   stationAvatar: {
     display: 'flex',
     flexFlow: 'column-reverse',
-    width: 90,
-    height: 90,
+    width: 150,
+    height: 150,
     backgroundSize: 'cover',
   },
   stationOnlineCountWrapper: {

@@ -66,8 +66,9 @@ io.on('connection', async function(socket) {
       case EVENTS.CLIENT_UPVOTE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_UPVOTE_SONG);
         eventHandlers.voteSong(
-          createEmitter(socket, io),
           1,
+          io,
+          socket,
           action.payload.userId,
           action.payload.stationId,
           action.payload.songId,
@@ -77,8 +78,9 @@ io.on('connection', async function(socket) {
       case EVENTS.CLIENT_DOWNVOTE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_DOWNVOTE_SONG);
         eventHandlers.voteSong(
-          createEmitter(socket, io),
           -1,
+          io,
+          socket,
           action.payload.userId,
           action.payload.stationId,
           action.payload.songId,
