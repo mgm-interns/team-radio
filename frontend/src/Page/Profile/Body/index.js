@@ -53,7 +53,7 @@ class Body extends Component {
                 textColor="primary"
               >
                 <Tab label="All" />
-                <Tab label="Pins" />
+                {/* <Tab label="Pins" /> */}
               </Tabs>
             </Grid>
           </Grid>

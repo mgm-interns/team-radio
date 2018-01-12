@@ -309,7 +309,7 @@ export default router => {
       throw err;
     }
   });
-  router.use(authController);
+  //router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

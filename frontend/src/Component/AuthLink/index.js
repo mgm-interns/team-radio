@@ -17,10 +17,10 @@ class AuthLink extends Component {
   constructor(props) {
     super(props);
 
-    this._logout = this._logout.bind(this);
     this.state = {
       anchorEl: null,
     };
+    this._logout = this._logout.bind(this);
   }
 
   _logout() {
@@ -29,7 +29,7 @@ class AuthLink extends Component {
       message: `Logout your account!`,
     });
     removeAuthenticationState();
-    this.props.dispatch(logout());
+    this.props.logout();
   }
 
   _handleClick = event => {
@@ -109,13 +109,16 @@ AuthLink.propTypes = {
   user: PropTypes.any,
   history: PropTypes.any,
   navigateToProfile: PropTypes.func,
+  logout: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
   user: state.api.user,
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(logout()),
+});
 
 export default compose(
   withNotification,

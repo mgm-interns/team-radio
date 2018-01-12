@@ -77,3 +77,44 @@ export const fetchUserWithUsername = username => ({
     },
   },
 });
+
+export const updateUsername = username => ({
+  [CALL_API]: {
+    types: [
+      'UPDATE_USERNAME',
+      'UPDATE_USERNAME_SUCCESS',
+      'UPDATE_USERNAME_FAILURE',
+    ],
+    endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/setUsername`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'access-token': localStorage.getItem('token'),
+    },
+    body: JSON.stringify({
+      userId: localStorage.getItem('userId'),
+      username,
+    }),
+  },
+});
+
+export const updatePassword = ({ oldPassword, newPassword }) => ({
+  [CALL_API]: {
+    types: [
+      'UPDATE_PASSWORD',
+      'UPDATE_PASSWORD_SUCCESS',
+      'UPDATE_PASSWORD_FAILURE',
+    ],
+    endpoint: `${process.env.REACT_APP_SERVER_END_POINT}/updatePassword`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'access-token': localStorage.getItem('token'),
+    },
+    body: JSON.stringify({
+      userId: localStorage.getItem('userId'),
+      oldPassword,
+      newPassword,
+    }),
+  },
+});

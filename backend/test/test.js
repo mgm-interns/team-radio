@@ -104,3 +104,8 @@ station.downVote = async function (req, res) {
     let song = await stationController.downVote(req.params.id, req.body.song_id, req.body.user_id);
     res.json(song);
 }
+
+station.getListStationUserAddedSong = async function (req, res) {
+    let song = await stationController.getListStationUserAddedSong(req.body.user_id);
+    res.json(song);
+}
