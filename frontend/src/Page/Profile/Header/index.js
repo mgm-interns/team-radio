@@ -27,7 +27,7 @@ class Header extends Component {
     // const data = user.data.user;
 
     return (
-      <Grid item xs={12} md={7} xl={8} className={classes.coverWrapper}>
+      <Grid container className={classes.coverWrapper}>
         <div className={classes.coverBackground}>
           <div className={classes.userInformation}>
             <ImageUploader avatarUrl={user.avatar_url} />
