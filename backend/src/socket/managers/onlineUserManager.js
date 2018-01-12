@@ -80,12 +80,13 @@ export const getListUserIdOnline = async (stationId, io) => {
       userList.push(userId);
     }
   });
-  return [...new Set(userList)]; // make unique
+  return new Set(userList); // make unique
 };
 
 export const getListUserOnline = async (stationId, io) => {
   // name, username, avatar_url
-  const list = await getListUserIdOnline(stationId, io);
+  const setUserId = await getListUserIdOnline(stationId, io);
+  const list = [...setUserId];
 
   return Promise.all(
     list.map(async userId => {
