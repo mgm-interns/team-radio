@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import authController from '../controllers/auth';
 import * as userController from '../controllers/user';
+import * as stationController from '../controllers/station';
 
 export default router => {
   router.post('/signup', async (req, res) => {
@@ -309,7 +310,27 @@ export default router => {
       throw err;
     }
   });
-  //router.use(authController);
+
+  router.put('/stations/getstationbyadded', async (req, res) => {
+    const stations = await stationController.getListStationUserAddedSong(
+      req.body.user_id,
+    );
+    res.json({
+      message: 'Success',
+      stations: stations,
+    });
+  });
+
+  router.put('/stations/getstationbyuserid', async (req, res) => {
+    const stations = await stationController.getStationsByUserId(
+      req.body.user_id,
+    );
+    res.json({
+      message: 'Success',
+      stations: stations,
+    });
+  });
+  router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

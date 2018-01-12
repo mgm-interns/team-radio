@@ -109,3 +109,8 @@ station.getListStationUserAddedSong = async function (req, res) {
     let song = await stationController.getListStationUserAddedSong(req.body.user_id);
     res.json(song);
 }
+
+station.getStationsByUserId = async function(req,res){
+    let stations = await stationController.getStationsByUserId(req.body.user_id);
+    res.json(stations);
+}
