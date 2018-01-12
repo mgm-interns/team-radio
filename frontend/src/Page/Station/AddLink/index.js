@@ -58,6 +58,10 @@ class AddLink extends Component {
     this._clearSearchInput = this._clearSearchInput.bind(this);
   }
 
+  componentWillUnmount() {
+    this.props.setPreviewVideo();
+  }
+
   componentWillReceiveProps(nextProps) {
     const { mutePreview, muteNowPlaying, userDid, currentStation } = nextProps;
 
