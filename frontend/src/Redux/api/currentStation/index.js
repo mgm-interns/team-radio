@@ -32,6 +32,7 @@ const INITIAL_STATE = {
   joined: {
     loading: false,
     success: false,
+    failed: false,
   },
 };
 
@@ -49,6 +50,7 @@ export default (state = INITIAL_STATE, action) => {
         joined: {
           loading: true,
           success: false,
+          failed: false,
         },
       };
     case SERVER_JOINED_STATION_SUCCESS:
@@ -59,11 +61,19 @@ export default (state = INITIAL_STATE, action) => {
         joined: {
           loading: false,
           success: true,
+          failed: false,
         },
       };
 
     case SERVER_JOINED_STATION_FAILURE:
-      return { ...INITIAL_STATE };
+      return {
+        ...INITIAL_STATE,
+        joined: {
+          loading: false,
+          success: false,
+          failed: true,
+        },
+      };
 
     case CLIENT_LEAVE_STATION:
       return {
