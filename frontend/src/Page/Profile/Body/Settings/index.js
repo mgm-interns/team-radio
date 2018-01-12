@@ -103,11 +103,11 @@ class Settings extends Component {
     const { userResponse } = nextProps;
 
     if (
-      (!userResponse.loading &&
-        userResponse.data.username !== this.props.userResponse.data.username) ||
-      (!userResponse.loading &&
-        userResponse.data.is_password !==
-          this.props.userResponse.data.is_password)
+      !userResponse.loading &&
+      userResponse.data.username !== this.props.userResponse.data.username
+      // (!userResponse.loading &&
+      //   userResponse.data.is_password !==
+      //     this.props.userResponse.data.is_password)
     ) {
       // if (!userResponse.loading) {
       this.props.history.push(`/profile/${userResponse.data.username}`);
@@ -147,7 +147,7 @@ class Settings extends Component {
                 textColor="primary"
               >
                 <Tab label="Information" />
-                {/*<Tab label="Security" />*/}
+                {/* <Tab label="Security" /> */}
               </Tabs>
             </Grid>,
             {this.state.value === 0 && (
