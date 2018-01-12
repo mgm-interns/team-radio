@@ -94,6 +94,8 @@ class StationSwitcher extends Component {
         autoHideTimeout={1000}
         className={classes.container}
         renderView={() => <div className={classes.scrollArea} />}
+        renderTrackVertical={() => <div />}
+        renderThumbVertical={() => <div />}
         ref={ref => {
           this.scrollBar = ref;
         }}
