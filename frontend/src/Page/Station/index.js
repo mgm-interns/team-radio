@@ -100,8 +100,14 @@ class StationPage extends Component {
   }
 
   _renderTabs() {
-    const { classes } = this.props;
-    const { tabValue, history, playlist } = this.state;
+    const {
+      classes,
+      // currentStation: { playlist }
+    } = this.props;
+    const { tabValue, playlist, history } = this.state;
+
+    // const updatedPlaylist = playlist.filter(item => item.is_played === false);
+    // const updatedHistory = playlist.filter(item => item.is_played === true);
 
     return [
       <Tabs
@@ -121,7 +127,7 @@ class StationPage extends Component {
           classes={{
             label: classes.tabLabel,
           }}
-          label="History"
+          label={`History (${history.length})`}
         />
       </Tabs>,
       tabValue === 0 && (
@@ -140,7 +146,7 @@ class StationPage extends Component {
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !history,
             })}
-            history={history}
+            history={history.reverse()}
           />
         </TabContainer>
       ),
