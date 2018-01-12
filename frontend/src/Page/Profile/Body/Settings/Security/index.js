@@ -37,7 +37,11 @@ class Security extends Component {
   }
 
   _renderChangePasswordForm() {
-    const { classes, submitSucceeded } = this.props;
+    const {
+      classes,
+      submitSucceeded,
+      userResponse: { is_password },
+    } = this.props;
     return [
       <Field
         key={1}
@@ -46,6 +50,7 @@ class Security extends Component {
         type="password"
         component={TextView}
         label="Old password"
+        disabled={is_password === false}
         validate={[required, minLength6]}
         border
       />,
@@ -109,7 +114,7 @@ Security.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  addUserResponse: state.api.user,
+  userResponse: state.api.user.data,
 });
 
 const mapDispatchToProps = dispatch => ({
