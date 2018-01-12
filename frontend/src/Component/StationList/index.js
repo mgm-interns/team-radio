@@ -23,7 +23,7 @@ class StationList extends Component {
       <div
         className={classNames([classes.container, classes.loadingContainer])}
       >
-        {[1, 2, 3].map((item, index) => (
+        {[1, 2, 3, 4, 5, 6].map((item, index) => (
           <div key={index} className={classes.stationWrapper}>
             <div
               className={classNames([
