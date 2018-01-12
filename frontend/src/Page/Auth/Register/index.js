@@ -22,7 +22,7 @@ import { withNotification } from 'Component/Notification';
 
 import { saveAuthenticationState } from 'Config';
 import {
-  customValidate,
+  registerValidate,
   required,
   email,
   minLength6,
@@ -258,7 +258,7 @@ export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   reduxForm({
     form: 'registerForm',
-    validate: customValidate,
+    validate: registerValidate,
   }),
   withStyles(styles),
   withNotification,

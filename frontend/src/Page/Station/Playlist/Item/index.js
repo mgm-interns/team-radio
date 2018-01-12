@@ -143,7 +143,7 @@ class PlaylistItem extends Component {
               Added by
               <Tooltip placement={'bottom'} title={creator.name}>
                 <img
-                  src={creator.avatar_url || Images.avatar.default}
+                  src={creator.avatar_url || Images.avatar.male01}
                   className={classes.creatorAvatar}
                   onClick={this._onCreatorIconClicked}
                 />

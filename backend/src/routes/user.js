@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import authController from '../controllers/auth';
 import * as userController from '../controllers/user';
+import * as stationController from '../controllers/station';
 
 export default router => {
   router.post('/signup', async (req, res) => {
@@ -252,7 +253,8 @@ export default router => {
           );
           return res.json({
             message: 'Success',
-            user: user,
+            ...user._doc,
+            userId: user._id,
           });
         }
       }
@@ -298,7 +300,8 @@ export default router => {
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
             message: 'Success',
-            user: user,
+            ...user._doc,
+            userId: user._id,
           });
         }
       }
@@ -310,6 +313,28 @@ export default router => {
     }
   });
 
+<<<<<<< HEAD
+=======
+  router.put('/stations/getstationbyadded', async (req, res) => {
+    const stations = await stationController.getListStationUserAddedSong(
+      req.body.user_id,
+    );
+    res.json({
+      message: 'Success',
+      stations: stations,
+    });
+  });
+
+  router.put('/stations/getstationbyuserid', async (req, res) => {
+    const stations = await stationController.getStationsByUserId(
+      req.body.user_id,
+    );
+    res.json({
+      message: 'Success',
+      stations: stations,
+    });
+  });
+>>>>>>> 976d708d1312ff4974082f65b6559dbf51df26f3
   router.use(authController);
 
   // test function *************************************

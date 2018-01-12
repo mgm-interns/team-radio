@@ -86,6 +86,21 @@ module.exports.getStationDetails = limit => {
 };
 
 /**
+ * Get info of station  : 
+ * - station_id 
+ * - created_date
+ * - station_name
+ * - owner_id
+ * 
+ * @param {number} limit 
+ */
+module.exports.getAllStationLimitInfor = limit => {
+  return Station.find({},{ station_id: 1, created_date: 1, station_name: 1, owner_id: 1 })
+    .limit(limit)
+    .exec();
+};
+
+/**
  * Get station by name
  * 
  * @param {string} stationNameToFind 
@@ -113,7 +128,7 @@ module.exports.getStationById = idToFind => {
  * @param {string} userId 
  */
 module.exports.getStationsByUserId = userId => {
-  return Station.find({ owner_id: userId });
+  return Station.find({ owner_id: userId },{ station_id: 1, created_date: 1, station_name: 1, owner_id: 1 });
 };
 
 
@@ -252,19 +267,20 @@ module.exports.getPlaylistOfStation = async stationId => {
 };
 
 /**
- * Get list song by User ID
  * 
  * @param {string} stationId 
  * @param {string} userId 
  */
-module.exports.getLisSongByUserId = (stationId, userId) => {
-  // TODO :
-  return Station.find({ station_id: stationId }, {
+module.exports.getStationHasSongUserAdded =  (stationId, userId) => {
+  return Station.findOne({ station_id: stationId }, {
     playlist: {
-      creator: userId
+      $elemMatch: {
+        creator: userId
+      }
     }
-  });
-};
+  })
+}
+
 
 // module.exports.getListSongHistory = async stationId => {
 //   // TODO : 

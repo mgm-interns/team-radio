@@ -19,8 +19,8 @@ class Landing extends Component {
     const nextStationId =
       nextProps.currentStation.station &&
       nextProps.currentStation.station.station_id;
-    if (currentStationId !== nextStationId) {
-      history.push(`/station/${nextStationId}`);
+    if (nextStationId && currentStationId !== nextStationId) {
+      history.replace(`/station/${nextStationId}`);
     }
   }
 

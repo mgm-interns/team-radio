@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, Form } from 'redux-form';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import { withStyles } from 'material-ui/styles';
@@ -26,6 +27,9 @@ import {
 
 import { Images } from 'Theme';
 import styles from './styles';
+
+import Information from './Information';
+import Security from './Security';
 
 function getModalStyle() {
   const top = 50;
@@ -56,24 +60,28 @@ class Settings extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this._renderChangeInformationForm = this._renderChangeInformationForm.bind(
-      this,
-    );
-    this._renderChangePasswordForm = this._renderChangePasswordForm.bind(this);
-    this._getMe = this._getMe.bind(this);
+    this._onOpenModal = this._onOpenModal.bind(this);
+    this._onCloseModal = this._onCloseModal.bind(this);
+    this.onCancelButtonClick = this.onCancelButtonClick.bind(this);
+  }
+
+  onCancelButtonClick() {
+    this.setState({ open: !this.state.open });
+  }
+
+  onSubmitButtonClick(values) {
+    console.log(values);
   }
 
   handleChange(event, value) {
     this.setState({ value });
   }
 
-  handleOpen() {
+  _onOpenModal() {
     this.setState({ open: true });
   }
 
-  handleClose() {
+  _onCloseModal() {
     this.setState({ open: false });
   }
 
@@ -86,95 +94,27 @@ class Settings extends Component {
     );
   }
 
-  _getMe(loading, me) {
-    return loading
-      ? null
-      : {
-          fullname: 'test',
-          // username: me.username,
-        };
-  }
-
-  _renderChangeInformationForm(user) {
-    const { classes, submitSucceeded } = this.props;
-    // const data = user.data.user;
-
-    return [
-      <Field
-        key={1}
-        name="username"
-        placeholder="Your username"
-        type="text"
-        component={TextView}
-        label="Username"
-        validate={[required]}
-        border
-      />,
-      <Field
-        key={2}
-        name="name"
-        placeholder="Display name"
-        type="text"
-        component={TextView}
-        label="Display name"
-        validate={[required, maxLength15]}
-        border
-      />,
-      <FormHelperText key={5} className={classes.error}>
-        {submitSucceeded && this.state.asyncError}
-      </FormHelperText>,
-    ];
-  }
-
-  _renderChangePasswordForm() {
-    const { classes, submitSucceeded } = this.props;
-    return [
-      <Field
-        key={1}
-        name="password"
-        placeholder="Your password"
-        type="password"
-        component={TextView}
-        label="Your password"
-        validate={[required, maxLength15]}
-        border
-      />,
-      <Field
-        key={2}
-        name="confirmPassword"
-        placeholder="Confirm password"
-        type="password"
-        component={TextView}
-        label="Confirm password"
-        validate={[required]}
-        border
-      />,
-      <FormHelperText key={5} className={classes.error}>
-        {submitSucceeded && this.state.asyncError}
-      </FormHelperText>,
-    ];
+  _renderLoading() {
+    return <CircularProgress />;
   }
 
   render() {
-    const { classes, handleSubmit, user } = this.props;
-    // const { data: { me, loading } } = this.props;
+    const { classes, user } = this.props;
+
+    if (!user) {
+      return this._renderLoading();
+    }
 
     const SecondButton = this._renderSecondItem();
     return [
-      <Button
-        // raised
-        // color={}
-        onClick={this.handleOpen}
-        // disabled={!this.state.stationName}
-        key={1}
-      >
+      <Button onClick={this._onOpenModal} key={1}>
         <Icon className={classes.icon}>edit</Icon>
       </Button>,
       <Modal
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         open={this.state.open}
-        onClose={this.handleClose}
+        onClose={this._onCloseModal}
         key={2}
       >
         <div style={getModalStyle()}>
@@ -196,46 +136,14 @@ class Settings extends Component {
             </Grid>,
             {this.state.value === 0 && (
               <TabContainer>
-                <Grid item xs={12} className={classes.content}>
-                  <form
-                    onSubmit={handleSubmit}
-                    className={classes.formInformation}
-                  >
-                    {this._renderChangeInformationForm()}
-                  </form>
-                </Grid>
+                <Information onCancel={this.onCancelButtonClick} />
               </TabContainer>
             )}
             {this.state.value === 1 && (
               <TabContainer>
-                <form
-                  onSubmit={handleSubmit}
-                  className={classes.formInformation}
-                >
-                  {this._renderChangePasswordForm()}
-                </form>
+                <Security onCancel={this.onCancelButtonClick} />
               </TabContainer>
             )}
-            <Grid item xs={12} className={classes.modalFooter}>
-              <Button
-              // raised
-              // color={}
-              // onClick={this.handleOpen}
-              // className={classes.buttonCover}
-              // disabled={!this.state.stationName}
-              >
-                Cancel
-              </Button>
-              <Button
-              // raised
-              // color={}
-              // onClick={this.handleOpen}
-              // className={classes.buttonCover}
-              // disabled={!this.state.stationName}
-              >
-                Save changes
-              </Button>
-            </Grid>
           </Grid>
         </div>
       </Modal>,
@@ -248,9 +156,4 @@ Settings.propTypes = {
   user: PropTypes.object,
 };
 
-export default compose(
-  withStyles(styles),
-  reduxForm({
-    form: 'editProfileForm',
-  }),
-)(Settings);
+export default compose(withStyles(styles))(Settings);

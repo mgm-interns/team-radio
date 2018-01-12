@@ -12,19 +12,28 @@ import {
   SERVER_UPDATE_ONLINE_USERS,
   CLIENT_LEAVE_STATION,
   SERVER_USER_LEFT,
+  SERVER_SKIP_SONG,
 } from 'Redux/actions';
 import { appNotificationInstance } from 'Component/Notification/AppNotification';
 
 const INITIAL_STATE = {
   station: null,
   playlist: [],
+  tempPlaylist: [],
   nowPlaying: {
     url: '',
     starting_time: 0,
   },
-  tempPlaylist: [],
-  joined: false,
+  skip: {
+    _id: new Date().getTime(),
+    delay: 0,
+  },
   online_count: 0,
+  joined: {
+    loading: false,
+    success: false,
+    failed: false,
+  },
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -32,24 +41,37 @@ export default (state = INITIAL_STATE, action) => {
     /**
      * Station information actions
      */
+    case CLIENT_JOIN_STATION:
+      return {
+        ...state,
+        station: {
+          station_id: action.payload.stationId,
+        },
+        joined: {
+          loading: true,
+          success: false,
+          failed: false,
+        },
+      };
     case SERVER_JOINED_STATION_SUCCESS:
       return {
         ...state,
         station: action.payload.station,
         playlist: action.payload.station.playlist,
-        joined: true,
+        joined: {
+          loading: false,
+          success: true,
+          failed: false,
+        },
       };
 
     case SERVER_JOINED_STATION_FAILURE:
       return {
         ...INITIAL_STATE,
-      };
-
-    case CLIENT_JOIN_STATION:
-      return {
-        ...INITIAL_STATE,
-        station: {
-          id: action.payload.stationId,
+        joined: {
+          loading: false,
+          success: false,
+          failed: true,
         },
       };
 
@@ -80,17 +102,30 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         nowPlaying: action.payload,
       };
+
+    /**
+     * Skip song
+     */
+    case SERVER_SKIP_SONG:
+      return {
+        ...state,
+        skip: {
+          _id: new Date().getTime(),
+          delay: action.payload.delay,
+          thumbnail: action.payload.now_playing.thumbnail,
+        },
+      };
     /**
      * Notify when a new user join
      */
     case SERVER_NEW_USER_JOINED:
       appNotificationInstance.info({
-        message: action.payload && `${action.payload.user} has joined!`,
+        message: `${action.payload.user} has joined!`,
       });
       return state;
     case SERVER_USER_LEFT:
       appNotificationInstance.info({
-        message: action.payload && `${action.payload.user} has left!`,
+        message: `${action.payload.user} has left!`,
       });
       return state;
     /**
@@ -98,12 +133,12 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SERVER_UPVOTE_SONG_FAILURE:
       appNotificationInstance.info({
-        message: action.payload && action.payload.message,
+        message: action.payload.message,
       });
       return state;
     case SERVER_DOWNVOTE_SONG_FAILURE:
       appNotificationInstance.info({
-        message: action.payload && action.payload.message,
+        message: action.payload.message,
       });
       return state;
     /**
@@ -122,7 +157,7 @@ export default (state = INITIAL_STATE, action) => {
      */
     case SERVER_ADD_SONG_FAILURE:
       appNotificationInstance.warning({
-        message: action.payload && action.payload.message,
+        message: action.payload.message,
       });
       return {
         ...state,

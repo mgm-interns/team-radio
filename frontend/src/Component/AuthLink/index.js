@@ -7,9 +7,9 @@ import { compose } from 'redux';
 import { withNotification } from 'Component/Notification';
 import { removeAuthenticationState } from 'Config';
 import { logout } from 'Redux/api/user/actions';
-import { Images } from 'Theme';
 import Icon from 'material-ui/Icon';
 import Menu, { MenuItem } from 'material-ui/Menu';
+import { Images } from 'Theme';
 
 import styles from './styles';
 
@@ -17,11 +17,10 @@ class AuthLink extends Component {
   constructor(props) {
     super(props);
 
-    this._logout = this._logout.bind(this);
-    // this._navigateToProfile = this._navigateToProfile.bind(this);
     this.state = {
       anchorEl: null,
     };
+    this._logout = this._logout.bind(this);
   }
 
   _logout() {
@@ -30,7 +29,7 @@ class AuthLink extends Component {
       message: `Logout your account!`,
     });
     removeAuthenticationState();
-    this.props.dispatch(logout());
+    this.props.logout();
   }
 
   _handleClick = event => {
@@ -71,7 +70,11 @@ class AuthLink extends Component {
             >
               <img
                 className={classes.avatar}
-                src={Images.avatar.default}
+                src={
+                  user.data.avatar_url === null
+                    ? Images.avatar.male01
+                    : user.data.avatar_url
+                }
                 alt="avatar"
               />
               <Icon className={classes.dropdownIcon}>arrow_drop_down</Icon>
@@ -86,7 +89,12 @@ class AuthLink extends Component {
             >
               {/* <MenuItem>{user.data.name}</MenuItem> */}
               <MenuItem>
-                <Link to={`/profile/${user.data.username}`}>My Profile</Link>
+                <Link
+                  className={classes.profileLink}
+                  to={`/profile/${user.data.username}`}
+                >
+                  My Profile
+                </Link>
               </MenuItem>
               <MenuItem>
                 <a onClick={this._logout}>Logout</a>
@@ -106,13 +114,16 @@ AuthLink.propTypes = {
   user: PropTypes.any,
   history: PropTypes.any,
   navigateToProfile: PropTypes.func,
+  logout: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
   user: state.api.user,
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(logout()),
+});
 
 export default compose(
   withNotification,

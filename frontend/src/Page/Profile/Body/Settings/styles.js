@@ -41,6 +41,6 @@ export default ({ breakpoints, palette, spacing, transitions }) => ({
     },
   },
   formInformation: {
-    paddingLeft: 20,
+    // paddingLeft: 20,
   },
 });

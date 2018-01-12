@@ -5,26 +5,26 @@ import deleteDiacriticMarks from "khong-dau";
 import * as stationModels from "../models/station";
 
 export const isExistUserHandler = async email => {
-    try {
-        let alreadyUser = await userModels.getUserByEmail(email);
+  try {
+    let alreadyUser = await userModels.getUserByEmail(email);
 
-        //if email is already sign up
-        if (alreadyUser) {
-            return true;
-        } else {
-            return false;
-        }
-    } catch (err) {
-    throw err;
+    //if email is already sign up
+    if (alreadyUser) {
+      return true;
+    } else {
+      return false;
     }
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const getUserById = async userId => {
-    try {
-        return await userModels.getUserById(userId);
-    } catch (err) {
-        throw err;
-    }
+  try {
+    return await userModels.getUserById(userId);
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null,name) => {
@@ -50,13 +50,14 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
             await userModels.setUsername(email, username);
             if (avatar_url)
                 await userModels.setAvatarUrl(email, avatar_url);
-        }
-        user = await userModels.getUserByEmail(email);
-        return user;
-    } catch (err) {
-        throw err;
     }
+    user = await userModels.getUserByEmail(email);
+    return user;
+  } catch (err) {
+    throw err;
+  }
 };
+
 export const createUser = async (email,password,name) => {
     try{
         let user = await new userModels({
@@ -70,56 +71,56 @@ export const createUser = async (email,password,name) => {
         const username = await _createUsername(name);
         await userModels.setUsername(email, username);
 
-        user = await userModels.getUserByEmail(email);
-        return user;
-    } catch(err) {
-        throw err;
-    }
-}
-export const getUserProfile = async (username) => {
-    try{
-        return await userModels.getUserByUsername(username);
-    } catch (err) {
-        throw err
-    }
-}
+    user = await userModels.getUserByEmail(email);
+    return user;
+  } catch (err) {
+    throw err;
+  }
+};
+export const getUserProfile = async username => {
+  try {
+    return await userModels.getUserByUsername(username);
+  } catch (err) {
+    throw err;
+  }
+};
 export const setAvatar = async (userId, avatar_url) => {
-    try{
-        await userModels.setAvatar(userId, avatar_url);
-        return await userModels.getUserById(userId);
-    }catch(err){
-        throw err;
-    }
-}
+  try {
+    await userModels.setAvatar(userId, avatar_url);
+    return await userModels.getUserById(userId);
+  } catch (err) {
+    throw err;
+  }
+};
 export const setUsername = async (email, username) => {
-    try{
-        await userModels.setUsername(email, username);
-        return await userModels.getUserByEmail(email);
-    }catch(err){
-        throw err;
-    }
-}
+  try {
+    await userModels.setUsername(email, username);
+    return await userModels.getUserByEmail(email);
+  } catch (err) {
+    throw err;
+  }
+};
 export const setPassword = async (email, password) => {
-    try{
-        await userModels.setPassword(email, password);
-        return await userModels.getUserByEmail(email);
-    }catch(err){
-        throw err;
-    }
-}
+  try {
+    await userModels.setPassword(email, password);
+    return await userModels.getUserByEmail(email);
+  } catch (err) {
+    throw err;
+  }
+};
 export const isVerifidedToken = async (userId, token, superSecret) => {
-    try{
-        let result = false;
-        if (token) {
-            jwt.verify(token, superSecret, (err, decoded) => {
-                if (!err && decoded.userId === userId) result = true;
-            })
-        }
-        return result;
-    } catch (err) {
-        throw err
+  try {
+    let result = false;
+    if (token) {
+      jwt.verify(token, superSecret, (err, decoded) => {
+        if (!err && decoded.userId === userId) result = true;
+      });
     }
-}
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
 
 function _stringToId(str) {
     return str
@@ -139,5 +140,4 @@ async function _createUsername(username) {
         station = await userModels.getUserByUsername(username);
     }
     return currentId;
-
 }

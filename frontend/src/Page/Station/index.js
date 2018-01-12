@@ -16,7 +16,6 @@ import {
   savePlaylist,
   saveHistory,
 } from 'Redux/page/station/actions';
-import AlertIcon from 'react-icons/lib/go/alert';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
@@ -41,34 +40,16 @@ class StationPage extends Component {
     this._onVolumeClick = this._onVolumeClick.bind(this);
     this._renderTabs = this._renderTabs.bind(this);
     this._handleTabChange = this._handleTabChange.bind(this);
+    this._checkValidStation = this._checkValidStation.bind(this);
   }
 
   componentWillMount() {
-    // Get station id from react-router
-    const { match: { params: { stationId } }, history, userId } = this.props;
-    if (stationId && stationId !== 'null' && stationId !== 'undefined') {
-      this.props.joinStation({ stationId, userId });
-    } else {
-      // Go to landing page
-      history.replace(`/`);
-    }
+    this._checkValidStation(this.props);
   }
 
   componentWillUnmount() {
     const { match: { params: { stationId } }, userId } = this.props;
     this.props.leaveStation({ stationId, userId });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { muteNowPlaying, currentStation: { playlist } } = nextProps;
-
-    // Get playlist & history
-    this.setState({
-      playlist: playlist.filter(item => item.is_played === false),
-      history: playlist.filter(item => item.is_played === true),
-    });
-
-    this.setState({ muted: muteNowPlaying });
   }
 
   componentDidMount() {
@@ -81,6 +62,41 @@ class StationPage extends Component {
       mutePreview: volumeStatus.mutePreview,
       userDid: volumeStatus.userDid,
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { muteNowPlaying, currentStation: { playlist } } = nextProps;
+
+    this._checkValidStation(nextProps);
+
+    // Get playlist & history
+    this.setState({
+      playlist: playlist.filter(item => item.is_played === false),
+      history: playlist.filter(item => item.is_played === true),
+    });
+
+    this.setState({ muted: muteNowPlaying });
+  }
+
+  _checkValidStation(props) {
+    // Get station id from react-router
+    const {
+      match: { params: { stationId } },
+      history,
+      userId,
+      currentStation: { joined },
+    } = props;
+    // Station must be a valid string
+    if (!joined.loading && !joined.success) {
+      this.props.joinStation({ stationId, userId });
+    }
+    // if (joined.loading && !joined.success) {
+    // }
+    // if (!joined.loading && joined.success) {
+    // }
+    if (!joined.loading && joined.failed) {
+      history.replace('/');
+    }
   }
 
   _onVolumeClick() {
@@ -182,44 +198,14 @@ class StationPage extends Component {
                     <StationSharing />
                   </div>
                 </Grid>
-                {playlist.length > 0 ? (
-                  <NowPlaying
-                    className={classNames(
-                      [classes.content, classes.nowPlaying],
-                      {
-                        [classes.emptyNowPlaying]: !playlist,
-                      },
-                    )}
-                    autoPlay={true}
-                    muted={muted}
-                    nowPlaying={nowPlaying}
-                  />
-                ) : (
-                  <Grid item xs={12}>
-                    <Grid
-                      container
-                      className={classNames(
-                        classes.content,
-                        classes.nowPlayingSuggestion,
-                      )}
-                      justify={'center'}
-                      alignItems={'center'}
-                      alignContent={'center'}
-                      direction={'column'}
-                    >
-                      <AlertIcon className={classes.suggestionIcon} />
-                      <Typography
-                        type={'title'}
-                        align={'center'}
-                        className={classes.suggestionText}
-                      >
-                        There is no song in playlist!
-                        <br />
-                        Please add a new song.
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                )}
+                <NowPlaying
+                  className={classNames([classes.content, classes.nowPlaying], {
+                    [classes.emptyNowPlaying]: !playlist,
+                  })}
+                  autoPlay={true}
+                  muted={muted}
+                  nowPlaying={nowPlaying}
+                />
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>

@@ -72,7 +72,10 @@ class AddLink extends Component {
     localStorage.setItem('volumeStatus', JSON.stringify(volumeStatus));
 
     // Reset add link box when navigating to another station
-    if (this.props.currentStation._id !== currentStation._id) {
+    if (
+      (this.props.currentStation && this.props.currentStation.station_id) !==
+      (currentStation && currentStation.station_id)
+    ) {
       this.setState({ searchText: '' });
     }
   }

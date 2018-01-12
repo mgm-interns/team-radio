@@ -54,4 +54,9 @@ export default router => {
   router.put('/stations/setisprivate/:id', function(req, res) {
     station.setIsPrivateOfStation(req, res);
   });
+
+  // router.put('/stations/getstationbyadded/get', function(req, res) {
+  //   console.log("***********************");
+  //   station.getListStationUserAddedSong(req, res);
+  // });
 };
