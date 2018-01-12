@@ -37,7 +37,7 @@ class Information extends Component {
         component={TextView}
         label="Profile URL"
         validate={[required]}
-        border
+        // border
       />,
       <Field
         key={2}
@@ -47,7 +47,7 @@ class Information extends Component {
         component={TextView}
         label="Display name"
         validate={[required, maxLength15]}
-        border
+        // border
         disabled
       />,
       <Field
@@ -57,7 +57,7 @@ class Information extends Component {
         type="email"
         component={TextView}
         label="Email"
-        border
+        // border
         disabled
       />,
     ];
