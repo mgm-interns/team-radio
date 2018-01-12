@@ -11,11 +11,7 @@ import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
 import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
-import {
-  muteVideoRequest,
-  savePlaylist,
-  saveHistory,
-} from 'Redux/page/station/actions';
+import { muteVideoRequest } from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
@@ -33,6 +29,8 @@ class StationPage extends Component {
     this.state = {
       muted: false,
       tabValue: 0,
+      playlist: [],
+      history: [],
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
@@ -63,9 +61,13 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { muteNowPlaying } = nextProps;
+    const { muteNowPlaying, currentStation: { playlist } } = nextProps;
     this._checkValidStation(nextProps);
-    this.setState({ muted: muteNowPlaying });
+    this.setState({
+      muted: muteNowPlaying,
+      playlist: playlist.filter(item => item.is_played === false),
+      history: playlist.filter(item => item.is_played === true),
+    });
   }
 
   _checkValidStation(props) {
@@ -98,8 +100,8 @@ class StationPage extends Component {
   }
 
   _renderTabs() {
-    const { classes, currentStation: { playlist } } = this.props;
-    const { tabValue } = this.state;
+    const { classes } = this.props;
+    const { tabValue, history, playlist } = this.state;
 
     return [
       <Tabs
@@ -113,9 +115,7 @@ class StationPage extends Component {
           classes={{
             label: classes.tabLabel,
           }}
-          label={`Playlist (${
-            playlist.filter(item => item.is_played === false).length
-          })`}
+          label={`Playlist (${playlist.length})`}
         />
         <Tab
           classes={{
@@ -128,11 +128,9 @@ class StationPage extends Component {
         <TabContainer key={2}>
           <Playlist
             className={classNames(classes.content, {
-              [classes.emptyPlaylist]: !playlist.filter(
-                item => item.is_played === false,
-              ),
+              [classes.emptyPlaylist]: !playlist,
             })}
-            playlist={playlist.filter(item => item.is_played === false)}
+            playlist={playlist}
           />
         </TabContainer>
       ),
@@ -140,11 +138,9 @@ class StationPage extends Component {
         <TabContainer key={3}>
           <History
             className={classNames(classes.content, {
-              [classes.emptyPlaylist]: !playlist.filter(
-                item => item.is_played === true,
-              ),
+              [classes.emptyPlaylist]: !history,
             })}
-            history={playlist.filter(item => item.is_played === true)}
+            history={history}
           />
         </TabContainer>
       ),
@@ -230,8 +226,6 @@ StationPage.propTypes = {
   muteNowPlaying: PropTypes.bool,
   mutedPreview: PropTypes.bool,
   preview: PropTypes.object,
-  savePlaylist: PropTypes.func,
-  saveHistory: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -247,8 +241,6 @@ const mapDispatchToProps = dispatch => ({
   leaveStation: option => dispatch(leaveStation(option)),
   muteVideoRequest: ({ muteNowPlaying, mutePreview, userDid }) =>
     dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
-  savePlaylist: playlist => dispatch(savePlaylist(playlist)),
-  saveHistory: history => dispatch(saveHistory(history)),
 });
 
 export default compose(

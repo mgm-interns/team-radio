@@ -31,8 +31,10 @@ class Player {
     // Check songs will be skipped
     playlist.forEach(song => {
       // Dem so vote co user
-      // Dem so downvote co user
+      // Dem so down votes co user
       let points = 0;
+      /*
+      // Skip song base on up votes and down votes.
       song.up_vote.forEach(user => {
         userIds.forEach(childUser => {
           if (user.toString() === childUser.toString()) {
@@ -40,6 +42,7 @@ class Player {
           }
         });
       });
+      */
       song.down_vote.forEach(user => {
         userIds.forEach(childUser => {
           if (user.toString() === childUser.toString()) {
@@ -67,10 +70,12 @@ class Player {
     this._emit(EVENTS.SERVER_UPDATE_SKIPPED_SONGS, this.skippedSongs);
   };
   addSkippedSong = songId => {
+    if (this.skippedSongs.has(songId)) {
+      return;
+    }
+    this.skippedSongs.add(songId);
     if (songId === this.nowPlaying.song_id) {
       this.skipNowPlayingSong();
-    } else {
-      this.skippedSongs.add(songId);
     }
     // TODO: check this.nowPlaying.song_id
   };
@@ -83,13 +88,9 @@ class Player {
   };
 
   skipNowPlayingSong = async () => {
-    this._emitSkippedSong(2 * TIME_BUFFER);
-    // Maybe do not need to call the below statement
-    this.skippedSongs.delete(this.nowPlaying.song_id);
-    // Make sure the nowPlaying song is set to be is_played
-    await stationController.setPlayedSongs(this.stationId, [
-      this.nowPlaying.song_id,
-    ]);
+    let skipTime = Date.now() - this.nowPlaying.starting_time + TIME_BUFFER;
+    if (2 * TIME_BUFFER < skipTime) skipTime = 2 * TIME_BUFFER;
+    this._emitSkippedSong(skipTime);
     // TODO: setSkippedSong not working well now
     await stationController.setSkippedSong(
       this.stationId,
@@ -127,9 +128,7 @@ class Player {
   };
 
   _emitPlaylist = async () => {
-    const playlist = await stationController.getAvailableListSong(
-      this.stationId,
-    );
+    const playlist = await stationController.getListSong(this.stationId);
     this._emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
       playlist: playlist,
     });
@@ -172,6 +171,9 @@ class Player {
     // Take here to current station working
     this._emitNowPlaying();
     this._emit(EVENTS.SERVER_SKIP_SONG, {
+      message: `The song will be skipped after ${Math.floor(
+        delay / 1000,
+      )}s because the number of online users click down votes is greater 50%`,
       delay: delay,
       now_playing: this.getNowPlaying(),
     });
@@ -229,6 +231,7 @@ class Player {
         await stationController.setPlayedSongs(this.stationId, [
           this.nowPlaying.song_id,
         ]);
+        this.skippedSongs.delete(playingSongId);
         this._setPlayableSong();
       }
     }, timeout);

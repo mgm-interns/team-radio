@@ -1,7 +1,6 @@
 import {
   SERVER_JOINED_STATION_SUCCESS,
   SERVER_UPDATE_PLAYLIST,
-  SERVER_UPDATE_HISTORY,
   SERVER_UPDATE_NOW_PLAYING,
   CLIENT_ADD_SONG,
   SERVER_ADD_SONG_FAILURE,
@@ -20,9 +19,6 @@ import { appNotificationInstance } from 'Component/Notification/AppNotification'
 const INITIAL_STATE = {
   station: null,
   playlist: [],
-  isUpdatePlaylist: false,
-  updatedPlaylist: [],
-  updatedHistory: [],
   tempPlaylist: [],
   nowPlaying: {
     url: '',
@@ -95,16 +91,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_UPDATE_PLAYLIST:
       return {
         ...state,
-        isUpdatePlaylist: true,
-        updatedPlaylist: action.payload.playlist,
-      };
-    /**
-     * Update history
-     */
-    case SERVER_UPDATE_HISTORY:
-      return {
-        ...state,
-        updatedHistory: action.payload.history,
+        playlist: action.payload.playlist,
       };
 
     /**
