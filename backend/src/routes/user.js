@@ -252,7 +252,8 @@ export default router => {
           );
           return res.json({
             message: 'Success',
-            user: user,
+            ...user._doc,
+            userId: user._id,
           });
         }
       }
@@ -298,7 +299,8 @@ export default router => {
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
             message: 'Success',
-            user: user,
+            ...user._doc,
+            userId: user._id,
           });
         }
       }
@@ -309,7 +311,6 @@ export default router => {
       throw err;
     }
   });
-  //router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

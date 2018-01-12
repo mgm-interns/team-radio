@@ -32,8 +32,8 @@ class Profile extends Component {
       const { match: { params: { username } }, history } = this.props;
       if (username !== nextProps.user.username) {
         // Go to landing page
-        console.log('redirect landing');
-        history.push('/');
+        // console.log('redirect landing');
+        // history.push('/');
       }
     }
   }
