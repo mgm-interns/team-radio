@@ -128,7 +128,7 @@ class Player {
   };
 
   _emitPlaylist = async () => {
-    const playlist = await stationController.getAvailableListSong(
+    const playlist = await stationController.getListSong(
       this.stationId,
     );
     this._emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
