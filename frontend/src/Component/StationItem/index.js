@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { withNotification } from 'Component/Notification';
 import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
+import { Images } from 'Theme';
 import styles from './styles';
 
 class SwitcherItem extends Component {
@@ -23,9 +24,10 @@ class SwitcherItem extends Component {
       currentStation: { station, nowPlaying },
       disableOnlineCount,
     } = this.props;
-    let { thumbnail, online_count } = this.props;
+    let { thumbnail = Images.fixture.avatar1, online_count } = this.props;
     if ((station && station.station_id) === station_id) {
       thumbnail = (nowPlaying && nowPlaying.thumbnail) || thumbnail;
+
       online_count = this.props.currentStation.online_count; // eslint-disable-line
     }
     return (

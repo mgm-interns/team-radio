@@ -4,11 +4,14 @@ const REQUEST_POSTFIX = '_REQUEST';
 const SUCCESS_POSTFIX = '_SUCCESS';
 const FAILURE_POSTFIX = '_FAILURE';
 
+/* eslint-disable */
 const METHOD_GET = 'GET';
 const METHOD_POST = 'POST';
+const METHOD_PUT = 'PUT';
+/* eslint-enable */
 
 const DEFAULT_HEADERS = {
-  'Content-Type': 'application/json',
+  // 'Content-Type': 'application/json',
 };
 
 const DEFAULT_BODY = {};
@@ -51,8 +54,11 @@ class HttpRequest {
   getAction() {
     switch (this.method) {
       case METHOD_GET:
-        return () => this._getDefaultAction();
-      case METHOD_POST:
+        return param =>
+          this._getDefaultAction({
+            endpoint: `${this.endpoint}/${param}`,
+          });
+      default:
         return payload =>
           this._getDefaultAction({
             body: JSON.stringify({
@@ -60,8 +66,6 @@ class HttpRequest {
               ...payload,
             }),
           });
-      default:
-        throw new Error('Invalid Method');
     }
   }
 

@@ -8,15 +8,10 @@ import { withStyles } from 'material-ui/styles/index';
 import { connect } from 'react-redux';
 
 import Grid from 'material-ui/Grid';
-import { FormHelperText } from 'material-ui/Form';
 import Button from 'material-ui/Button';
 
 import { updateUsername } from 'Redux/api/user/actions';
 import styles from '../styles';
-
-const _submit = values => {
-  console.log(values);
-};
 
 class Information extends Component {
   constructor(props) {
@@ -26,7 +21,6 @@ class Information extends Component {
       this,
     );
     this._onCancelButtonClick = this._onCancelButtonClick.bind(this);
-    // this._submit = this._submit.bind(this);
   }
 
   _onCancelButtonClick() {
@@ -34,8 +28,6 @@ class Information extends Component {
   }
 
   _renderChangeInformationForm() {
-    const { classes, submitSucceeded } = this.props;
-
     return [
       <Field
         key={1}
@@ -78,9 +70,6 @@ class Information extends Component {
         border
         disabled
       />,
-      <FormHelperText key={5} className={classes.error}>
-        {/* {submitSucceeded && this.state.asyncError} */}
-      </FormHelperText>,
     ];
   }
 
@@ -133,6 +122,5 @@ export default compose(
   reduxForm({
     form: 'editProfileInformationForm',
     enableReinitialize: true,
-    onSubmit: _submit,
   }),
 )(Information);

@@ -34,6 +34,7 @@ export default ({ breakpoints, palette, spacing }) => ({
   },
   nowPlayingHeader: {
     display: 'flex',
+    justifyContent: 'space-between',
   },
   nowPlayingActions: {
     display: 'flex',
@@ -64,8 +65,27 @@ export default ({ breakpoints, palette, spacing }) => ({
   tabLabel: {
     fontSize: '1.425rem',
     fontFamily: 'Lato',
-    // fontWeight: 'bold',
     color: 'rgba(0,0,0,0.54)',
     textTransform: 'none',
+  },
+  onlineCountContainer: {
+    display: 'inline-block',
+    marginTop: 12,
+    marginLeft: spacing.baseMargin,
+  },
+  onlineIcon: {
+    display: 'inline-block',
+    fontSize: '1em',
+    marginLeft: spacing.baseMargin,
+    marginRight: spacing.baseMargin,
+    marginBottom: 2,
+    color: palette.green.A700,
+  },
+  stationOnlineCountText: {
+    display: 'inline-block',
+    fontSize: '1em',
+  },
+  titleContainer: {
+    display: 'flex',
   },
 });

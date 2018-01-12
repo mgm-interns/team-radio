@@ -58,13 +58,16 @@ class StationSwitcher extends Component {
       match: { params: { stationId } },
     } = this.props;
 
-    const filteredStations = stations.map(station => ({
-      ...station,
-      isActive:
-        (currentStation.station && currentStation.station.station_id) ===
-        station.station_id,
-      thumbnail: station.thumbnail || Images.stationDefault,
-    }));
+    const filteredStations = stations
+      .map(station => ({
+        ...station,
+        thumbnail: station.thumbnail || Images.stationDefault,
+      }))
+      .filter(
+        station =>
+          (currentStation.station && currentStation.station.station_id) !==
+          station.station_id,
+      );
 
     /**
      * Ordered stations

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import CircleIcon from 'react-icons/lib/fa/circle';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
@@ -11,11 +12,7 @@ import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
 import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
-import {
-  muteVideoRequest,
-  savePlaylist,
-  saveHistory,
-} from 'Redux/page/station/actions';
+import { muteVideoRequest } from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
@@ -32,9 +29,9 @@ class StationPage extends Component {
 
     this.state = {
       muted: false,
+      tabValue: 0,
       playlist: [],
       history: [],
-      tabValue: 0,
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
@@ -66,16 +63,12 @@ class StationPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { muteNowPlaying, currentStation: { playlist } } = nextProps;
-
     this._checkValidStation(nextProps);
-
-    // Get playlist & history
     this.setState({
+      muted: muteNowPlaying,
       playlist: playlist.filter(item => item.is_played === false),
       history: playlist.filter(item => item.is_played === true),
     });
-
-    this.setState({ muted: muteNowPlaying });
   }
 
   _checkValidStation(props) {
@@ -90,10 +83,6 @@ class StationPage extends Component {
     if (!joined.loading && !joined.success) {
       this.props.joinStation({ stationId, userId });
     }
-    // if (joined.loading && !joined.success) {
-    // }
-    // if (!joined.loading && joined.success) {
-    // }
     if (!joined.loading && joined.failed) {
       history.replace('/');
     }
@@ -112,8 +101,15 @@ class StationPage extends Component {
   }
 
   _renderTabs() {
-    const { classes } = this.props;
-    const { playlist, history, tabValue } = this.state;
+    const {
+      classes,
+      // currentStation: { playlist }
+    } = this.props;
+    const { tabValue, playlist, history } = this.state;
+
+    // const updatedPlaylist = playlist.filter(item => item.is_played === false);
+    // const updatedHistory = playlist.filter(item => item.is_played === true);
+
     return [
       <Tabs
         key={1}
@@ -132,7 +128,7 @@ class StationPage extends Component {
           classes={{
             label: classes.tabLabel,
           }}
-          label="History"
+          label={`History (${history.length})`}
         />
       </Tabs>,
       tabValue === 0 && (
@@ -151,7 +147,7 @@ class StationPage extends Component {
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !history,
             })}
-            history={history}
+            history={history.reverse()}
           />
         </TabContainer>
       ),
@@ -159,8 +155,11 @@ class StationPage extends Component {
   }
 
   render() {
-    const { classes, currentStation: { station, nowPlaying } } = this.props;
-    const { muted, playlist } = this.state;
+    const {
+      classes,
+      currentStation: { station, nowPlaying, playlist, online_count },
+    } = this.props;
+    const { muted } = this.state;
 
     return [
       <NavBar key={1} color="primary" />,
@@ -180,9 +179,22 @@ class StationPage extends Component {
             <Grid item xs={12} md={7} xl={8}>
               <Grid container>
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
-                  <Typography type={'display1'}>
-                    {(station && station.station_name) || STATION_NAME_DEFAULT}
-                  </Typography>
+                  <div className={classes.titleContainer}>
+                    <Typography type={'display1'}>
+                      {(station && station.station_name) ||
+                        STATION_NAME_DEFAULT}
+                    </Typography>
+                    <div className={classes.onlineCountContainer}>
+                      <CircleIcon className={classNames(classes.onlineIcon)} />
+                      <Typography
+                        type={'caption'}
+                        align={'left'}
+                        className={classes.stationOnlineCountText}
+                      >
+                        {online_count || '-'} online
+                      </Typography>
+                    </div>
+                  </div>
                   <div className={classes.nowPlayingActions}>
                     {!nowPlaying.url ? null : (
                       <IconButton
@@ -234,8 +246,6 @@ StationPage.propTypes = {
   muteNowPlaying: PropTypes.bool,
   mutedPreview: PropTypes.bool,
   preview: PropTypes.object,
-  savePlaylist: PropTypes.func,
-  saveHistory: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -251,8 +261,6 @@ const mapDispatchToProps = dispatch => ({
   leaveStation: option => dispatch(leaveStation(option)),
   muteVideoRequest: ({ muteNowPlaying, mutePreview, userDid }) =>
     dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
-  savePlaylist: playlist => dispatch(savePlaylist(playlist)),
-  saveHistory: history => dispatch(saveHistory(history)),
 });
 
 export default compose(

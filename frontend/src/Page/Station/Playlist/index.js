@@ -33,7 +33,7 @@ class Playlist extends Component {
     const { playlist, nowPlaying } = this.props;
 
     return orderBy(
-      playlist.filter(song => song.is_played === false),
+      playlist,
       [
         ({ song_id }) => (song_id === nowPlaying.song_id ? -1 : 1),
         Playlist.getSongScore,
@@ -70,7 +70,6 @@ Playlist.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  playlist: state.api.currentStation.playlist,
   nowPlaying: state.api.currentStation.nowPlaying,
 });
 

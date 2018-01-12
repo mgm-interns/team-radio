@@ -44,6 +44,7 @@ export default theme => {
 
     addLinkBoxRight: {
       paddingLeft: '30px !important',
+      minHeight: 186,
       [breakpoints.down('md')]: {
         paddingLeft: '8px !important',
       },

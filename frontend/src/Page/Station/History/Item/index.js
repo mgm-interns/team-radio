@@ -4,12 +4,10 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import withRouter from 'react-router-dom/withRouter';
 import { addSong } from 'Redux/api/currentStation/actions';
-import { replayRequest } from 'Redux/page/station/actions';
 import Grid from 'material-ui/Grid';
 import Tooltip from 'material-ui/Tooltip';
 import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
-import classNames from 'classnames';
 import { Images } from 'Theme';
 import styles from './styles';
 
@@ -29,7 +27,6 @@ class HistoryItem extends Component {
   _onReplayClick() {
     const {
       addSong,
-      replayRequest,
       match: { params: { stationId } },
       userId,
       url,
@@ -43,7 +40,6 @@ class HistoryItem extends Component {
       stationId,
       userId,
     });
-    replayRequest();
   }
 
   render() {
@@ -100,7 +96,6 @@ const mapStateToProps = ({ api }) => ({
 
 const mapDispatchToProps = dispatch => ({
   addSong: option => dispatch(addSong(option)),
-  replayRequest: () => dispatch(replayRequest()),
 });
 
 export default compose(

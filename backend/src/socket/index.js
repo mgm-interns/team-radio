@@ -1,5 +1,6 @@
 import SocketIO from 'socket.io';
 import eventHandlers from './events';
+import eventManager from './managers';
 import * as players from '../players';
 import * as EVENTS from '../const/actions';
 import createEmitter from './managers/createEmitter';
@@ -37,12 +38,7 @@ io.on('connection', async function(socket) {
 
       case EVENTS.CLIENT_LEAVE_STATION:
         console.log('Action received: ' + EVENTS.CLIENT_LEAVE_STATION);
-        eventHandlers.leaveStation(
-          io,
-          socket,
-          action.payload.userId,
-          action.payload.stationId,
-        );
+        eventHandlers.leaveStation(io, socket, action.payload.userId);
         break;
 
       case EVENTS.CLIENT_ADD_SONG:
@@ -89,6 +85,7 @@ io.on('connection', async function(socket) {
         );
         break;
       default:
+        eventManager.chatEvents(io, socket, action);
         break;
     }
   });

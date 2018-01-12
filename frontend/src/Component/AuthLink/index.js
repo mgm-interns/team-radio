@@ -10,6 +10,7 @@ import { logout } from 'Redux/api/user/actions';
 import Icon from 'material-ui/Icon';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import { Images } from 'Theme';
+import { withRouter } from 'react-router';
 
 import styles from './styles';
 
@@ -30,6 +31,7 @@ class AuthLink extends Component {
     });
     removeAuthenticationState();
     this.props.logout();
+    this.props.history.replace('/');
   }
 
   _handleClick = event => {
@@ -127,5 +129,6 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   withNotification,
+  withRouter,
   connect(mapStateToProps, mapDispatchToProps),
 )(withStyles(styles)(AuthLink));
