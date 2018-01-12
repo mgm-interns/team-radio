@@ -133,11 +133,11 @@ async function _createUsername(username) {
     const id = _stringToId(deleteDiacriticMarks(username));
     let currentId = id;
     let i = 1;
-    let station = await userModels.getUserByUsername(username);
-    while (station) {
+    let user = await userModels.getUserByUsername(currentId);
+    while (user) {
         i += 1;
         currentId = id + i;
-        station = await userModels.getUserByUsername(username);
+        user = await userModels.getUserByUsername(currentId);
     }
     return currentId;
 }
