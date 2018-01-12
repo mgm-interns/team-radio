@@ -46,7 +46,10 @@ class Backdrop extends Component {
   }
 
   _submit() {
-    this.props.createStation(this.state.stationName);
+    const { createStation, userId } = this.props;
+    const { stationName } = this.state;
+
+    createStation({ stationName, userId });
   }
 
   render() {
@@ -105,15 +108,18 @@ Backdrop.propTypes = {
   station: PropTypes.object,
   history: PropTypes.object,
   message: PropTypes.string,
+  userId: PropTypes.string,
 };
 
-const mapStateToProps = ({ api: { stations } }) => ({
+const mapStateToProps = ({ api: { stations, user } }) => ({
   station: stations.station,
   message: stations.message,
+  userId: user.data.userId,
 });
 
 const mapDispatchToProps = dispatch => ({
-  createStation: stationName => dispatch(createStation({ stationName })),
+  createStation: ({ stationName, userId }) =>
+    dispatch(createStation({ stationName, userId })),
 });
 
 export default compose(

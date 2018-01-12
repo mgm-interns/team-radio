@@ -9,12 +9,13 @@ import station from '../routes/station';
 
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 /**
- * 
+ *
  * @param {string} stationName
- * @param {string} userId 
+ * @param {string} userId
  * @param {boolean} isPrivate - If false then station is public, if true then station is private
  */
 export const addStation = async (stationName, userId, isPrivate) => {
+  console.log('add station: ',stationName,' + ',userId);
   const currentStationName = stationName.trim();
   if (!currentStationName) {
     throw new Error('The station name can not be empty!');
@@ -44,13 +45,13 @@ export const addStation = async (stationName, userId, isPrivate) => {
 
 /**
  * Set station is private public/private
- * 
- * @param {string} stationId 
- * @param {string} userId 
+ *
+ * @param {string} stationId
+ * @param {string} userId
  * @param {boolean} value -  If false then station is public, if true then station is private
  */
 export const setIsPrivateOfStation = async (stationId, userId, value) => {
-  // TODO : 
+  // TODO :
   try {
     const stationsOfUser = await stationModels.getStationsByUserId(_safeObjectId(userId));
     if (!stationsOfUser) {
@@ -68,9 +69,9 @@ export const setIsPrivateOfStation = async (stationId, userId, value) => {
 }
 
 /**
- * 
- * @param {string} stationId 
- * @param {string} userId 
+ *
+ * @param {string} stationId
+ * @param {string} userId
  */
 export const deleteStation = async (stationId, userId) => {
   // TODO :
@@ -85,8 +86,8 @@ export const deleteStation = async (stationId, userId) => {
 
 /**
  * Get a statio by id
- * 
- * @param {string} stationId 
+ *
+ * @param {string} stationId
  */
 export const getStation = async stationId => {
   const station = await stationModels.getStationById(stationId);
@@ -101,11 +102,11 @@ export const getStation = async stationId => {
  * Get station by user id
  *  return info :
  * - station_id
- * - created_date 
+ * - created_date
  * - station_name
  * - owner_id
- * 
- * @param {string} userId 
+ *
+ * @param {string} userId
  */
 export const getStationsByUserId = async userId => {
   try {
@@ -119,10 +120,10 @@ export const getStationsByUserId = async userId => {
 
 /**
  * Add a song
- * 
- * @param {string} stationId 
- * @param {string} songUrl 
- * @param {string} userId 
+ *
+ * @param {string} stationId
+ * @param {string} songUrl
+ * @param {string} userId
  */
 export const addSong = async (stationId, songUrl, userId = null) => {
   let station;
@@ -178,9 +179,9 @@ export const addSong = async (stationId, songUrl, userId = null) => {
 };
 /**
  * Update time starting of station
- * 
- * @param {string} stationId 
- * @param {number} time 
+ *
+ * @param {string} stationId
+ * @param {number} time
  */
 export const updateStartingTime = async (stationId, time) => {
   try {
@@ -196,9 +197,9 @@ export const updateStartingTime = async (stationId, time) => {
 
 /**
  * The song played will be set to true
- * 
- * @param {string} stationId 
- * @param {string} songIds 
+ *
+ * @param {string} stationId
+ * @param {string} songIds
  */
 export const setPlayedSongs = async (stationId, songIds) => {
   try {
@@ -256,8 +257,8 @@ export const getAllStationDetails = async () => {
 
 /**
  * The function get all info of history playlist
- * 
- * @param {string} stationId 
+ *
+ * @param {string} stationId
  */
 export const getListSongHistory = async stationId => {
   try {
@@ -276,8 +277,8 @@ export const getListSongHistory = async stationId => {
 
 /**
  * The func
- * 
- * @param {string} stationId 
+ *
+ * @param {string} stationId
  */
 export const getAvailableListSong = async stationId => {
   try {
@@ -296,8 +297,8 @@ export const getAvailableListSong = async stationId => {
 
 /**
  * Get list all infor song of station
- * 
- * @param {string} stationId 
+ *
+ * @param {string} stationId
  */
 export const getListSong = async stationId => {
   try {
@@ -311,9 +312,9 @@ export const getListSong = async stationId => {
 
 
 /**
- * @param {string} stationId 
- * @param {string} songId 
- * @param {string} userId 
+ * @param {string} stationId
+ * @param {string} songId
+ * @param {string} userId
  */
 export const upVote = async (stationId, songId, userId) => {
   try {
@@ -382,10 +383,10 @@ export const upVote = async (stationId, songId, userId) => {
 };
 
 /**
- * 
- * @param {string} stationId 
- * @param {string} songId 
- * @param {string} userId 
+ *
+ * @param {string} stationId
+ * @param {string} songId
+ * @param {string} userId
  */
 export const downVote = async (stationId, songId, userId) => {
   try {
@@ -457,12 +458,12 @@ export const downVote = async (stationId, songId, userId) => {
 /**
  * Get list station which user has added song
  * return infors :
- * - station_id 
+ * - station_id
  * - created_date
  * - station_name
  * - owner_id
- * 
- * @param {string} userId 
+ *
+ * @param {string} userId
  */
 export const getListStationUserAddedSong = async userId => {
   try {
