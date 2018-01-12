@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { Field, reduxForm, Form } from 'redux-form';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import { withStyles } from 'material-ui/styles';
@@ -26,7 +27,9 @@ import {
 
 import { Images } from 'Theme';
 import styles from './styles';
-import { connect } from 'react-redux';
+
+import Information from './Information';
+import Security from './Security';
 
 function getModalStyle() {
   const top = 50;
@@ -59,12 +62,15 @@ class Settings extends Component {
     this.handleChange = this.handleChange.bind(this);
     this._onOpenModal = this._onOpenModal.bind(this);
     this._onCloseModal = this._onCloseModal.bind(this);
-    this._renderChangeInformationForm = this._renderChangeInformationForm.bind(
-      this,
-    );
-    this._renderChangePasswordForm = this._renderChangePasswordForm.bind(this);
-    this._onSaveChangesButtonClick = this._onSaveChangesButtonClick.bind(this);
-    this._onCancelButtonClick = this._onCancelButtonClick.bind(this);
+    this.onCancelButtonClick = this.onCancelButtonClick.bind(this);
+  }
+
+  onCancelButtonClick() {
+    this.setState({ open: !this.state.open });
+  }
+
+  onSubmitButtonClick(values) {
+    console.log(values);
   }
 
   handleChange(event, value) {
@@ -79,14 +85,6 @@ class Settings extends Component {
     this.setState({ open: false });
   }
 
-  _onSaveChangesButtonClick() {
-    console.log('_onSaveChangesButtonClick');
-  }
-
-  _onCancelButtonClick() {
-    console.log('_onCancelButtonClick');
-  }
-
   _renderSecondItem() {
     const { classes } = this.props;
     return () => (
@@ -96,102 +94,12 @@ class Settings extends Component {
     );
   }
 
-  _renderChangeInformationForm(user) {
-    const { classes, submitSucceeded } = this.props;
-
-    return [
-      <Field
-        key={1}
-        name="username"
-        placeholder="Your username"
-        type="text"
-        component={TextView}
-        label="Username"
-        validate={[required]}
-        border
-        initialValues={'test'}
-      />,
-      <Field
-        key={2}
-        name="name"
-        placeholder="Display name"
-        type="text"
-        component={TextView}
-        label="Display name"
-        validate={[required, maxLength15]}
-        border
-      />,
-      <Field
-        key={3}
-        name="email"
-        placeholder="Email"
-        type="email"
-        component={TextView}
-        label="Email"
-        border
-        disabled
-      />,
-      <Field
-        key={4}
-        name="level"
-        placeholder="Level"
-        type="text"
-        component={TextView}
-        label="Level"
-        border
-        disabled
-      />,
-      <FormHelperText key={5} className={classes.error}>
-        {submitSucceeded && this.state.asyncError}
-      </FormHelperText>,
-    ];
-  }
-
-  _renderChangePasswordForm(user) {
-    const { classes, submitSucceeded } = this.props;
-    return [
-      <Field
-        key={1}
-        name="password"
-        placeholder="Old password"
-        type="password"
-        component={TextView}
-        label="Your password"
-        validate={[required, maxLength15]}
-        border
-      />,
-      <Field
-        key={3}
-        name="password"
-        placeholder="New password"
-        type="password"
-        component={TextView}
-        label="Your password"
-        validate={[required, maxLength15]}
-        border
-      />,
-      <Field
-        key={4}
-        name="confirmPassword"
-        placeholder="New password confirm"
-        type="password"
-        component={TextView}
-        label="Confirm password"
-        validate={[required]}
-        border
-      />,
-      <FormHelperText key={5} className={classes.error}>
-        {submitSucceeded && this.state.asyncError}
-      </FormHelperText>,
-    ];
-  }
-
   _renderLoading() {
     return <CircularProgress />;
   }
 
   render() {
-    const { classes, handleSubmit, user } = this.props;
+    const { classes, user } = this.props;
 
     if (!user) {
       return this._renderLoading();
@@ -199,13 +107,7 @@ class Settings extends Component {
 
     const SecondButton = this._renderSecondItem();
     return [
-      <Button
-        // raised
-        // color={}
-        onClick={this._onOpenModal}
-        // disabled={!this.state.stationName}
-        key={1}
-      >
+      <Button onClick={this._onOpenModal} key={1}>
         <Icon className={classes.icon}>edit</Icon>
       </Button>,
       <Modal
@@ -232,69 +134,26 @@ class Settings extends Component {
                 <Tab label="Security" />
               </Tabs>
             </Grid>,
-            {/* <form onSubmit={handleSubmit} className={classes.formInformation}> */}
             {this.state.value === 0 && (
               <TabContainer>
-                <Grid item xs={12} className={classes.content}>
-                  <Form
-                    onSubmit={handleSubmit}
-                    className={classes.formInformation}
-                  >
-                    {this._renderChangeInformationForm(user)}
-                  </Form>
-                </Grid>
+                <Information onCancel={this.onCancelButtonClick} />
               </TabContainer>
             )}
             {this.state.value === 1 && (
               <TabContainer>
-                <form
-                  onSubmit={handleSubmit}
-                  className={classes.formInformation}
-                >
-                  {this._renderChangePasswordForm(user)}
-                </form>
+                <Security onCancel={this.onCancelButtonClick} />
               </TabContainer>
             )}
-            {/* </form>, */}
-            <Grid item xs={12} className={classes.modalFooter}>
-              <Button
-                raised
-                // color={'#808080'}
-                onClick={this._onCancelButtonClick}
-                // className={classes.buttonCover}
-                // disabled={!this.state.stationName}
-              >
-                Cancel
-              </Button>
-              <Button
-                // raised
-                onClick={this._onSaveChangesButtonClick}
-                // className={classes.buttonCover}
-                // disabled={!this.state.stationName}
-              >
-                Save changes
-              </Button>
-            </Grid>
           </Grid>
         </div>
       </Modal>,
     ];
   }
 }
-const mapStateToProps = state => ({
-  initialValues: state.api.user.data,
-});
 
 Settings.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.object,
 };
 
-export default compose(
-  withStyles(styles),
-  connect(mapStateToProps),
-  reduxForm({
-    form: 'editProfileForm',
-    enableReinitialize: true,
-  }),
-)(Settings);
+export default compose(withStyles(styles))(Settings);
