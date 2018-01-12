@@ -313,9 +313,9 @@ export default router => {
     }
   });
 
-  router.put('/stations/getstationbyadded', async (req, res) => {
+  router.get('/stations/getstationbyadded/:user_id', async (req, res) => {
     const stations = await stationController.getListStationUserAddedSong(
-      req.body.user_id,
+      req.params.user_id,
     );
     res.json({
       message: 'Success',
@@ -323,16 +323,16 @@ export default router => {
     });
   });
 
-  router.put('/stations/getstationbyuserid', async (req, res) => {
+  router.get('/stations/getstationbyuserid/:user_id', async (req, res) => {
     const stations = await stationController.getStationsByUserId(
-      req.body.user_id,
+      req.params.user_id,
     );
     res.json({
       message: 'Success',
       stations: stations,
     });
   });
-  router.use(authController);
+  //router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

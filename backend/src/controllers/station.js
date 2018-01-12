@@ -99,6 +99,11 @@ export const getStation = async stationId => {
 
 /**
  * Get station by user id
+ *  return info :
+ * - station_id
+ * - created_date 
+ * - station_name
+ * - owner_id
  * 
  * @param {string} userId 
  */
@@ -329,7 +334,7 @@ export const upVote = async (stationId, songId, userId) => {
             songId,
             upVoteArray,
           );
-          const playList = await getAvailableListSong(stationId);
+          const playList = await stationModels.getPlaylistOfStation(stationId);
           return playList;
         }
       }
@@ -341,14 +346,14 @@ export const upVote = async (stationId, songId, userId) => {
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
 
-            const playList = await getAvailableListSong(stationId);
+            const playList = await stationModels.getPlaylistOfStation(stationId);
             return playList;
           }
         }
       }
       upVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
-      const playList = await getAvailableListSong(stationId);
+      const playList = await stationModels.getPlaylistOfStation(stationId);
       return playList;
     } else {
       if (downVoteArray.length > 0) {
@@ -358,17 +363,17 @@ export const upVote = async (stationId, songId, userId) => {
             upVoteArray.push(_safeObjectId(userId));
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
-            const playList = await getAvailableListSong(stationId);
+            const playList = await stationModels.getPlaylistOfStation(stationId);
             return playList;
           }
         }
       }
       upVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
-      const playList = await getAvailableListSong(stationId);
+      const playList = await stationModels.getPlaylistOfStation(stationId);
       return playList;
     }
-    const playList = await getAvailableListSong(stationId);
+    const playList = await stationModels.getPlaylistOfStation(stationId);
     return playList;
   } catch (err) {
     console.log(err);
@@ -401,7 +406,7 @@ export const downVote = async (stationId, songId, userId) => {
             songId,
             downVoteArray,
           );
-          const playList = await getAvailableListSong(stationId);
+          const playList = await stationModels.getPlaylistOfStation(stationId);
           return playList;
         }
       }
@@ -413,14 +418,14 @@ export const downVote = async (stationId, songId, userId) => {
             downVoteArray.push(_safeObjectId(userId));
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
-            const playList = await getAvailableListSong(stationId);
+            const playList = await stationModels.getPlaylistOfStation(stationId);
             return playList;
           }
         }
       }
       downVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
-      const playList = await getAvailableListSong(stationId);
+      const playList = await stationModels.getPlaylistOfStation(stationId);
       return playList;
     } else {
       if (upVoteArray.length > 0) {
@@ -431,17 +436,17 @@ export const downVote = async (stationId, songId, userId) => {
             downVoteArray.push(_safeObjectId(userId));
             await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
             await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
-            const playList = await getAvailableListSong(stationId);
+            const playList = await getPlaylistOfStation(stationId);
             return playList;
           }
         }
       }
       downVoteArray.push(_safeObjectId(userId));
       await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
-      const playList = await getAvailableListSong(stationId);
+      const playList = await stationModels.getPlaylistOfStation(stationId);
       return playList;
     }
-    const playList = await getAvailableListSong(stationId);
+    const playList = await stationModels.getPlaylistOfStation(stationId);
     return playList;
   } catch (err) {
     console.log(err);
@@ -451,6 +456,11 @@ export const downVote = async (stationId, songId, userId) => {
 };
 /**
  * Get list station which user has added song
+ * return infors :
+ * - station_id 
+ * - created_date
+ * - station_name
+ * - owner_id
  * 
  * @param {string} userId 
  */
