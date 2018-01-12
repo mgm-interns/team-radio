@@ -34,6 +34,7 @@ export default ({ breakpoints, palette, spacing }) => ({
   },
   nowPlayingHeader: {
     display: 'flex',
+    justifyContent: 'space-between',
   },
   nowPlayingActions: {
     display: 'flex',
@@ -57,18 +58,6 @@ export default ({ breakpoints, palette, spacing }) => ({
   },
   emptyPlaylist: {
     height: 0,
-  },
-  nowPlayingSuggestion: {
-    margin: 'auto',
-    width: '100%',
-    backgroundColor: 'rgba(0,0,0,0.0225)',
-  },
-  suggestionText: {
-    color: palette.lightBlack,
-  },
-  suggestionIcon: {
-    color: palette.lightBlack,
-    fontSize: 64,
   },
   switchedTitle: {
     color: palette.primary['500'],

@@ -16,7 +16,6 @@ import {
   savePlaylist,
   saveHistory,
 } from 'Redux/page/station/actions';
-import AlertIcon from 'react-icons/lib/go/alert';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
@@ -34,6 +33,8 @@ class StationPage extends Component {
     this.state = {
       muted: false,
       tabValue: 0,
+      playlist: [],
+      history: [],
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
@@ -49,7 +50,6 @@ class StationPage extends Component {
       userId,
       currentStation: { joined },
     } = this.props;
-    console.log(stationId);
     // Station must be a valid string
     if (stationId) {
       if (
@@ -70,8 +70,35 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { muteNowPlaying } = nextProps;
+    const {
+      muteNowPlaying,
+      currentStation: {
+        playlist,
+        // updatedPlaylist,
+        // updatedHistory,
+        // isUpdatePlaylist,
+      },
+    } = nextProps;
     this.setState({ muted: muteNowPlaying });
+    console.log('props: ', this.props.currentStation.playlist.length);
+    console.log('next: ', playlist.length);
+    if (this.props.currentStation.playlist.length !== playlist.length) {
+      this.setState({
+        playlist: playlist.filter(item => item.is_played === false),
+        history: playlist.filter(item => item.is_played === true),
+      });
+    }
+    // if (isUpdatePlaylist) {
+    //   console.log('is update playlist');
+    //   this.setState({ playlist: updatedPlaylist, history: updatedHistory });
+    // } else {
+    //   console.log('join station');
+
+    //   this.setState({
+    //     playlist: playlist.filter(item => item.is_played === false),
+    //     history: playlist.filter(item => item.is_played === true),
+    //   });
+    // }
   }
 
   componentDidMount() {
@@ -101,14 +128,14 @@ class StationPage extends Component {
   _renderTabs() {
     const {
       classes,
-      currentStation: {
-        playlist,
-        updatedPlaylist,
-        updatedHistory,
-        isUpdatePlaylist,
-      },
+      // currentStation: {
+      //   playlist,
+      //   updatedPlaylist,
+      //   updatedHistory,
+      //   isUpdatePlaylist,
+      // },
     } = this.props;
-    const { tabValue } = this.state;
+    const { tabValue, playlist, history } = this.state;
 
     return [
       <Tabs
@@ -123,9 +150,10 @@ class StationPage extends Component {
             label: classes.tabLabel,
           }}
           label={`Playlist (${
-            !isUpdatePlaylist
-              ? playlist.filter(item => item.is_played === false).length
-              : updatedPlaylist.length
+            // !isUpdatePlaylist
+            // ? playlist.filter(item => item.is_played === false).length
+            // : updatedPlaylist.length
+            playlist.length
           })`}
         />
         <Tab
@@ -139,12 +167,13 @@ class StationPage extends Component {
         <TabContainer key={2}>
           <Playlist
             className={classNames(classes.content, {
-              [classes.emptyPlaylist]: !updatedPlaylist,
+              [classes.emptyPlaylist]: !playlist,
             })}
             playlist={
-              !isUpdatePlaylist
-                ? playlist.filter(item => item.is_played === false)
-                : updatedPlaylist
+              // !isUpdatePlaylist
+              // ? playlist.filter(item => item.is_played === false)
+              // : updatedPlaylist
+              playlist
             }
           />
         </TabContainer>
@@ -153,12 +182,13 @@ class StationPage extends Component {
         <TabContainer key={3}>
           <History
             className={classNames(classes.content, {
-              [classes.emptyPlaylist]: !updatedHistory,
+              [classes.emptyPlaylist]: !history,
             })}
             history={
-              !isUpdatePlaylist
-                ? playlist.filter(item => item.is_played === true)
-                : updatedHistory
+              // !isUpdatePlaylist
+              //   ? playlist.filter(item => item.is_played === true)
+              //   : updatedHistory
+              history
             }
           />
         </TabContainer>
@@ -169,18 +199,9 @@ class StationPage extends Component {
   render() {
     const {
       classes,
-      currentStation: {
-        station,
-        nowPlaying,
-        playlist,
-        isUpdatePlaylist,
-        updatedPlaylist,
-      },
+      currentStation: { station, nowPlaying, playlist },
     } = this.props;
     const { muted } = this.state;
-    const playListLength = !isUpdatePlaylist
-      ? playlist.length
-      : updatedPlaylist.length;
 
     return [
       <NavBar key={1} color="primary" />,
@@ -218,44 +239,14 @@ class StationPage extends Component {
                     <StationSharing />
                   </div>
                 </Grid>
-                {playListLength > 0 ? (
-                  <NowPlaying
-                    className={classNames(
-                      [classes.content, classes.nowPlaying],
-                      {
-                        [classes.emptyNowPlaying]: !playlist,
-                      },
-                    )}
-                    autoPlay={true}
-                    muted={muted}
-                    nowPlaying={nowPlaying}
-                  />
-                ) : (
-                  <Grid item xs={12}>
-                    <Grid
-                      container
-                      className={classNames(
-                        classes.content,
-                        classes.nowPlayingSuggestion,
-                      )}
-                      justify={'center'}
-                      alignItems={'center'}
-                      alignContent={'center'}
-                      direction={'column'}
-                    >
-                      <AlertIcon className={classes.suggestionIcon} />
-                      <Typography
-                        type={'title'}
-                        align={'center'}
-                        className={classes.suggestionText}
-                      >
-                        There is no song in playlist!
-                        <br />
-                        Please add a new song.
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                )}
+                <NowPlaying
+                  className={classNames([classes.content, classes.nowPlaying], {
+                    [classes.emptyNowPlaying]: !playlist,
+                  })}
+                  autoPlay={true}
+                  muted={muted}
+                  nowPlaying={nowPlaying}
+                />
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>

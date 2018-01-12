@@ -32,6 +32,8 @@ class Playlist extends Component {
   getFilteredPlaylist() {
     const { playlist, nowPlaying } = this.props;
 
+    console.log('playlist: ', playlist);
+
     return orderBy(
       playlist,
       [

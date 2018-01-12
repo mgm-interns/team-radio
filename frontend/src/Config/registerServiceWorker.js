@@ -62,7 +62,7 @@ function registerValidSW(swUrl) {
                 // available; please refresh." message in your web app.
                 console.log('New content is available; please refresh.');
                 appNotificationInstance.warning({
-                  message: 'Our application has released new update. Please refresh (F5) the page to the latest version.',
+                  message: 'Our application has released new updates. Please refresh the page to update the latest version.',
                   dismissible: false,
                   autoDismiss: 0,
                   position: 'br'
@@ -72,11 +72,6 @@ function registerValidSW(swUrl) {
                 // It's the perfect time to display a
                 // "Content is cached for offline use." message.
                 console.log('Content is cached for offline use.');
-                appNotificationInstance.error({
-                  message: 'The network is not available. Switch to offline mode.',
-                  autoDismiss: 5,
-                  position: 'br'
-                })
               }
               break;
             default:
