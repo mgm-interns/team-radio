@@ -313,8 +313,6 @@ export default router => {
     }
   });
 
-<<<<<<< HEAD
-=======
   router.put('/stations/getstationbyadded', async (req, res) => {
     const stations = await stationController.getListStationUserAddedSong(
       req.body.user_id,
@@ -334,7 +332,6 @@ export default router => {
       stations: stations,
     });
   });
->>>>>>> 976d708d1312ff4974082f65b6559dbf51df26f3
   router.use(authController);
 
   // test function *************************************
