@@ -89,7 +89,12 @@ class AuthLink extends Component {
             >
               {/* <MenuItem>{user.data.name}</MenuItem> */}
               <MenuItem>
-                <Link to={`/profile/${user.data.username}`}>My Profile</Link>
+                <Link
+                  className={classes.profileLink}
+                  to={`/profile/${user.data.username}`}
+                >
+                  My Profile
+                </Link>
               </MenuItem>
               <MenuItem>
                 <a onClick={this._logout}>Logout</a>

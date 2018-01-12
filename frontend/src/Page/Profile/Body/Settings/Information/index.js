@@ -79,7 +79,7 @@ class Information extends Component {
         disabled
       />,
       <FormHelperText key={5} className={classes.error}>
-        {submitSucceeded && this.state.asyncError}
+        {/* {submitSucceeded && this.state.asyncError} */}
       </FormHelperText>,
     ];
   }

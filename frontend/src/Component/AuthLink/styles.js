@@ -46,4 +46,8 @@ export default () => ({
   menuPopover: {
     marginTop: 30,
   },
+  profileLink: {
+    textDecoration: 'none',
+    color: '#000000de',
+  },
 });
