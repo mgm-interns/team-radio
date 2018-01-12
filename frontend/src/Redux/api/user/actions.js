@@ -98,7 +98,7 @@ export const updateUsername = username => ({
   },
 });
 
-export const updatePassword = ({ oldPassword, newPassword }) => ({
+export const updatePassword = (oldPassword = 'null', newPassword) => ({
   [CALL_API]: {
     types: [
       'UPDATE_PASSWORD',

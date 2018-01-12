@@ -43,17 +43,18 @@ class Security extends Component {
       userResponse: { is_password },
     } = this.props;
     return [
-      <Field
-        key={1}
-        name="oldPassword"
-        placeholder="Old password"
-        type="password"
-        component={TextView}
-        label="Old password"
-        disabled={is_password === false}
-        validate={[required, minLength6]}
-        border
-      />,
+      is_password === false && (
+        <Field
+          key={1}
+          name="oldPassword"
+          placeholder="Old password"
+          type="password"
+          component={TextView}
+          label="Old password"
+          validate={[required, minLength6]}
+          border
+        />
+      ),
       <Field
         key={2}
         name="newPassword"
@@ -118,7 +119,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: data => dispatch(updatePassword(data)),
+  onSubmit: ({ oldPassword, newPassword }) =>
+    dispatch(updatePassword(oldPassword, newPassword)),
 });
 
 export default compose(

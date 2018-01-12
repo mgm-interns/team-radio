@@ -104,7 +104,8 @@ class Settings extends Component {
 
     if (
       !userResponse.loading &&
-      userResponse.data.username !== this.props.userResponse.data.username
+      userResponse.data.username !== this.props.userResponse.data.username &&
+      userResponse.data.is_password !== this.props.userResponse.data.is_password
     ) {
       // if (!userResponse.loading) {
       this.props.history.push(`/profile/${userResponse.data.username}`);
