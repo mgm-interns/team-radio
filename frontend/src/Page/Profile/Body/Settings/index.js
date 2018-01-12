@@ -147,7 +147,7 @@ class Settings extends Component {
                 textColor="primary"
               >
                 <Tab label="Information" />
-                <Tab label="Security" />
+                {/*<Tab label="Security" />*/}
               </Tabs>
             </Grid>,
             {this.state.value === 0 && (
