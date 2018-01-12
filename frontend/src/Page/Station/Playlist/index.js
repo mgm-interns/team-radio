@@ -6,6 +6,8 @@ import Grid from 'material-ui/Grid';
 import List from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
 import orderBy from 'lodash/orderBy';
+import Typography from 'material-ui/Typography';
+import WarningIcon from 'react-icons/lib/md/warning';
 import Item from './Item';
 import styles from './styles';
 
@@ -44,7 +46,33 @@ class Playlist extends Component {
   }
 
   render() {
-    const { className, style } = this.props;
+    const { className, classes, style } = this.props;
+    const playlist = this.getFilteredPlaylist();
+    if (playlist.length === 0) {
+      return (
+        <Grid item xs={12} className={className}>
+          <Grid
+            container
+            justify={'center'}
+            alignItems={'center'}
+            alignContent={'center'}
+            direction={'column'}
+            className={classes.emptyContainer}
+          >
+            <WarningIcon className={classes.emptyIcon} />
+            <Typography
+              type={'title'}
+              align={'center'}
+              className={classes.emptyText}
+            >
+              There is no song in the playlist.
+              <br />
+              Please add new song.
+            </Typography>
+          </Grid>
+        </Grid>
+      );
+    }
     return (
       <Grid
         item
@@ -53,7 +81,7 @@ class Playlist extends Component {
         style={{ ...style, overflowY: 'auto' }}
       >
         <List style={{ paddingTop: 0, paddingBottom: 0 }}>
-          {this.getFilteredPlaylist().map((video, index) => (
+          {playlist.map((video, index) => (
             <Item key={index} {...video} playing={index === 0} />
           ))}
         </List>
