@@ -40,46 +40,16 @@ class StationPage extends Component {
     this._onVolumeClick = this._onVolumeClick.bind(this);
     this._renderTabs = this._renderTabs.bind(this);
     this._handleTabChange = this._handleTabChange.bind(this);
+    this._checkValidStation = this._checkValidStation.bind(this);
   }
 
   componentWillMount() {
-    // Get station id from react-router
-    const {
-      match: { params: { stationId } },
-      history,
-      userId,
-      currentStation: { joined },
-    } = this.props;
-    console.log(stationId);
-    // Station must be a valid string
-    if (stationId) {
-      if (
-        // Only dispatch if NOT in joining state
-        joined.loading === false &&
-        joined.success === false
-      ) {
-        this.props.joinStation({ stationId, userId });
-      }
-    } else {
-      history.replace('/');
-    }
+    this._checkValidStation(this.props);
   }
 
   componentWillUnmount() {
     const { match: { params: { stationId } }, userId } = this.props;
     this.props.leaveStation({ stationId, userId });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { muteNowPlaying, currentStation: { playlist } } = nextProps;
-
-    // Get playlist & history
-    this.setState({
-      playlist: playlist.filter(item => item.is_played === false),
-      history: playlist.filter(item => item.is_played === true),
-    });
-
-    this.setState({ muted: muteNowPlaying });
   }
 
   componentDidMount() {
@@ -92,6 +62,41 @@ class StationPage extends Component {
       mutePreview: volumeStatus.mutePreview,
       userDid: volumeStatus.userDid,
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { muteNowPlaying, currentStation: { playlist } } = nextProps;
+
+    this._checkValidStation(nextProps);
+
+    // Get playlist & history
+    this.setState({
+      playlist: playlist.filter(item => item.is_played === false),
+      history: playlist.filter(item => item.is_played === true),
+    });
+
+    this.setState({ muted: muteNowPlaying });
+  }
+
+  _checkValidStation(props) {
+    // Get station id from react-router
+    const {
+      match: { params: { stationId } },
+      history,
+      userId,
+      currentStation: { joined },
+    } = props;
+    // Station must be a valid string
+    if (!joined.loading && !joined.success) {
+      this.props.joinStation({ stationId, userId });
+    }
+    // if (joined.loading && !joined.success) {
+    // }
+    // if (!joined.loading && joined.success) {
+    // }
+    if (!joined.loading && joined.failed) {
+      history.replace('/');
+    }
   }
 
   _onVolumeClick() {
