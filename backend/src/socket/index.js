@@ -38,12 +38,7 @@ io.on('connection', async function(socket) {
 
       case EVENTS.CLIENT_LEAVE_STATION:
         console.log('Action received: ' + EVENTS.CLIENT_LEAVE_STATION);
-        eventHandlers.leaveStation(
-          io,
-          socket,
-          action.payload.userId,
-          action.payload.stationId,
-        );
+        eventHandlers.leaveStation(io, socket, action.payload.userId);
         break;
 
       case EVENTS.CLIENT_ADD_SONG:

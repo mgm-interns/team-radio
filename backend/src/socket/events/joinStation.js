@@ -48,7 +48,6 @@ const _joinStationProcess = async (socket, io, userId, station) => {
 
   // Join to new station and reassign param
   socket.join(station.station_id);
-  console.log('Join accept: ' + socket.id + ' joined to ' + station.station_id);
 
   emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
     station: station,
