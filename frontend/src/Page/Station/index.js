@@ -16,7 +16,6 @@ import {
   savePlaylist,
   saveHistory,
 } from 'Redux/page/station/actions';
-import AlertIcon from 'react-icons/lib/go/alert';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
@@ -45,12 +44,24 @@ class StationPage extends Component {
 
   componentWillMount() {
     // Get station id from react-router
-    const { match: { params: { stationId } }, history, userId } = this.props;
-    if (stationId && stationId !== 'null' && stationId !== 'undefined') {
-      this.props.joinStation({ stationId, userId });
+    const {
+      match: { params: { stationId } },
+      history,
+      userId,
+      currentStation: { joined },
+    } = this.props;
+    console.log(stationId);
+    // Station must be a valid string
+    if (stationId) {
+      if (
+        // Only dispatch if NOT in joining state
+        joined.loading === false &&
+        joined.success === false
+      ) {
+        this.props.joinStation({ stationId, userId });
+      }
     } else {
-      // Go to landing page
-      history.replace(`/`);
+      history.replace('/');
     }
   }
 
@@ -182,44 +193,14 @@ class StationPage extends Component {
                     <StationSharing />
                   </div>
                 </Grid>
-                {playlist.length > 0 ? (
-                  <NowPlaying
-                    className={classNames(
-                      [classes.content, classes.nowPlaying],
-                      {
-                        [classes.emptyNowPlaying]: !playlist,
-                      },
-                    )}
-                    autoPlay={true}
-                    muted={muted}
-                    nowPlaying={nowPlaying}
-                  />
-                ) : (
-                  <Grid item xs={12}>
-                    <Grid
-                      container
-                      className={classNames(
-                        classes.content,
-                        classes.nowPlayingSuggestion,
-                      )}
-                      justify={'center'}
-                      alignItems={'center'}
-                      alignContent={'center'}
-                      direction={'column'}
-                    >
-                      <AlertIcon className={classes.suggestionIcon} />
-                      <Typography
-                        type={'title'}
-                        align={'center'}
-                        className={classes.suggestionText}
-                      >
-                        There is no song in playlist!
-                        <br />
-                        Please add a new song.
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                )}
+                <NowPlaying
+                  className={classNames([classes.content, classes.nowPlaying], {
+                    [classes.emptyNowPlaying]: !playlist,
+                  })}
+                  autoPlay={true}
+                  muted={muted}
+                  nowPlaying={nowPlaying}
+                />
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} xl={4}>

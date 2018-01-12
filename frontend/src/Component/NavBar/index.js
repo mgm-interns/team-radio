@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
-
 import { withStyles } from 'material-ui/styles';
 import fixture from 'Fixture/landing';
-import { connect } from 'react-redux';
 import { compose } from 'redux';
 
 import styles from './styles';
@@ -119,6 +117,4 @@ NavBar.propTypes = {
   dispatch: PropTypes.any,
 };
 
-export default compose(withStyles(styles), connect(undefined, undefined))(
-  NavBar,
-);
+export default compose(withStyles(styles))(NavBar);

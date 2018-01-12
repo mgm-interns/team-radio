@@ -83,7 +83,8 @@ class Player {
   };
 
   skipNowPlayingSong = async () => {
-    // Maybe dot not need to call the below statement
+    this._emitSkippedSong(2 * TIME_BUFFER);
+    // Maybe do not need to call the below statement
     this.skippedSongs.delete(this.nowPlaying.song_id);
     // Make sure the nowPlaying song is set to be is_played
     await stationController.setPlayedSongs(this.stationId, [
@@ -94,7 +95,6 @@ class Player {
       this.stationId,
       this.nowPlaying.song_id,
     );
-    this._emitSkippedSong(2 * TIME_BUFFER);
     // when the rest time of the now playing song is less than 2 * TIME_BUFFER
     // Them timeout for next song will is the less time
     this._nextSongByTimeout(2 * TIME_BUFFER, this.nowPlaying.song_id);
@@ -127,7 +127,9 @@ class Player {
   };
 
   _emitPlaylist = async () => {
-    const playlist = await stationController.getListSong(this.stationId);
+    const playlist = await stationController.getAvailableListSong(
+      this.stationId,
+    );
     this._emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
       playlist: playlist,
     });

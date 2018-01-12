@@ -7,7 +7,16 @@ import styles from './styles';
 
 class TextView extends Component {
   render() {
-    const { input, label, type, placeholder, classes, border } = this.props;
+    const {
+      input,
+      label,
+      type,
+      placeholder,
+      classes,
+      border,
+      value,
+      ...others
+    } = this.props;
     const { touched, error } = this.props.meta;
     return (
       <TextField
@@ -34,6 +43,7 @@ class TextView extends Component {
             className: classes.textFieldFormLabel,
           }
         }
+        {...others}
       />
     );
   }

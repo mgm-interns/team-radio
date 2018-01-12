@@ -115,7 +115,7 @@ class FacebookLogin extends Component {
         };
         res.profileObj = {
           facebookId: me.id,
-          imageUrl: me.picture.data.url,
+          avatar_url: me.picture.data.url,
           email: me.email,
           name: me.name,
         };
