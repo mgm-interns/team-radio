@@ -89,7 +89,7 @@ io.on('connection', async function(socket) {
     }
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnecting', () => {
     eventHandlers.socketDisconnect(io, socket);
     console.log('Disconnect with ' + socket.id);
   });
