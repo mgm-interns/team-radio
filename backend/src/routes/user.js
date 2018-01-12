@@ -28,10 +28,8 @@ export default router => {
         res.json({
           message: 'signup success',
           token: token,
+          ...newUser._doc,
           userId: newUser._id,
-          name: newUser.name,
-          avatar_url: newUser.avatar_url,
-          username: newUser.username,
         });
       }
     } catch (err) {
@@ -67,10 +65,8 @@ export default router => {
             success: true,
             message: 'Enjoy your token!',
             token: token,
+            ...user._doc,
             userId: user._id,
-            name: user.name,
-            avatar_url: user.avatar_url,
-            username: user.username,
           });
         }
       }
@@ -98,12 +94,8 @@ export default router => {
       res.json({
         message: 'signup success',
         token: token,
+        ...user._doc,
         userId: user._id,
-        googleId: user.google_id,
-        facebookId: user.facebook_id,
-        name: user.name,
-        avatar_url: user.avatar_url,
-        username: user.username,
       });
     } catch (err) {
       throw err;
@@ -295,7 +287,7 @@ export default router => {
             });
           }
           const newPassword = user.generateHash(req.body.newPassword);
-          console.log('call controller '+ newPassword);
+          console.log('call controller ' + newPassword);
           await userController.setPassword(user.email, newPassword);
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
