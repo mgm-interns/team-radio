@@ -44,19 +44,23 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { fetchUserResponse: { error, data, isAuthenticated } } = nextProps;
-
+    const { fetchUserResponse: { data: { token } } } = this.props;
     if (error !== null) {
       this.setState({
-        formErrors: { message: error.response.message },
+        formErrors: {
+          message: error.response.message,
+        },
       });
-    } else if (data.token || isAuthenticated) {
+    } else if (isAuthenticated && token !== data.token) {
       this._showNotification('Login successful!');
       saveAuthenticationState(data);
       this.props.history.go(-1);
       // this.props.history.replace('/');
     }
     if (!loadAuthenticationState()) {
-      this.setState({ isLoggedIn: false });
+      this.setState({
+        isLoggedIn: false,
+      });
     }
   }
 
@@ -73,7 +77,9 @@ class Login extends Component {
 
   _onLoginSocialClick(response) {
     if (response) {
-      this.setState({ isLoggedIn: true });
+      this.setState({
+        isLoggedIn: true,
+      });
       const { profileObj, authResponse } = response;
 
       // handle data
@@ -99,20 +105,34 @@ class Login extends Component {
     });
   }
 
+  componentDidMount() {
+    if (loadAuthenticationState()) {
+      this.props.history.replace('/');
+    }
+  }
+
   _renderHeadline() {
     return (
-      <Grid style={{ paddingBottom: '1em' }}>
+      <Grid
+        style={{
+          paddingBottom: '1em',
+        }}
+      >
         <Typography type="headline" component="h2">
           Log in
-        </Typography>
-        <Typography component="p">for listening and sharing music</Typography>
+        </Typography>{' '}
+        <Typography component="p">for listening and sharing music </Typography>{' '}
       </Grid>
     );
   }
 
   _renderLoginSocial() {
     return (
-      <Grid style={{ paddingBottom: '1em' }}>
+      <Grid
+        style={{
+          paddingBottom: '1em',
+        }}
+      >
         <FacebookLogin
           fields="name,email,picture"
           autoLoad={false}
@@ -120,8 +140,12 @@ class Login extends Component {
           onSuccess={this._onLoginSocialClick}
           isDisabled={this.state.isLoggedIn}
           onFailure={this._onLoginSocialFailure}
-        />
-        <div style={{ height: 16 }} />
+        />{' '}
+        <div
+          style={{
+            height: 16,
+          }}
+        />{' '}
         <GoogleLogin
           onSuccess={this._onLoginSocialClick}
           offline={false}
@@ -132,7 +156,7 @@ class Login extends Component {
           onFailure={this._onLoginSocialFailure}
           autoLoad={false}
           onSignedIn={this._onSignedIn}
-        />
+        />{' '}
       </Grid>
     );
   }
@@ -183,10 +207,9 @@ class Login extends Component {
               Log in
             </Button>
           )}
-
           <FormHelperText className={classes.callout}>
-            <span>Not a member?</span>
-            <Link to="/auth/register">Create an account</Link>
+            <span> Not a member ? </span>
+            <Link to="/auth/register"> Create an account </Link>
           </FormHelperText>
         </Grid>
       </Grid>
@@ -217,15 +240,13 @@ class Login extends Component {
             <Card raised className={classes.cardForm}>
               <form onSubmit={handleSubmit}>
                 <CardContent>
-                  {this._renderHeadline()}
-                  {this._renderLoginSocial()}
+                  {this._renderHeadline()} {this._renderLoginSocial()}
                   {this._renderLoginLocalForm()}
                 </CardContent>
-                <CardActions>{this._renderLoginLocalActions()}</CardActions>
+                <CardActions> {this._renderLoginLocalActions()} </CardActions>
               </form>
             </Card>
           </Grid>
-
           {this._renderBackground()}
         </Grid>
       </Grid>,
