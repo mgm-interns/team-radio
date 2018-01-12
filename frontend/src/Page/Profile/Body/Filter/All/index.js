@@ -9,7 +9,6 @@ import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles/index';
 import styles from './styles';
 
-/* eslint-disable no-shadow */
 class FilterAll extends Component {
   render() {
     const { classes } = this.props;

@@ -33,72 +33,21 @@ class StationPage extends Component {
     this.state = {
       muted: false,
       tabValue: 0,
-      playlist: [],
-      history: [],
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
     this._renderTabs = this._renderTabs.bind(this);
     this._handleTabChange = this._handleTabChange.bind(this);
+    this._checkValidStation = this._checkValidStation.bind(this);
   }
 
   componentWillMount() {
-    // Get station id from react-router
-    const {
-      match: { params: { stationId } },
-      history,
-      userId,
-      currentStation: { joined },
-    } = this.props;
-    // Station must be a valid string
-    if (stationId) {
-      if (
-        // Only dispatch if NOT in joining state
-        joined.loading === false &&
-        joined.success === false
-      ) {
-        this.props.joinStation({ stationId, userId });
-      }
-    } else {
-      history.replace('/');
-    }
+    this._checkValidStation(this.props);
   }
 
   componentWillUnmount() {
     const { match: { params: { stationId } }, userId } = this.props;
     this.props.leaveStation({ stationId, userId });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const {
-      muteNowPlaying,
-      currentStation: {
-        playlist,
-        // updatedPlaylist,
-        // updatedHistory,
-        // isUpdatePlaylist,
-      },
-    } = nextProps;
-    this.setState({ muted: muteNowPlaying });
-    console.log('props: ', this.props.currentStation.playlist.length);
-    console.log('next: ', playlist.length);
-    if (this.props.currentStation.playlist.length !== playlist.length) {
-      this.setState({
-        playlist: playlist.filter(item => item.is_played === false),
-        history: playlist.filter(item => item.is_played === true),
-      });
-    }
-    // if (isUpdatePlaylist) {
-    //   console.log('is update playlist');
-    //   this.setState({ playlist: updatedPlaylist, history: updatedHistory });
-    // } else {
-    //   console.log('join station');
-
-    //   this.setState({
-    //     playlist: playlist.filter(item => item.is_played === false),
-    //     history: playlist.filter(item => item.is_played === true),
-    //   });
-    // }
   }
 
   componentDidMount() {
@@ -111,6 +60,29 @@ class StationPage extends Component {
       mutePreview: volumeStatus.mutePreview,
       userDid: volumeStatus.userDid,
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { muteNowPlaying } = nextProps;
+    this._checkValidStation(nextProps);
+    this.setState({ muted: muteNowPlaying });
+  }
+
+  _checkValidStation(props) {
+    // Get station id from react-router
+    const {
+      match: { params: { stationId } },
+      history,
+      userId,
+      currentStation: { joined },
+    } = props;
+    // Station must be a valid string
+    if (!joined.loading && !joined.success) {
+      this.props.joinStation({ stationId, userId });
+    }
+    if (!joined.loading && joined.failed) {
+      history.replace('/');
+    }
   }
 
   _onVolumeClick() {
@@ -126,16 +98,8 @@ class StationPage extends Component {
   }
 
   _renderTabs() {
-    const {
-      classes,
-      // currentStation: {
-      //   playlist,
-      //   updatedPlaylist,
-      //   updatedHistory,
-      //   isUpdatePlaylist,
-      // },
-    } = this.props;
-    const { tabValue, playlist, history } = this.state;
+    const { classes, currentStation: { playlist } } = this.props;
+    const { tabValue } = this.state;
 
     return [
       <Tabs
@@ -150,10 +114,7 @@ class StationPage extends Component {
             label: classes.tabLabel,
           }}
           label={`Playlist (${
-            // !isUpdatePlaylist
-            // ? playlist.filter(item => item.is_played === false).length
-            // : updatedPlaylist.length
-            playlist.length
+            playlist.filter(item => item.is_played === false).length
           })`}
         />
         <Tab
@@ -167,14 +128,11 @@ class StationPage extends Component {
         <TabContainer key={2}>
           <Playlist
             className={classNames(classes.content, {
-              [classes.emptyPlaylist]: !playlist,
+              [classes.emptyPlaylist]: !playlist.filter(
+                item => item.is_played === false,
+              ),
             })}
-            playlist={
-              // !isUpdatePlaylist
-              // ? playlist.filter(item => item.is_played === false)
-              // : updatedPlaylist
-              playlist
-            }
+            playlist={playlist.filter(item => item.is_played === false)}
           />
         </TabContainer>
       ),
@@ -182,14 +140,11 @@ class StationPage extends Component {
         <TabContainer key={3}>
           <History
             className={classNames(classes.content, {
-              [classes.emptyPlaylist]: !history,
+              [classes.emptyPlaylist]: !playlist.filter(
+                item => item.is_played === true,
+              ),
             })}
-            history={
-              // !isUpdatePlaylist
-              //   ? playlist.filter(item => item.is_played === true)
-              //   : updatedHistory
-              history
-            }
+            history={playlist.filter(item => item.is_played === true)}
           />
         </TabContainer>
       ),

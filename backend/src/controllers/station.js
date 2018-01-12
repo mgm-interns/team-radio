@@ -7,7 +7,6 @@ import * as stationModels from './../models/station';
 import { Error } from 'mongoose';
 import station from '../routes/station';
 
-
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 /**
  * 
@@ -106,7 +105,7 @@ export const getStation = async stationId => {
 export const getStationsByUserId = async userId => {
   try {
     const stations = stationModels.getStationsByUserId(_safeObjectId(userId));
-    return stations.toObject();
+    return stations;
   } catch (err) {
     console.log(err);
     throw err;
@@ -165,7 +164,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
     await stationModels.addSong(stationId, song);
     station = await stationModels.getStationById(stationId);
     players.updatePlaylist(stationId);
-    return await getAvailableListSong(stationId);
+    return station.playlist;
     // return Promise.resolve(station.playlist);
   } catch (err) {
     console.log('Error add song : ' + err);
@@ -462,14 +461,13 @@ export const getListStationUserAddedSong = async userId => {
     for (let i = 0; i < stations.length; i++) {
       const playList = (await stationModels.getStationHasSongUserAdded(stations[i].station_id, userId)).playlist;
       if (playList.length > 0) {
-        currentStation.push(stations[i]) ;
+        currentStation.push(stations[i]);
       }
     }
     return currentStation;
   } catch (error) {
     throw error;
   }
-
 }
 
 export const setSkippedSong = async (stationId, songId) => {

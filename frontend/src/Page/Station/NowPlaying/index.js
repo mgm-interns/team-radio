@@ -93,7 +93,6 @@ class NowPlaying extends Component {
 
   render() {
     const { className, nowPlaying, autoPlay, muted } = this.props;
-    console.log(this.state.skipNotification);
     return this.state.skipNotification ? (
       this.renderSkipNotification()
     ) : (
