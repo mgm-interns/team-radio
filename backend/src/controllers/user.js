@@ -1,6 +1,8 @@
 /* eslint-disable */
 import userModels from '../models/user';
 import jwt from 'jsonwebtoken';
+import deleteDiacriticMarks from "khong-dau";
+import * as stationModels from "../models/station";
 
 export const isExistUserHandler = async email => {
   try {
@@ -25,30 +27,29 @@ export const getUserById = async userId => {
   }
 };
 
-export const createUserWithSocialAccount = async (
-  email,
-  googleId = null,
-  facebookId = null,
-  avatar_url = null,
-  name,
-) => {
-  try {
-    let user = await userModels.getUserByEmail(email);
-    if (user) {
-      if (googleId) await userModels.setGoogleId(email, googleId);
-      if (facebookId) await userModels.setFacebookId(email, facebookId);
-      if (avatar_url) await userModels.setAvatarUrl(email, avatar_url);
-    } else {
-      let user = await new userModels({
-        email: email,
-        google_id: googleId,
-        facebook_id: facebookId,
-        name: name,
-      });
-      await user.save();
-      const username = user.generateHash(user._id.toString());
-      await userModels.setUsername(email, username);
-      if (avatar_url) await userModels.setAvatarUrl(email, avatar_url);
+export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null,name) => {
+    try {
+        let user = await userModels.getUserByEmail(email);
+        if (user) {
+            if (googleId)
+                await userModels.setGoogleId(email, googleId);
+            if (facebookId)
+                await userModels.setFacebookId(email, facebookId);
+            if (avatar_url)
+                await userModels.setAvatarUrl(email, avatar_url);
+        } else {
+            let user = await new userModels({
+                email : email,
+                google_id : googleId,
+                facebook_id : facebookId,
+                name: name,
+                is_password: false
+            });
+            await user.save();
+            const username = await _createUsername(name);
+            await userModels.setUsername(email, username);
+            if (avatar_url)
+                await userModels.setAvatarUrl(email, avatar_url);
     }
     user = await userModels.getUserByEmail(email);
     return user;
@@ -56,22 +57,19 @@ export const createUserWithSocialAccount = async (
     throw err;
   }
 };
-export const createUser = async (email, password, name) => {
-  try {
-    let user = await new userModels({
-      email: email,
-      name: name,
-    });
 
-    user.password = user.generateHash(password);
-    await user.save();
-    // const username = user.generateHash(user._id.toString())
-    const username = user._id
-      .toString()
-      .split('')
-      .reverse()
-      .join('');
-    await userModels.setUsername(email, username);
+export const createUser = async (email,password,name) => {
+    try{
+        let user = await new userModels({
+            email : email,
+            name: name,
+            is_password: true,
+        });
+
+        user.password = user.generateHash(password)
+        await user.save();
+        const username = await _createUsername(name);
+        await userModels.setUsername(email, username);
 
     user = await userModels.getUserByEmail(email);
     return user;
@@ -123,3 +121,23 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
     throw err;
   }
 };
+
+function _stringToId(str) {
+    return str
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^a-z0-9-]/g, '');
+}
+
+async function _createUsername(username) {
+    const id = _stringToId(deleteDiacriticMarks(username));
+    let currentId = id;
+    let i = 1;
+    let station = await userModels.getUserByUsername(username);
+    while (station) {
+        i += 1;
+        currentId = id + i;
+        station = await userModels.getUserByUsername(username);
+    }
+    return currentId;
+}
