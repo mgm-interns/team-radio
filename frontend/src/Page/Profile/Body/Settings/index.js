@@ -149,7 +149,7 @@ class Settings extends Component {
                 <Tab label="Information" />
                 {/* <Tab label="Security" /> */}
               </Tabs>
-            </Grid>,
+            </Grid>
             {this.state.value === 0 && (
               <TabContainer>
                 <Information onCancel={this.onCancelButtonClick} />

@@ -60,16 +60,6 @@ class Information extends Component {
         border
         disabled
       />,
-      <Field
-        key={4}
-        name="level"
-        placeholder="Level"
-        type="text"
-        component={TextView}
-        label="Level"
-        border
-        disabled
-      />,
     ];
   }
 
