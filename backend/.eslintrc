@@ -11,6 +11,7 @@
     "vars-on-top": "off",
     "no-param-reassign": "off",
     "linebreak-style": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "camelcase": "warn"
   }
 }

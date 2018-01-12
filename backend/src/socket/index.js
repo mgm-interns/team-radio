@@ -1,5 +1,6 @@
 import SocketIO from 'socket.io';
 import eventHandlers from './events';
+import eventManager from './managers';
 import * as players from '../players';
 import * as EVENTS from '../const/actions';
 import createEmitter from './managers/createEmitter';
@@ -89,6 +90,7 @@ io.on('connection', async function(socket) {
         );
         break;
       default:
+        eventManager.chatEvents(io, socket, action);
         break;
     }
   });
