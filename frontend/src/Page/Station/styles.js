@@ -34,6 +34,7 @@ export default ({ breakpoints, palette, spacing }) => ({
   },
   nowPlayingHeader: {
     display: 'flex',
+    justifyContent: 'space-between',
   },
   nowPlayingActions: {
     display: 'flex',
@@ -64,7 +65,6 @@ export default ({ breakpoints, palette, spacing }) => ({
   tabLabel: {
     fontSize: '1.425rem',
     fontFamily: 'Lato',
-    // fontWeight: 'bold',
     color: 'rgba(0,0,0,0.54)',
     textTransform: 'none',
   },

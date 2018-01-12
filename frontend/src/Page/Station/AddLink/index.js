@@ -197,7 +197,7 @@ class AddLink extends Component {
         if (checkValidYoutubeUrl(value)) {
           // skip the other params of youtube link
           // just get the main part: https://www.youtube.com/watch?v={video_id}
-          const input = value.split('&')[0];
+          const input = `${value.split('&')[0]}&t=0s`;
           const videoId = checkValidYoutubeUrl(input);
           const data = await this._getVideoInfo(videoId);
           setPreviewVideo(data[0]);

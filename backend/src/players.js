@@ -58,7 +58,7 @@ class Player {
     });
     // compare current skipped and preSkippedSongs
     if (this.skippedSongs.size === preSkippedSongs.size) {
-      for (let i = 0; i < preSkippedSongs.size; i++){
+      for (let i = 0; i < preSkippedSongs.size; i++) {
         if (!this.skippedSongs.has(preSkippedSongs[i])) {
           this._emitSkippedSongs();
           break;
@@ -70,7 +70,7 @@ class Player {
     this._emit(EVENTS.SERVER_UPDATE_SKIPPED_SONGS, this.skippedSongs);
   };
   addSkippedSong = songId => {
-    if (this.skippedSongs.has(songId)){
+    if (this.skippedSongs.has(songId)) {
       return;
     }
     this.skippedSongs.add(songId);
@@ -128,9 +128,7 @@ class Player {
   };
 
   _emitPlaylist = async () => {
-    const playlist = await stationController.getListSong(
-      this.stationId,
-    );
+    const playlist = await stationController.getListSong(this.stationId);
     this._emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
       playlist: playlist,
     });
@@ -173,7 +171,9 @@ class Player {
     // Take here to current station working
     this._emitNowPlaying();
     this._emit(EVENTS.SERVER_SKIP_SONG, {
-      message: `The song will be skipped after ${Math.floor( delay / 1000)}s because the number of online users click down votes is greater 50%`,
+      message: `The song will be skipped after ${Math.floor(
+        delay / 1000,
+      )}s because the number of online users click down votes is greater 50%`,
       delay: delay,
       now_playing: this.getNowPlaying(),
     });
