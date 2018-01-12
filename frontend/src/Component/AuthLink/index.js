@@ -73,7 +73,7 @@ class AuthLink extends Component {
               <img
                 className={classes.avatar}
                 src={
-                  user.data.avatar_url === null
+                  !user.data.avatar_url
                     ? Images.avatar.male01
                     : user.data.avatar_url
                 }
