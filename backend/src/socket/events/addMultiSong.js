@@ -1,10 +1,12 @@
 import * as stationController from '../../controllers/station';
+import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
 import * as players from '../../players';
 
 export default async (emitter, userId, stationId, songList) => {
   let playlist;
   try {
+    await userController.getUserById(userId);
     // Addsong and return playlist
     playlist = await stationController.addMultiSong(
       stationId,
