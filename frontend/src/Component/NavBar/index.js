@@ -63,7 +63,7 @@ class NavBar extends Component {
         //     ? { filter: 'opacity(0.8)', backgroundColor: setColor.primary }
         //     : { backgroundColor: setColor[color] }
         // }
-        style={{ backgroundColor: setColor[color] }}
+        style={{ backgroundColor: setColor.primary }}
       >
         <Grid
           container
