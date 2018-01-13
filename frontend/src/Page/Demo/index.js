@@ -26,13 +26,13 @@ const styles = theme => ({
     flexGrow: 1,
     // marginTop: theme.spacing.unit * 3,
     backgroundColor: theme.palette.background.paper,
-    paddingTop: '80px',
+    paddingTop: 60,
   },
 });
 
 class DemoPage extends Component {
   state = {
-    value: 3,
+    value: 2,
   };
 
   handleChange = (event, value) => {
@@ -51,17 +51,17 @@ class DemoPage extends Component {
               <Tab label="Notification" />
             </Tabs>
           </AppBar>
-          {this.state.value === 1 && (
+          {this.state.value === 0 && (
             <TabContainer>
               <ImageCropper />
             </TabContainer>
           )}
-          {this.state.value === 2 && (
+          {this.state.value === 1 && (
             <TabContainer>
               <LoginSocial />
             </TabContainer>
           )}
-          {this.state.value === 3 && (
+          {this.state.value === 2 && (
             <TabContainer>
               <Notification />
             </TabContainer>
