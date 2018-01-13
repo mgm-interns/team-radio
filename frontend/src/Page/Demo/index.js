@@ -4,13 +4,10 @@ import { withStyles } from 'material-ui/styles';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import AppBar from 'material-ui/AppBar';
 import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
-
+import { NavBar } from 'Component';
 import ImageCropper from './ImageCropper';
 import LoginSocial from './LoginSocial';
 import Notification from './Notification';
-import ImageUploader from './ImageUploader';
-import { NavBar } from 'Component';
 
 function TabContainer(props) {
   return (
@@ -35,7 +32,7 @@ const styles = theme => ({
 
 class DemoPage extends Component {
   state = {
-    value: 0,
+    value: 3,
   };
 
   handleChange = (event, value) => {
@@ -49,17 +46,11 @@ class DemoPage extends Component {
         <div className={classes.root}>
           <AppBar position="static" color="default">
             <Tabs value={this.state.value} onChange={this.handleChange}>
-              <Tab label="Image Uploader" />
               <Tab label="Image Cropper" />
               <Tab label="Login Social" />
               <Tab label="Notifcation" />
             </Tabs>
           </AppBar>
-          {this.state.value === 0 && (
-            <TabContainer>
-              <ImageUploader />
-            </TabContainer>
-          )}
           {this.state.value === 1 && (
             <TabContainer>
               <ImageCropper />
