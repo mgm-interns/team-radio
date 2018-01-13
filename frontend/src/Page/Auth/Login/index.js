@@ -52,7 +52,7 @@ class Login extends Component {
         },
       });
     } else if (isAuthenticated && token !== data.token) {
-      this._showNotification('Login successful!');
+      this._showNotification('Login successfully!');
       saveAuthenticationState(data);
       if (window.history.length > 2) {
         this.props.history.go(-1);

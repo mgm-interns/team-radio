@@ -132,9 +132,9 @@ export default router => {
             return res.status(400).json({ tokenError: 'Verify token failed.' });
           }
           const user = await userController.getUserById(decoded.userId);
+
           const userRes = { ...user._doc, userId: user._id };
           return res.json(userRes);
-          // return res.json(decoded);
         });
       } else {
         return res.status(400).json({ tokenError: 'No token provided.' });
@@ -205,7 +205,7 @@ export default router => {
             req.body.userId,
             req.body.avatar_url,
           );
-          return res.json(user);
+          return res.json({ ...user._doc, userId: user._id });
         }
       }
       return res.json({
@@ -324,7 +324,7 @@ export default router => {
       stations: stations,
     });
   });
-  //router.use(authController);
+  // router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {
