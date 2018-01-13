@@ -83,9 +83,9 @@ class StationSwitcher extends Component {
         // Sort by number of online users
         'online_count',
         // Sort by is active station
-        'isActive',
+        'thumbnail',
       ],
-      ['asc', 'desc', 'asc'],
+      ['asc', 'desc', 'desc'],
     );
 
     return (
