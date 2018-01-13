@@ -135,7 +135,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
   if (!station) {
     throw new Error(`Station id ${stationId} is not exist!`);
   }
-  if (!userId) {
+  if (!userId | userId === 0 | userId === '0') {
     let numOfSongsAddedByUnregistedUsers = 0;
     station.playlist.forEach((song, index) => {
       if (!song.creator && song.is_played === false) {
@@ -143,10 +143,8 @@ export const addSong = async (stationId, songUrl, userId = null) => {
         if (
           numOfSongsAddedByUnregistedUsers === MAX_SONG_UNREGISTED_USER_CAN_ADD
         ) {
-          throw new Error(
-            `When a playlist contains three or more songs from unregistered users,` +
-            ` new songs can only be entered by logged in users`,
-          );
+          throw new Error('You need to login to add more song!\n' +
+        'Unlogged users are only allowed to add up to 3 songs to playlist at a time');
         }
       }
     });
