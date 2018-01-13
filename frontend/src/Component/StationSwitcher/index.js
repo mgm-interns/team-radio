@@ -7,7 +7,6 @@ import classNames from 'classnames';
 import withStyles from 'material-ui/styles/withStyles';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
 import { setPreviewVideo } from 'Redux/page/station/actions';
-import { Scrollbars } from 'react-custom-scrollbars';
 import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
 import orderBy from 'lodash/orderBy';
@@ -43,7 +42,7 @@ class StationSwitcher extends Component {
       joinStationRequest({ userId, stationId: station.station_id });
       setPreviewVideo();
       // Scroll to left after switch successful
-      this.scrollBar.scrollToLeft();
+      // this.scrollBar.scrollToLeft();
     }
     notification.app.success({
       message: `Switched to station ${station.station_name}`,
@@ -89,13 +88,8 @@ class StationSwitcher extends Component {
     );
 
     return (
-      <Scrollbars
-        autoHide
-        autoHideTimeout={1000}
+      <div
         className={classes.container}
-        renderView={() => <div className={classes.scrollArea} />}
-        renderTrackVertical={() => <div />}
-        renderThumbVertical={() => <div />}
         ref={ref => {
           this.scrollBar = ref;
         }}
@@ -107,7 +101,7 @@ class StationSwitcher extends Component {
             goToStationPage={() => this._goToStationPage(station)}
           />
         ))}
-      </Scrollbars>
+      </div>
     );
   }
 
@@ -146,7 +140,7 @@ class StationSwitcher extends Component {
           classes.emptyContainer,
         ])}
       >
-        <p>No stations. There is something wrong</p>
+        <p>No stations. There is something wrong.</p>
       </div>
     );
   }

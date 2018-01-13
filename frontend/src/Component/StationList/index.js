@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import { Scrollbars } from 'react-custom-scrollbars';
 import { StationItem } from 'Component';
 import Typography from 'material-ui/Typography';
 import classNames from 'classnames';
@@ -58,13 +57,8 @@ class StationList extends Component {
   _renderList() {
     const { classes, stations } = this.props;
     return (
-      <Scrollbars
-        autoHide
-        autoHideTimeout={1000}
+      <div
         className={classes.container}
-        renderView={() => <div className={classes.scrollArea} />}
-        renderTrackVertical={() => <div />}
-        renderThumbVertical={() => <div />}
         ref={ref => {
           this.scrollBar = ref;
         }}
@@ -77,7 +71,7 @@ class StationList extends Component {
             // goToStationPage={() => this._goToStationPage(station)}
           />
         ))}
-      </Scrollbars>
+      </div>
     );
   }
 

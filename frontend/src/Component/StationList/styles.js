@@ -1,5 +1,6 @@
 export default ({ breakpoints, spacing }) => ({
   container: {
+    display: 'flex',
     paddingBottom: 8,
     margin: 'auto',
     overflowX: 'auto',
@@ -10,20 +11,6 @@ export default ({ breakpoints, spacing }) => ({
       paddingLeft: spacing.doubleBaseMargin,
       paddingRight: spacing.doubleBaseMargin,
     },
-  },
-  scrollArea: {
-    display: 'flex',
-    flexDirection: 'row',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    overflow: 'scroll',
-    marginRight: -17,
-    marginBottom: -17,
-    paddingLeft: spacing.doubleBaseMargin,
-    paddingRight: spacing.doubleBaseMargin,
   },
   stationWrapper: {
     display: 'flex !important',

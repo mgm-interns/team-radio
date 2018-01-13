@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Scrollbar from 'react-scrollbar';
 import { withStyles } from 'material-ui/styles';
 import { Notification } from 'Component';
 import { compose } from 'redux';
@@ -16,10 +17,15 @@ class App extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.container}>
+      <Scrollbar
+        className={classes.container}
+        contentClassName={classes.content}
+        horizontal={false}
+        smoothScrolling
+      >
         <Router />
         <Notification.AppNotification />
-      </div>
+      </Scrollbar>
     );
   }
 }
