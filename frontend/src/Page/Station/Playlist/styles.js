@@ -1,7 +1,6 @@
 export default ({ spacing }) => ({
   container: {
-    display: 'flex',
-    flex: 1,
+    height: '100%',
   },
   emptyContainer: {
     backgroundColor: 'rgba(0,0,0,0.0225)',

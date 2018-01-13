@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
 import List from 'material-ui/List';
+import Scrollbar from 'react-scrollbar';
 import { withStyles } from 'material-ui/styles';
 import orderBy from 'lodash/orderBy';
 import Typography from 'material-ui/Typography';
@@ -80,11 +81,17 @@ class Playlist extends Component {
         className={className}
         style={{ ...style, overflowY: 'auto' }}
       >
-        <List style={{ paddingTop: 0, paddingBottom: 0 }}>
-          {playlist.map((video, index) => (
-            <Item key={index} {...video} playing={index === 0} />
-          ))}
-        </List>
+        <Scrollbar
+          className={classes.container}
+          horizontal={false}
+          smoothScrolling
+        >
+          <List style={{ paddingTop: 0, paddingBottom: 0 }}>
+            {playlist.map((video, index) => (
+              <Item key={index} {...video} playing={index === 0} />
+            ))}
+          </List>
+        </Scrollbar>
       </Grid>
     );
   }

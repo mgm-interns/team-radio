@@ -1,6 +1,5 @@
-export default theme => ({
+export default () => ({
   container: {
-    display: 'flex',
-    flex: 1,
+    height: '100%',
   },
 });
