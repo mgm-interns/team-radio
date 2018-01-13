@@ -22,8 +22,11 @@ class App extends Component {
         contentClassName={classes.content}
         horizontal={false}
         smoothScrolling
+        ref={ref => {
+          this.scrollbarRef = ref;
+        }}
       >
-        <Router />
+        <Router scrollbarRef={this.scrollbarRef} />
         <Notification.AppNotification />
       </Scrollbar>
     );

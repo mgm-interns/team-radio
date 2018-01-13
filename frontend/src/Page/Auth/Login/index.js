@@ -11,16 +11,15 @@ import Typography from 'material-ui/Typography';
 import { FormHelperText } from 'material-ui/Form';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
-
 import { Field, reduxForm } from 'redux-form';
 import { fetchUser, addUserWithSocialAccount } from 'Redux/api/user/actions';
-
 import { NavBar, GoogleLogin, FacebookLogin, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
-
-import { saveAuthenticationState, loadAuthenticationState } from 'Config';
+import {
+  saveAuthenticationState,
+  loadAuthenticationState,
+} from 'Configuration';
 import { email, required } from 'Util/validate';
-
 import styles from './styles';
 
 class Login extends Component {

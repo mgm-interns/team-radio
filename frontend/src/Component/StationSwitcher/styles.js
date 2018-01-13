@@ -1,11 +1,12 @@
 export default ({ breakpoints, spacing }) => ({
   container: {
-    display: 'flex',
-    paddingBottom: 8,
     margin: 'auto',
-    overflowX: 'auto',
+  },
+  content: {
+    display: 'flex',
+    float: 'left',
+    paddingBottom: 8,
     minHeight: 110,
-    width: '100%',
     [breakpoints.up('md')]: {
       minHeight: 200,
       paddingLeft: spacing.doubleBaseMargin,

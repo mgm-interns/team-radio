@@ -20,7 +20,7 @@ import { Field, reduxForm } from 'redux-form';
 import { NavBar, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
 
-import { saveAuthenticationState } from 'Config';
+import { saveAuthenticationState } from 'Configuration';
 import {
   registerValidate,
   required,

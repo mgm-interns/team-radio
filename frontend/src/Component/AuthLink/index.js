@@ -5,7 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withNotification } from 'Component/Notification';
-import { removeAuthenticationState } from 'Config';
+import { removeAuthenticationState } from 'Configuration';
 import { logout } from 'Redux/api/user/actions';
 import Icon from 'material-ui/Icon';
 import Menu, { MenuItem } from 'material-ui/Menu';

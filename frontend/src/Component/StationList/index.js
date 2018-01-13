@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { StationItem } from 'Component';
 import Typography from 'material-ui/Typography';
+import Scrollbar from 'react-scrollbar';
 import classNames from 'classnames';
 import styles from './styles';
 
@@ -55,23 +56,25 @@ class StationList extends Component {
     );
   }
   _renderList() {
-    const { classes, stations } = this.props;
+    const { classes, stations, onItemClick, scrollbarRef } = this.props;
     return (
-      <div
+      <Scrollbar
+        speed={1.6}
         className={classes.container}
-        ref={ref => {
-          this.scrollBar = ref;
-        }}
+        contentClassName={classes.content}
+        swapWheelAxes={true}
+        smoothScrolling
+        ref={scrollbarRef}
       >
         {stations.map((station, index) => (
           <StationItem
             key={index}
             {...station}
             disableOnlineCount
-            // goToStationPage={() => this._goToStationPage(station)}
+            onClick={onItemClick}
           />
         ))}
-      </div>
+      </Scrollbar>
     );
   }
 
@@ -92,11 +95,15 @@ StationList.propTypes = {
   stations: PropTypes.array,
   loading: PropTypes.bool,
   emptyMessage: PropTypes.string,
+  onItemClick: PropTypes.func,
+  scrollbarRef: PropTypes.func,
 };
+
 StationList.defaultProps = {
   stations: [],
   loading: false,
   emptyMessage: 'No stations.',
+  onItemClick: () => {},
 };
 
 export default withStyles(styles)(StationList);
