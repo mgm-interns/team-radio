@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
-
 import { withStyles } from 'material-ui/styles';
-// import Images from 'Theme/Images';
-// import fixture from 'Fixture/landing';
 import styles from './styles';
 
 class Footer extends Component {
@@ -15,7 +12,7 @@ class Footer extends Component {
         <Grid item xs className={classes.wrapper}>
           <Grid item xs={12} className={classes.copyright}>
             <span className={classes.copyrightText}>
-              Copyright 2017 &copy; MGM Internship 2017. All rights reversed
+              Copyright 2018 &copy; mgm Internship 2018. All rights reversed.
             </span>
           </Grid>
         </Grid>
