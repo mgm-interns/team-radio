@@ -48,7 +48,7 @@ class DemoPage extends Component {
             <Tabs value={this.state.value} onChange={this.handleChange}>
               <Tab label="Image Cropper" />
               <Tab label="Login Social" />
-              <Tab label="Notifcation" />
+              <Tab label="Notification" />
             </Tabs>
           </AppBar>
           {this.state.value === 1 && (
