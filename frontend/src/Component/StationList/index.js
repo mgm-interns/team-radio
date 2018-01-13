@@ -56,7 +56,13 @@ class StationList extends Component {
     );
   }
   _renderList() {
-    const { classes, stations, onItemClick, scrollbarRef } = this.props;
+    const {
+      classes,
+      stations,
+      onItemClick,
+      scrollbarRef,
+      disableOnlineCount,
+    } = this.props;
     return (
       <Scrollbar
         speed={1.6}
@@ -70,7 +76,7 @@ class StationList extends Component {
           <StationItem
             key={index}
             {...station}
-            disableOnlineCount
+            disableOnlineCount={disableOnlineCount}
             onClick={onItemClick}
           />
         ))}
@@ -94,6 +100,7 @@ StationList.propTypes = {
   classes: PropTypes.object,
   stations: PropTypes.array,
   loading: PropTypes.bool,
+  disableOnlineCount: PropTypes.bool,
   emptyMessage: PropTypes.string,
   onItemClick: PropTypes.func,
   scrollbarRef: PropTypes.func,
