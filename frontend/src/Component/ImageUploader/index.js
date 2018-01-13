@@ -69,7 +69,7 @@ class ImageUploader extends Component {
         // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
 
         this.setState({
-          uploadedFileCloudinaryUrl: response.secure_url,
+          avatarUrl: response.secure_url,
           uploading: false,
           open: false,
         });
@@ -124,7 +124,7 @@ class ImageUploader extends Component {
           <div>
             <Avatar
               className={classes.avatar}
-              src={avatarUrl === null ? Images.avatar.male01 : avatarUrl}
+              src={!avatarUrl ? Images.avatar.male01 : avatarUrl}
             />
           </div>
         </div>

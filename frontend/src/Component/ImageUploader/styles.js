@@ -61,7 +61,6 @@ export default ({ palette }) => ({
     flexDirection: 'column',
   },
   cardHeader: {
-    display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'column',
   },
 });
