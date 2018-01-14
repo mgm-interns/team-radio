@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { HOST_NAME } from 'Util/constants';
 
-class HttpsRedirect extends React.Component {
+class HttpsRedirector extends React.Component {
   isLocalHost(hostname) {
     return !!(
       hostname === 'localhost' ||
@@ -28,8 +28,8 @@ class HttpsRedirect extends React.Component {
   }
 }
 
-HttpsRedirect.propTypes = {
+HttpsRedirector.propTypes = {
   children: PropTypes.node,
 };
 
-export default HttpsRedirect;
+export default HttpsRedirector;
