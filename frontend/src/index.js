@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { MuiThemeProvider } from 'material-ui/styles';
 import 'cropperjs/dist/cropper.css';
-import HttpsRedirector from 'Configuration/httpsRedirector';
+import HttpsRedirector from 'Container/HttpsRedirector';
 import { registerServiceWorker } from './Configuration';
 import Container from './Container';
 import { MuiTheme } from './Theme';

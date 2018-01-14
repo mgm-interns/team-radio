@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { HOST_NAME } from 'Util/constants';
 
 class HttpsRedirector extends React.Component {
-  isLocalHost(hostname) {
+  static isLocalHost(hostname) {
     return !!(
       hostname === 'localhost' ||
       hostname === '[::1]' ||
@@ -16,7 +16,7 @@ class HttpsRedirector extends React.Component {
       typeof window !== 'undefined' &&
       window.location &&
       window.location.protocol === 'http:' &&
-      !this.isLocalHost(window.location.hostname)
+      !HttpsRedirector.isLocalHost(window.location.hostname)
     ) {
       window.location.href = window.location.href.replace(
         /^http(?!s)/,
@@ -24,7 +24,7 @@ class HttpsRedirector extends React.Component {
       );
     }
 
-    return <div>{this.props.children}</div>;
+    return <Fragment>{this.props.children}</Fragment>;
   }
 }
 
