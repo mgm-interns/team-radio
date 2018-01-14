@@ -11,7 +11,7 @@ const METHOD_PUT = 'PUT';
 /* eslint-enable */
 
 const DEFAULT_HEADERS = {
-  // 'Content-Type': 'application/json',
+  'Content-Type': 'application/json',
 };
 
 const DEFAULT_BODY = {};
