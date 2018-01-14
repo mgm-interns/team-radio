@@ -11,7 +11,7 @@ import Icon from 'material-ui/Icon';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import { Images } from 'Theme';
 import { withRouter } from 'react-router';
-
+import { withScrollbarInstances } from 'Component/Scrollbar';
 import styles from './styles';
 
 class AuthLink extends Component {
@@ -34,15 +34,14 @@ class AuthLink extends Component {
     this.props.history.replace('/');
   }
 
-  _handleClick = event => {
+  _openMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
-    document
-      .getElementsByTagName('body')[0]
-      .setAttribute('style', 'padding-right:0;');
+    this.props.scrollbarInstances.getInstance('App').disable();
   };
 
-  _handleClose = () => {
+  _closeMenu = () => {
     this.setState({ anchorEl: null });
+    this.props.scrollbarInstances.getInstance('App').enable();
   };
 
   render() {
@@ -68,7 +67,7 @@ class AuthLink extends Component {
               className={classes.menuItem}
               aria-owns={anchorEl ? 'simple-menu' : null}
               aria-haspopup="true"
-              onClick={this._handleClick}
+              onClick={this._openMenu}
             >
               <img
                 className={classes.avatar}
@@ -87,7 +86,7 @@ class AuthLink extends Component {
               className={classes.menuPopover}
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
-              onClose={this._handleClose}
+              onClose={this._closeMenu}
             >
               {/* <MenuItem>{user.data.name}</MenuItem> */}
               <MenuItem>
@@ -117,6 +116,7 @@ AuthLink.propTypes = {
   history: PropTypes.any,
   navigateToProfile: PropTypes.func,
   logout: PropTypes.func,
+  scrollbarInstances: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
@@ -128,7 +128,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
   withNotification,
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  withScrollbarInstances,
 )(withStyles(styles)(AuthLink));

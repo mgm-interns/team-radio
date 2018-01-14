@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { compose } from 'redux';
 import { withRouter, Route } from 'react-router-dom';
+import { withScrollbarInstances } from 'Component/Scrollbar';
 
-/* eslint-disable react/prop-types */
 class RouteWrapper extends Component {
   componentDidMount() {
-    this.unlisten = this.props.history.listen(() => {
-      this.props.scrollbarRef.scrollTop(0);
+    const { history, scrollbarInstances } = this.props;
+    this.unlisten = history.listen(() => {
+      scrollbarInstances.getInstance('App').scrollYTo(0);
     });
   }
 
@@ -26,6 +29,11 @@ class RouteWrapper extends Component {
   }
 }
 
-RouteWrapper.propTypes = {};
+RouteWrapper.propTypes = {
+  history: PropTypes.any,
+  scrollbarInstances: PropTypes.object,
+  path: PropTypes.string,
+  routes: PropTypes.array,
+};
 
-export default withRouter(RouteWrapper);
+export default compose(withRouter, withScrollbarInstances)(RouteWrapper);

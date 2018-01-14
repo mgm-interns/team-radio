@@ -6,3 +6,4 @@ export {
   saveAuthenticationState,
   removeAuthenticationState,
 } from './localStorage';
+export { default as scrollbarInstances } from './scrollbarInstances';

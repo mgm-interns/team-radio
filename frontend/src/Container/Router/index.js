@@ -5,14 +5,10 @@ import routes from '../routes';
 
 // wrap <Route> and use this everywhere instead, then when
 // sub routes are added to any route it'll work
-
-/* eslint-disable react/prop-types */
-const Router = ({ scrollbarRef }) => (
+const Router = () => (
   <BrowserRouter>
     <Switch>
-      {routes.map((route, i) => (
-        <RouteWrapper key={i} {...route} scrollbarRef={scrollbarRef} />
-      ))}
+      {routes.map((route, i) => <RouteWrapper key={i} {...route} />)}
     </Switch>
   </BrowserRouter>
 );

@@ -22,6 +22,7 @@ class History extends Component {
           className={classes.container}
           horizontal={false}
           smoothScrolling
+          stopScrollPropagation
         >
           <List style={{ paddingTop: 0, paddingBottom: 0 }}>
             {history.map((video, index) => (

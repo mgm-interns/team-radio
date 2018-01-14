@@ -70,6 +70,7 @@ class StationList extends Component {
         contentClassName={classes.content}
         swapWheelAxes={true}
         smoothScrolling
+        stopScrollPropagation
         ref={scrollbarRef}
       >
         {stations.map((station, index) => (

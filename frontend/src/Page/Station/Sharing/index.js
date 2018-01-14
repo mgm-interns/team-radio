@@ -15,6 +15,7 @@ import GoogleIcon from 'react-icons/lib/fa/google-plus-square';
 import TwitterIcon from 'react-icons/lib/fa/twitter-square';
 import CopyIcon from 'react-icons/lib/go/clippy';
 import { withNotification } from 'Component/Notification';
+import { withScrollbarInstances } from 'Component/Scrollbar';
 import styles from './styles';
 
 const FACEBOOK_SHARING = 'https://www.facebook.com/sharer/sharer.php?u=';
@@ -74,6 +75,11 @@ class StationSharing extends Component {
   }
 
   _togglePopover(event) {
+    if (!this.state.open) {
+      this.props.scrollbarInstances.getInstance('App').enable();
+    } else {
+      this.props.scrollbarInstances.getInstance('App').disable();
+    }
     this.setState({
       open: !this.state.open,
       anchor: this.state.open ? event.target : null,
@@ -85,12 +91,14 @@ class StationSharing extends Component {
       open: true,
       anchor: event.target,
     });
+    this.props.scrollbarInstances.getInstance('App').disable();
   }
 
   _closePopover() {
     this.setState({ open: false }, () => {
       this.setState({ copied: false, anchor: null });
     });
+    this.props.scrollbarInstances.getInstance('App').enable();
   }
 
   _copyToClipboard() {
@@ -133,11 +141,11 @@ class StationSharing extends Component {
         <Popover
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'left',
+            horizontal: 'right',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'left',
+            horizontal: 'right',
           }}
           open={this.state.open}
           anchorEl={this.state.anchor}
@@ -221,6 +229,7 @@ StationSharing.propTypes = {
   currentStation: PropTypes.object,
   classes: PropTypes.object,
   notification: PropTypes.object,
+  scrollbarInstances: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({
@@ -231,4 +240,5 @@ export default compose(
   withStyles(styles),
   connect(mapStateToProps),
   withNotification,
+  withScrollbarInstances,
 )(StationSharing);
