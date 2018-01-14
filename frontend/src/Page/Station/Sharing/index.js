@@ -128,6 +128,12 @@ class StationSharing extends Component {
     }
   }
 
+  componentWillUnmount() {
+    // Re enable scrolling after un mount
+    // For preventing unpredicted bugs
+    this.props.scrollbarInstances.getInstance('App').enable();
+  }
+
   render() {
     const { classes, currentStation } = this.props;
     return (

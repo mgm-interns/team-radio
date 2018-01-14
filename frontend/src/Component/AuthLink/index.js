@@ -44,6 +44,12 @@ class AuthLink extends Component {
     this.props.scrollbarInstances.getInstance('App').enable();
   };
 
+  componentWillUnmount() {
+    // Re enable scrolling after un mount
+    // For preventing unpredicted bugs
+    this.props.scrollbarInstances.getInstance('App').enable();
+  }
+
   render() {
     const { classes, user } = this.props;
 
