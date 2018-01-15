@@ -8,7 +8,7 @@ export default async (emitter, userId, stationId, songUrl) => {
   if (user) {
     _addSongProcess(emitter, userId, stationId, songUrl);
   } else {
-    _addSongProcess(emitter, '0', stationId, songUrl);
+    _addSongProcess(emitter, null, stationId, songUrl);
   }
 };
 
