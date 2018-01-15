@@ -115,8 +115,10 @@ class AddLink extends Component {
           q: value,
           part: 'snippet',
           safeSearch: 'strict',
+          regionCode: 'VN', //	STAMEQ
           type: 'video',
           videoEmbeddable: 'true',
+          videoSyndicated: 'true',
           maxResults: 5,
           videoDefinition: 'any',
           relevanceLanguage: 'en',
@@ -176,7 +178,7 @@ class AddLink extends Component {
     );
   }
 
-  _renderSuggestionsContainer(options) {
+  static _renderSuggestionsContainer(options) {
     const { containerProps, children } = options;
 
     return (
@@ -186,7 +188,7 @@ class AddLink extends Component {
     );
   }
 
-  _getSuggestionValue(suggestion) {
+  static _getSuggestionValue(suggestion) {
     return suggestion.snippet.title;
   }
 
@@ -204,20 +206,28 @@ class AddLink extends Component {
           const input = `${value.split('&')[0]}&t=0s`;
           const videoId = checkValidYoutubeUrl(input);
           const data = await this._getVideoInfo(videoId);
-          const embeddableVideo = data[0].status.embeddable;
 
-          setPreviewVideo(data[0]);
-          // The "Add" button will be depended on that the video is embeddable onto your website or not
-          this.setState({
-            isDisableButton: !embeddableVideo,
-          });
-
-          if (!embeddableVideo) {
-            notification.app.warning({
-              message:
-                'Your video cannot be added because of copyright issue or it is prevented from the owner.',
-              duration: 10000,
+          // if the video is deleted from youtube
+          if (data.length === 0) {
+            this.setState({
+              notFoundSearchResults: true,
             });
+          } else {
+            const embeddableVideo = data[0].status.embeddable;
+
+            setPreviewVideo(data[0]);
+            // The "Add" button will be depended on that the video is embeddable onto your website or not
+            this.setState({
+              isDisableButton: !embeddableVideo,
+            });
+
+            if (!embeddableVideo) {
+              notification.app.warning({
+                message:
+                  'Your video cannot be added because of copyright issue or it is blocked from the owner.',
+                duration: 10000,
+              });
+            }
           }
         }
 
@@ -394,8 +404,8 @@ class AddLink extends Component {
               onSuggestionsFetchRequested={this._onSuggestionsFetchRequested}
               onSuggestionsClearRequested={this._onSuggestionsClearRequested}
               onSuggestionSelected={this._onSuggestionSelected}
-              renderSuggestionsContainer={this._renderSuggestionsContainer}
-              getSuggestionValue={this._getSuggestionValue}
+              renderSuggestionsContainer={AddLink._renderSuggestionsContainer}
+              getSuggestionValue={AddLink._getSuggestionValue}
               renderSuggestion={this._renderSuggestion}
               inputProps={{
                 classes,
