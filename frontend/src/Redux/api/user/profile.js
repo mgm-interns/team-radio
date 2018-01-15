@@ -16,7 +16,6 @@ const setAvatarRequest = new HttpRequest({
   method: 'POST',
   type: 'UPDATE_AVATAR',
   headers: {
-    'Content-Type': 'application/json',
     'access-token': localStorage.getItem('token'),
   },
   endpoint: `${ENDPOINT}/setAvatar`,
@@ -28,7 +27,6 @@ const setPasswordRequest = new HttpRequest({
   type: 'UPDATE_PASSWORD',
   endpoint: `${ENDPOINT}/updatePassword`,
   headers: {
-    'Content-Type': 'application/json',
     'access-token': localStorage.getItem('token'),
   },
   // payload: { userId, oldPassword, newPassword },
@@ -39,20 +37,30 @@ const setUsernameRequest = new HttpRequest({
   type: 'SET_USERNAME',
   endpoint: `${ENDPOINT}/setUsername`,
   headers: {
-    'Content-Type': 'application/json',
     'access-token': localStorage.getItem('token'),
   },
   // payload: { userId, username },
+});
+
+const setUserInformationRequest = new HttpRequest({
+  method: 'POST',
+  type: 'SET_USER_INFORMATION',
+  endpoint: `${ENDPOINT}/setUserInformation`,
+  headers: {
+    'access-token': localStorage.getItem('token'),
+  },
 });
 
 export const getUserByUsername = gethUserByUsernameRequest.getAction();
 export const setAvatar = setAvatarRequest.getAction();
 export const setPassword = setPasswordRequest.getAction();
 export const setUsername = setUsernameRequest.getAction();
+export const setUserInformation = setUserInformationRequest.getAction();
 
 export default combineReducers({
   avatar: setAvatarRequest.getReducer(),
   password: setPasswordRequest.getReducer(),
   username: setUsernameRequest.getReducer(),
+  information: setUserInformationRequest.getReducer(),
   user: gethUserByUsernameRequest.getReducer(),
 });

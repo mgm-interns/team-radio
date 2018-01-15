@@ -129,30 +129,22 @@ class Settings extends Component {
         <div style={getModalStyle()}>
           <Grid container>
             <Grid item xs={12} className={classes.modalHeadline}>
-              Edit your Account
+              Edit your Information
             </Grid>
             <div className="line" />
             <Grid item xs={12} className={classes.settingTabs}>
-              <Tabs
-                value={this.state.value}
-                onChange={this.handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-              >
-                <Tab label="Information" />
-                <Tab label="Security" />
-              </Tabs>
+              <Information user={user} onCancel={this.onCancelButtonClick} />
             </Grid>
-            {this.state.value === 0 && (
-              <TabContainer>
-                <Information user={user} onCancel={this.onCancelButtonClick} />
-              </TabContainer>
-            )}
-            {this.state.value === 1 && (
-              <TabContainer>
-                <Security user={user} onCancel={this.onCancelButtonClick} />
-              </TabContainer>
-            )}
+            {/* {this.state.value === 0 && ( */}
+            {/* <TabContainer> */}
+            {/* <Information user={user} onCancel={this.onCancelButtonClick} /> */}
+            {/* </TabContainer> */}
+            {/* )} */}
+            {/* {this.state.value === 1 && ( */}
+            {/* <TabContainer> */}
+            {/* <Security user={user} onCancel={this.onCancelButtonClick} /> */}
+            {/* </TabContainer> */}
+            {/* )} */}
           </Grid>
         </div>
       </Modal>,
@@ -166,12 +158,4 @@ Settings.propTypes = {
   loading: PropTypes.bool,
 };
 
-const mapStateToProps = state => ({
-  // userResponse: state.api.user,
-});
-
-export default compose(
-  withStyles(styles),
-  withRouter,
-  connect(mapStateToProps, null),
-)(Settings);
+export default compose(withStyles(styles), withRouter)(Settings);
