@@ -11,7 +11,7 @@ import {
 import { TextView } from 'Component';
 import { withStyles } from 'material-ui/styles/index';
 import { connect } from 'react-redux';
-import { updatePassword } from 'Redux/api/user/actions';
+import { setPassword } from 'Redux/api/user/profile';
 
 import Grid from 'material-ui/Grid';
 import { FormHelperText } from 'material-ui/Form';
@@ -25,11 +25,20 @@ class Security extends Component {
     super(props);
 
     this.state = {
-      asyncError: '',
+      formErrors: '',
     };
 
     this._renderChangePasswordForm = this._renderChangePasswordForm.bind(this);
     this._onCancelButtonClick = this._onCancelButtonClick.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { initialValues: { message } } = nextProps;
+    if (message !== null) {
+      this.setState({
+        formErrors: message,
+      });
+    }
   }
 
   _onCancelButtonClick() {
@@ -37,13 +46,12 @@ class Security extends Component {
   }
 
   _renderChangePasswordForm() {
-    const {
-      classes,
-      submitSucceeded,
-      userResponse: { is_password },
-    } = this.props;
+    const { classes, submitSucceeded, user: { is_password } } = this.props;
+
+    console.log(is_password);
+
     return [
-      is_password === false && (
+      is_password !== false && (
         <Field
           key={1}
           name="oldPassword"
@@ -73,18 +81,18 @@ class Security extends Component {
         validate={[required]}
       />,
       <FormHelperText key={4} className={classes.error}>
-        {submitSucceeded && this.state.asyncError}
+        {submitSucceeded && this.state.formErrors}
       </FormHelperText>,
     ];
   }
 
   render() {
-    const { classes, handleSubmit, pristine, submitting, reset } = this.props;
+    const { classes, handleSubmit, pristine, submitting } = this.props;
 
     return (
-      <Grid container className={classes.content}>
+      <Grid className={classes.content}>
         <form onSubmit={handleSubmit}>
-          <Grid item xs={12} className={classes.formInformation}>
+          <Grid item xs={12}>
             {this._renderChangePasswordForm()}
           </Grid>
           <Grid item xs={12} className={classes.modalFooter}>
@@ -107,17 +115,19 @@ class Security extends Component {
 Security.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.object,
-  submitSucceeded: PropTypes.any,
+  onCancel: PropTypes.func,
   handleSubmit: PropTypes.func,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({
-  userResponse: state.api.user.data,
+const mapStateToProps = ({ api }) => ({
+  initialValues: api.user.data,
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: ({ oldPassword, newPassword }) =>
-    dispatch(updatePassword(oldPassword, newPassword)),
+  onSubmit: ({ userId, oldPassword, newPassword }) =>
+    dispatch(setPassword({ userId, oldPassword, newPassword })),
 });
 
 export default compose(

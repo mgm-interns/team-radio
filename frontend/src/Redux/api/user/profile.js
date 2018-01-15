@@ -25,11 +25,10 @@ const setAvatarRequest = new HttpRequest({
 const setPasswordRequest = new HttpRequest({
   method: 'POST',
   type: 'UPDATE_PASSWORD',
-  endpoint: `${ENDPOINT}/updatePassword`,
+  endpoint: `${ENDPOINT}/setPassword`,
   headers: {
     'access-token': localStorage.getItem('token'),
   },
-  // payload: { userId, oldPassword, newPassword },
 });
 
 const setUsernameRequest = new HttpRequest({
