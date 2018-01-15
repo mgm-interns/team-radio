@@ -113,7 +113,7 @@ class Information extends Component {
     return (
       <Grid className={classes.content}>
         <form onSubmit={handleSubmit}>
-          <Grid item xs={12} className={classes.formInformation}>
+          <Grid item xs={12}>
             {this._renderChangeInformationForm()}
           </Grid>
           <Grid item xs={12} className={classes.modalFooter}>

@@ -40,7 +40,9 @@ export default ({ breakpoints, palette, spacing, transitions }) => ({
       flexDirection: 'flex-start',
     },
   },
-  formInformation: {
-    // paddingLeft: 20,
+  error: {
+    color: '#ff1744',
+    fontWeight: 'bold',
+    marginBottom: '10px',
   },
 });

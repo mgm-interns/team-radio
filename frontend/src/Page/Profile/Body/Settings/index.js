@@ -55,32 +55,44 @@ class Settings extends Component {
     super(props);
 
     this.state = {
-      value: 0,
-      open: false,
-      secondSource:
-        'http://www.followingthenerd.com/site/wp-content/uploads/avatar.jpg_274898881.jpg',
+      // value: 0,
+      openEditInformation: false,
+      openEditSecurity: false,
+      // secondSource:
+      //   'http://www.followingthenerd.com/site/wp-content/uploads/avatar.jpg_274898881.jpg',
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this._onOpenModal = this._onOpenModal.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
+    this._onOpenEditInformation = this._onOpenEditInformation.bind(this);
+    this._onOpenEditSecurity = this._onOpenEditSecurity.bind(this);
     this._onCloseModal = this._onCloseModal.bind(this);
     this.onCancelButtonClick = this.onCancelButtonClick.bind(this);
   }
 
   onCancelButtonClick() {
-    this.setState({ open: !this.state.open });
+    this.setState({
+      openEditInformation: !this.state.openEditInformation,
+      openEditSecurity: !this.state.openEditSecurity,
+    });
   }
 
-  handleChange(event, value) {
-    this.setState({ value });
+  // handleChange(event, value) {
+  //   this.setState({ value });
+  // }
+
+  _onOpenEditInformation() {
+    this.setState({ openEditInformation: true });
   }
 
-  _onOpenModal() {
-    this.setState({ open: true });
+  _onOpenEditSecurity() {
+    this.setState({ openEditSecurity: true });
   }
 
   _onCloseModal() {
-    this.setState({ open: false });
+    this.setState({
+      openEditInformation: false,
+      openEditSecurity: false,
+    });
   }
 
   _renderSecondItem() {
@@ -96,15 +108,32 @@ class Settings extends Component {
     return <CircularProgress />;
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   const { userResponse } = nextProps;
-  //
-  //   if (
-  //     !userResponse.loading &&
-  //     userResponse.data.username !== this.props.userResponse.data.username
-  //   ) {
-  //     this.props.history.push(`/profile/${userResponse.data.username}`);
-  //   }
+  // _renderEditInformation() {
+  //   const { classes, user } = this.props;
+  //   return [
+  //     <Button key={1} onClick={this._onOpenEditInformation}>
+  //       <Icon>edit</Icon>
+  //     </Button>,
+  //     <Modal
+  //       key={2}
+  //       aria-labelledby="simple-modal-title"
+  //       aria-describedby="simple-modal-description"
+  //       open={this.state.openEditInformation}
+  //       onClose={this._onCloseModal}
+  //     >
+  //       <div style={getModalStyle()}>
+  //         <Grid container>
+  //           <Grid item xs={12} className={classes.modalHeadline}>
+  //             Edit your Information
+  //           </Grid>
+  //           <div className="line" />
+  //           <Grid item xs={12} className={classes.settingTabs}>
+  //             <Information user={user} onCancel={this.onCancelButtonClick} />
+  //           </Grid>
+  //         </Grid>
+  //       </div>
+  //     </Modal>,
+  //   ];
   // }
 
   render() {
@@ -114,37 +143,26 @@ class Settings extends Component {
       return this._renderLoading();
     }
 
-    const SecondButton = this._renderSecondItem();
     return [
-      <Button onClick={this._onOpenModal} key={1}>
-        <Icon className={classes.icon}>edit</Icon>
+      <Button key={1} onClick={this._onOpenEditSecurity}>
+        <Icon>settings</Icon>
       </Button>,
       <Modal
+        key={2}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
-        open={this.state.open}
+        open={this.state.openEditSecurity}
         onClose={this._onCloseModal}
-        key={2}
       >
         <div style={getModalStyle()}>
           <Grid container>
             <Grid item xs={12} className={classes.modalHeadline}>
-              Edit your Information
+              Edit your Security
             </Grid>
             <div className="line" />
             <Grid item xs={12} className={classes.settingTabs}>
-              <Information user={user} onCancel={this.onCancelButtonClick} />
+              <Security user={user} onCancel={this.onCancelButtonClick} />
             </Grid>
-            {/* {this.state.value === 0 && ( */}
-            {/* <TabContainer> */}
-            {/* <Information user={user} onCancel={this.onCancelButtonClick} /> */}
-            {/* </TabContainer> */}
-            {/* )} */}
-            {/* {this.state.value === 1 && ( */}
-            {/* <TabContainer> */}
-            {/* <Security user={user} onCancel={this.onCancelButtonClick} /> */}
-            {/* </TabContainer> */}
-            {/* )} */}
           </Grid>
         </div>
       </Modal>,

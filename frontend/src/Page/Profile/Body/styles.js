@@ -1,4 +1,4 @@
-export default ({ breakpoints, palette, spacing, transitions }) => ({
+export default ({ breakpoints }) => ({
   container: {
     margin: 'auto',
     [breakpoints.up('lg')]: {
