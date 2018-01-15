@@ -167,7 +167,6 @@ export const addSong = async (stationId, songUrl, userId = null) => {
     station = await stationModels.getStationById(stationId);
     players.updatePlaylist(stationId);
     return station.playlist;
-    // return Promise.resolve(station.playlist);
   } catch (err) {
     console.log('Error add song : ' + err);
     throw err;
@@ -320,6 +319,10 @@ export const upVote = async (stationId, songId, userId) => {
     ))[0];
     const upVoteArray = currentSong.up_vote;
     const downVoteArray = currentSong.down_vote;
+    const userAddSong = currentSong.creator.toString();
+    if (userAddSong === userId) {
+      throw new Error("Can't up vote your song .");
+    }
     if (upVoteArray.length > 0) {
       for (let i = 0; i < upVoteArray.length; i++) {
 
@@ -451,6 +454,7 @@ export const downVote = async (stationId, songId, userId) => {
   }
 
 };
+
 /**
  * Get list station which user has added song
  * return infors :
@@ -492,7 +496,10 @@ function _stringToId(str) {
 }
 
 async function _createStationId(stationName) {
-  const id = _stringToId(deleteDiacriticMarks(stationName));
+  let id = _stringToId(deleteDiacriticMarks(stationName));
+  if (!id) {
+    id = 'abcdefgyklmn';
+  }
   let currentId = id;
   let i = 1;
   let station = await stationModels.getStationById(currentId);
