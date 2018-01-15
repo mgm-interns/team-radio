@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import CircleIcon from 'react-icons/lib/fa/circle';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
@@ -17,6 +16,7 @@ import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
 import NowPlaying from './NowPlaying';
+import OnlineUsers from './OnlineUsers';
 import styles from './styles';
 import StationSharing from './Sharing';
 
@@ -157,7 +157,7 @@ class StationPage extends Component {
   render() {
     const {
       classes,
-      currentStation: { station, nowPlaying, playlist, online_count },
+      currentStation: { station, nowPlaying, playlist },
     } = this.props;
     const { muted } = this.state;
 
@@ -184,16 +184,7 @@ class StationPage extends Component {
                       {(station && station.station_name) ||
                         STATION_NAME_DEFAULT}
                     </Typography>
-                    <div className={classes.onlineCountContainer}>
-                      <CircleIcon className={classNames(classes.onlineIcon)} />
-                      <Typography
-                        type={'caption'}
-                        align={'left'}
-                        className={classes.stationOnlineCountText}
-                      >
-                        {online_count || '-'} online
-                      </Typography>
-                    </div>
+                    <OnlineUsers />
                   </div>
                   <div className={classes.nowPlayingActions}>
                     {!nowPlaying.url ? null : (

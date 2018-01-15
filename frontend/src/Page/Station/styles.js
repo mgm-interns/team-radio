@@ -68,24 +68,9 @@ export default ({ breakpoints, palette, spacing }) => ({
     color: 'rgba(0,0,0,0.54)',
     textTransform: 'none',
   },
-  onlineCountContainer: {
-    display: 'inline-block',
-    marginTop: 12,
-    marginLeft: spacing.baseMargin,
-  },
-  onlineIcon: {
-    display: 'inline-block',
-    fontSize: '1em',
-    marginLeft: spacing.baseMargin,
-    marginRight: spacing.baseMargin,
-    marginBottom: 2,
-    color: palette.green.A700,
-  },
-  stationOnlineCountText: {
-    display: 'inline-block',
-    fontSize: '1em',
-  },
   titleContainer: {
     display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'baseline',
   },
 });
