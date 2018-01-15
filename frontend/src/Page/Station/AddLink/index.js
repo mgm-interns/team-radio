@@ -19,7 +19,6 @@ import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import { MenuItem } from 'material-ui/Menu';
-import { CircularProgress } from 'material-ui/Progress';
 import { Player } from 'Component';
 import { withNotification } from 'Component/Notification';
 import { Images } from 'Theme';
@@ -98,7 +97,7 @@ class AddLink extends Component {
       {
         params: {
           key: process.env.REACT_APP_YOUTUBE_API_KEY,
-          part: 'id,snippet',
+          part: 'id,snippet,contentDetails,status',
           id,
         },
       },
@@ -117,6 +116,7 @@ class AddLink extends Component {
           part: 'snippet',
           safeSearch: 'strict',
           type: 'video',
+          videoEmbeddable: 'true',
           maxResults: 5,
           videoDefinition: 'any',
           relevanceLanguage: 'en',
@@ -192,7 +192,7 @@ class AddLink extends Component {
 
   _timeoutSearchFunc;
   _onSuggestionsFetchRequested({ value }) {
-    const { setPreviewVideo } = this.props;
+    const { setPreviewVideo, notification } = this.props;
 
     try {
       clearTimeout(this._timeoutSearchFunc);
@@ -204,10 +204,21 @@ class AddLink extends Component {
           const input = `${value.split('&')[0]}&t=0s`;
           const videoId = checkValidYoutubeUrl(input);
           const data = await this._getVideoInfo(videoId);
+          const embeddableVideo = data[0].status.embeddable;
+
           setPreviewVideo(data[0]);
+          // The "Add" button will be depended on that the video is embeddable onto your website or not
           this.setState({
-            isDisableButton: false,
+            isDisableButton: !embeddableVideo,
           });
+
+          if (!embeddableVideo) {
+            notification.app.warning({
+              message:
+                'Your video cannot be added because of copyright issue or it is prevented from the owner.',
+              duration: 10000,
+            });
+          }
         }
 
         // Search by keyword if value is not a youtube link
@@ -334,22 +345,6 @@ class AddLink extends Component {
       mutePreview: !mutePreview,
       userDid: !!(userDid && muteNowPlaying),
     });
-  }
-
-  /* Render loading while waiting for load data */
-  _renderLoading() {
-    const { classes } = this.props;
-
-    return (
-      <Grid
-        container
-        className={classes.loadingContainer}
-        justify="center"
-        alignItems="center"
-      >
-        <CircularProgress color="primary" thickness={3} size={20} />
-      </Grid>
-    );
   }
 
   /* Render icon if there is not preview content */
