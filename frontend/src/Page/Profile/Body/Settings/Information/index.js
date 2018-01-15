@@ -11,7 +11,7 @@ import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
-import { setUsername } from 'Redux/api/user/profile';
+import { setUsername, setUserInformation } from 'Redux/api/user/profile';
 import styles from '../styles';
 
 class Information extends Component {
@@ -38,7 +38,6 @@ class Information extends Component {
         component={TextView}
         label="Profile URL"
         validate={[required]}
-        // border
       />,
       <Field
         key={2}
@@ -48,8 +47,6 @@ class Information extends Component {
         component={TextView}
         label="Display name"
         validate={[required, maxLength15]}
-        // border
-        disabled
       />,
       <Field
         key={3}
@@ -58,8 +55,54 @@ class Information extends Component {
         type="email"
         component={TextView}
         label="Email"
-        // border
-        disabled
+      />,
+      <Field
+        key={4}
+        name="firstname"
+        placeholder="First name"
+        type="text"
+        component={TextView}
+        label="First name"
+      />,
+      <Field
+        key={5}
+        name="lastname"
+        placeholder="Last name"
+        type="text"
+        component={TextView}
+        label="Last name"
+      />,
+      <Field
+        key={6}
+        name="email"
+        placeholder="Email"
+        type="email"
+        component={TextView}
+        label="Email"
+      />,
+      <Field
+        key={7}
+        name="bio"
+        placeholder="Bio"
+        type="text"
+        component={TextView}
+        label="Bio"
+      />,
+      <Field
+        key={8}
+        name="city"
+        placeholder="City"
+        type="text"
+        component={TextView}
+        label="City"
+      />,
+      <Field
+        key={9}
+        name="country"
+        placeholder="Country"
+        type="text"
+        component={TextView}
+        label="Country"
       />,
     ];
   }
@@ -90,12 +133,40 @@ class Information extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  initialValues: state.api.user.data,
+const mapStateToProps = ({ api }) => ({
+  initialValues: api.user.data,
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: ({ username }) => dispatch(setUsername(username)),
+  onSubmit: ({
+    userId,
+    username,
+    name,
+    firstname,
+    lastname,
+    bio,
+    city,
+    country,
+  }) => {
+    // dispatch(
+    //   setUsername({
+    //     userId: localStorage.getItem('userId'),
+    //     username,
+    //   }),
+    // );
+    console.log(userId);
+    dispatch(
+      setUserInformation({
+        userId,
+        name,
+        firstname,
+        lastname,
+        bio,
+        city,
+        country,
+      }),
+    );
+  },
 });
 
 Information.propTypes = {
