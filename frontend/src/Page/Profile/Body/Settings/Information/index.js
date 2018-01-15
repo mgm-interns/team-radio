@@ -9,8 +9,9 @@ import { connect } from 'react-redux';
 
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 
-import { updateUsername } from 'Redux/api/user/actions';
+import { setUsername } from 'Redux/api/user/profile';
 import styles from '../styles';
 
 class Information extends Component {
@@ -94,7 +95,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: ({ username }) => dispatch(updateUsername(username)),
+  onSubmit: ({ username }) => dispatch(setUsername(username)),
 });
 
 Information.propTypes = {

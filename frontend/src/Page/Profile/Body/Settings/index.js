@@ -70,10 +70,6 @@ class Settings extends Component {
     this.setState({ open: !this.state.open });
   }
 
-  onSubmitButtonClick(values) {
-    console.log(values);
-  }
-
   handleChange(event, value) {
     this.setState({ value });
   }
@@ -99,25 +95,21 @@ class Settings extends Component {
     return <CircularProgress />;
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { userResponse } = nextProps;
-
-    if (
-      !userResponse.loading &&
-      userResponse.data.username !== this.props.userResponse.data.username
-      // (!userResponse.loading &&
-      //   userResponse.data.is_password !==
-      //     this.props.userResponse.data.is_password)
-    ) {
-      // if (!userResponse.loading) {
-      this.props.history.push(`/profile/${userResponse.data.username}`);
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   const { userResponse } = nextProps;
+  //
+  //   if (
+  //     !userResponse.loading &&
+  //     userResponse.data.username !== this.props.userResponse.data.username
+  //   ) {
+  //     this.props.history.push(`/profile/${userResponse.data.username}`);
+  //   }
+  // }
 
   render() {
-    const { classes, user } = this.props;
+    const { classes, loading, user } = this.props;
 
-    if (!user) {
+    if (loading) {
       return this._renderLoading();
     }
 
@@ -152,12 +144,12 @@ class Settings extends Component {
             </Grid>
             {this.state.value === 0 && (
               <TabContainer>
-                <Information onCancel={this.onCancelButtonClick} />
+                <Information user={user} onCancel={this.onCancelButtonClick} />
               </TabContainer>
             )}
             {this.state.value === 1 && (
               <TabContainer>
-                <Security onCancel={this.onCancelButtonClick} />
+                <Security user={user} onCancel={this.onCancelButtonClick} />
               </TabContainer>
             )}
           </Grid>
@@ -169,11 +161,12 @@ class Settings extends Component {
 
 Settings.propTypes = {
   classes: PropTypes.any,
-  user: PropTypes.object,
+  user: PropTypes.any,
+  loading: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
-  userResponse: state.api.user,
+  // userResponse: state.api.user,
 });
 
 export default compose(
