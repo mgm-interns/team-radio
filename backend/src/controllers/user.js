@@ -35,7 +35,7 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
                 await userModels.setGoogleId(email, googleId);
             if (facebookId)
                 await userModels.setFacebookId(email, facebookId);
-            if (avatar_url)
+            if (avatar_url && !user.avatar_url)
                 await userModels.setAvatarUrl(email, avatar_url);
         } else {
             let user = await new userModels({
@@ -92,9 +92,11 @@ export const setAvatar = async (userId, avatar_url) => {
     throw err;
   }
 };
+
 export const setUsername = async (email, username) => {
   try {
-    await userModels.setUsername(email, username);
+    const newUsername = await _createUsername(username);
+    await userModels.setUsername(email, newUsername);
     return await userModels.getUserByEmail(email);
   } catch (err) {
     throw err;
@@ -108,6 +110,24 @@ export const setPassword = async (email, password) => {
     throw err;
   }
 };
+
+export const setUserInformation = async (userId, name, firstname, lastname, bio, city, country) => {
+    try {
+        let data = {}
+        if (name) data.name = name;
+        if (firstname) data.firstname = firstname;
+        if (lastname) data.lastname = lastname;
+        if (country) data.country = country;
+        if (city) data.city = city;
+        if (bio) data.bio = bio;
+
+        await userModels.setUserInformation(userId, data);
+        return await userModels.getUserById(userId);
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const isVerifidedToken = async (userId, token, superSecret) => {
   try {
     let result = false;

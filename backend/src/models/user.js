@@ -20,6 +20,27 @@ const userSchema = mongoose.Schema({
   },
   name: {
     type: String,
+    default: '',
+  },
+  firstname: {
+    type: String,
+    default: '',
+  },
+  lastname: {
+    type: String,
+    default: '',
+  },
+  country: {
+    type: String,
+    default: '',
+  },
+  city: {
+    type: String,
+    default: '',
+  },
+  bio: {
+    type: String,
+    default: '',
   },
   username: {
     type: String,
@@ -39,8 +60,8 @@ const userSchema = mongoose.Schema({
   },
   level: {
     type: String,
-    default: 'Little chick',
-    enum: ['Little chick'],
+    default: 'Newbie',
+    enum: ['Newbie'],
   },
   facebook_id: {
     type: String,
@@ -84,6 +105,9 @@ module.exports.setUsername = async (email, username) =>
 
 module.exports.setAvatarUrl = async (email, avatar_url) =>
   user.update({ email: email }, { avatar_url: avatar_url }, { multi: true });
+
+module.exports.setUserInformation = async (userId, data) =>
+  user.update({ _id: _safeObjectId(userId) }, data, { multi: true });
 
 module.exports.setPassword = async (email, password) =>
   user.update(

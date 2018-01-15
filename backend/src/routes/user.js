@@ -41,7 +41,8 @@ export default router => {
 
   router.post('/login', async (req, res) => {
     try {
-      const user = await User.findOne({ email: req.body.email });
+      let user = await User.findOne({ email: req.body.email });
+      if (!user) user = await User.findOne({ username: req.body.email });
       if (!user) {
         res.status(401).json({
           success: false,
@@ -152,7 +153,7 @@ export default router => {
     }
   });
 
-  router.get('/Profile/:username', async (req, res) => {
+  router.get('/profile/:username', async (req, res) => {
     // INPUT  : req.headers['access-token'], req.params.username
     // OUTPUT :
     // Return res.json({
@@ -266,7 +267,7 @@ export default router => {
     }
   });
 
-  router.post('/updatePassword', async (req, res) => {
+  router.post('/setPassword', async (req, res) => {
     // INPUT  : req.headers['access-token'], req.body.userId, req.body.oldPassword, req.body.newPassword
     // OUTPUT :
     // Return res.json({
@@ -295,7 +296,6 @@ export default router => {
             });
           }
           const newPassword = user.generateHash(req.body.newPassword);
-          console.log('call controller '+ newPassword);
           await userController.setPassword(user.email, newPassword);
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
@@ -331,6 +331,48 @@ export default router => {
       message: 'Success',
       stations: stations,
     });
+  });
+
+  router.post('/setUserInformation', async (req, res) => {
+    // INPUT  : req.headers['access-token'], req.body.userId, req.body.newDisplayName....
+    // OUTPUT :
+    // Return res.json({
+    //     message: 'Success',
+    //     user: user,
+    // }); if updating success
+    // Return res.json({
+    //     message: 'Can not update display name !',
+    // }); if updating fail
+    try {
+      let user = await userController.getUserById(req.body.userId);
+      const token = req.headers['access-token'];
+      if (user) {
+        // verify token
+        const isOwner = await userController.isVerifidedToken(
+          user._id.toString(),
+          token,
+          req.app.get('superSecret'),
+        );
+        if (isOwner) {
+          console.log(user)
+          user = await userController.setUserInformation(
+            req.body.userId,
+            req.body.name,
+            req.body.firstname,
+            req.body.lastname,
+            req.body.bio,
+            req.body.city,
+            req.body.country,
+          );
+          return res.json(user);
+        }
+      }
+      return res.json({
+        message: 'Can not update display name!',
+      });
+    } catch (err) {
+      throw err;
+    }
   });
   router.use(authController);
 
