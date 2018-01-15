@@ -148,13 +148,12 @@ const mapDispatchToProps = dispatch => ({
     city,
     country,
   }) => {
-    // dispatch(
-    //   setUsername({
-    //     userId: localStorage.getItem('userId'),
-    //     username,
-    //   }),
-    // );
-    console.log(userId);
+    dispatch(
+      setUsername({
+        userId: localStorage.getItem('userId'),
+        username,
+      }),
+    );
     dispatch(
       setUserInformation({
         userId,

@@ -62,6 +62,7 @@ class Settings extends Component {
       //   'http://www.followingthenerd.com/site/wp-content/uploads/avatar.jpg_274898881.jpg',
     };
 
+    this._renderEditInformation = this._renderEditInformation.bind(this);
     // this.handleChange = this.handleChange.bind(this);
     this._onOpenEditInformation = this._onOpenEditInformation.bind(this);
     this._onOpenEditSecurity = this._onOpenEditSecurity.bind(this);
@@ -108,41 +109,36 @@ class Settings extends Component {
     return <CircularProgress />;
   }
 
-  // _renderEditInformation() {
-  //   const { classes, user } = this.props;
-  //   return [
-  //     <Button key={1} onClick={this._onOpenEditInformation}>
-  //       <Icon>edit</Icon>
-  //     </Button>,
-  //     <Modal
-  //       key={2}
-  //       aria-labelledby="simple-modal-title"
-  //       aria-describedby="simple-modal-description"
-  //       open={this.state.openEditInformation}
-  //       onClose={this._onCloseModal}
-  //     >
-  //       <div style={getModalStyle()}>
-  //         <Grid container>
-  //           <Grid item xs={12} className={classes.modalHeadline}>
-  //             Edit your Information
-  //           </Grid>
-  //           <div className="line" />
-  //           <Grid item xs={12} className={classes.settingTabs}>
-  //             <Information user={user} onCancel={this.onCancelButtonClick} />
-  //           </Grid>
-  //         </Grid>
-  //       </div>
-  //     </Modal>,
-  //   ];
-  // }
+  _renderEditInformation() {
+    const { classes, user } = this.props;
+    return [
+      <Button key={1} onClick={this._onOpenEditInformation}>
+        <Icon>edit</Icon>
+      </Button>,
+      <Modal
+        key={2}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={this.state.openEditInformation}
+        onClose={this._onCloseModal}
+      >
+        <div style={getModalStyle()}>
+          <Grid container>
+            <Grid item xs={12} className={classes.modalHeadline}>
+              Edit your Information
+            </Grid>
+            <div className="line" />
+            <Grid item xs={12} className={classes.settingTabs}>
+              <Information user={user} onCancel={this.onCancelButtonClick} />
+            </Grid>
+          </Grid>
+        </div>
+      </Modal>,
+    ];
+  }
 
-  render() {
-    const { classes, loading, user } = this.props;
-
-    if (loading) {
-      return this._renderLoading();
-    }
-
+  _renderEditSecurity() {
+    const { classes, user } = this.props;
     return [
       <Button key={1} onClick={this._onOpenEditSecurity}>
         <Icon>settings</Icon>
@@ -167,6 +163,16 @@ class Settings extends Component {
         </div>
       </Modal>,
     ];
+  }
+
+  render() {
+    const { classes, loading, user } = this.props;
+
+    if (loading) {
+      return this._renderLoading();
+    }
+
+    return this._renderEditInformation();
   }
 }
 
