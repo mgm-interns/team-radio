@@ -15,7 +15,8 @@ import { FormHelperText } from 'material-ui/Form';
 import Typography from 'material-ui/Typography';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
-import { ImageCropper, TextView, TabContainer } from 'Component';
+import { TabContainer } from 'Component';
+import { withRouter } from 'react-router';
 
 import {
   customValidate,
@@ -98,6 +99,21 @@ class Settings extends Component {
     return <CircularProgress />;
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { userResponse } = nextProps;
+
+    if (
+      !userResponse.loading &&
+      userResponse.data.username !== this.props.userResponse.data.username
+      // (!userResponse.loading &&
+      //   userResponse.data.is_password !==
+      //     this.props.userResponse.data.is_password)
+    ) {
+      // if (!userResponse.loading) {
+      this.props.history.push(`/profile/${userResponse.data.username}`);
+    }
+  }
+
   render() {
     const { classes, user } = this.props;
 
@@ -131,9 +147,9 @@ class Settings extends Component {
                 textColor="primary"
               >
                 <Tab label="Information" />
-                <Tab label="Security" />
+                {/* <Tab label="Security" /> */}
               </Tabs>
-            </Grid>,
+            </Grid>
             {this.state.value === 0 && (
               <TabContainer>
                 <Information onCancel={this.onCancelButtonClick} />
@@ -156,4 +172,12 @@ Settings.propTypes = {
   user: PropTypes.object,
 };
 
-export default compose(withStyles(styles))(Settings);
+const mapStateToProps = state => ({
+  userResponse: state.api.user,
+});
+
+export default compose(
+  withStyles(styles),
+  withRouter,
+  connect(mapStateToProps, null),
+)(Settings);

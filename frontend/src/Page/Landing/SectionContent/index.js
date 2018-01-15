@@ -10,8 +10,8 @@ import styles from './styles';
 class SectionContent extends Component {
   render() {
     const { classes } = this.props;
-    return (
-      <Grid container justify="center" className={classes.container}>
+    return [
+      <Grid key={1} container justify="center" className={classes.container}>
         <Grid container className={classes.wrapper}>
           <Hidden mdDown>
             <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>
@@ -45,6 +45,8 @@ class SectionContent extends Component {
             </Grid>
           </Hidden>
         </Grid>
+      </Grid>,
+      <Grid key={2} container justify="center" className={classes.container}>
         <Grid container className={classes.wrapper}>
           <Grid item xs={12} sm={12} lg={6} className={classes.textBlock}>
             <div className={classes.textContent}>
@@ -65,8 +67,8 @@ class SectionContent extends Component {
             />
           </Grid>
         </Grid>
-      </Grid>
-    );
+      </Grid>,
+    ];
   }
 }
 

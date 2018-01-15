@@ -10,12 +10,13 @@ import { connect } from 'react-redux';
 import { withNotification } from 'Component/Notification';
 import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
+import { Images } from 'Theme';
 import styles from './styles';
 
 class SwitcherItem extends Component {
   render() {
     const {
-      goToStationPage,
+      onClick,
       classes,
       isActive,
       station_name,
@@ -23,9 +24,10 @@ class SwitcherItem extends Component {
       currentStation: { station, nowPlaying },
       disableOnlineCount,
     } = this.props;
-    let { thumbnail, online_count } = this.props;
+    let { thumbnail = Images.fixture.avatar1, online_count } = this.props;
     if ((station && station.station_id) === station_id) {
       thumbnail = (nowPlaying && nowPlaying.thumbnail) || thumbnail;
+
       online_count = this.props.currentStation.online_count; // eslint-disable-line
     }
     return (
@@ -33,7 +35,7 @@ class SwitcherItem extends Component {
         className={classNames(classes.stationWrapper, {
           [classes.activeStation]: isActive,
         })}
-        onClick={goToStationPage}
+        onClick={() => onClick && onClick({ ...this.props })}
       >
         <div
           className={classes.stationAvatar}
@@ -69,7 +71,7 @@ class SwitcherItem extends Component {
 }
 
 SwitcherItem.propTypes = {
-  goToStationPage: PropTypes.any,
+  onClick: PropTypes.any,
   classes: PropTypes.any,
   disableOnlineCount: PropTypes.bool,
   thumbnail: PropTypes.any,
@@ -78,6 +80,10 @@ SwitcherItem.propTypes = {
   currentStation: PropTypes.object,
   station_id: PropTypes.any,
   online_count: PropTypes.any,
+};
+
+SwitcherItem.defaultProps = {
+  onClick: station => console.log(station),
 };
 
 const mapStateToProps = ({ api }) => ({

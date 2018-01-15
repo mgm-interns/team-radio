@@ -15,6 +15,7 @@ import GoogleIcon from 'react-icons/lib/fa/google-plus-square';
 import TwitterIcon from 'react-icons/lib/fa/twitter-square';
 import CopyIcon from 'react-icons/lib/go/clippy';
 import { withNotification } from 'Component/Notification';
+import { withScrollbarInstances } from 'Component/Scrollbar';
 import styles from './styles';
 
 const FACEBOOK_SHARING = 'https://www.facebook.com/sharer/sharer.php?u=';
@@ -133,11 +134,11 @@ class StationSharing extends Component {
         <Popover
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'left',
+            horizontal: 'right',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'left',
+            horizontal: 'right',
           }}
           open={this.state.open}
           anchorEl={this.state.anchor}
@@ -231,4 +232,5 @@ export default compose(
   withStyles(styles),
   connect(mapStateToProps),
   withNotification,
+  withScrollbarInstances,
 )(StationSharing);

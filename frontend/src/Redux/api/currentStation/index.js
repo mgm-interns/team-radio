@@ -28,6 +28,7 @@ const INITIAL_STATE = {
     _id: new Date().getTime(),
     delay: 0,
   },
+  users: [],
   online_count: 0,
   joined: {
     loading: false,
@@ -84,6 +85,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         online_count: action.payload.online_count,
+        users: action.payload.users,
       };
     /**
      * Update playlist

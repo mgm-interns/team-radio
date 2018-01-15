@@ -17,7 +17,6 @@ io.on('connection', async function(socket) {
   socket.on('action', action => {
     switch (action.type) {
       case EVENTS.CLIENT_CREATE_STATION:
-        console.log('Action received: ' + EVENTS.CLIENT_CREATE_STATION);
         eventHandlers.createStation(
           createEmitter(socket, io),
           action.payload.userId,
@@ -38,12 +37,7 @@ io.on('connection', async function(socket) {
 
       case EVENTS.CLIENT_LEAVE_STATION:
         console.log('Action received: ' + EVENTS.CLIENT_LEAVE_STATION);
-        eventHandlers.leaveStation(
-          io,
-          socket,
-          action.payload.userId,
-          action.payload.stationId,
-        );
+        eventHandlers.leaveStation(io, socket, action.payload.userId);
         break;
 
       case EVENTS.CLIENT_ADD_SONG:
@@ -95,7 +89,7 @@ io.on('connection', async function(socket) {
     }
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnecting', () => {
     eventHandlers.socketDisconnect(io, socket);
     console.log('Disconnect with ' + socket.id);
   });

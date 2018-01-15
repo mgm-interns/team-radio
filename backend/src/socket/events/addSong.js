@@ -4,10 +4,18 @@ import * as EVENTS from '../../const/actions';
 import * as players from '../../players';
 
 export default async (emitter, userId, stationId, songUrl) => {
+  const user = await userController.getUserById(userId);
+  if (user) {
+    _addSongProcess(emitter, userId, stationId, songUrl);
+  } else {
+    _addSongProcess(emitter, null, stationId, songUrl);
+  }
+};
+
+const _addSongProcess = async (emitter, userId, stationId, songUrl) => {
   let playlist;
+
   try {
-    await userController.getUserById(userId);
-    // Addsong
     playlist = await stationController.addSong(stationId, songUrl, userId);
     emitter.emit(EVENTS.SERVER_ADD_SONG_SUCCESS, {});
   } catch (err) {

@@ -28,10 +28,8 @@ export default router => {
         res.json({
           message: 'signup success',
           token: token,
+          ...newUser._doc,
           userId: newUser._id,
-          name: newUser.name,
-          avatar_url: newUser.avatar_url,
-          username: newUser.username,
         });
       }
     } catch (err) {
@@ -68,10 +66,8 @@ export default router => {
             success: true,
             message: 'Enjoy your token!',
             token: token,
+            ...user._doc,
             userId: user._id,
-            name: user.name,
-            avatar_url: user.avatar_url,
-            username: user.username,
           });
         }
       }
@@ -99,12 +95,8 @@ export default router => {
       res.json({
         message: 'signup success',
         token: token,
+        ...user._doc,
         userId: user._id,
-        googleId: user.google_id,
-        facebookId: user.facebook_id,
-        name: user.name,
-        avatar_url: user.avatar_url,
-        username: user.username,
       });
     } catch (err) {
       throw err;
@@ -141,9 +133,9 @@ export default router => {
             return res.status(400).json({ tokenError: 'Verify token failed.' });
           }
           const user = await userController.getUserById(decoded.userId);
+
           const userRes = { ...user._doc, userId: user._id };
           return res.json(userRes);
-          // return res.json(decoded);
         });
       } else {
         return res.status(400).json({ tokenError: 'No token provided.' });
@@ -214,7 +206,7 @@ export default router => {
             req.body.userId,
             req.body.avatar_url,
           );
-          return res.json(user);
+          return res.json({ ...user._doc, userId: user._id });
         }
       }
       return res.json({
@@ -313,9 +305,9 @@ export default router => {
     }
   });
 
-  router.put('/stations/getstationbyadded', async (req, res) => {
+  router.get('/stations/getstationbyadded/:user_id', async (req, res) => {
     const stations = await stationController.getListStationUserAddedSong(
-      req.body.user_id,
+      req.params.user_id,
     );
     res.json({
       message: 'Success',
@@ -323,9 +315,9 @@ export default router => {
     });
   });
 
-  router.put('/stations/getstationbyuserid', async (req, res) => {
+  router.get('/stations/getstationbyuserid/:user_id', async (req, res) => {
     const stations = await stationController.getStationsByUserId(
-      req.body.user_id,
+      req.params.user_id,
     );
     res.json({
       message: 'Success',
@@ -373,6 +365,7 @@ export default router => {
       throw err;
     }
   });
+
   router.use(authController);
 
   // test function *************************************

@@ -68,4 +68,9 @@ export default ({ breakpoints, palette, spacing }) => ({
     color: 'rgba(0,0,0,0.54)',
     textTransform: 'none',
   },
+  titleContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'baseline',
+  },
 });

@@ -20,7 +20,7 @@ import { Field, reduxForm } from 'redux-form';
 import { NavBar, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
 
-import { saveAuthenticationState } from 'Config';
+import { saveAuthenticationState } from 'Configuration';
 import {
   registerValidate,
   required,
@@ -57,15 +57,21 @@ class Register extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { addUserResponse: { error, data, isAuthenticated } } = nextProps;
+    const { addUserResponse: { data: { token } } } = this.props;
 
     if (error !== null) {
       this.setState({
         asyncError: error.response.message,
       });
-    } else if (data.token || isAuthenticated) {
-      this._showNotification('Registration successful!');
+    } else if (isAuthenticated && token !== data.token) {
+      this._showNotification('Register successfully!');
+
       saveAuthenticationState(data);
-      this.props.history.go(-1);
+      if (window.history.length > 2) {
+        this.props.history.go(-1);
+      } else {
+        this.props.history.replace('/');
+      }
       // this.props.history.push('/');
     }
   }

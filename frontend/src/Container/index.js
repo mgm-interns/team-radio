@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { initRedux } from '../Config';
+import { initRedux } from '../Configuration';
 import App from './App';
 
 const store = initRedux();

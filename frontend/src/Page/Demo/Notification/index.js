@@ -22,7 +22,7 @@ class NotificationDemo extends Component {
   }
 
   async callAppNotificationSuccess() {
-    const { notification: { app, browser } } = this.props;
+    const { notification: { app } } = this.props;
     // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -36,7 +36,7 @@ class NotificationDemo extends Component {
   }
 
   async callAppNotificationInfo() {
-    const { notification: { app, browser } } = this.props;
+    const { notification: { app } } = this.props;
     // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -50,7 +50,7 @@ class NotificationDemo extends Component {
   }
 
   async callAppNotificationWarning() {
-    const { notification: { app, browser } } = this.props;
+    const { notification: { app } } = this.props;
     // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -64,7 +64,7 @@ class NotificationDemo extends Component {
   }
 
   async callAppNotificationError() {
-    const { notification: { app, browser } } = this.props;
+    const { notification: { app } } = this.props;
     // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -78,7 +78,7 @@ class NotificationDemo extends Component {
   }
 
   async callAppNotification() {
-    const { notification: { app, browser } } = this.props;
+    const { notification: { app } } = this.props;
     // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -100,17 +100,18 @@ class NotificationDemo extends Component {
   }
 
   async callBrowserNotification() {
-    const { notification: { app, browser } } = this.props;
+    const { notification: { browser } } = this.props;
     let count = 0;
     const duration = 2000;
     // // Call notification 3 times
     const interval = setInterval(async () => {
       await browser.success({
+        title: 'Team Radio',
         message: 'Hello, this is browser notification',
         duration,
       });
       count += 1;
-      if (count > 3) {
+      if (count > 2) {
         clearInterval(interval);
       }
     }, 300);
@@ -127,11 +128,12 @@ class NotificationDemo extends Component {
         duration,
       });
       await browser.info({
+        title: 'Team Radio',
         message: 'Hello, this is browser notification',
         duration,
       });
       count += 1;
-      if (count > 3) {
+      if (count > 2) {
         clearInterval(interval);
       }
     }, 300);
@@ -153,6 +155,8 @@ class NotificationDemo extends Component {
             >
               <span>App Notification Success</span>
             </Button>
+            <br />
+            <br />
           </Grid>
           <Grid item xs={4}>
             <Button
@@ -162,6 +166,8 @@ class NotificationDemo extends Component {
             >
               <span>App Notification Info</span>
             </Button>
+            <br />
+            <br />
           </Grid>
           <Grid item xs={4}>
             <Button
@@ -172,6 +178,8 @@ class NotificationDemo extends Component {
             >
               <span>App Notification Warning</span>
             </Button>
+            <br />
+            <br />
           </Grid>
           <Grid item xs={4}>
             <Button
@@ -184,7 +192,6 @@ class NotificationDemo extends Component {
             </Button>
           </Grid>
         </Grid>
-
         <Grid item xs={12}>
           <Button raised color="primary" onClick={this.callBrowserNotification}>
             <span>Browser Notification</span>

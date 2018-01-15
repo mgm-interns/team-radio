@@ -16,7 +16,7 @@ import { updatePassword } from 'Redux/api/user/actions';
 import Grid from 'material-ui/Grid';
 import { FormHelperText } from 'material-ui/Form';
 import Button from 'material-ui/Button';
-import { saveAuthenticationState } from 'Config';
+import { saveAuthenticationState } from 'Configuration';
 
 import styles from '../styles';
 
@@ -37,18 +37,24 @@ class Security extends Component {
   }
 
   _renderChangePasswordForm() {
-    const { classes, submitSucceeded } = this.props;
+    const {
+      classes,
+      submitSucceeded,
+      userResponse: { is_password },
+    } = this.props;
     return [
-      <Field
-        key={1}
-        name="oldPassword"
-        placeholder="Old password"
-        type="password"
-        component={TextView}
-        label="Old password"
-        validate={[required, minLength6]}
-        border
-      />,
+      is_password === false && (
+        <Field
+          key={1}
+          name="oldPassword"
+          placeholder="Old password"
+          type="password"
+          component={TextView}
+          label="Old password"
+          validate={[required, minLength6]}
+          border
+        />
+      ),
       <Field
         key={2}
         name="newPassword"
@@ -109,11 +115,12 @@ Security.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  addUserResponse: state.api.user,
+  userResponse: state.api.user.data,
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: data => dispatch(updatePassword(data)),
+  onSubmit: ({ oldPassword, newPassword }) =>
+    dispatch(updatePassword(oldPassword, newPassword)),
 });
 
 export default compose(

@@ -66,6 +66,10 @@ module.exports.deleteStation = (stationId, userId) => {
 
 /**
  * Get all station has is_private : fasle (station is public)
+ * return info :
+ * - station_name 
+ * - created_date
+ * - station_id
  * 
  * @param {number} limit 
  */
@@ -95,7 +99,7 @@ module.exports.getStationDetails = limit => {
  * @param {number} limit 
  */
 module.exports.getAllStationLimitInfor = limit => {
-  return Station.find({},{ station_id: 1, created_date: 1, station_name: 1, owner_id: 1 })
+  return Station.find({}, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 })
     .limit(limit)
     .exec();
 };
@@ -124,11 +128,16 @@ module.exports.getStationById = idToFind => {
 
 /**
  * Get station by id
+ * return info :
+ * - station_id
+ * - created_date 
+ * - station_name
+ * - owner_id
  * 
  * @param {string} userId 
  */
 module.exports.getStationsByUserId = userId => {
-  return Station.find({ owner_id: userId },{ station_id: 1, created_date: 1, station_name: 1, owner_id: 1 });
+  return Station.find({ owner_id: userId }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 });
 };
 
 
@@ -271,7 +280,7 @@ module.exports.getPlaylistOfStation = async stationId => {
  * @param {string} stationId 
  * @param {string} userId 
  */
-module.exports.getStationHasSongUserAdded =  (stationId, userId) => {
+module.exports.getStationHasSongUserAdded = (stationId, userId) => {
   return Station.findOne({ station_id: stationId }, {
     playlist: {
       $elemMatch: {

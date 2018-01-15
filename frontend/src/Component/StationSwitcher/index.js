@@ -3,15 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import classNames from 'classnames';
 import withStyles from 'material-ui/styles/withStyles';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
 import { setPreviewVideo } from 'Redux/page/station/actions';
-import { Scrollbars } from 'react-custom-scrollbars';
 import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
 import orderBy from 'lodash/orderBy';
-import { StationItem } from 'Component';
+import { StationList } from 'Component';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -19,8 +17,8 @@ class StationSwitcher extends Component {
   constructor(props) {
     super(props);
 
-    this._renderSwitcher = this._renderSwitcher.bind(this);
     this._goToStationPage = this._goToStationPage.bind(this);
+    this._filterStations = this._filterStations.bind(this);
   }
 
   _goToStationPage(station) {
@@ -36,6 +34,7 @@ class StationSwitcher extends Component {
     // Only change to new station if the id has changed
     if (station.station_id !== stationId) {
       // Leave current station
+      // No need to send this, server will handle this case
       // leaveStationRequest({ userId, stationId });
 
       // Join in selected station
@@ -43,28 +42,34 @@ class StationSwitcher extends Component {
       joinStationRequest({ userId, stationId: station.station_id });
       setPreviewVideo();
       // Scroll to left after switch successful
-      this.scrollBar.scrollToLeft();
+      this.scrollbarRef.scrollLeft();
     }
     notification.app.success({
       message: `Switched to station ${station.station_name}`,
     });
   }
 
-  _renderSwitcher() {
+  _filterStations() {
     const {
-      classes,
-      stations,
+      stations = [],
       currentStation,
       match: { params: { stationId } },
     } = this.props;
 
-    const filteredStations = stations.map(station => ({
-      ...station,
-      isActive:
-        (currentStation.station && currentStation.station.station_id) ===
-        station.station_id,
-      thumbnail: station.thumbnail || Images.stationDefault,
-    }));
+    /**
+     * Set sleepy thumbnail if there is no thumbnail in station
+     * Then remove current station from the list
+     */
+    const filteredStations = stations
+      .map(station => ({
+        ...station,
+        thumbnail: station.thumbnail || Images.stationDefault,
+      }))
+      .filter(
+        station =>
+          (currentStation.station && currentStation.station.station_id) !==
+          station.station_id,
+      );
 
     /**
      * Ordered stations
@@ -72,7 +77,7 @@ class StationSwitcher extends Component {
      * - higher online users higher position
      * - Active station
      */
-    const orderedStations = orderBy(
+    return orderBy(
       filteredStations,
       [
         // Current station always be on top
@@ -80,84 +85,25 @@ class StationSwitcher extends Component {
         // Sort by number of online users
         'online_count',
         // Sort by is active station
-        'isActive',
+        'thumbnail',
       ],
-      ['asc', 'desc', 'asc'],
-    );
-
-    return (
-      <Scrollbars
-        autoHide
-        autoHideTimeout={1000}
-        className={classes.container}
-        renderView={() => <div className={classes.scrollArea} />}
-        ref={ref => {
-          this.scrollBar = ref;
-        }}
-      >
-        {orderedStations.map((station, index) => (
-          <StationItem
-            key={index}
-            {...station}
-            goToStationPage={() => this._goToStationPage(station)}
-          />
-        ))}
-      </Scrollbars>
-    );
-  }
-
-  _renderLoading() {
-    const { classes } = this.props;
-
-    return (
-      <div
-        className={classNames([classes.container, classes.loadingContainer])}
-      >
-        {[1, 2, 3].map((item, index) => (
-          <div key={index} className={classes.stationWrapper}>
-            <div
-              className={classNames([
-                classes.stationAvatar,
-                classes.loadingAvatar,
-              ])}
-            />
-            <div
-              className={classNames([classes.stationInfo, classes.loadingInfo])}
-            />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  _renderEmptyComponent() {
-    const { classes } = this.props;
-
-    return (
-      <div
-        className={classNames([
-          classes.container,
-          classes.loadingContainer,
-          classes.emptyContainer,
-        ])}
-      >
-        <p>No stations. There is something wrong</p>
-      </div>
+      ['asc', 'desc', 'desc'],
     );
   }
 
   render() {
     const { stations } = this.props;
-    let view = null;
-    if (stations === undefined) {
-      view = this._renderLoading();
-    } else if (stations.length === 0) {
-      view = this._renderEmptyComponent();
-    } else {
-      view = this._renderSwitcher();
-    }
 
-    return view;
+    return (
+      <StationList
+        stations={this._filterStations()}
+        loading={!stations}
+        onItemClick={this._goToStationPage}
+        scrollbarRef={ref => {
+          this.scrollbarRef = ref;
+        }}
+      />
+    );
   }
 }
 

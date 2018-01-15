@@ -29,12 +29,12 @@ class Profile extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.loading === false) {
-      const { match: { params: { username } }, history } = this.props;
-      if (username !== nextProps.user.username) {
-        // Go to landing page
-        // console.log('redirect landing');
-        // history.push('/');
-      }
+      // const { match: { params: { username } }, history } = this.props;
+      // if (username !== nextProps.user.username) {
+      //   // Go to landing page
+      //   console.log('redirect landing');
+      //   history.push('/');
+      // }
     }
   }
 

@@ -29,9 +29,6 @@ export default async (io, socket, userId, stationId) => {
       const player = await players.getPlayer(stationId);
       const nowPlaying = await player.getNowPlaying();
       emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, nowPlaying);
-      // if have no song is playing, do not update nowPlaying
-      // if (nowPlaying.url)
-      //   emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, nowPlaying);
     } catch (err) {
       console.log('Players error: ' + err.message);
     }
@@ -45,10 +42,10 @@ const _leaveAllAndJoinStation = async (socket, io, userId, station) => {
 
 const _joinStationProcess = async (socket, io, userId, station) => {
   const emitter = createEmitter(socket, io);
+  const stationId = station.station_id;
 
   // Join to new station and reassign param
-  socket.join(station.station_id);
-  console.log('Join accept: ' + socket.id + ' joined to ' + station.station_id);
+  socket.join(stationId);
 
   emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
     station: station,
@@ -75,17 +72,12 @@ const _joinStationProcess = async (socket, io, userId, station) => {
     } else {
       onlineManager.joinNotification(
         station.station_id,
-        'Anonymous',
+        'Someone',
         emitter,
         io,
       );
     }
   } catch (err) {
-    onlineManager.joinNotification(
-      station.station_id,
-      'Anonymous',
-      emitter,
-      io,
-    );
+    onlineManager.joinNotification(station.station_id, 'Someone', emitter, io);
   }
 };
