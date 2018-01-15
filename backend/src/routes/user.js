@@ -354,7 +354,6 @@ export default router => {
           req.app.get('superSecret'),
         );
         if (isOwner) {
-          console.log(user)
           user = await userController.setUserInformation(
             req.body.userId,
             req.body.name,
@@ -368,7 +367,7 @@ export default router => {
         }
       }
       return res.json({
-        message: 'Can not update display name!',
+        message: 'Can not update user information!',
       });
     } catch (err) {
       throw err;
