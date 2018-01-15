@@ -107,12 +107,6 @@ class Login extends Component {
     });
   }
 
-  componentDidMount() {
-    if (loadAuthenticationState()) {
-      this.props.history.replace('/');
-    }
-  }
-
   _renderHeadline() {
     return (
       <Grid
@@ -175,7 +169,7 @@ class Login extends Component {
           component={TextView}
           label="Email"
           validate={[required, email]}
-        />
+        />{' '}
         <Field
           name="password"
           placeholder="Password"
@@ -183,10 +177,11 @@ class Login extends Component {
           component={TextView}
           label="Password"
           validate={required}
-        />
+        />{' '}
         <FormHelperText className={classes.error}>
-          {submitSucceeded && this.state.formErrors.message}
-        </FormHelperText>
+          {' '}
+          {submitSucceeded && this.state.formErrors.message}{' '}
+        </FormHelperText>{' '}
       </Grid>
     );
   }
@@ -196,6 +191,7 @@ class Login extends Component {
     return (
       <Grid container>
         <Grid item xs={12}>
+          {' '}
           {loading ? (
             <CircularProgress />
           ) : (
@@ -208,12 +204,12 @@ class Login extends Component {
             >
               Log in
             </Button>
-          )}
+          )}{' '}
           <FormHelperText className={classes.callout}>
-            <span> Not a member ? </span>
-            <Link to="/auth/register"> Create an account </Link>
-          </FormHelperText>
-        </Grid>
+            <span> Not a member ? </span>{' '}
+            <Link to="/auth/register"> Create an account </Link>{' '}
+          </FormHelperText>{' '}
+        </Grid>{' '}
       </Grid>
     );
   }
@@ -226,7 +222,7 @@ class Login extends Component {
           src="https://images.unsplash.com/photo-1512692505538-1e7bb8980a77?auto=format&fit=crop&w=2600&q=80"
           alt="Team Radio - Cover"
           className={classes.backgroundImg}
-        />
+        />{' '}
       </Grid>
     );
   }
@@ -242,15 +238,16 @@ class Login extends Component {
             <Card raised className={classes.cardForm}>
               <form onSubmit={handleSubmit}>
                 <CardContent>
-                  {this._renderHeadline()} {this._renderLoginSocial()}
-                  {this._renderLoginLocalForm()}
-                </CardContent>
-                <CardActions> {this._renderLoginLocalActions()} </CardActions>
-              </form>
-            </Card>
-          </Grid>
-          {this._renderBackground()}
-        </Grid>
+                  {' '}
+                  {this._renderHeadline()} {this._renderLoginSocial()}{' '}
+                  {this._renderLoginLocalForm()}{' '}
+                </CardContent>{' '}
+                <CardActions> {this._renderLoginLocalActions()} </CardActions>{' '}
+              </form>{' '}
+            </Card>{' '}
+          </Grid>{' '}
+          {this._renderBackground()}{' '}
+        </Grid>{' '}
       </Grid>,
     ];
   }
