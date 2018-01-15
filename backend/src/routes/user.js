@@ -217,6 +217,42 @@ export default router => {
     }
   });
 
+  router.post('/setCover', async (req, res) => {
+    // INPUT  : req.headers['access-token'], req.body.userId, req.body.cover_url
+    // OUTPUT :
+    // Return res.json({
+    //     message: 'Success',
+    //     user: user,
+    // }); if updating success
+    // Return res.json({
+    //     message: 'Can not update avatar!',
+    // }); if updating fail
+    try {
+      let user = await userController.getUserById(req.body.userId);
+      const token = req.headers['access-token'];
+      if (user) {
+        // verify token
+        const isOwner = await userController.isVerifidedToken(
+          user._id.toString(),
+          token,
+          req.app.get('superSecret'),
+        );
+        if (isOwner) {
+          user = await userController.setCover(
+            req.body.userId,
+            req.body.cover_url,
+          );
+          return res.json({ ...user._doc, userId: user._id });
+        }
+      }
+      return res.json({
+        message: 'Can not update avatar!',
+      });
+    } catch (err) {
+      throw err;
+    }
+  });
+
   router.post('/setUsername', async (req, res) => {
     // INPUT  : req.headers['access-token'], req.body.userId, req.body.username
     // OUTPUT :
@@ -232,6 +268,12 @@ export default router => {
       const AlreadyUser = await userController.getUserProfile(
         req.body.username,
       );
+      if (AlreadyUser && AlreadyUser.username === user.username)
+        return res.json({
+          message: 'Success',
+          ...user._doc,
+          userId: user._id,
+        });
       const token = req.headers['access-token'];
       if ((!AlreadyUser || AlreadyUser.username === user.username) && user) {
         const isOwner = await userController.isVerifidedToken(

@@ -77,6 +77,7 @@ export const createUser = async (email,password,name) => {
     throw err;
   }
 };
+
 export const getUserProfile = async username => {
   try {
     return await userModels.getUserByUsername(username);
@@ -84,13 +85,23 @@ export const getUserProfile = async username => {
     throw err;
   }
 };
+
 export const setAvatar = async (userId, avatar_url) => {
-  try {
-    await userModels.setAvatar(userId, avatar_url);
-    return await userModels.getUserById(userId);
-  } catch (err) {
-    throw err;
-  }
+    try {
+        await userModels.setAvatar(userId, avatar_url);
+        return await userModels.getUserById(userId);
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const setCover = async (userId, cover_url) => {
+    try {
+        await userModels.setCover(userId, cover_url);
+        return await userModels.getUserById(userId);
+    } catch (err) {
+        throw err;
+    }
 };
 
 export const setUsername = async (email, username) => {
@@ -102,6 +113,7 @@ export const setUsername = async (email, username) => {
     throw err;
   }
 };
+
 export const setPassword = async (email, password) => {
   try {
     await userModels.setPassword(email, password);
@@ -141,6 +153,11 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
     throw err;
   }
 };
+
+async function _increaseReputation(userId, point){
+    const user = await userModels.getUserById(userId);
+    await userModels.updateReputation(userId, user.reputation + point)
+}
 
 function _stringToId(str) {
     return str

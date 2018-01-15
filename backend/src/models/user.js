@@ -109,6 +109,13 @@ module.exports.setAvatarUrl = async (email, avatar_url) =>
 module.exports.setUserInformation = async (userId, data) =>
   user.update({ _id: _safeObjectId(userId) }, data, { multi: true });
 
+module.exports.updateReputation = async (userId, point) =>
+  user.update(
+    { _id: _safeObjectId(userId) },
+    { reputation: point },
+    { multi: true },
+  );
+
 module.exports.setPassword = async (email, password) =>
   user.update(
     { email: email },
@@ -120,5 +127,11 @@ module.exports.setAvatar = async (userId, avatarUrl) =>
   user.update(
     { _id: _safeObjectId(userId) },
     { avatar_url: avatarUrl },
+    { multi: true },
+  );
+module.exports.setCover = async (userId, coverUrl) =>
+  user.update(
+    { _id: _safeObjectId(userId) },
+    { cover_url: coverUrl },
     { multi: true },
   );
