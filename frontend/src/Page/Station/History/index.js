@@ -10,7 +10,7 @@ import styles from './styles';
 
 class History extends Component {
   render() {
-    const { className, style, history, classes } = this.props;
+    const { className, style, history } = this.props;
     return (
       <Grid
         item
@@ -18,18 +18,11 @@ class History extends Component {
         className={className}
         style={{ ...style, overflowY: 'auto' }}
       >
-        <Scrollbar
-          className={classes.container}
-          horizontal={false}
-          smoothScrolling
-          stopScrollPropagation
-        >
-          <List style={{ paddingTop: 0, paddingBottom: 0 }}>
-            {history.map((video, index) => (
-              <Item key={index} {...video} playing={index === 0} />
-            ))}
-          </List>
-        </Scrollbar>
+        <List style={{ paddingTop: 0, paddingBottom: 0 }}>
+          {history.map((video, index) => (
+            <Item key={index} {...video} playing={index === 0} />
+          ))}
+        </List>
       </Grid>
     );
   }

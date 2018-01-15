@@ -75,11 +75,6 @@ class StationSharing extends Component {
   }
 
   _togglePopover(event) {
-    if (!this.state.open) {
-      this.props.scrollbarInstances.getInstance('App').enable();
-    } else {
-      this.props.scrollbarInstances.getInstance('App').disable();
-    }
     this.setState({
       open: !this.state.open,
       anchor: this.state.open ? event.target : null,
@@ -91,14 +86,12 @@ class StationSharing extends Component {
       open: true,
       anchor: event.target,
     });
-    this.props.scrollbarInstances.getInstance('App').disable();
   }
 
   _closePopover() {
     this.setState({ open: false }, () => {
       this.setState({ copied: false, anchor: null });
     });
-    this.props.scrollbarInstances.getInstance('App').enable();
   }
 
   _copyToClipboard() {
@@ -126,12 +119,6 @@ class StationSharing extends Component {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  componentWillUnmount() {
-    // Re enable scrolling after un mount
-    // For preventing unpredicted bugs
-    this.props.scrollbarInstances.getInstance('App').enable();
   }
 
   render() {
@@ -235,7 +222,6 @@ StationSharing.propTypes = {
   currentStation: PropTypes.object,
   classes: PropTypes.object,
   notification: PropTypes.object,
-  scrollbarInstances: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({

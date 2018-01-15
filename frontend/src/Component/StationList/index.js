@@ -17,11 +17,17 @@ class StationList extends Component {
   }
 
   _renderLoading() {
-    const { classes } = this.props;
+    const { classes, scrollbarInstanceLevel, scrollbarRef } = this.props;
 
     return (
-      <div
+      <Scrollbar
+        level={scrollbarInstanceLevel}
         className={classNames([classes.container, classes.loadingContainer])}
+        contentClassName={classes.content}
+        swapWheelAxes={true}
+        smoothScrolling
+        stopScrollPropagation
+        ref={scrollbarRef}
       >
         {[1, 2, 3, 4, 5, 6].map((item, index) => (
           <div key={index} className={classes.stationWrapper}>
@@ -36,7 +42,7 @@ class StationList extends Component {
             />
           </div>
         ))}
-      </div>
+      </Scrollbar>
     );
   }
 
@@ -62,10 +68,12 @@ class StationList extends Component {
       onItemClick,
       scrollbarRef,
       disableOnlineCount,
+      scrollbarInstanceLevel,
     } = this.props;
     return (
       <Scrollbar
         speed={1.6}
+        level={scrollbarInstanceLevel}
         className={classes.container}
         contentClassName={classes.content}
         swapWheelAxes={true}
@@ -105,11 +113,13 @@ StationList.propTypes = {
   emptyMessage: PropTypes.string,
   onItemClick: PropTypes.func,
   scrollbarRef: PropTypes.func,
+  scrollbarInstanceLevel: PropTypes.string,
 };
 
 StationList.defaultProps = {
   stations: [],
   loading: false,
+  scrollbarInstanceLevel: 'StationsSwitcher',
   emptyMessage: 'No stations.',
   onItemClick: () => {},
 };

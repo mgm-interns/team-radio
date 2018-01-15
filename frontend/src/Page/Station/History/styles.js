@@ -1,5 +1,1 @@
-export default () => ({
-  container: {
-    height: '100%',
-  },
-});
+export default () => ({});

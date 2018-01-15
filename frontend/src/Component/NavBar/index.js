@@ -58,12 +58,11 @@ class NavBar extends Component {
         container
         justify="center"
         className={classes.container}
-        // style={
-        //   color === undefined && this.state.transform !== 0
-        //     ? { filter: 'opacity(0.8)', backgroundColor: setColor.primary }
-        //     : { backgroundColor: setColor[color] }
-        // }
-        style={{ backgroundColor: setColor.primary }}
+        style={
+          color === undefined && this.state.transform !== 0
+            ? { filter: 'opacity(0.8)', backgroundColor: setColor.primary }
+            : { backgroundColor: setColor[color] }
+        }
       >
         <Grid
           container

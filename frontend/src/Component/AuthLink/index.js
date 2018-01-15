@@ -11,7 +11,6 @@ import Icon from 'material-ui/Icon';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import { Images } from 'Theme';
 import { withRouter } from 'react-router';
-import { withScrollbarInstances } from 'Component/Scrollbar';
 import styles from './styles';
 
 class AuthLink extends Component {
@@ -36,19 +35,11 @@ class AuthLink extends Component {
 
   _openMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
-    this.props.scrollbarInstances.getInstance('App').disable();
   };
 
   _closeMenu = () => {
     this.setState({ anchorEl: null });
-    this.props.scrollbarInstances.getInstance('App').enable();
   };
-
-  componentWillUnmount() {
-    // Re enable scrolling after un mount
-    // For preventing unpredicted bugs
-    this.props.scrollbarInstances.getInstance('App').enable();
-  }
 
   render() {
     const { classes, user } = this.props;
@@ -122,7 +113,6 @@ AuthLink.propTypes = {
   history: PropTypes.any,
   navigateToProfile: PropTypes.func,
   logout: PropTypes.func,
-  scrollbarInstances: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
@@ -137,5 +127,4 @@ export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   withNotification,
   withRouter,
-  withScrollbarInstances,
 )(withStyles(styles)(AuthLink));

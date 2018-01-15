@@ -16,7 +16,6 @@ import Typography from 'material-ui/Typography';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { TabContainer } from 'Component';
-import { withScrollbarInstances } from 'Component/Scrollbar';
 import { withRouter } from 'react-router';
 
 import {
@@ -115,22 +114,6 @@ class Settings extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.open !== this.state.open) {
-      if (this.state.open) {
-        this.props.scrollbarInstances.getInstance('App').disable();
-      } else {
-        this.props.scrollbarInstances.getInstance('App').enable();
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    // Re enable scrolling after un mount
-    // For preventing unpredicted bugs
-    this.props.scrollbarInstances.getInstance('App').enable();
-  }
-
   render() {
     const { classes, user } = this.props;
 
@@ -187,7 +170,6 @@ class Settings extends Component {
 Settings.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.object,
-  scrollbarInstances: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
@@ -198,5 +180,4 @@ export default compose(
   withStyles(styles),
   withRouter,
   connect(mapStateToProps, null),
-  withScrollbarInstances,
 )(Settings);

@@ -1,12 +1,11 @@
 export default () => ({
   container: {
-    width: '100vw',
-    height: '100vh',
+    width: '100%',
+    minHeight: '100vh',
     marginLeft: 'auto',
     marginRight: 'auto',
-  },
-  content: {
-    minHeight: '100vh',
     position: 'relative',
+    // paddingLeft: 8,
+    // paddingRight: 8,
   },
 });
