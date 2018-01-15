@@ -52,7 +52,6 @@ class Security extends Component {
           component={TextView}
           label="Old password"
           validate={[required, minLength6]}
-          border
         />
       ),
       <Field
@@ -63,7 +62,6 @@ class Security extends Component {
         component={TextView}
         label="New password"
         validate={[required, minLength6]}
-        border
       />,
       <Field
         key={3}
@@ -73,7 +71,6 @@ class Security extends Component {
         component={TextView}
         label="Confirm password"
         validate={[required]}
-        border
       />,
       <FormHelperText key={4} className={classes.error}>
         {submitSucceeded && this.state.asyncError}

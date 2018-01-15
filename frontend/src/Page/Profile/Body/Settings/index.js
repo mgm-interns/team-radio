@@ -14,6 +14,7 @@ import Modal from 'material-ui/Modal';
 import { FormHelperText } from 'material-ui/Form';
 import Typography from 'material-ui/Typography';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
+import Menu, { MenuItem } from 'material-ui/Menu';
 
 import { TabContainer } from 'Component';
 import { withRouter } from 'react-router';
@@ -139,7 +140,7 @@ class Settings extends Component {
                 textColor="primary"
               >
                 <Tab label="Information" />
-                {/* <Tab label="Security" /> */}
+                <Tab label="Security" />
               </Tabs>
             </Grid>
             {this.state.value === 0 && (
