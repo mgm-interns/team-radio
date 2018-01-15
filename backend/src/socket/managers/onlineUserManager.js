@@ -12,24 +12,24 @@ export const leaveAllStation = async (io, socket, userId) => {
     const user = await userController.getUserById(userId);
     if (user.name) {
       const name = user.name;
-      allStations.forEach(station => {
-        leaveStationPromises.push(_leaveStation(io, socket, station, name));
+      allStations.forEach(stationId => {
+        leaveStationPromises.push(_leaveStation(io, socket, stationId, name));
       });
     } else if (user.username) {
       const name = user.username;
-      allStations.forEach(station => {
-        leaveStationPromises.push(_leaveStation(io, socket, station, name));
+      allStations.forEach(stationId => {
+        leaveStationPromises.push(_leaveStation(io, socket, stationId, name));
       });
     } else {
-      const name = 'Anonymous';
-      allStations.forEach(station => {
-        leaveStationPromises.push(_leaveStation(io, socket, station, name));
+      const name = 'Someone';
+      allStations.forEach(stationId => {
+        leaveStationPromises.push(_leaveStation(io, socket, stationId, name));
       });
     }
   } catch (err) {
-    allStations.forEach(station => {
+    allStations.forEach(stationId => {
       leaveStationPromises.push(
-        _leaveStation(io, socket, station, 'Anonymous'),
+        _leaveStation(io, socket, stationId, 'Someone'),
       );
     });
   }
@@ -76,7 +76,7 @@ export const getListUserIdOnline = async (stationId, io) => {
   const socketList = await getListSocketId(stationId, io);
   socketList.forEach(socketId => {
     const userId = io.sockets.connected[socketId].userId;
-    if (userId) {
+    if (userId && userId !== 0 && userId !== '0') {
       userList.push(userId);
     }
   });
@@ -85,30 +85,30 @@ export const getListUserIdOnline = async (stationId, io) => {
 
 export const getListUserOnline = async (stationId, io) => {
   // name, username, avatar_url
-  const users = [];
-  const idList = await getListUserIdOnline(stationId, io);
+  const setUserId = await getListUserIdOnline(stationId, io);
+  const list = [...setUserId];
 
-  Promise.all(
-    idList.forEach(async userId => {
+  return Promise.all(
+    list.map(async userId => {
       const user = await userController.getUserById(userId);
-      users.push({
+      return {
         name: user.name,
         username: user.username,
         avatar_url: user.avatar_url,
-      });
+      };
     }),
-  ).then(() => users);
+  );
 };
 
 export const leaveNotification = async (stationId, name, emitter, io) => {
   const count = await countOnlineOfStation(stationId, io);
-  // const users = await getListUserOnline(stationId, io);
+  const users = await getListUserOnline(stationId, io);
   emitter.broadcastToStation(stationId, EVENTS.SERVER_USER_LEFT, {
     user: name,
   });
   emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
     online_count: count,
-    // users: users,
+    users: users,
   });
   emitter.emitAll(EVENTS.SERVER_STATION_CHANGE_ONLINE_USERS, {
     station_id: stationId,
@@ -118,13 +118,13 @@ export const leaveNotification = async (stationId, name, emitter, io) => {
 
 export const joinNotification = async (stationId, name, emitter, io) => {
   const count = await countOnlineOfStation(stationId, io);
-  // const users = await getListUserOnline(stationId, io);
+  const users = await getListUserOnline(stationId, io);
   emitter.broadcastToStation(stationId, EVENTS.SERVER_NEW_USER_JOINED, {
     user: name,
   });
   emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
     online_count: count,
-    // users: users,
+    users: users,
   });
   emitter.emitAll(EVENTS.SERVER_STATION_CHANGE_ONLINE_USERS, {
     station_id: stationId,
@@ -132,11 +132,11 @@ export const joinNotification = async (stationId, name, emitter, io) => {
   });
 };
 
-const _leaveStation = (io, socket, station, name) => {
+const _leaveStation = (io, socket, stationId, name) => {
   const emitter = createEmitter(socket, io);
   return new Promise(resolve => {
-    socket.leave(station, resolve);
-    skipDecider(io, station);
-    leaveNotification(station, name, emitter, io);
+    socket.leave(stationId, resolve);
+    skipDecider(io, stationId);
+    leaveNotification(stationId, name, emitter, io);
   });
 };

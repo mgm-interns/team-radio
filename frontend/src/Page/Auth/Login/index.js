@@ -11,16 +11,15 @@ import Typography from 'material-ui/Typography';
 import { FormHelperText } from 'material-ui/Form';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
-
 import { Field, reduxForm } from 'redux-form';
 import { fetchUser, addUserWithSocialAccount } from 'Redux/api/user/actions';
-
 import { NavBar, GoogleLogin, FacebookLogin, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
-
-import { saveAuthenticationState, loadAuthenticationState } from 'Config';
+import {
+  saveAuthenticationState,
+  loadAuthenticationState,
+} from 'Configuration';
 import { email, required } from 'Util/validate';
-
 import styles from './styles';
 
 class Login extends Component {
@@ -44,19 +43,26 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { fetchUserResponse: { error, data, isAuthenticated } } = nextProps;
-
+    const { fetchUserResponse: { data: { token } } } = this.props;
     if (error !== null) {
       this.setState({
-        formErrors: { message: error.response.message },
+        formErrors: {
+          message: error.response.message,
+        },
       });
-    } else if (data.token || isAuthenticated) {
-      this._showNotification('Login successful!');
+    } else if (isAuthenticated && token !== data.token) {
+      this._showNotification('Login successfully!');
       saveAuthenticationState(data);
-      this.props.history.go(-1);
-      // this.props.history.replace('/');
+      if (window.history.length > 2) {
+        this.props.history.go(-1);
+      } else {
+        this.props.history.replace('/');
+      }
     }
     if (!loadAuthenticationState()) {
-      this.setState({ isLoggedIn: false });
+      this.setState({
+        isLoggedIn: false,
+      });
     }
   }
 
@@ -73,7 +79,9 @@ class Login extends Component {
 
   _onLoginSocialClick(response) {
     if (response) {
-      this.setState({ isLoggedIn: true });
+      this.setState({
+        isLoggedIn: true,
+      });
       const { profileObj, authResponse } = response;
 
       // handle data
@@ -101,18 +109,26 @@ class Login extends Component {
 
   _renderHeadline() {
     return (
-      <Grid style={{ paddingBottom: '1em' }}>
+      <Grid
+        style={{
+          paddingBottom: '1em',
+        }}
+      >
         <Typography type="headline" component="h2">
           Log in
-        </Typography>
-        <Typography component="p">for listening and sharing music</Typography>
+        </Typography>{' '}
+        <Typography component="p">for listening and sharing music </Typography>{' '}
       </Grid>
     );
   }
 
   _renderLoginSocial() {
     return (
-      <Grid style={{ paddingBottom: '1em' }}>
+      <Grid
+        style={{
+          paddingBottom: '1em',
+        }}
+      >
         <FacebookLogin
           fields="name,email,picture"
           autoLoad={false}
@@ -120,8 +136,12 @@ class Login extends Component {
           onSuccess={this._onLoginSocialClick}
           isDisabled={this.state.isLoggedIn}
           onFailure={this._onLoginSocialFailure}
-        />
-        <div style={{ height: 16 }} />
+        />{' '}
+        <div
+          style={{
+            height: 16,
+          }}
+        />{' '}
         <GoogleLogin
           onSuccess={this._onLoginSocialClick}
           offline={false}
@@ -132,7 +152,7 @@ class Login extends Component {
           onFailure={this._onLoginSocialFailure}
           autoLoad={false}
           onSignedIn={this._onSignedIn}
-        />
+        />{' '}
       </Grid>
     );
   }
@@ -149,7 +169,7 @@ class Login extends Component {
           component={TextView}
           label="Email"
           validate={[required, email]}
-        />
+        />{' '}
         <Field
           name="password"
           placeholder="Password"
@@ -157,10 +177,11 @@ class Login extends Component {
           component={TextView}
           label="Password"
           validate={required}
-        />
+        />{' '}
         <FormHelperText className={classes.error}>
-          {submitSucceeded && this.state.formErrors.message}
-        </FormHelperText>
+          {' '}
+          {submitSucceeded && this.state.formErrors.message}{' '}
+        </FormHelperText>{' '}
       </Grid>
     );
   }
@@ -170,6 +191,7 @@ class Login extends Component {
     return (
       <Grid container>
         <Grid item xs={12}>
+          {' '}
           {loading ? (
             <CircularProgress />
           ) : (
@@ -182,13 +204,12 @@ class Login extends Component {
             >
               Log in
             </Button>
-          )}
-
+          )}{' '}
           <FormHelperText className={classes.callout}>
-            <span>Not a member?</span>
-            <Link to="/auth/register">Create an account</Link>
-          </FormHelperText>
-        </Grid>
+            <span> Not a member ? </span>{' '}
+            <Link to="/auth/register"> Create an account </Link>{' '}
+          </FormHelperText>{' '}
+        </Grid>{' '}
       </Grid>
     );
   }
@@ -201,7 +222,7 @@ class Login extends Component {
           src="https://images.unsplash.com/photo-1512692505538-1e7bb8980a77?auto=format&fit=crop&w=2600&q=80"
           alt="Team Radio - Cover"
           className={classes.backgroundImg}
-        />
+        />{' '}
       </Grid>
     );
   }
@@ -217,17 +238,16 @@ class Login extends Component {
             <Card raised className={classes.cardForm}>
               <form onSubmit={handleSubmit}>
                 <CardContent>
-                  {this._renderHeadline()}
-                  {this._renderLoginSocial()}
-                  {this._renderLoginLocalForm()}
-                </CardContent>
-                <CardActions>{this._renderLoginLocalActions()}</CardActions>
-              </form>
-            </Card>
-          </Grid>
-
-          {this._renderBackground()}
-        </Grid>
+                  {' '}
+                  {this._renderHeadline()} {this._renderLoginSocial()}{' '}
+                  {this._renderLoginLocalForm()}{' '}
+                </CardContent>{' '}
+                <CardActions> {this._renderLoginLocalActions()} </CardActions>{' '}
+              </form>{' '}
+            </Card>{' '}
+          </Grid>{' '}
+          {this._renderBackground()}{' '}
+        </Grid>{' '}
       </Grid>,
     ];
   }

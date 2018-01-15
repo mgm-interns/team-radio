@@ -5,13 +5,12 @@ import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withNotification } from 'Component/Notification';
-import { removeAuthenticationState } from 'Config';
+import { removeAuthenticationState } from 'Configuration';
 import { logout } from 'Redux/api/user/actions';
 import Icon from 'material-ui/Icon';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import { Images } from 'Theme';
 import { withRouter } from 'react-router';
-
 import styles from './styles';
 
 class AuthLink extends Component {
@@ -34,14 +33,11 @@ class AuthLink extends Component {
     this.props.history.replace('/');
   }
 
-  _handleClick = event => {
+  _openMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
-    document
-      .getElementsByTagName('body')[0]
-      .setAttribute('style', 'padding-right:0;');
   };
 
-  _handleClose = () => {
+  _closeMenu = () => {
     this.setState({ anchorEl: null });
   };
 
@@ -68,12 +64,12 @@ class AuthLink extends Component {
               className={classes.menuItem}
               aria-owns={anchorEl ? 'simple-menu' : null}
               aria-haspopup="true"
-              onClick={this._handleClick}
+              onClick={this._openMenu}
             >
               <img
                 className={classes.avatar}
                 src={
-                  user.data.avatar_url === null
+                  !user.data.avatar_url
                     ? Images.avatar.male01
                     : user.data.avatar_url
                 }
@@ -87,7 +83,7 @@ class AuthLink extends Component {
               className={classes.menuPopover}
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
-              onClose={this._handleClose}
+              onClose={this._closeMenu}
             >
               {/* <MenuItem>{user.data.name}</MenuItem> */}
               <MenuItem>
@@ -128,7 +124,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
   withNotification,
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
 )(withStyles(styles)(AuthLink));

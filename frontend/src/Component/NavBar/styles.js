@@ -5,6 +5,9 @@ export default ({ breakpoints, spacing }) => ({
     width: '100%',
     height: 56,
     position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
     fontFamily: 'Lato',
     transition: 'all 0.3s',
     [breakpoints.down('md')]: {

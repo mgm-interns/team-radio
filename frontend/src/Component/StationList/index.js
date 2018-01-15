@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import { Scrollbars } from 'react-custom-scrollbars';
 import { StationItem } from 'Component';
 import Typography from 'material-ui/Typography';
+import Scrollbar from 'react-scrollbar';
 import classNames from 'classnames';
 import styles from './styles';
 
@@ -17,13 +17,19 @@ class StationList extends Component {
   }
 
   _renderLoading() {
-    const { classes } = this.props;
+    const { classes, scrollbarInstanceLevel, scrollbarRef } = this.props;
 
     return (
-      <div
+      <Scrollbar
+        level={scrollbarInstanceLevel}
         className={classNames([classes.container, classes.loadingContainer])}
+        contentClassName={classes.content}
+        swapWheelAxes={true}
+        smoothScrolling
+        stopScrollPropagation
+        ref={scrollbarRef}
       >
-        {[1, 2, 3].map((item, index) => (
+        {[1, 2, 3, 4, 5, 6].map((item, index) => (
           <div key={index} className={classes.stationWrapper}>
             <div
               className={classNames([
@@ -36,7 +42,7 @@ class StationList extends Component {
             />
           </div>
         ))}
-      </div>
+      </Scrollbar>
     );
   }
 
@@ -56,26 +62,34 @@ class StationList extends Component {
     );
   }
   _renderList() {
-    const { classes, stations } = this.props;
+    const {
+      classes,
+      stations,
+      onItemClick,
+      scrollbarRef,
+      disableOnlineCount,
+      scrollbarInstanceLevel,
+    } = this.props;
     return (
-      <Scrollbars
-        autoHide
-        autoHideTimeout={1000}
+      <Scrollbar
+        speed={1.6}
+        level={scrollbarInstanceLevel}
         className={classes.container}
-        renderView={() => <div className={classes.scrollArea} />}
-        ref={ref => {
-          this.scrollBar = ref;
-        }}
+        contentClassName={classes.content}
+        swapWheelAxes={true}
+        smoothScrolling
+        stopScrollPropagation
+        ref={scrollbarRef}
       >
         {stations.map((station, index) => (
           <StationItem
             key={index}
             {...station}
-            disableOnlineCount
-            // goToStationPage={() => this._goToStationPage(station)}
+            disableOnlineCount={disableOnlineCount}
+            onClick={onItemClick}
           />
         ))}
-      </Scrollbars>
+      </Scrollbar>
     );
   }
 
@@ -95,12 +109,19 @@ StationList.propTypes = {
   classes: PropTypes.object,
   stations: PropTypes.array,
   loading: PropTypes.bool,
+  disableOnlineCount: PropTypes.bool,
   emptyMessage: PropTypes.string,
+  onItemClick: PropTypes.func,
+  scrollbarRef: PropTypes.func,
+  scrollbarInstanceLevel: PropTypes.string,
 };
+
 StationList.defaultProps = {
   stations: [],
   loading: false,
+  scrollbarInstanceLevel: 'StationsSwitcher',
   emptyMessage: 'No stations.',
+  onItemClick: () => {},
 };
 
 export default withStyles(styles)(StationList);

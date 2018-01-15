@@ -16,7 +16,7 @@ import { updatePassword } from 'Redux/api/user/actions';
 import Grid from 'material-ui/Grid';
 import { FormHelperText } from 'material-ui/Form';
 import Button from 'material-ui/Button';
-import { saveAuthenticationState } from 'Config';
+import { saveAuthenticationState } from 'Configuration';
 
 import styles from '../styles';
 

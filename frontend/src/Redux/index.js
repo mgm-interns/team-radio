@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createSocketIoMiddleware from 'redux-socket.io';
 import { apiMiddleware } from 'redux-api-middleware';
-import { webSocket } from 'Config';
+import { webSocket } from 'Configuration';
 import reducers from './reducers';
 
 let store = null;

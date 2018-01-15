@@ -31,6 +31,7 @@ class FilterAll extends Component {
               stations={all.data.stations}
               loading={all.loading}
               emptyMessage={'You have no station.'}
+              disableOnlineCount
             />
           </div>
           <Typography type="display1" className={classes.titleLabel}>
@@ -41,6 +42,7 @@ class FilterAll extends Component {
               stations={recent.data.stations}
               loading={recent.loading}
               emptyMessage={"You haven't interact with any station yet."}
+              disableOnlineCount
             />
           </div>
         </Grid>

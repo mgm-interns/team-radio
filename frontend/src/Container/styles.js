@@ -1,13 +1,11 @@
-export default theme => ({
+export default () => ({
   container: {
     width: '100%',
     minHeight: '100vh',
     marginLeft: 'auto',
     marginRight: 'auto',
     position: 'relative',
-    // [theme.breakpoints.up('lg')]: {
-    //   minWidth: 1024,
-    //   maxWidth: 1280,
-    // },
+    // paddingLeft: 8,
+    // paddingRight: 8,
   },
 });

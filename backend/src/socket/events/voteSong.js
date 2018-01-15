@@ -16,10 +16,10 @@ export default (action, io, socket, userId, stationId, songId) => {
 const _upVoteSong = async (io, socket, userId, stationId, songId) => {
   const emitter = createEmitter(socket, io);
 
-  // Check if Anonymous user try to vote song
+  // Check if anonymous user try to vote song
   if (userId === '0') {
     emitter.emit(EVENTS.SERVER_UPVOTE_SONG_FAILURE, {
-      message: 'Anonymous users can not vote song',
+      message: 'You need to login to use this feature!',
     });
     return;
   }
@@ -48,10 +48,10 @@ const _upVoteSong = async (io, socket, userId, stationId, songId) => {
 const _downVoteSong = async (io, socket, userId, stationId, songId) => {
   const emitter = createEmitter(socket, io);
 
-  // Check if Anonymous user try to vote song
+  // Check if anonymous user try to vote song
   if (userId === '0') {
     emitter.emit(EVENTS.SERVER_DOWNVOTE_SONG_FAILURE, {
-      message: 'Anonymous users can not vote song',
+      message: 'You need to login to use this feature!',
     });
     return;
   }
