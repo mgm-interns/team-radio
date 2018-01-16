@@ -79,7 +79,7 @@ class Playlist extends Component {
         item
         xs={12}
         className={className}
-        style={{ ...style, overflowY: 'auto' }}
+        style={{ ...style, overflowY: 'auto', overflowX: 'hidden' }}
       >
         <List style={{ paddingTop: 0, paddingBottom: 0 }}>
           {playlist.map((video, index) => (

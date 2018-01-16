@@ -2,6 +2,7 @@ export default ({ spacing, palette, typography }) => ({
   onlineCountContainer: {
     marginLeft: spacing.baseMargin,
     cursor: 'pointer',
+    position: 'relative',
   },
   onlineIcon: {
     display: 'inline-block',
@@ -32,5 +33,17 @@ export default ({ spacing, palette, typography }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  tooltip: {
+    position: 'absolute',
+    top: '100%',
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    padding: spacing.baseMargin,
+    borderRadius: spacing.smallMargin,
+  },
+  tooltipItem: {
+    fontSize: '0.625em',
+    color: palette.white,
   },
 });

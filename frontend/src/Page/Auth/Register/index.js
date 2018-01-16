@@ -20,7 +20,11 @@ import { Field, reduxForm } from 'redux-form';
 import { NavBar, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
 
-import { saveAuthenticationState } from 'Configuration';
+import {
+  saveAuthenticationState,
+  loadAuthenticationState,
+} from 'Configuration';
+
 import {
   registerValidate,
   required,
@@ -73,6 +77,12 @@ class Register extends Component {
         this.props.history.replace('/');
       }
       // this.props.history.push('/');
+    }
+  }
+
+  componentWillMount() {
+    if (loadAuthenticationState()) {
+      this.props.history.replace('/');
     }
   }
 
@@ -163,11 +173,12 @@ class Register extends Component {
   }
 
   _renderRegisterLocalActions() {
-    const { classes, loading } = this.props;
+    console.log(this.props.submitting);
+    const { classes, submitting } = this.props;
     return (
       <Grid container>
-        <Grid item xs={12}>
-          {loading ? (
+        <Grid item xs={12} className={classes.cardActionContainer}>
+          {submitting ? (
             <CircularProgress />
           ) : (
             <Button
@@ -182,7 +193,9 @@ class Register extends Component {
 
           <FormHelperText className={classes.callout}>
             <span>Already have an account?</span>
-            <Link to="/auth/login">Login</Link>
+            <Link to="/auth/login" className={classes.link}>
+              Login
+            </Link>
           </FormHelperText>
         </Grid>
       </Grid>
@@ -248,12 +261,11 @@ Register.propTypes = {
   loading: PropTypes.bool,
   handleSubmit: PropTypes.any,
   submitSucceeded: PropTypes.any,
+  submitting: PropTypes.bool,
 };
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: values => {
-    dispatch(addUser(values));
-  },
+  onSubmit: values => dispatch(addUser(values)),
 });
 
 const mapStateToProps = state => ({

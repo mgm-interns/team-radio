@@ -176,7 +176,7 @@ class StationPage extends Component {
         </Grid>
         <Grid item xs={12} className={classes.container}>
           <Grid container>
-            <Grid item xs={12} md={7} xl={8}>
+            <Grid item xs={12} md={7} lg={8}>
               <Grid container>
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <div className={classes.titleContainer}>
@@ -211,7 +211,7 @@ class StationPage extends Component {
                 />
               </Grid>
             </Grid>
-            <Grid item xs={12} md={5} xl={4}>
+            <Grid item xs={12} md={5} lg={4}>
               {this._renderTabs()}
             </Grid>
             <Grid item xs={12}>
