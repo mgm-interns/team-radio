@@ -22,6 +22,9 @@ export default ({ spacing, palette, typography }) => ({
     ...typography.body2,
     fontSize: '0.825em',
     fontWeight: 'bold',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflowX: 'hidden',
   },
   singer: {
     ...typography.body2,

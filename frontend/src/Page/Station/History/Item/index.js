@@ -59,7 +59,7 @@ class HistoryItem extends Component {
               title={creator === null ? 'Anonymous' : creator.name}
             >
               <img
-                src={creator.avatar_url || Images.avatar.male01}
+                src={(creator && creator.avatar_url) || Images.avatar.male01}
                 className={classes.creatorAvatar}
                 onClick={this._onCreatorIconClicked}
               />
