@@ -268,10 +268,11 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
  * 
  * @param {string} stationId 
  */
-module.exports.getPlaylistOfStation = async stationId => {
+module.exports.getPlaylistOfStation = async (stationId, limit) => {
   let query = { station_id: stationId };
   const station = await Station.findOne(query, { playlist: true, _id: false })
-    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 });
+    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
+    .limit(limit);
   return station.playlist;
 };
 
