@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import AccessTimeIcon from 'react-icons/lib/md/access-time';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
@@ -155,7 +156,10 @@ class PlaylistItem extends Component {
           <div className={classes.name}>{title}</div>
           <div className={classes.singer}>{singer}</div>
           <div className={classes.singer}>
-            {transformNumber.millisecondsToTime(duration)}
+            <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14}/>
+            <span className={classes.durationText}>
+              {transformNumber.millisecondsToTime(duration)}
+            </span>
           </div>
           <div className={classes.creator}>
             Added by

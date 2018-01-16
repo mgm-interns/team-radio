@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import AccessTimeIcon from 'react-icons/lib/md/access-time';
+import { transformNumber } from 'Transformer';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import withRouter from 'react-router-dom/withRouter';
@@ -54,7 +56,7 @@ class HistoryItem extends Component {
   }
 
   render() {
-    const { thumbnail, title, creator, classes } = this.props;
+    const { thumbnail, title, creator, duration, classes } = this.props;
     return (
       <Grid container className={classes.container}>
         <Grid item xs={3} className={classes.thumbnail}>
@@ -62,6 +64,12 @@ class HistoryItem extends Component {
         </Grid>
         <Grid item xs={8} className={classes.info}>
           <div className={classes.name}>{title}</div>
+          <div className={classes.singer}>
+            <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
+            <span className={classes.durationText}>
+              {transformNumber.millisecondsToTime(duration)}
+            </span>
+          </div>
           <div className={classes.creator}>
             Added by
             {creator === null ? (
@@ -96,6 +104,7 @@ HistoryItem.propTypes = {
   url: PropTypes.string,
   thumbnail: PropTypes.string,
   title: PropTypes.any,
+  duration: PropTypes.number,
   creator: PropTypes.object,
   addSong: PropTypes.func,
   match: PropTypes.any,

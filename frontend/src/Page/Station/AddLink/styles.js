@@ -14,12 +14,12 @@ export default theme => {
       marginBottom: doubleBaseMargin,
     },
 
-    primaryTitle: {
+    primaryText: {
       display: 'inline',
     },
 
-    secondaryTitle: {
-      color: lightGrey[900],
+    secondaryText: {
+      color: 'rgba(0,0,0,0.54)',
     },
 
     warningText: {
@@ -148,6 +148,16 @@ export default theme => {
       position: 'absolute',
       top: '-25%',
       right: 0,
+    },
+    durationContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: baseMargin,
+    },
+    durationText: {
+      ...typography.caption,
+      fontSize: '0.9em',
+      marginLeft: baseMargin,
     },
     /* End search */
   };

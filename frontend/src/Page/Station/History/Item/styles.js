@@ -17,6 +17,7 @@ export default ({ spacing, palette, typography }) => ({
   },
   info: {
     padding: spacing.baseMargin,
+    position: 'relative',
   },
   name: {
     ...typography.body2,
@@ -26,7 +27,13 @@ export default ({ spacing, palette, typography }) => ({
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
   },
+  singer: {
+    ...typography.body2,
+    fontSize: '0.725em',
+  },
   creator: {
+    position: 'absolute',
+    bottom: spacing.baseMargin,
     ...typography.caption,
     fontSize: '0.725em',
     display: 'flex',
@@ -56,14 +63,8 @@ export default ({ spacing, palette, typography }) => ({
       fontSize: spacing.baseMargin * 3,
     },
   },
-  score: {
-    ...typography.body2,
-    margin: 'auto',
-    width: spacing.baseMargin * 3,
-    fontSize: '0.825em',
-    color: palette.secondary['500'],
-    '&.active': {
-      color: palette.primary['500'],
-    },
+  durationText: {
+    color: 'rgba(0,0,0,0.54)',
+    marginLeft: spacing.smallMargin,
   },
 });
