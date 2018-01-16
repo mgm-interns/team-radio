@@ -8,6 +8,7 @@ import Grid from 'material-ui/Grid';
 import Tooltip from 'material-ui/Tooltip';
 import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
+import { withNotification } from 'Component/Notification';
 import { Images } from 'Theme';
 import styles from './styles';
 
@@ -22,6 +23,7 @@ class HistoryItem extends Component {
     };
 
     this._onReplayClick = this._onReplayClick.bind(this);
+    this._onCreatorIconClicked = this._onCreatorIconClicked.bind(this);
   }
 
   _onReplayClick() {
@@ -40,6 +42,14 @@ class HistoryItem extends Component {
       stationId,
       userId,
       creator: { username, name, avatar_url },
+    });
+  }
+
+  _onCreatorIconClicked(event) {
+    event.preventDefault();
+    const { notification } = this.props;
+    notification.app.warning({
+      message: 'This feature is not ready yet!',
     });
   }
 
@@ -91,6 +101,7 @@ HistoryItem.propTypes = {
   match: PropTypes.any,
   user: PropTypes.object,
   replayRequest: PropTypes.func,
+  notification: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({
@@ -105,4 +116,5 @@ export default compose(
   withStyles(styles),
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
+  withNotification,
 )(HistoryItem);
