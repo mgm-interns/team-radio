@@ -2,6 +2,7 @@ import createEmitter from '../managers/createEmitter';
 import * as stationController from '../../controllers/station';
 import * as onlineManager from '../managers/onlineUserManager';
 import * as EVENTS from '../../const/actions';
+import * as switcher from '../../switcher';
 
 export default (io, socket) => {
   updateStationList(io, socket);
@@ -16,7 +17,7 @@ const updateStationList = async (io, socket) => {
       io,
     );
     emitter.emit(EVENTS.SERVER_UPDATE_STATIONS, {
-      stations: mergeOnlineCountToStation(allStations, allOnlineUser),
+      stations: switcher.getPopularStations(),
     });
   } catch (err) {
     console.log(EVENTS.SERVER_UPDATE_STATIONS + ' fail! Error: ' + err);

@@ -36,6 +36,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         data: action.payload.stations,
       };
+    /*
     case SERVER_STATION_CHANGE_ONLINE_USERS: {
       return {
         ...state,
@@ -51,6 +52,7 @@ export default (state = INITIAL_STATE, action) => {
         }),
       };
     }
+    */
     case SERVER_CHANGE_STATION_THUMBNAIL: {
       return {
         ...state,

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as stationController from './controllers/station';
 import * as EVENTS from './const/actions';
+import * as switcher from './switcher';
 
 const _players = [];
 const TIME_BUFFER = 5000;
@@ -24,6 +25,7 @@ class Player {
     this.updatePlaylist(station);
   }
   updateOnlineUsers = async userIds => {
+    switcher.updateNumberOfOnlineUsersInStation(this.stationId, userIds.size);
     const preSkippedSongs = new Set(this.skippedSongs);
     // Save the user ids
     this.userIds = userIds;
@@ -324,7 +326,7 @@ class Player {
 export const init = async () => {
   try {
     const stations = await stationController.getAllStationDetails();
-    stations.forEach((station, i) => {
+    stations.forEach((station) => {
       station = station.toObject();
       _players[station.station_id] = new Player(station);
     });
@@ -336,6 +338,7 @@ export const init = async () => {
 
 export const attachWebSocket = _io => {
   io = _io;
+  switcher.attachWebSocket(_io);
   init();
 };
 
@@ -370,3 +373,11 @@ export const getNowPlaying = async stationId => {
     throw err;
   }
 };
+export const getPlayingStationIds = () => {
+  const playingStationIds = [];
+  _players.forEach((player, stationId) => {
+    if (player.getNowPlaying().song_id)
+      playingStationIds.push(stationId);
+  });
+  return playingStationIds;
+}
