@@ -55,6 +55,7 @@ class PlaylistItem extends Component {
     const {
       upVoteSong,
       song_id,
+      creator,
       userId,
       match: { params: { stationId } },
       isAuthenticated,
@@ -64,6 +65,12 @@ class PlaylistItem extends Component {
     if (!isAuthenticated) {
       notification.app.warning({
         message: 'You need to login to use this feature.',
+      });
+      return;
+    }
+    if (userId === creator._id) {
+      notification.app.warning({
+        message: 'You can not up vote your song.',
       });
       return;
     }
