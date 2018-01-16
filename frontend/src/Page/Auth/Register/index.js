@@ -182,7 +182,9 @@ class Register extends Component {
 
           <FormHelperText className={classes.callout}>
             <span>Already have an account?</span>
-            <Link to="/auth/login">Login</Link>
+            <Link to="/auth/login" className={classes.link}>
+              Login
+            </Link>
           </FormHelperText>
         </Grid>
       </Grid>

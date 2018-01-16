@@ -177,9 +177,8 @@ class Login extends Component {
           component={TextView}
           label="Password"
           validate={required}
-        />{' '}
+        />
         <FormHelperText className={classes.error}>
-          {' '}
           {submitSucceeded && this.state.formErrors.message}{' '}
         </FormHelperText>{' '}
       </Grid>
@@ -187,11 +186,10 @@ class Login extends Component {
   }
 
   _renderLoginLocalActions() {
-    const { classes, loading } = this.props;
+    const { classes, fetchUserResponse: { loading } } = this.props;
     return (
       <Grid container>
-        <Grid item xs={12}>
-          {' '}
+        <Grid item xs={12} className={classes.cardActionContainer}>
           {loading ? (
             <CircularProgress />
           ) : (
@@ -206,8 +204,10 @@ class Login extends Component {
             </Button>
           )}{' '}
           <FormHelperText className={classes.callout}>
-            <span> Not a member ? </span>{' '}
-            <Link to="/auth/register"> Create an account </Link>{' '}
+            <span> Not a member? </span>{' '}
+            <Link to="/auth/register" className={classes.link}>
+              Create an account{' '}
+            </Link>{' '}
           </FormHelperText>{' '}
         </Grid>{' '}
       </Grid>

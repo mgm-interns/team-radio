@@ -121,4 +121,7 @@ export default ({ palette, breakpoints }) => ({
       marginLeft: '5px',
     },
   },
+  link: {
+    color: '#0000008a',
+  },
 });
