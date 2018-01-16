@@ -54,16 +54,17 @@ class HistoryItem extends Component {
           <div className={classes.name}>{title}</div>
           <div className={classes.creator}>
             Added by
-            <Tooltip
-              placement={'bottom'}
-              title={creator === null ? 'Anonymous' : creator.name}
-            >
-              <img
-                src={(creator && creator.avatar_url) || Images.avatar.male01}
-                className={classes.creatorAvatar}
-                onClick={this._onCreatorIconClicked}
-              />
-            </Tooltip>
+            {creator === null ? (
+              ' Unregistered User'
+            ) : (
+              <Tooltip placement={'bottom'} title={creator.name}>
+                <img
+                  src={creator.avatar_url || Images.avatar.male01}
+                  className={classes.creatorAvatar}
+                  onClick={this._onCreatorIconClicked}
+                />
+              </Tooltip>
+            )}
           </div>
         </Grid>
         <Grid item xs={1} className={classes.actions}>
