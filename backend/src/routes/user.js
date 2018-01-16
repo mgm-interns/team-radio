@@ -408,7 +408,7 @@ export default router => {
     }
   });
 
-  router.use(authController);
+  //router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

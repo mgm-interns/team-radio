@@ -15,7 +15,7 @@ const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
  * @param {boolean} isPrivate - If false then station is public, if true then station is private
  */
 export const addStation = async (stationName, userId, isPrivate) => {
-  console.log('add station: ',stationName,' + ',userId);
+  console.log('add station: ', stationName, ' + ', userId);
   const currentStationName = stationName.trim();
   if (!currentStationName) {
     throw new Error('The station name can not be empty!');
@@ -142,7 +142,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
         numOfSongsAddedByUnregistedUsers += 1;
         if (numOfSongsAddedByUnregistedUsers === MAX_SONG_UNREGISTED_USER_CAN_ADD) {
           throw new Error(`You need to login to add more song!\n` +
-        `Unlogged users are only allowed to add up to 3 songs to playlist at a time`);
+            `Unlogged users are only allowed to add up to 3 songs to playlist at a time`);
         }
       }
     });
@@ -319,9 +319,16 @@ export const upVote = async (stationId, songId, userId) => {
     ))[0];
     const upVoteArray = currentSong.up_vote;
     const downVoteArray = currentSong.down_vote;
-    const userAddSong = currentSong.creator.toString();
+    let userAddSong;
+    if (currentSong.creator) {
+      userAddSong = currentSong.creator.toString();
+    }
+    else {
+      userAddSong = currentSong.creator;
+    }
+
     if (userAddSong === userId) {
-      throw new Error("Can't up vote your song .");
+      throw new Error({ song: currentSong, message: "Can't up vote your own song." });
     }
     if (upVoteArray.length > 0) {
       for (let i = 0; i < upVoteArray.length; i++) {
