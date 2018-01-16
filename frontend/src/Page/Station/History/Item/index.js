@@ -28,7 +28,7 @@ class HistoryItem extends Component {
     const {
       addSong,
       match: { params: { stationId } },
-      userId,
+      user: { userId, username, name, avatar_url },
       url,
       title,
       thumbnail,
@@ -39,6 +39,7 @@ class HistoryItem extends Component {
       thumbnail,
       stationId,
       userId,
+      creator: { username, name, avatar_url },
     });
   }
 
@@ -87,12 +88,12 @@ HistoryItem.propTypes = {
   creator: PropTypes.object,
   addSong: PropTypes.func,
   match: PropTypes.any,
-  userId: PropTypes.any,
+  user: PropTypes.object,
   replayRequest: PropTypes.func,
 };
 
 const mapStateToProps = ({ api }) => ({
-  userId: api.user.data.userId,
+  user: api.user.data,
 });
 
 const mapDispatchToProps = dispatch => ({
