@@ -124,4 +124,9 @@ export default ({ palette, breakpoints }) => ({
   link: {
     color: '#0000008a',
   },
+  cardActionContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 });

@@ -163,10 +163,10 @@ class Register extends Component {
   }
 
   _renderRegisterLocalActions() {
-    const { classes, loading } = this.props;
+    const { classes, addUserResponse: { loading } } = this.props;
     return (
       <Grid container>
-        <Grid item xs={12}>
+        <Grid item xs={12} className={classes.cardActionContainer}>
           {loading ? (
             <CircularProgress />
           ) : (
