@@ -109,12 +109,8 @@ module.exports.setAvatarUrl = async (email, avatar_url) =>
 module.exports.setUserInformation = async (userId, data) =>
   user.update({ _id: _safeObjectId(userId) }, data, { multi: true });
 
-module.exports.updateReputation = async (userId, point) =>
-  user.update(
-    { _id: _safeObjectId(userId) },
-    { reputation: point },
-    { multi: true },
-  );
+module.exports.updateReputation = async (email, point) =>
+  user.update({ email: email }, { reputation: point }, { multi: true });
 
 module.exports.setPassword = async (email, password) =>
   user.update(

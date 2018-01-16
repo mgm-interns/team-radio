@@ -49,6 +49,7 @@ class Playlist extends Component {
   render() {
     const { className, classes, style } = this.props;
     const playlist = this.getFilteredPlaylist();
+
     if (playlist.length === 0) {
       return (
         <Grid item xs={12} className={className}>
@@ -93,6 +94,7 @@ class Playlist extends Component {
 
 Playlist.propTypes = {
   className: PropTypes.any,
+  classes: PropTypes.any,
   style: PropTypes.any,
   playlist: PropTypes.array,
   nowPlaying: PropTypes.object,
