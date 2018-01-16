@@ -108,4 +108,15 @@ export default ({ palette, breakpoints }) => ({
   sendIcon: {
     paddingLeft: '0.5em',
   },
+  bar: {},
+  checked: {
+    color: palette.primary[500],
+    '& + $bar': {
+      backgroundColor: palette.primary[500],
+    },
+  },
+  privateOption: {
+    textAlign: 'start',
+    color: 'white',
+  },
 });
