@@ -511,7 +511,7 @@ const mapStateToProps = ({ page, api }) => ({
   mutePreview: page.station.mutePreview,
   muteNowPlaying: page.station.muteNowPlaying,
   userDid: page.station.userDid,
-  user: api.user.data.user,
+  user: api.user.data,
   nowPlaying: api.currentStation.nowPlaying,
   isAuthenticated: api.user.isAuthenticated,
   joinedStation: page.station.joinedStation,
