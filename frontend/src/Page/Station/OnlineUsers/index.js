@@ -67,6 +67,7 @@ class OnlineUsers extends Component {
     const {
       classes,
       currentStation: { users = [], online_count },
+      currentUser,
     } = this.props;
     // Only display keep top 10 users
     const filteredUsers = users.filter((user, index) => index < 10);
@@ -86,7 +87,11 @@ class OnlineUsers extends Component {
               src={avatar_url || Images.avatar.male01}
               className={classes.userAvatar}
             />
-            <ListItemText primary={name || 'Unknown'} />
+            <ListItemText
+              primary={
+                currentUser.username === username ? 'You' : name || 'Unknown'
+              }
+            />
           </ListItem>
         ))}
         {anonymousUsers > 0 && (
