@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
+import withRouter from 'react-router-dom/withRouter';
+import classNames from 'classnames';
 import Popover from 'material-ui/Popover';
 import Typography from 'material-ui/Typography';
 import List, { ListItem, ListItemText, ListItemAvatar } from 'material-ui/List';
@@ -56,11 +58,16 @@ class OnlineUsers extends Component {
     });
   }
 
-  _onItemClick(user) {
+  _onItemClick({ username }) {
+    const { currentUser, history } = this.props;
+    if (currentUser.username === username) {
+      history.push(`/profile/${username}`);
+      return;
+    }
+
     this.props.notification.app.warning({
       message: 'This feature is not ready yet.',
     });
-    console.log('Click on', user);
   }
 
   renderPopoverContent() {
@@ -70,7 +77,9 @@ class OnlineUsers extends Component {
       currentUser,
     } = this.props;
     // Only display keep top 10 users
-    const filteredUsers = users.filter((user, index) => index < 10);
+    const filteredUsers = users.sort(
+      user => (user.username === currentUser.username ? 1 : 0),
+    );
     // Group the rest people to anonymous group
     const anonymousUsers = online_count - filteredUsers.length;
     return (
@@ -80,7 +89,9 @@ class OnlineUsers extends Component {
             key={index}
             dense
             button
-            className={classes.listItem}
+            className={classNames(classes.listItem, {
+              [classes.activeListItem]: username === currentUser.username,
+            })}
             onClick={() => this._onItemClick({ name, username, avatar_url })}
           >
             <Avatar
@@ -99,7 +110,7 @@ class OnlineUsers extends Component {
             <ListItemAvatar className={classes.userAvatar}>
               <div className={classes.anonymousImage}>{anonymousUsers}</div>
             </ListItemAvatar>
-            <ListItemText primary={`Anonymous`} />
+            <ListItemText primary={`Unregistered users`} />
           </ListItem>
         )}
       </List>
@@ -186,6 +197,7 @@ OnlineUsers.propTypes = {
   currentStation: PropTypes.object,
   notification: PropTypes.object,
   currentUser: PropTypes.object,
+  history: PropTypes.any,
 };
 
 OnlineUsers.defaultProps = {
@@ -201,4 +213,5 @@ export default compose(
   withStyles(styles),
   connect(mapStateToProps),
   withNotification,
+  withRouter,
 )(OnlineUsers);
