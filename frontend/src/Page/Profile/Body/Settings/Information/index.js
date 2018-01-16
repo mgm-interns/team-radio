@@ -71,6 +71,7 @@ class Information extends Component {
         type="email"
         component={TextView}
         label="Email"
+        disabled
       />,
       <Field
         key={4}
@@ -90,14 +91,6 @@ class Information extends Component {
       />,
       <Field
         key={6}
-        name="email"
-        placeholder="Email"
-        type="email"
-        component={TextView}
-        label="Email"
-      />,
-      <Field
-        key={7}
         name="bio"
         placeholder="Bio"
         type="text"
@@ -105,7 +98,7 @@ class Information extends Component {
         label="Bio"
       />,
       <Field
-        key={8}
+        key={7}
         name="city"
         placeholder="City"
         type="text"
@@ -113,7 +106,7 @@ class Information extends Component {
         label="City"
       />,
       <Field
-        key={9}
+        key={8}
         name="country"
         placeholder="Country"
         type="text"

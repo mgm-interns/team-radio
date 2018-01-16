@@ -33,7 +33,7 @@ import { Images } from 'Theme';
 import styles from './styles';
 
 import Information from './Information';
-import Security from './Security';
+import Password from './Password';
 
 function getModalStyle() {
   const top = 50;
@@ -58,13 +58,13 @@ class Settings extends Component {
 
     this.state = {
       openEditInformation: false,
-      openEditSecurity: false,
+      openEditPassword: false,
       anchorEl: null,
     };
 
     this._renderEditInformation = this._renderEditInformation.bind(this);
     this._onOpenEditInformation = this._onOpenEditInformation.bind(this);
-    this._onOpenEditSecurity = this._onOpenEditSecurity.bind(this);
+    this._onOpenEditPassword = this._onOpenEditPassword.bind(this);
     this._onCloseModal = this._onCloseModal.bind(this);
     this.onCancelButtonClick = this.onCancelButtonClick.bind(this);
     this._openMenu = this._openMenu.bind(this);
@@ -87,25 +87,25 @@ class Settings extends Component {
   onCancelButtonClick() {
     this.setState({
       openEditInformation: false,
-      openEditSecurity: false,
+      openEditPassword: false,
     });
     this._closeMenu();
   }
 
   _onOpenEditInformation() {
     this._closeMenu();
-    this.setState({ openEditInformation: true, openEditSecurity: false });
+    this.setState({ openEditInformation: true, openEditPassword: false });
   }
 
-  _onOpenEditSecurity() {
+  _onOpenEditPassword() {
     this._closeMenu();
-    this.setState({ openEditInformation: false, openEditSecurity: true });
+    this.setState({ openEditInformation: false, openEditPassword: true });
   }
 
   _onCloseModal() {
     this.setState({
       openEditInformation: false,
-      openEditSecurity: false,
+      openEditPassword: false,
     });
     this._closeMenu();
   }
@@ -157,23 +157,23 @@ class Settings extends Component {
     );
   }
 
-  _renderEditSecurity() {
+  _renderEditPassword() {
     const { classes, user, loading } = this.props;
     return (
       <Modal
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
-        open={this.state.openEditSecurity}
+        open={this.state.openEditPassword}
         onClose={this._onCloseModal}
       >
         <div style={getModalStyle()}>
           <Grid container>
             <Grid item xs={12} className={classes.modalHeadline}>
-              Edit your Security
+              Edit your Password
             </Grid>
             <div className="line" />
             <Grid item xs={12} className={classes.settingTabs}>
-              <Security
+              <Password
                 user={user}
                 loading={loading}
                 onCancel={this.onCancelButtonClick}
@@ -221,16 +221,16 @@ class Settings extends Component {
               </ListItemIcon>
               <ListItemText primary="Information" />
             </ListItem>
-            <ListItem button onClick={this._onOpenEditSecurity}>
+            <ListItem button onClick={this._onOpenEditPassword}>
               <ListItemIcon>
-                <Icon>settings</Icon>
+                <Icon>vpn_key</Icon>
               </ListItemIcon>
-              <ListItemText primary="Settings" />
+              <ListItemText primary="Password" />
             </ListItem>
           </List>
         </Menu>
         {this._renderEditInformation()}
-        {this._renderEditSecurity()}
+        {this._renderEditPassword()}
       </div>
     );
   }
