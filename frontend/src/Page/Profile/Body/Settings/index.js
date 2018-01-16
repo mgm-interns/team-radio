@@ -18,6 +18,7 @@ import Menu, { MenuItem } from 'material-ui/Menu';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
 import { TabContainer } from 'Component';
+import { withNotification } from 'Component/Notification';
 import { withRouter } from 'react-router';
 
 import {
@@ -69,6 +70,18 @@ class Settings extends Component {
     this._openMenu = this._openMenu.bind(this);
     this._closeMenu = this._closeMenu.bind(this);
     this._submitModal = this._submitModal.bind(this);
+    this._showNotification = this._showNotification.bind(this);
+  }
+
+  _showNotification(content) {
+    const { notification } = this.props;
+
+    notification.app.success({
+      message: content,
+    });
+    // notification.browser.success({
+    //   message: content,
+    // });
   }
 
   onCancelButtonClick() {
@@ -106,16 +119,9 @@ class Settings extends Component {
   }
 
   _submitModal() {
+    const { user } = this.props;
     this._onCloseModal();
-  }
-
-  _renderSecondItem() {
-    const { classes } = this.props;
-    return () => (
-      <div className={classes.secondButton}>
-        <img width="150" height="150" src={this.state.secondSource} alt="" />
-      </div>
-    );
+    this._showNotification('Your information has been changed successfully!');
   }
 
   _renderLoading() {
@@ -123,7 +129,7 @@ class Settings extends Component {
   }
 
   _renderEditInformation() {
-    const { classes, user } = this.props;
+    const { classes, user, loading } = this.props;
     return (
       <Modal
         aria-labelledby="simple-modal-title"
@@ -138,7 +144,12 @@ class Settings extends Component {
             </Grid>
             <div className="line" />
             <Grid item xs={12} className={classes.settingTabs}>
-              <Information user={user} onCancel={this.onCancelButtonClick} />
+              <Information
+                user={user}
+                loading={loading}
+                onCancel={this.onCancelButtonClick}
+                onDone={this._submitModal}
+              />
             </Grid>
           </Grid>
         </div>
@@ -147,7 +158,7 @@ class Settings extends Component {
   }
 
   _renderEditSecurity() {
-    const { classes, user } = this.props;
+    const { classes, user, loading } = this.props;
     return (
       <Modal
         aria-labelledby="simple-modal-title"
@@ -164,6 +175,7 @@ class Settings extends Component {
             <Grid item xs={12} className={classes.settingTabs}>
               <Security
                 user={user}
+                loading={loading}
                 onCancel={this.onCancelButtonClick}
                 onDone={this._submitModal}
               />
@@ -230,4 +242,4 @@ Settings.propTypes = {
   loading: PropTypes.bool,
 };
 
-export default compose(withStyles(styles), withRouter)(Settings);
+export default compose(withStyles(styles), withRouter, withNotification)(Settings);

@@ -10,12 +10,14 @@ import {
 } from 'Util/validate';
 import { TextView } from 'Component';
 import { withStyles } from 'material-ui/styles/index';
-import { connect } from 'react-redux';
-import { setPassword } from 'Redux/api/user/profile';
-
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 import Grid from 'material-ui/Grid';
 import { FormHelperText } from 'material-ui/Form';
 import Button from 'material-ui/Button';
+
+import { connect } from 'react-redux';
+import { setPassword } from 'Redux/api/user/profile';
+
 import { saveAuthenticationState } from 'Configuration';
 
 import styles from '../styles';
@@ -34,7 +36,7 @@ class Security extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { initialValues: { message } } = nextProps;
+    const { password: { message } } = nextProps;
     if (message !== null) {
       this.setState({
         formErrors: message,
@@ -48,8 +50,6 @@ class Security extends Component {
 
   _renderChangePasswordForm() {
     const { classes, submitSucceeded, user: { is_password } } = this.props;
-
-    console.log(is_password);
 
     return [
       is_password !== false && (
@@ -87,12 +87,23 @@ class Security extends Component {
     ];
   }
 
-  _submitModal() {
-    this.props.onDone();
+  _submitModal(values) {
+    this.props.onSubmit({ userId: this.props.initialValues.userId, ...values });
+    if (this.state.formErrors) {
+      this.props.onDone();
+    }
+  }
+
+  _renderLoading() {
+    return <CircularProgress />;
   }
 
   render() {
-    const { classes, handleSubmit, pristine, submitting } = this.props;
+    const { classes, handleSubmit, pristine, submitting, loading } = this.props;
+
+    if (loading) {
+      return this._renderLoading();
+    }
 
     return (
       <Grid className={classes.content}>
@@ -125,15 +136,24 @@ Security.propTypes = {
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   onDone: PropTypes.func,
+  password: PropTypes.any,
+  loading: PropTypes.bool,
 };
 
 const mapStateToProps = ({ api }) => ({
   initialValues: api.user.data,
+  password: api.userProfile.password.data,
 });
 
 const mapDispatchToProps = dispatch => ({
   onSubmit: ({ userId, oldPassword, newPassword }) =>
-    dispatch(setPassword({ userId, oldPassword, newPassword })),
+    dispatch(
+      setPassword({
+        userId,
+        oldPassword,
+        newPassword,
+      }),
+    ),
 });
 
 export default compose(
