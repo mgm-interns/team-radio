@@ -66,6 +66,12 @@ class Login extends Component {
     }
   }
 
+  componentDidMount() {
+    if (loadAuthenticationState()) {
+      this.props.history.replace('/');
+    }
+  }
+
   _showNotification(content) {
     const { notification } = this.props;
 

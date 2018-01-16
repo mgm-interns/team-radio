@@ -5,12 +5,24 @@ import { withStyles } from 'material-ui/styles';
 import { Notification } from 'Component';
 import { compose } from 'redux';
 import { verifyToken } from 'Redux/api/user/actions';
+import { removeAuthenticationState } from 'Configuration';
 import Router from './Router';
 import styles from './styles';
 
 class App extends Component {
   componentDidMount() {
     this.props.getAuth();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { error } = nextProps.user;
+
+    if (error) {
+      const { response: { tokenError } } = error;
+      if (tokenError) {
+        removeAuthenticationState();
+      }
+    }
   }
 
   render() {
@@ -27,6 +39,7 @@ class App extends Component {
 App.propTypes = {
   classes: PropTypes.any,
   getAuth: PropTypes.any,
+  user: PropTypes.any,
 };
 
 const mapDispatchToProps = dispatch => ({
