@@ -113,8 +113,8 @@ class OnlineUsers extends Component {
     const anonymousUsersCount = online_count - filteredUsers.length;
     if (filteredUsers.length === 0) {
       // In loading phrase because there is no user in this phrase
+      return null;
     }
-    console.log(currentUser);
     return (
       <div className={classes.tooltip}>
         {filteredUsers.map(({ name, username }) => (
