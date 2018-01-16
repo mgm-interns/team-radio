@@ -15,6 +15,7 @@ import { FormHelperText } from 'material-ui/Form';
 import Typography from 'material-ui/Typography';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import Menu, { MenuItem } from 'material-ui/Menu';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
 import { TabContainer } from 'Component';
 import { withRouter } from 'react-router';
@@ -55,38 +56,33 @@ class Settings extends Component {
     super(props);
 
     this.state = {
-      // value: 0,
       openEditInformation: false,
       openEditSecurity: false,
-      // secondSource:
-      //   'http://www.followingthenerd.com/site/wp-content/uploads/avatar.jpg_274898881.jpg',
+      anchorEl: null,
     };
 
     this._renderEditInformation = this._renderEditInformation.bind(this);
-    // this.handleChange = this.handleChange.bind(this);
     this._onOpenEditInformation = this._onOpenEditInformation.bind(this);
     this._onOpenEditSecurity = this._onOpenEditSecurity.bind(this);
     this._onCloseModal = this._onCloseModal.bind(this);
     this.onCancelButtonClick = this.onCancelButtonClick.bind(this);
+    this._openMenu = this._openMenu.bind(this);
+    this._closeMenu = this._closeMenu.bind(this);
   }
 
   onCancelButtonClick() {
     this.setState({
-      openEditInformation: !this.state.openEditInformation,
-      openEditSecurity: !this.state.openEditSecurity,
+      openEditInformation: false,
+      openEditSecurity: false,
     });
   }
 
-  // handleChange(event, value) {
-  //   this.setState({ value });
-  // }
-
   _onOpenEditInformation() {
-    this.setState({ openEditInformation: true });
+    this.setState({ openEditInformation: true, openEditSecurity: false });
   }
 
   _onOpenEditSecurity() {
-    this.setState({ openEditSecurity: true });
+    this.setState({ openEditInformation: false, openEditSecurity: true });
   }
 
   _onCloseModal() {
@@ -94,6 +90,14 @@ class Settings extends Component {
       openEditInformation: false,
       openEditSecurity: false,
     });
+  }
+
+  _openMenu(event) {
+    this.setState({ anchorEl: event.currentTarget });
+  }
+
+  _closeMenu() {
+    this.setState({ anchorEl: null });
   }
 
   _renderSecondItem() {
@@ -111,12 +115,9 @@ class Settings extends Component {
 
   _renderEditInformation() {
     const { classes, user } = this.props;
-    return [
-      <Button key={1} onClick={this._onOpenEditInformation}>
-        <Icon>edit</Icon>
-      </Button>,
+    console.log(this.state.openEditInformation);
+    return (
       <Modal
-        key={2}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         open={this.state.openEditInformation}
@@ -133,18 +134,15 @@ class Settings extends Component {
             </Grid>
           </Grid>
         </div>
-      </Modal>,
-    ];
+      </Modal>
+    );
   }
 
   _renderEditSecurity() {
     const { classes, user } = this.props;
-    return [
-      <Button key={1} onClick={this._onOpenEditSecurity}>
-        <Icon>settings</Icon>
-      </Button>,
+    console.log(this.state.openEditInformation);
+    return (
       <Modal
-        key={2}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         open={this.state.openEditSecurity}
@@ -161,18 +159,57 @@ class Settings extends Component {
             </Grid>
           </Grid>
         </div>
-      </Modal>,
-    ];
+      </Modal>
+    );
   }
 
   render() {
     const { classes, loading, user } = this.props;
+    const { anchorEl } = this.state;
 
     if (loading) {
       return this._renderLoading();
     }
 
-    return this._renderEditInformation();
+    return (
+      <div>
+        <div
+          className={classes.menuItem}
+          aria-owns={anchorEl ? 'simple-menu' : null}
+          aria-haspopup="true"
+          onClick={this._openMenu}
+        >
+          <Button key={1}>
+            <Icon>edit</Icon>
+          </Button>
+        </div>
+
+        <Menu
+          id="simple-menu"
+          className={classes.menuPopover}
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={this._closeMenu}
+        >
+          <List>
+            <ListItem button onClick={this._onOpenEditInformation}>
+              <ListItemIcon>
+                <Icon>personal</Icon>
+              </ListItemIcon>
+              <ListItemText primary="Information" />
+            </ListItem>
+            <ListItem button onClick={this._onOpenEditSecurity}>
+              <ListItemIcon>
+                <Icon>settings</Icon>
+              </ListItemIcon>
+              <ListItemText primary="Settings" />
+            </ListItem>
+          </List>
+          {this._renderEditInformation()}
+          {this._renderEditSecurity()}
+        </Menu>
+      </div>
+    );
   }
 }
 

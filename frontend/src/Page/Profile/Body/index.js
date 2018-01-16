@@ -52,7 +52,7 @@ class Body extends Component {
                 indicatorColor="primary"
                 textColor="primary"
               >
-                <Tab label="All" user={user} loading={loading} />
+                <Tab label="All" />
                 {/* <Tab label="Pins" /> */}
               </Tabs>
             </Grid>
@@ -63,7 +63,7 @@ class Body extends Component {
         </Grid>
         {this.state.value === 0 && (
           <TabContainer>
-            <FilterAll />
+            <FilterAll user={user} loading={loading} />
           </TabContainer>
         )}
         {this.state.value === 1 && (
@@ -79,8 +79,8 @@ class Body extends Component {
 Body.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.any,
-  isDisabled: PropTypes.bool,
   loading: PropTypes.bool,
+  isDisabled: PropTypes.bool,
 };
 
 export default compose(withStyles(styles))(Body);

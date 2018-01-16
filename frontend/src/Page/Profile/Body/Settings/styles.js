@@ -45,4 +45,7 @@ export default ({ breakpoints, palette, spacing, transitions }) => ({
     fontWeight: 'bold',
     marginBottom: '10px',
   },
+  menuPopover: {
+    marginTop: 30,
+  },
 });

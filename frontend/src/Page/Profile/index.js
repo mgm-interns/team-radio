@@ -32,7 +32,11 @@ class Profile extends Component {
   }
 
   render() {
-    const { classes, userProfile } = this.props;
+    const { classes, userProfile, loading } = this.props;
+
+    if (loading) {
+      return this._renderLoading();
+    }
 
     return [
       <NavBar key={1} color="primary" />,
@@ -63,6 +67,8 @@ Profile.propTypes = {
   fetchUserWithUsername: PropTypes.func,
   user: PropTypes.object,
   userProfile: PropTypes.object,
+  loading: PropTypes.bool,
+  requestUserByUsername: PropTypes.func,
 };
 
 const mapStateToProps = ({ api }) => ({
