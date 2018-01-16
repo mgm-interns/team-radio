@@ -68,6 +68,7 @@ class Settings extends Component {
     this.onCancelButtonClick = this.onCancelButtonClick.bind(this);
     this._openMenu = this._openMenu.bind(this);
     this._closeMenu = this._closeMenu.bind(this);
+    this._submitModal = this._submitModal.bind(this);
   }
 
   onCancelButtonClick() {
@@ -75,13 +76,16 @@ class Settings extends Component {
       openEditInformation: false,
       openEditSecurity: false,
     });
+    this._closeMenu();
   }
 
   _onOpenEditInformation() {
+    this._closeMenu();
     this.setState({ openEditInformation: true, openEditSecurity: false });
   }
 
   _onOpenEditSecurity() {
+    this._closeMenu();
     this.setState({ openEditInformation: false, openEditSecurity: true });
   }
 
@@ -90,6 +94,7 @@ class Settings extends Component {
       openEditInformation: false,
       openEditSecurity: false,
     });
+    this._closeMenu();
   }
 
   _openMenu(event) {
@@ -98,6 +103,10 @@ class Settings extends Component {
 
   _closeMenu() {
     this.setState({ anchorEl: null });
+  }
+
+  _submitModal() {
+    this._onCloseModal();
   }
 
   _renderSecondItem() {
@@ -115,7 +124,6 @@ class Settings extends Component {
 
   _renderEditInformation() {
     const { classes, user } = this.props;
-    console.log(this.state.openEditInformation);
     return (
       <Modal
         aria-labelledby="simple-modal-title"
@@ -140,7 +148,6 @@ class Settings extends Component {
 
   _renderEditSecurity() {
     const { classes, user } = this.props;
-    console.log(this.state.openEditInformation);
     return (
       <Modal
         aria-labelledby="simple-modal-title"
@@ -155,7 +162,11 @@ class Settings extends Component {
             </Grid>
             <div className="line" />
             <Grid item xs={12} className={classes.settingTabs}>
-              <Security user={user} onCancel={this.onCancelButtonClick} />
+              <Security
+                user={user}
+                onCancel={this.onCancelButtonClick}
+                onDone={this._submitModal}
+              />
             </Grid>
           </Grid>
         </div>
@@ -164,7 +175,7 @@ class Settings extends Component {
   }
 
   render() {
-    const { classes, loading, user } = this.props;
+    const { classes, loading } = this.props;
     const { anchorEl } = this.state;
 
     if (loading) {
@@ -205,9 +216,9 @@ class Settings extends Component {
               <ListItemText primary="Settings" />
             </ListItem>
           </List>
-          {this._renderEditInformation()}
-          {this._renderEditSecurity()}
         </Menu>
+        {this._renderEditInformation()}
+        {this._renderEditSecurity()}
       </div>
     );
   }

@@ -30,6 +30,7 @@ class Security extends Component {
 
     this._renderChangePasswordForm = this._renderChangePasswordForm.bind(this);
     this._onCancelButtonClick = this._onCancelButtonClick.bind(this);
+    this._submitModal = this._submitModal.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -86,12 +87,16 @@ class Security extends Component {
     ];
   }
 
+  _submitModal() {
+    this.props.onDone();
+  }
+
   render() {
     const { classes, handleSubmit, pristine, submitting } = this.props;
 
     return (
       <Grid className={classes.content}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(this._submitModal)}>
           <Grid item xs={12}>
             {this._renderChangePasswordForm()}
           </Grid>
@@ -119,6 +124,7 @@ Security.propTypes = {
   handleSubmit: PropTypes.func,
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
+  onDone: PropTypes.func,
 };
 
 const mapStateToProps = ({ api }) => ({
