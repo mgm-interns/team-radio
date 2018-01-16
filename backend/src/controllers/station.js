@@ -326,7 +326,6 @@ export const upVote = async (stationId, songId, userId) => {
     else {
       userAddSong = currentSong.creator;
     }
-
     if (userAddSong === userId) {
       throw new Error({ song: currentSong, message: "Can't up vote your own song." });
     }
@@ -384,7 +383,7 @@ export const upVote = async (stationId, songId, userId) => {
     return playList;
   } catch (err) {
     console.log(err);
-    throw new Error("Can not vote song !");
+    throw new Error({ song: currentSong, message: "Can't up vote song." });
   }
 };
 
@@ -457,7 +456,7 @@ export const downVote = async (stationId, songId, userId) => {
     return playList;
   } catch (err) {
     console.log(err);
-    throw new Error("Can not vote song !");
+    throw new Error({ song: currentSong, message: "Can't up vote your own song." });
   }
 
 };
