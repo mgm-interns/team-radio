@@ -18,9 +18,14 @@ class NowPlaying extends Component {
       refPlayer: null,
       skipNotification: false,
       countDown: 0,
+      seektime: 0,
     };
     this.renderSkipNotification = this.renderSkipNotification.bind(this);
     this.setStateAsync = this.setStateAsync.bind(this);
+  }
+
+  static calculateSeekTime(start) {
+    return parseInt(start, 10) / 1000;
   }
 
   setStateAsync(state) {
@@ -30,6 +35,7 @@ class NowPlaying extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
+    // Replace player with skipping notification
     const { currentStation } = this.props;
     const nextCurrentStation = nextProps.currentStation;
     // only trigger when received a new skip notification
@@ -56,6 +62,32 @@ class NowPlaying extends Component {
       await this.setStateAsync({
         skipNotification: false,
         countDown: 0,
+      });
+    }
+
+    // Force player to re-render after the song has changed
+    const { nowPlaying } = this.props;
+    const nextNowPlaying = nextProps.nowPlaying;
+    // Only trigger when the song_id has changed
+    if (nowPlaying.song_id !== nextNowPlaying.song_id) {
+      let seektime = 0;
+      const { starting_time } = nextNowPlaying;
+      if (
+        nowPlaying.url === nextNowPlaying.url &&
+        nowPlaying.starting_time !== nextNowPlaying.starting_time
+      ) {
+        /**
+         * If the old song is the same with the new song
+         * We need to plus 0.1 to make sure that
+         * new start time is different from the old one
+         */
+        seektime = NowPlaying.calculateSeekTime(starting_time) + 0.1;
+      } else {
+        // If not
+        seektime = NowPlaying.calculateSeekTime(starting_time);
+      }
+      this.setState({
+        seektime,
       });
     }
   }
@@ -100,7 +132,7 @@ class NowPlaying extends Component {
         <Player
           url={nowPlaying ? nowPlaying.url : ''}
           playing={autoPlay}
-          seektime={parseInt(nowPlaying && nowPlaying.starting_time, 10) / 1000}
+          seektime={this.state.seektime}
           muted={muted}
         />
       </Grid>
