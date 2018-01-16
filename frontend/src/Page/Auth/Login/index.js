@@ -66,7 +66,7 @@ class Login extends Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     if (loadAuthenticationState()) {
       this.props.history.replace('/');
     }
@@ -192,11 +192,12 @@ class Login extends Component {
   }
 
   _renderLoginLocalActions() {
-    const { classes, fetchUserResponse: { loading } } = this.props;
+    const { classes, submitting } = this.props;
+
     return (
       <Grid container>
         <Grid item xs={12} className={classes.cardActionContainer}>
-          {loading ? (
+          {submitting ? (
             <CircularProgress />
           ) : (
             <Button
@@ -268,6 +269,7 @@ Login.propTypes = {
   submitSucceeded: PropTypes.any,
   notification: PropTypes.object,
   addUserWithSocialAccount: PropTypes.func,
+  submitting: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({

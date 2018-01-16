@@ -20,7 +20,11 @@ import { Field, reduxForm } from 'redux-form';
 import { NavBar, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
 
-import { saveAuthenticationState } from 'Configuration';
+import {
+  saveAuthenticationState,
+  loadAuthenticationState,
+} from 'Configuration';
+
 import {
   registerValidate,
   required,
@@ -73,6 +77,12 @@ class Register extends Component {
         this.props.history.replace('/');
       }
       // this.props.history.push('/');
+    }
+  }
+
+  componentWillMount() {
+    if (loadAuthenticationState()) {
+      this.props.history.replace('/');
     }
   }
 
@@ -163,11 +173,12 @@ class Register extends Component {
   }
 
   _renderRegisterLocalActions() {
-    const { classes, addUserResponse: { loading } } = this.props;
+    console.log(this.props.submitting);
+    const { classes, submitting } = this.props;
     return (
       <Grid container>
         <Grid item xs={12} className={classes.cardActionContainer}>
-          {loading ? (
+          {submitting ? (
             <CircularProgress />
           ) : (
             <Button
@@ -250,12 +261,11 @@ Register.propTypes = {
   loading: PropTypes.bool,
   handleSubmit: PropTypes.any,
   submitSucceeded: PropTypes.any,
+  submitting: PropTypes.bool,
 };
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: values => {
-    dispatch(addUser(values));
-  },
+  onSubmit: values => dispatch(addUser(values)),
 });
 
 const mapStateToProps = state => ({
