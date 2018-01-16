@@ -15,7 +15,7 @@ const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
  * @param {boolean} isPrivate - If false then station is public, if true then station is private
  */
 export const addStation = async (stationName, userId, isPrivate) => {
-  console.log('add station: ',stationName,' + ',userId);
+  console.log('add station: ', stationName, ' + ', userId);
   const currentStationName = stationName.trim();
   if (!currentStationName) {
     throw new Error('The station name can not be empty!');
@@ -142,7 +142,7 @@ export const addSong = async (stationId, songUrl, userId = null) => {
         numOfSongsAddedByUnregistedUsers += 1;
         if (numOfSongsAddedByUnregistedUsers === MAX_SONG_UNREGISTED_USER_CAN_ADD) {
           throw new Error(`You need to login to add more song!\n` +
-        `Unlogged users are only allowed to add up to 3 songs to playlist at a time`);
+            `Unlogged users are only allowed to add up to 3 songs to playlist at a time`);
         }
       }
     });
@@ -307,6 +307,12 @@ export const getListSong = async stationId => {
 
 
 /**
+ * - Check :
+ * - If user id has up vote then remove user in upvote
+ * - If user id have not up vote the add user in upvote 
+ * - If user id has down vote : 
+ *  + if user down vote then remove user in down vote 
+ * 
  * @param {string} stationId
  * @param {string} songId
  * @param {string} userId
@@ -319,11 +325,19 @@ export const upVote = async (stationId, songId, userId) => {
     ))[0];
     const upVoteArray = currentSong.up_vote;
     const downVoteArray = currentSong.down_vote;
-    const userAddSong = currentSong.creator.toString();
-    if (userAddSong === userId) {
-      throw new Error("Can't up vote your song .");
+    let userAddSong;
+    if (currentSong.creator) {
+      userAddSong = currentSong.creator.toString();
     }
+    else {
+      userAddSong = currentSong.creator;
+    }
+    if (userAddSong === userId) {
+      throw new Error({ song: currentSong, message: "Can't up vote your own song." });
+    }
+     // divide upVoteArray.length > 0 and upVoteArray.length < 0 , if not error.
     if (upVoteArray.length > 0) {
+
       for (let i = 0; i < upVoteArray.length; i++) {
 
         if (upVoteArray[i].toString() === userId) {
@@ -377,12 +391,16 @@ export const upVote = async (stationId, songId, userId) => {
     return playList;
   } catch (err) {
     console.log(err);
-    throw new Error("Can not vote song !");
+    throw new Error({ song: null, message: "Can't up vote song." });
   }
 };
 
 /**
- *
+ *- Check :
+ * - If user id has down vote then remove user in downvote
+ * - If user id have not down vote the add user in downvote 
+ * - If user id has up vote the remove user in up vote and add user in down vote
+ *  
  * @param {string} stationId
  * @param {string} songId
  * @param {string} userId
@@ -410,6 +428,7 @@ export const downVote = async (stationId, songId, userId) => {
           return playList;
         }
       }
+      // divide upVoteArray.length > 0 and upVoteArray.length < 0 , if not error.
       if (upVoteArray.length > 0) {
 
         for (let i = 0; i < upVoteArray.length; i++) {
@@ -450,7 +469,7 @@ export const downVote = async (stationId, songId, userId) => {
     return playList;
   } catch (err) {
     console.log(err);
-    throw new Error("Can not vote song !");
+    throw new Error({ song: null, message: "Can't up vote song." });
   }
 
 };

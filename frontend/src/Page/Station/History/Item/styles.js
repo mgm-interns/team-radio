@@ -1,6 +1,7 @@
 export default ({ spacing, palette, typography }) => ({
   container: {
     margin: 0,
+    height: '80px',
     width: '100%',
     '&.playing': {
       background: palette.lightGrey['500'],
@@ -12,6 +13,7 @@ export default ({ spacing, palette, typography }) => ({
     height: '100%',
     display: 'block',
     objectFit: 'cover',
+    background: '#FFFFFF',
   },
   info: {
     padding: spacing.baseMargin,

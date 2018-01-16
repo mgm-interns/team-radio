@@ -1,4 +1,4 @@
-export default ({ spacing, typography }) => ({
+export default ({ spacing, typography, zIndex }) => ({
   NotificationItem: {
     success: {
       borderTop: '2px solid rgb(120, 159, 138)',
@@ -52,6 +52,9 @@ export default ({ spacing, typography }) => ({
     },
   },
   Containers: {
+    DefaultStyle: {
+      zIndex: zIndex.modal - 1,
+    },
     tr: {
       top: 50,
       right: spacing.baseMargin * -1,

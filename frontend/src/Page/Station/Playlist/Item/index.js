@@ -55,6 +55,7 @@ class PlaylistItem extends Component {
     const {
       upVoteSong,
       song_id,
+      creator,
       userId,
       match: { params: { stationId } },
       isAuthenticated,
@@ -64,6 +65,12 @@ class PlaylistItem extends Component {
     if (!isAuthenticated) {
       notification.app.warning({
         message: 'You need to login to use this feature.',
+      });
+      return;
+    }
+    if (userId === creator._id) {
+      notification.app.warning({
+        message: 'You can not up vote your song.',
       });
       return;
     }
@@ -138,18 +145,19 @@ class PlaylistItem extends Component {
         <Grid item xs={8} className={classes.info}>
           <div className={classes.name}>{title}</div>
           <div className={classes.singer}>{singer}</div>
-          {creator && (
-            <div className={classes.creator}>
-              Added by
-              <Tooltip placement={'bottom'} title={creator.name}>
-                <img
-                  src={creator.avatar_url || Images.avatar.male01}
-                  className={classes.creatorAvatar}
-                  onClick={this._onCreatorIconClicked}
-                />
-              </Tooltip>
-            </div>
-          )}
+          <div className={classes.creator}>
+            Added by
+            <Tooltip
+              placement={'bottom'}
+              title={creator === null ? 'Anonymous' : creator.name}
+            >
+              <img
+                src={creator.avatar_url || Images.avatar.male01}
+                className={classes.creatorAvatar}
+                onClick={this._onCreatorIconClicked}
+              />
+            </Tooltip>
+          </div>
         </Grid>
         <Grid item xs={1} className={classes.actions}>
           <IconButton

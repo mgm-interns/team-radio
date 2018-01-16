@@ -84,7 +84,7 @@ module.exports.getAllAvailableStations = (limit) => {
  */
 module.exports.getStationDetails = limit => {
   return Station.find()
-    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
+    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1, username: 1 })
     .limit(limit)
     .exec();
 };
@@ -111,7 +111,7 @@ module.exports.getAllStationLimitInfor = limit => {
  */
 module.exports.getStationByName = stationNameToFind => {
   return Station.findOne({ station_name: stationNameToFind })
-    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
+    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1, username: 1 })
     .exec();
 };
 
@@ -122,7 +122,7 @@ module.exports.getStationByName = stationNameToFind => {
  */
 module.exports.getStationById = idToFind => {
   return Station.findOne({ station_id: idToFind })
-    .populate('playlist.creator', { id: 1, name: 1, avatar_url: 1 })
+    .populate('playlist.creator', { id: 1, name: 1, avatar_url: 1, username: 1 })
     .exec();
 };
 

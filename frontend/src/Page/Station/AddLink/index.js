@@ -300,7 +300,7 @@ class AddLink extends Component {
       muteNowPlaying,
       userDid,
       match: { params: { stationId } },
-      userId,
+      user: { userId, username, name, avatar_url },
       notification,
       isAuthenticated,
     } = this.props;
@@ -323,6 +323,7 @@ class AddLink extends Component {
       thumbnail: preview.snippet.thumbnails.default.url,
       stationId,
       userId,
+      creator: { username, name, avatar_url },
     });
     this.setState({
       searchText: '',
@@ -494,7 +495,7 @@ AddLink.propTypes = {
   preview: PropTypes.object,
   nowPlaying: PropTypes.object,
   match: PropTypes.any,
-  userId: PropTypes.any,
+  user: PropTypes.any,
   muteVideoRequest: PropTypes.func,
   mutePreview: PropTypes.bool,
   muteNowPlaying: PropTypes.bool,
@@ -510,7 +511,7 @@ const mapStateToProps = ({ page, api }) => ({
   mutePreview: page.station.mutePreview,
   muteNowPlaying: page.station.muteNowPlaying,
   userDid: page.station.userDid,
-  userId: api.user.data.userId,
+  user: api.user.data,
   nowPlaying: api.currentStation.nowPlaying,
   isAuthenticated: api.user.isAuthenticated,
   joinedStation: page.station.joinedStation,

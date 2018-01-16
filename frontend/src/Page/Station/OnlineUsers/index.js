@@ -4,7 +4,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
 import Popover from 'material-ui/Popover';
-import Tooltip from 'material-ui/Tooltip';
 import Typography from 'material-ui/Typography';
 import List, { ListItem, ListItemText, ListItemAvatar } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
@@ -20,19 +19,16 @@ class OnlineUsers extends Component {
     this.state = {
       open: false,
       anchor: null,
+      tooltip: false,
     };
 
     this._openPopover = this._openPopover.bind(this);
     this._closePopover = this._closePopover.bind(this);
-    this._togglePopover = this._togglePopover.bind(this);
+    this._openTooltip = this._openTooltip.bind(this);
+    this._closeTooltip = this._closeTooltip.bind(this);
     this._onItemClick = this._onItemClick.bind(this);
-  }
-
-  _togglePopover(event) {
-    this.setState({
-      open: !this.state.open,
-      anchor: this.state.open ? event.target : null,
-    });
+    this.renderTooltip = this.renderTooltip.bind(this);
+    this.renderPopoverContent = this.renderPopoverContent.bind(this);
   }
 
   _openPopover(event) {
@@ -48,6 +44,18 @@ class OnlineUsers extends Component {
     });
   }
 
+  _openTooltip() {
+    this.setState({
+      tooltip: true,
+    });
+  }
+
+  _closeTooltip() {
+    this.setState({
+      tooltip: false,
+    });
+  }
+
   _onItemClick(user) {
     this.props.notification.app.warning({
       message: 'This feature is not ready yet.',
@@ -55,10 +63,11 @@ class OnlineUsers extends Component {
     console.log('Click on', user);
   }
 
-  renderUsersList() {
+  renderPopoverContent() {
     const {
       classes,
       currentStation: { users = [], online_count },
+      currentUser,
     } = this.props;
     // Only display keep top 10 users
     const filteredUsers = users.filter((user, index) => index < 10);
@@ -78,58 +87,95 @@ class OnlineUsers extends Component {
               src={avatar_url || Images.avatar.male01}
               className={classes.userAvatar}
             />
-            <ListItemText primary={name} />
+            <ListItemText
+              primary={
+                currentUser.username === username ? 'You' : name || 'Unknown'
+              }
+            />
           </ListItem>
         ))}
-        {anonymousUsers !== 0 && (
+        {anonymousUsers > 0 && (
           <ListItem dense className={classes.listItem}>
             <ListItemAvatar className={classes.userAvatar}>
               <div className={classes.anonymousImage}>{anonymousUsers}</div>
             </ListItemAvatar>
-            <ListItemText primary={`Others...`} />
+            <ListItemText primary={`Anonymous`} />
           </ListItem>
         )}
       </List>
     );
   }
 
+  renderTooltip() {
+    const {
+      classes,
+      currentStation: { users = [], online_count },
+      currentUser,
+    } = this.props;
+    // Only display keep top 10 users
+    const filteredUsers = users.filter((user, index) => index < 10);
+    // Group the rest people to anonymous group
+    const anonymousUsersCount = online_count - filteredUsers.length;
+    if (filteredUsers.length === 0) {
+      // In loading phrase because there is no user in this phrase
+      return null;
+    }
+    return (
+      <div className={classes.tooltip}>
+        {filteredUsers.map(({ name, username }) => (
+          <Typography
+            key={username}
+            type={'body1'}
+            className={classes.tooltipItem}
+          >
+            {currentUser.username === username ? 'You' : name}
+          </Typography>
+        ))}
+        {anonymousUsersCount > 0 && (
+          <Typography type={'body1'} className={classes.tooltipItem}>
+            and {anonymousUsersCount} more...
+          </Typography>
+        )}
+      </div>
+    );
+  }
+
   render() {
     const { classes, currentStation: { online_count } } = this.props;
     return [
-      <Tooltip
+      <div
         key={1}
-        placement={'bottom'}
-        title={'Press to see who is online.'}
+        className={classes.onlineCountContainer}
+        onClick={this._openPopover}
+        onMouseOver={this._openTooltip}
+        onMouseOut={this._closeTooltip}
       >
-        <div
-          className={classes.onlineCountContainer}
-          onClick={this._openPopover}
+        <CircleIcon className={classes.onlineIcon} />
+        <Typography
+          type={'caption'}
+          align={'left'}
+          className={classes.stationOnlineCountText}
         >
-          <CircleIcon className={classes.onlineIcon} />
-          <Typography
-            type={'caption'}
-            align={'left'}
-            className={classes.stationOnlineCountText}
-          >
-            {online_count || '0'} online
-          </Typography>
-        </div>
-      </Tooltip>,
+          {online_count || '0'} online
+        </Typography>
+        {this.state.tooltip && this.renderTooltip()}
+      </div>,
       <Popover
         key={2}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'left',
+          horizontal: 'right',
         }}
+        classes={classes.popover}
         open={this.state.open}
         anchorEl={this.state.anchor}
         onClose={this._closePopover}
       >
-        {this.renderUsersList()}
+        {this.renderPopoverContent()}
       </Popover>,
     ];
   }
@@ -139,13 +185,16 @@ OnlineUsers.propTypes = {
   classes: PropTypes.object,
   currentStation: PropTypes.object,
   notification: PropTypes.object,
+  currentUser: PropTypes.object,
 };
 
-OnlineUsers.defaultProps = {};
+OnlineUsers.defaultProps = {
+  currentUser: {},
+};
 
 const mapStateToProps = ({ api }) => ({
   currentStation: api.currentStation,
-  userId: api.user.data.userId,
+  currentUser: api.user.data,
 });
 
 export default compose(
