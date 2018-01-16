@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { addSong } from 'Redux/api/currentStation/actions';
@@ -9,6 +10,7 @@ import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import Grid from 'material-ui/Grid';
+import Tooltip from 'material-ui/Tooltip';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
@@ -22,7 +24,7 @@ import { MenuItem } from 'material-ui/Menu';
 import { Player } from 'Component';
 import { withNotification } from 'Component/Notification';
 import { Images } from 'Theme';
-import { checkValidYoutubeUrl } from 'Transformer/transformText';
+import { transformText, transformNumber } from 'Transformer';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -83,14 +85,11 @@ class AddLink extends Component {
     }
   }
 
-  /* Get video info */
+  /* Get info of a video or list of videos based on ids from search results */
   _getVideoUrl(video) {
-    return typeof video.id === 'string'
-      ? process.env.REACT_APP_YOUTUBE_URL + video.id
-      : process.env.REACT_APP_YOUTUBE_URL + video.id.videoId;
+    return process.env.REACT_APP_YOUTUBE_URL + video.id;
   }
 
-  // use for link
   async _getVideoInfo(id) {
     const { data: { items } } = await axios.get(
       `${process.env.REACT_APP_YOUTUBE_API_URL}/videos`,
@@ -115,17 +114,25 @@ class AddLink extends Component {
           q: value,
           part: 'snippet',
           safeSearch: 'strict',
-          regionCode: 'VN', //	STAMEQ
+          // regionCode: 'VN', //	STAMEQ
           type: 'video',
           videoEmbeddable: 'true',
-          videoSyndicated: 'true',
+          // videoSyndicated: 'true',
           maxResults: 5,
           videoDefinition: 'any',
           relevanceLanguage: 'en',
         },
       },
     );
-    return items;
+
+    // Get all video ids from search results that used to get info of those (contains more params like containDetails, status,...)
+    let videoIds = '';
+    items.forEach(item => {
+      videoIds += `${item.id.videoId},`;
+    });
+    const result = await this._getVideoInfo(videoIds);
+
+    return result;
   }
 
   /** AutoComplete Search */
@@ -200,11 +207,11 @@ class AddLink extends Component {
       clearTimeout(this._timeoutSearchFunc);
       this._timeoutSearchFunc = setTimeout(async () => {
         // Display preview if result is a youtube link without search
-        if (checkValidYoutubeUrl(value)) {
+        if (transformText.checkValidYoutubeUrl(value)) {
           // skip the other params of youtube link
           // just get the main part: https://www.youtube.com/watch?v={video_id}
           const input = `${value.split('&')[0]}&t=0s`;
-          const videoId = checkValidYoutubeUrl(input);
+          const videoId = transformText.checkValidYoutubeUrl(input);
           const data = await this._getVideoInfo(videoId);
 
           // if the video is deleted from youtube
@@ -232,7 +239,7 @@ class AddLink extends Component {
         }
 
         // Search by keyword if value is not a youtube link
-        if (!checkValidYoutubeUrl(value)) {
+        if (!transformText.checkValidYoutubeUrl(value)) {
           const data = await this._getSearchResults(value);
           this.setState(
             {
@@ -272,7 +279,7 @@ class AddLink extends Component {
     this.setState({
       isDisableButton: false,
       searchText: suggestion.snippet.title,
-      videoId: suggestion.id.videoId,
+      videoId: suggestion.videoId,
     });
   }
   /** End of autoComplete search  */
@@ -312,15 +319,12 @@ class AddLink extends Component {
       match: { params: { stationId } },
       user: { userId, username, name, avatar_url },
       notification,
-      isAuthenticated,
     } = this.props;
     // Show warning message if not authenticated
-    if (!isAuthenticated) {
-      notification.app.warning({
-        message: 'You need to login to use this feature.',
-      });
-      return;
-    }
+    // notification.app.warning({
+    //   message: 'You need to login to use this feature.',
+    // });
+
     // If authenticated
     setPreviewVideo();
     muteVideoRequest({
@@ -429,6 +433,7 @@ class AddLink extends Component {
     if (preview === null) {
       view = this._renderEmptyComponent();
     } else {
+      const videoDuration = moment.duration(preview.contentDetails.duration);
       view = (
         <Grid container className={classes.content}>
           <Grid item sm={4} xs={12} className={classes.previewImg}>
@@ -440,6 +445,24 @@ class AddLink extends Component {
           </Grid>
           <Grid item sm={8} xs={12} className={classes.previewRightContainer}>
             <p className={classes.previewTitle}>{preview.snippet.title}</p>
+            {preview && (
+              <div>
+                {videoDuration >= 300000 ? (
+                  <Tooltip
+                    placement={'bottom-start'}
+                    title="This video has long duration."
+                  >
+                    <p className={classes.warningText}>
+                      {transformNumber.millisecondsToTime(videoDuration)}
+                    </p>
+                  </Tooltip>
+                ) : (
+                  <p className={classes.secondaryTitle}>
+                    {transformNumber.millisecondsToTime(videoDuration)}
+                  </p>
+                )}
+              </div>
+            )}
             <p className={classes.secondaryTitle}>
               Channel: {preview.snippet.channelTitle}
             </p>

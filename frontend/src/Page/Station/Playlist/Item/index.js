@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
@@ -11,6 +12,7 @@ import withRouter from 'react-router-dom/withRouter';
 import { Images } from 'Theme';
 import { upVoteSong, downVoteSong } from 'Redux/api/currentStation/actions';
 import { withNotification } from 'Component/Notification';
+import { transformNumber } from 'Transformer';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -135,7 +137,15 @@ class PlaylistItem extends Component {
   }
 
   render() {
-    const { thumbnail, title, singer, playing, classes, creator } = this.props;
+    const {
+      thumbnail,
+      title,
+      singer,
+      playing,
+      classes,
+      creator,
+      duration,
+    } = this.props;
 
     return (
       <Grid container className={classNames(classes.container, { playing })}>
@@ -145,6 +155,9 @@ class PlaylistItem extends Component {
         <Grid item xs={8} className={classes.info}>
           <div className={classes.name}>{title}</div>
           <div className={classes.singer}>{singer}</div>
+          <div className={classes.singer}>
+            {transformNumber.millisecondsToTime(duration)}
+          </div>
           <div className={classes.creator}>
             Added by
             <Tooltip
@@ -196,6 +209,7 @@ PlaylistItem.propTypes = {
   downVoteSong: PropTypes.func,
   up_vote: PropTypes.array,
   down_vote: PropTypes.array,
+  duration: PropTypes.number,
   userId: PropTypes.any,
   isAuthenticated: PropTypes.bool,
   match: PropTypes.any,

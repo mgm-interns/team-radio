@@ -22,6 +22,10 @@ export default theme => {
       color: lightGrey[900],
     },
 
+    warningText: {
+      color: 'red',
+    },
+
     addLinkBox: {
       backgroundColor: '#fafafa !important',
       marginLeft: baseMargin,
@@ -52,6 +56,7 @@ export default theme => {
 
     previewRightContainer: {
       position: 'relative',
+      lineHeight: 1.8,
     },
 
     previewTitle: {

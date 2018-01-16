@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
-// import { transformNumber } from '../../Transformer';
 
 class Player extends Component {
   static defaultProps = {

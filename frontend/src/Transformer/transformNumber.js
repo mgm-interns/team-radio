@@ -1,20 +1,24 @@
-const numberToTime = (duration = 0) => {
-  let seconds = Math.floor(duration);
-  let hours = Math.floor(seconds / 3600);
-  seconds -= hours * 3600;
-  let minutes = Math.floor(seconds / 60);
-  seconds -= minutes * 60;
+const millisecondsToTime = (duration = 0) => {
+  let milliseconds = parseInt((duration % 1000) / 100);
+  let seconds = parseInt((duration / 1000) % 60);
+  let minutes = parseInt((duration / (1000 * 60)) % 60);
+  let hours = parseInt((duration / (1000 * 60 * 60)) % 24);
 
-  if (seconds < 10) seconds = `0${seconds}`;
-  if (minutes < 10) minutes = `0${minutes}`;
-  if (hours < 10) hours = `0${hours}`;
+  hours = hours > 0 && hours < 10 ? `0${hours}:` : `${hours}:`;
+  minutes = minutes < 10 ? `0${minutes}:` : `${minutes}:`;
+  seconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+  milliseconds = milliseconds === 0 ? '' : `.${milliseconds}`;
 
-  return `${hours}:${minutes}:${seconds}`;
+  if (hours === '0:') {
+    hours = '';
+  }
+
+  return `${hours}${minutes}${seconds}${milliseconds}`;
 };
 
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 export default {
-  numberToTime,
+  millisecondsToTime,
   random,
 };
