@@ -1,4 +1,4 @@
-export default ({ breakpoints, palette, spacing, transitions }) => ({
+export default () => ({
   modalHeadline: {
     borderBottom: '1px solid #f2f2f2',
     paddingBottom: 9,
@@ -46,6 +46,6 @@ export default ({ breakpoints, palette, spacing, transitions }) => ({
     marginBottom: '10px',
   },
   menuPopover: {
-    marginTop: 30,
+    marginTop: 80,
   },
 });

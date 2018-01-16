@@ -1,35 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { Field, reduxForm, Form } from 'redux-form';
-import { connect } from 'react-redux';
-import classNames from 'classnames';
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
-import Tabs, { Tab } from 'material-ui/Tabs';
 import Modal from 'material-ui/Modal';
-import { FormHelperText } from 'material-ui/Form';
-import Typography from 'material-ui/Typography';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
-import Menu, { MenuItem } from 'material-ui/Menu';
+import Menu from 'material-ui/Menu';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
-import { TabContainer } from 'Component';
 import { withNotification } from 'Component/Notification';
 import { withRouter } from 'react-router';
 
-import {
-  customValidate,
-  required,
-  email,
-  minLength6,
-  maxLength15,
-} from 'Util/validate';
-
-import { Images } from 'Theme';
 import styles from './styles';
 
 import Information from './Information';
@@ -79,9 +63,6 @@ class Settings extends Component {
     notification.app.success({
       message: content,
     });
-    // notification.browser.success({
-    //   message: content,
-    // });
   }
 
   onCancelButtonClick() {
@@ -111,7 +92,7 @@ class Settings extends Component {
   }
 
   _openMenu(event) {
-    this.setState({ anchorEl: event.currentTarget });
+    this.setState({ anchorEl: event.target });
   }
 
   _closeMenu() {
@@ -119,12 +100,11 @@ class Settings extends Component {
   }
 
   _submitModal() {
-    const { user } = this.props;
     this._onCloseModal();
     this._showNotification('Your information has been changed successfully!');
   }
 
-  _renderLoading() {
+  static _renderLoading() {
     return <CircularProgress />;
   }
 
@@ -191,7 +171,7 @@ class Settings extends Component {
     const { anchorEl } = this.state;
 
     if (loading) {
-      return this._renderLoading();
+      return Settings._renderLoading();
     }
 
     return (
@@ -240,6 +220,9 @@ Settings.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.any,
   loading: PropTypes.bool,
+  notification: PropTypes.any,
 };
 
-export default compose(withStyles(styles), withRouter, withNotification)(Settings);
+export default compose(withStyles(styles), withRouter, withNotification)(
+  Settings,
+);
