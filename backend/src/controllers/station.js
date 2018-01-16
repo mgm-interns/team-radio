@@ -307,6 +307,12 @@ export const getListSong = async stationId => {
 
 
 /**
+ * - Check :
+ * - If user id has up vote then remove user in upvote
+ * - If user id have not up vote the add user in upvote 
+ * - If user id has down vote : 
+ *  + if user down vote then remove user in down vote 
+ * 
  * @param {string} stationId
  * @param {string} songId
  * @param {string} userId
@@ -329,7 +335,9 @@ export const upVote = async (stationId, songId, userId) => {
     if (userAddSong === userId) {
       throw new Error({ song: currentSong, message: "Can't up vote your own song." });
     }
+     // divide upVoteArray.length > 0 and upVoteArray.length < 0 , if not error.
     if (upVoteArray.length > 0) {
+
       for (let i = 0; i < upVoteArray.length; i++) {
 
         if (upVoteArray[i].toString() === userId) {
@@ -383,12 +391,16 @@ export const upVote = async (stationId, songId, userId) => {
     return playList;
   } catch (err) {
     console.log(err);
-    throw new Error({ song: currentSong, message: "Can't up vote song." });
+    throw new Error({ song: null, message: "Can't up vote song." });
   }
 };
 
 /**
- *
+ *- Check :
+ * - If user id has down vote then remove user in downvote
+ * - If user id have not down vote the add user in downvote 
+ * - If user id has up vote the remove user in up vote and add user in down vote
+ *  
  * @param {string} stationId
  * @param {string} songId
  * @param {string} userId
@@ -416,6 +428,7 @@ export const downVote = async (stationId, songId, userId) => {
           return playList;
         }
       }
+      // divide upVoteArray.length > 0 and upVoteArray.length < 0 , if not error.
       if (upVoteArray.length > 0) {
 
         for (let i = 0; i < upVoteArray.length; i++) {
@@ -456,7 +469,7 @@ export const downVote = async (stationId, songId, userId) => {
     return playList;
   } catch (err) {
     console.log(err);
-    throw new Error({ song: currentSong, message: "Can't up vote your own song." });
+    throw new Error({ song: null, message: "Can't up vote song." });
   }
 
 };
