@@ -1,6 +1,6 @@
-export default () => ({
+export default ({ spacing }) => ({
   containerWrapper: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 0,
     paddingBottom: 50, // Footer height
   },

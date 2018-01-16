@@ -2,15 +2,15 @@ export default ({ spacing, palette, typography }) => ({
   container: {
     margin: 0,
     height: '80px',
-    width: '100%',
+    width: spacing.fullWidth,
     '&.playing': {
       background: palette.lightGrey['500'],
     },
   },
   thumbnail: {},
   img: {
-    width: '100%',
-    height: '100%',
+    width: spacing.fullWidth,
+    height: spacing.fullHeight,
     display: 'block',
     objectFit: 'cover',
     background: '#FFFFFF',

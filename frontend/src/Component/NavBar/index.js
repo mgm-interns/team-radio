@@ -14,10 +14,10 @@ const MENUS = {
     title: 'Home',
     url: '/',
   },
-  stations: {
-    title: 'My Station',
-    url: '/station',
-  },
+  // stations: {
+  //   title: 'My Station',
+  //   url: '/station',
+  // },
 };
 
 const setColor = {

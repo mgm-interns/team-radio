@@ -29,7 +29,7 @@ export default ({ spacing, palette, typography }) => ({
     borderRadius: '50%',
     fontSize: '.725em',
     backgroundColor: 'rgba(0,0,0,0.6)',
-    color: 'white',
+    color: palette.white,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

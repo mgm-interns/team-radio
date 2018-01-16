@@ -1,4 +1,4 @@
-export default () => ({
+export default ({ spacing }) => ({
   modalHeadline: {
     borderBottom: '1px solid #f2f2f2',
     paddingBottom: 9,
@@ -24,8 +24,8 @@ export default () => ({
     },
     '&:hover > .backdrop': {
       cursor: 'pointer',
-      width: '100%',
-      height: '100%',
+      width: spacing.fullWidth,
+      height: spacing.fullHeight,
       position: 'absolute',
       content: ' ',
       top: 0,

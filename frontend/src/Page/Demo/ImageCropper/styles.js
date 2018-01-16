@@ -1,9 +1,9 @@
-export default theme => ({
+export default ({ spacing }) => ({
   container: {
     margin: 'auto',
     paddingTop: 60,
     paddingBottom: 60,
-    width: '100%',
+    width: spacing.fullWidth,
   },
   secondButton: {
     position: 'relative',
@@ -12,8 +12,8 @@ export default theme => ({
     },
     '&:hover > .backdrop': {
       cursor: 'pointer',
-      width: '100%',
-      height: '100%',
+      width: spacing.fullWidth,
+      height: spacing.fullHeight,
       position: 'absolute',
       content: ' ',
       top: 0,

@@ -28,7 +28,7 @@ export default ({ breakpoints, spacing, palette }) => ({
     backgroundPosition: 'center',
   },
   stationOnlineCountWrapper: {
-    width: '100%',
+    width: spacing.fullWidth,
     backgroundColor: 'rgba(0,0,0,.56)',
     display: 'flex',
     flexDirection: 'row',

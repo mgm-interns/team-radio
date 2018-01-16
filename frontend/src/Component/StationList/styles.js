@@ -37,7 +37,7 @@ export default ({ breakpoints, spacing }) => ({
   },
   loadingInfo: {
     background: 'rgba(0,0,0,0.075)',
-    width: '100%',
+    width: spacing.fullWidth,
     height: spacing.doubleBaseMargin,
     marginTop: spacing.baseMargin,
   },

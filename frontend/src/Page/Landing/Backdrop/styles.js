@@ -1,13 +1,13 @@
-export default ({ palette, breakpoints }) => ({
+export default ({ palette, breakpoints, spacing }) => ({
   container: {
     margin: 'auto',
-    width: '100%',
+    width: spacing.fullWidth,
     background: palette.secondary['500'],
     position: 'relative',
   },
   foreground: {
-    height: '100vh',
-    width: '100%',
+    height: spacing.fullViewportHeight,
+    width: spacing.fullWidth,
     zIndex: 0,
     margin: 'auto',
     [breakpoints.up('lg')]: {
@@ -23,8 +23,8 @@ export default ({ palette, breakpoints }) => ({
   },
   backgroundImg: {
     position: 'absolute',
-    width: '100%',
-    height: '100vh',
+    width: spacing.fullWidth,
+    height: spacing.fullViewportHeight,
     top: 0,
     left: 0,
     margin: 'auto',
@@ -37,7 +37,7 @@ export default ({ palette, breakpoints }) => ({
   },
   mainLine: {
     cursor: 'default',
-    color: 'white',
+    color: palette.white,
     fontSize: '3em',
     [breakpoints.up('md')]: {
       fontSize: '7em',
@@ -47,7 +47,7 @@ export default ({ palette, breakpoints }) => ({
     cursor: 'default',
     fontSize: '2rem',
     fontWeight: '200',
-    color: 'white',
+    color: palette.white,
     textAlign: 'center',
     zIndex: 2,
     [breakpoints.up('sm')]: {
@@ -59,10 +59,10 @@ export default ({ palette, breakpoints }) => ({
     margin: 'auto',
     zIndex: 2,
     '& input': {
-      color: 'white',
+      color: palette.white,
     },
     '& label': {
-      color: 'white',
+      color: palette.white,
     },
     '& div': {
       [breakpoints.down('sm')]: {
