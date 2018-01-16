@@ -130,7 +130,7 @@ class PlaylistItem extends Component {
   _onCreatorIconClicked(event) {
     event.preventDefault();
     const { notification } = this.props;
-    notification.app.info({
+    notification.app.warning({
       message: 'This feature is not ready yet!',
     });
   }
