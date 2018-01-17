@@ -5,8 +5,9 @@ import { withStyles } from 'material-ui/styles';
 import ListSubheader from 'material-ui/List/ListSubheader';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Icon from 'material-ui/Icon';
-import Menu from 'material-ui/Menu';
 import Popover from 'material-ui/Popover';
+import Divider from 'material-ui/Divider';
+import Typography from 'material-ui/Typography';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -53,15 +54,20 @@ class AuthLink extends Component {
     return (
       <List
         subheader={
-          <ListSubheader>{`Signed in as: ${user.data.username ||
-            user.data.email}`}</ListSubheader>
+          <ListSubheader>
+            {`Signed in as:`}
+            <Typography type="body1">
+              {`${user.data.username || user.data.email}`}
+            </Typography>
+          </ListSubheader>
         }
       >
+        <Divider style={{ marginTop: 12 }} />
         <Link
           className={classes.profileLink}
           to={`/profile/${user.data.username}`}
         >
-          <ListItem>
+          <ListItem button>
             <ListItemIcon>
               <Icon>personal</Icon>
             </ListItemIcon>

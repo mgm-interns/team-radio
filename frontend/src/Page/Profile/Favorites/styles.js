@@ -14,6 +14,8 @@ export default ({ spacing }) => ({
     justifyContent: 'flex-start',
     // Promote the list into his own layer on Chrome. This cost memory but helps keefavoriteg high FPS.
     transform: 'translateZ(0)',
+    overflowY: 'auto',
+    overflowX: 'hidden',
   },
   container: {
     paddingTop: 50,

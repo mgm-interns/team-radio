@@ -1,4 +1,4 @@
-export default ({ palette }) => ({
+export default ({ palette, spacing }) => ({
   avatar: {
     width: 30,
     height: 30,

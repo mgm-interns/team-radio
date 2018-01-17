@@ -45,7 +45,4 @@ export default ({ spacing }) => ({
     fontWeight: 'bold',
     marginBottom: '10px',
   },
-  menuPopover: {
-    marginTop: 80,
-  },
 });

@@ -11,20 +11,11 @@ import styles from './styles';
 
 /* eslint-disable no-shadow */
 /* eslint-disable camelcase */
-class FavoritesItem extends Component {
+class FavoriteItem extends Component {
   constructor(props) {
     super(props);
 
-    this.reAddSong = this.reAddSong.bind(this);
     this.deleteSong = this.deleteSong.bind(this);
-  }
-
-  reAddSong(event) {
-    event.preventDefault();
-    const { notification } = this.props;
-    notification.app.warning({
-      message: 'This feature is not ready yet!',
-    });
   }
 
   deleteSong(event) {
@@ -52,15 +43,14 @@ class FavoritesItem extends Component {
           </span>
         </div>
         <div className={classes.actions}>
-          <IconButton onClick={this.reAddSong}>replay</IconButton>
-          <IconButton onClick={this.deleteSong}>delete</IconButton>
+          <IconButton onClick={this.deleteSong}>star_rate</IconButton>
         </div>
       </div>,
     ];
   }
 }
 
-FavoritesItem.propTypes = {
+FavoriteItem.propTypes = {
   classes: PropTypes.any,
   song_id: PropTypes.any,
   playing: PropTypes.bool,
@@ -82,4 +72,4 @@ FavoritesItem.propTypes = {
   notification: PropTypes.object,
 };
 
-export default compose(withStyles(styles), withNotification)(FavoritesItem);
+export default compose(withStyles(styles), withNotification)(FavoriteItem);

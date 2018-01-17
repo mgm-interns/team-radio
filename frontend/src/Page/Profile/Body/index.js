@@ -19,7 +19,7 @@ class Body extends Component {
     super(props);
 
     this.state = {
-      value: 1,
+      value: 0,
       open: false,
     };
 
@@ -36,7 +36,6 @@ class Body extends Component {
 
   render() {
     const { classes, user, isDisabled } = this.props;
-    console.log(user);
 
     return (
       <Grid container className={classes.container}>
@@ -50,13 +49,13 @@ class Body extends Component {
                 textColor="primary"
               >
                 <Tab
-                  label="My Stations"
+                  label="My stations"
                   classes={{
                     label: classes.tabLabel,
                   }}
                 />
                 <Tab
-                  label="Songs"
+                  label="Favorite songs"
                   classes={{
                     label: classes.tabLabel,
                   }}
