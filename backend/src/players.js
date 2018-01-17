@@ -192,34 +192,47 @@ class Player {
       starting_time: 0,
       thumbnail: '',
     };
-    this._emitStationState();
   };
-  _startSong = async song => {
+  _setNowPlaying = (song, starting_time) => {
+    this.nowPlaying.song_id = song.song_id;
+    this.nowPlaying.url = song.url;
+    this.nowPlaying.thumbnail = song.thumbnail;
+    this.nowPlaying.starting_time = starting_time;
+  }
+  // TODO: check change state of the station to update available stations
+  _startSong = async (song, starting_time) => {
     try {
+      const preSongId = this.nowPlaying.song_id;
       if (!song) {
+        this._resetNowPlaying();
         this._emitStationState();
-        return;
-      }
-      if (this.skippedSongs.has(song.song_id)) {
-        // The song needs to skipped
-        // delete the song in skippedSongs
-        this.skippedSongs.delete(song.song_id);
-        // TODO: setSkippedSong not working well now
-        await stationController.setSkippedSong(this.stationId, song.song_id);
-        // send _emit
-        this._emitSkippedSong(TIME_BUFFER);
-        this._nextSongByTimeout(TIME_BUFFER, this.nowPlaying.song_id);
       } else {
-        this._emitStationState();
-        // Update starting time in the station
-        stationController.updateStartingTime(
-          this.stationId,
-          this.nowPlaying.starting_time,
-        );
-        this._nextSongByTimeout(
-          song.duration + TIME_BUFFER,
-          this.nowPlaying.song_id,
-        );
+        this._setNowPlaying(song, starting_time);
+        if (this.skippedSongs.has(song.song_id)) {
+          // The song needs to skipped
+          // delete the song in skippedSongs
+          this.skippedSongs.delete(song.song_id);
+          // TODO: setSkippedSong not working well now
+          await stationController.setSkippedSong(this.stationId, song.song_id);
+          // send _emit
+          this._emitSkippedSong(TIME_BUFFER);
+          this._nextSongByTimeout(TIME_BUFFER, this.nowPlaying.song_id);
+        } else {
+          this._emitStationState();
+          // Update starting time in the station
+          stationController.updateStartingTime(
+            this.stationId,
+            this.nowPlaying.starting_time,
+          );
+          this._nextSongByTimeout(
+            song.duration + TIME_BUFFER,
+            this.nowPlaying.song_id,
+          );
+        }
+      }
+      // When the state of station was changed
+      if (!this.nowPlaying.song_id !== !preSongId) {
+        switcher.checkUpdatePopularStations();
       }
     } catch (err) {
       console.error(err);
@@ -259,19 +272,15 @@ class Player {
     );
     // Reset nowPlaying when the station is done
     if (sortedPlaylist.length === 0) {
-      this._resetNowPlaying();
+      this._startSong();
       return;
     }
     // When the player is playing
     if (this.nowPlaying.song_id) {
       // Update nowPlaying song
       const song = sortedPlaylist[0];
-      this.nowPlaying.song_id = song.song_id;
-      this.nowPlaying.url = song.url;
-      this.nowPlaying.starting_time = Date.now();
-      this.nowPlaying.thumbnail = song.thumbnail;
       // play the song
-      this._startSong(song);
+      this._startSong(song, Date.now());
       return;
     }
 
@@ -289,25 +298,12 @@ class Player {
       if (song.added_time + song.duration + TIME_BUFFER > currentTime) {
         // Update is_played of the playedSongs to true
         stationController.setPlayedSongs(this.stationId, playedSongs);
-        // Update nowPlaying song
-        this.nowPlaying.song_id = song.song_id;
-        this.nowPlaying.url = song.url;
-        this.nowPlaying.thumbnail = song.thumbnail;
-        this.nowPlaying.starting_time = song.added_time;
-        // play the song
-        this._startSong(song);
+        this._startSong(song, song.added_time);
         return;
       } else if (preStartingTime + song.duration + TIME_BUFFER > currentTime) {
         // Update is_played of the playedSongs to true
-
         stationController.setPlayedSongs(this.stationId, playedSongs);
-        // Update nowPlaying song
-        this.nowPlaying.song_id = song.song_id;
-        this.nowPlaying.url = song.url;
-        this.nowPlaying.thumbnail = song.thumbnail;
-        this.nowPlaying.starting_time = preStartingTime;
-        // play the song
-        this._startSong(song);
+        this._startSong(song, preStartingTime);
         return;
       }
       // Move the song to next song for checking
@@ -318,8 +314,7 @@ class Player {
     // The available song is not existed
     // Update is_played of the song in the sortedPlaylist to true
     stationController.setPlayedSongs(this.stationId, playedSongs);
-    // Update nowPlaying song is not available
-    this._resetNowPlaying();
+    this._startSong();
   };
 }
 

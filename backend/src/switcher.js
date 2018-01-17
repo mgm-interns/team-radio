@@ -13,6 +13,7 @@ let io = null;
 
 export const getPopularStations = () => stations;
 
+
 export const updateNumberOfOnlineUsersInStation = (stationId, numberOfUser) => {
   // TODO: make high performance
   if (
@@ -35,7 +36,7 @@ export const attachWebSocket = _io => {
   checkUpdatePopularStations();
 };
 
-async function checkUpdatePopularStations() {
+export const checkUpdatePopularStations = async () => {
   stations = await stationController.getAllAvailableStations();
   const currentTime = Date.now();
 
@@ -67,7 +68,6 @@ async function checkUpdatePopularStations() {
   );
   activeStations = _.orderBy(activeStations, ['online_count'], ['desc']);
   inactiveStations = _.orderBy(inactiveStations, ['online_count'], ['desc']);
-
   stations = newStationsWithActiveUsers.concat(activeStations);
   stations = stations.concat(inactiveStations);
   _emitPopularStations();
