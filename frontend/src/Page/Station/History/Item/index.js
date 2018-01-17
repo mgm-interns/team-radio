@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AccessTimeIcon from 'react-icons/lib/md/access-time';
 import { transformNumber } from 'Transformer';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -72,17 +71,16 @@ class HistoryItem extends Component {
       <Grid container className={classes.container}>
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} />
+          <div className={classes.duration}>
+            <span className={classes.durationText}>
+              {transformNumber.millisecondsToTime(duration)}
+            </span>
+          </div>
         </Grid>
         <Grid item xs={8} className={classes.info}>
           <Tooltip placement={'bottom'} title={title}>
             <div className={classes.name}>{title}</div>
           </Tooltip>
-          <div className={classes.duration}>
-            <AccessTimeIcon className={classes.durationIcon} />
-            <span className={classes.durationText}>
-              {transformNumber.millisecondsToTime(duration)}
-            </span>
-          </div>
           <div className={classes.creator}>
             Added by
             {creator === null ? (

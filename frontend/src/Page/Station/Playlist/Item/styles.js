@@ -8,13 +8,32 @@ export default ({ spacing, palette, typography }) => ({
       background: palette.lightGrey['500'],
     },
   },
-  thumbnail: {},
+  thumbnail: {
+    position: 'relative',
+  },
   img: {
     width: '100%',
     height: '100%',
     display: 'block',
     objectFit: 'cover',
     background: '#FFFFFF',
+  },
+  duration: {
+    position: 'absolute',
+    bottom: spacing.baseMargin + spacing.smallMargin / 2,
+    right: spacing.baseMargin + spacing.smallMargin / 2,
+    display: 'flex',
+    alignItems: 'center',
+    padding: spacing.smallMargin / 2,
+    borderRadius: 2,
+    backgroundColor: palette.lightBlack,
+  },
+  durationText: {
+    ...typography.body2,
+    color: palette.white,
+    fontSize: '0.625em',
+    marginLeft: spacing.smallMargin,
+    marginRight: spacing.smallMargin,
   },
   info: {
     padding: spacing.baseMargin,
@@ -27,20 +46,6 @@ export default ({ spacing, palette, typography }) => ({
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
     cursor: 'default',
-  },
-  duration: {
-    ...typography.body2,
-    fontSize: '0.725em',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  durationIcon: {
-    color: palette.lightBlack,
-    fontSize: spacing.doubleBaseMargin,
-  },
-  durationText: {
-    color: 'rgba(0,0,0,0.54)',
-    marginLeft: spacing.smallMargin,
   },
   creator: {
     ...typography.caption,
