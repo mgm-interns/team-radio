@@ -11,8 +11,8 @@ import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { FormHelperText } from 'material-ui/Form';
-
-import { setUsername, setUserInformation } from 'Redux/api/user/profile';
+import { withRouter } from 'react-router';
+import { setUsername, setUserInformation } from 'Redux/api/userProfile/actions';
 import styles from '../styles';
 
 class Information extends Component {
@@ -31,12 +31,18 @@ class Information extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { information: { message } } = nextProps;
-    if (message !== null) {
-      this.setState({
-        formErrors: message,
-      });
+    // const { information: { message } } = nextProps;
+    // console.log(nextProps);
+    const { user: { username } } = nextProps;
+    console.log(username);
+    if (username !== this.props.user.username) {
+      this.props.history.push(`/profile/${username}`);
     }
+    // if (message !== null) {
+    //   this.setState({
+    //     formErrors: message,
+    //   });
+    // }
   }
 
   _onCancelButtonClick() {
@@ -121,6 +127,7 @@ class Information extends Component {
 
   _submitModal(values) {
     const { onSubmit, initialValues } = this.props;
+    // console.log(initialValues);
     onSubmit({ userId: initialValues.userId, ...values });
     if (this.state.formErrors !== '') {
       this.props.onDone();
@@ -132,11 +139,7 @@ class Information extends Component {
   }
 
   render() {
-    const { classes, handleSubmit, pristine, submitting, loading } = this.props;
-
-    if (loading) {
-      return this._renderLoading();
-    }
+    const { classes, handleSubmit, pristine, submitting } = this.props;
 
     return (
       <Grid className={classes.content}>
@@ -162,8 +165,8 @@ class Information extends Component {
 }
 
 const mapStateToProps = ({ api }) => ({
-  initialValues: api.user.data,
-  information: api.userProfile.information.data,
+  initialValues: api.userProfile.data,
+  // information: api.userProfile.information.data,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -210,6 +213,7 @@ Information.propTypes = {
 
 export default compose(
   withStyles(styles),
+  withRouter,
   connect(mapStateToProps, mapDispatchToProps),
   reduxForm({
     form: 'editProfileInformationForm',

@@ -16,7 +16,7 @@ import { FormHelperText } from 'material-ui/Form';
 import Button from 'material-ui/Button';
 
 import { connect } from 'react-redux';
-import { setPassword } from 'Redux/api/user/profile';
+import { setPassword } from 'Redux/api/userProfile/actions';
 
 import { saveAuthenticationState } from 'Configuration';
 

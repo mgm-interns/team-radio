@@ -170,7 +170,8 @@ export default router => {
         return res.json({
           message: 'Success',
           isOwner: isOwner,
-          user: user,
+          ...user._doc,
+          userId: user._id,
         });
       }
       return res.json({
@@ -288,12 +289,13 @@ export default router => {
           );
           return res.json({
             message: 'Success',
+            isOwner: isOwner,
             ...user._doc,
             userId: user._id,
           });
         }
       }
-      return res.json({
+      return res.status(400).json({
         message: 'Can not update username!',
       });
     } catch (err) {
@@ -387,6 +389,7 @@ export default router => {
           token,
           req.app.get('superSecret'),
         );
+
         if (isOwner) {
           user = await userController.setUserInformation(
             req.body.userId,
@@ -397,10 +400,15 @@ export default router => {
             req.body.city,
             req.body.country,
           );
-          return res.json(user);
+          return res.json({
+            message: 'Update user information successfully',
+            isOwner: isOwner,
+            ...user._doc,
+            userId: user._id,
+          });
         }
       }
-      return res.json({
+      return res.status(400).json({
         message: 'Can not update user information!',
       });
     } catch (err) {

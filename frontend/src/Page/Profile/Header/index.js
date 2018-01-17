@@ -96,10 +96,6 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = ({ api }) => ({
-  userProfile: api.userProfile.user.data,
-});
-
 Header.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.any,
@@ -111,4 +107,4 @@ Header.defaultProps = {
   loading: false,
 };
 
-export default compose(withStyles(styles), connect(mapStateToProps))(Header);
+export default compose(withStyles(styles))(Header);

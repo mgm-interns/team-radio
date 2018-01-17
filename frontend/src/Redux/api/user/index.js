@@ -98,23 +98,6 @@ const user = (state = INITIAL_STATE, action) => {
         isAuthenticated: false,
       };
 
-    case 'FETCH_USER_PROFILE':
-      return {
-        data: {},
-      };
-    case 'FETCH_USER_PROFILE_SUCCESS':
-      return {
-        ...state,
-        data: action.payload,
-      };
-
-    case 'FETCH_USER_PROFILE_FAILURE':
-      return {
-        ...state,
-        loading: false,
-        error: { ...action.payload },
-      };
-
     case 'LOGOUT_REQUEST':
       return {
         ...state,
@@ -139,40 +122,7 @@ const user = (state = INITIAL_STATE, action) => {
         loading: false,
         error: { ...action.payload },
       };
-    case 'UPDATE_USERNAME':
-      return {
-        ...state,
-      };
-    case 'UPDATE_USERNAME_SUCCESS':
-      return {
-        ...state,
-        data: action.payload,
-        loading: false,
-      };
 
-    case 'UPDATE_USERNAME_FAILURE':
-      return {
-        ...state,
-        loading: false,
-        error: { ...action.payload },
-      };
-    case 'UPDATE_PASSWORD':
-      return {
-        ...state,
-      };
-    case 'UPDATE_PASSWORD_SUCCESS':
-      return {
-        ...state,
-        data: action.payload,
-        loading: false,
-      };
-
-    case 'UPDATE_PASSWORD_FAILURE':
-      return {
-        ...state,
-        loading: false,
-        error: { ...action.payload },
-      };
     default:
       return state;
   }

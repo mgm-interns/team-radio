@@ -3,8 +3,8 @@ import { combineReducers } from 'redux';
 import stations from './stations';
 import currentStation from './currentStation';
 import user from './user';
-import userStations from './user/stations';
-import userProfile from './user/profile';
+import userStations from './userProfile/stations';
+import userProfile from './userProfile';
 
 export default combineReducers({
   stations,

@@ -8,7 +8,7 @@ import withRouter from 'react-router-dom/withRouter';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { NavBar, Footer } from 'Component';
-import { getUserByUsername } from 'Redux/api/user/profile';
+import { getUserByUsername } from 'Redux/api/userProfile/actions';
 
 import Header from './Header';
 import Body from './Body';
@@ -32,9 +32,9 @@ class Profile extends Component {
   }
 
   render() {
-    const { classes, userProfile, loading } = this.props;
+    const { classes, user, isOwner } = this.props;
 
-    if (loading) {
+    if (!user) {
       return this._renderLoading();
     }
 
@@ -46,16 +46,8 @@ class Profile extends Component {
         container
         className={classes.containerWrapper}
       >
-        <Header
-          user={userProfile.data.user}
-          loading={userProfile.loading}
-          isDisabled={userProfile.data.isOwner}
-        />
-        <Body
-          user={userProfile.data.user}
-          loading={userProfile.loading}
-          isDisabled={userProfile.data.isOwner}
-        />
+        <Header user={user} isDisabled={isOwner} />
+        <Body user={user} isDisabled={isOwner} />
       </Grid>,
       <Footer key={3} />,
     ];
@@ -68,12 +60,13 @@ Profile.propTypes = {
   user: PropTypes.object,
   userProfile: PropTypes.object,
   loading: PropTypes.bool,
+  isOwner: PropTypes.bool,
   requestUserByUsername: PropTypes.func,
 };
 
 const mapStateToProps = ({ api }) => ({
-  user: api.user.data,
-  userProfile: api.userProfile.user,
+  user: api.userProfile.data,
+  isOwner: api.userProfile.data.isOwner,
   loading: api.user.loading,
 });
 

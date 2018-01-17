@@ -35,11 +35,7 @@ class Body extends Component {
   }
 
   render() {
-    const { classes, user, isDisabled, loading } = this.props;
-
-    if (loading) {
-      return this._renderLoading();
-    }
+    const { classes, user, isDisabled } = this.props;
 
     return (
       <Grid container className={classes.container}>
@@ -59,11 +55,11 @@ class Body extends Component {
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} xl={4} className={classes.buttonEditProfile}>
-          {isDisabled && <Settings user={user} loading={loading} />}
+          {isDisabled && <Settings user={user} />}
         </Grid>
         {this.state.value === 0 && (
           <TabContainer>
-            <FilterAll user={user} loading={loading} />
+            <FilterAll user={user} />
           </TabContainer>
         )}
         {this.state.value === 1 && (
