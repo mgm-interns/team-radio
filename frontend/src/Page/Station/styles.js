@@ -3,7 +3,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     width: '100%',
     height: '100%',
     background: 'rgba(0,0,0,0.99)',
-    zIndex: '99',
+    zIndex: '1000',
     position: 'absolute',
   },
   containerWrapper: {
@@ -39,7 +39,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
-    zIndex: '999',
+    zIndex: '1001',
     width: '100%',
     padding: `${spacing.doubleBaseMargin}px !important`,
   },

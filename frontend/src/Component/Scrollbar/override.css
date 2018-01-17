@@ -7,6 +7,10 @@
   border-radius: 4px;
 }
 
+#root .scrollarea > .scrollbar-container {
+  z-index: 999;
+}
+
 #root .scrollarea > .scrollbar-container > .scrollbar {
   opacity: 0 !important;
   transition: opacity 0.4s;
