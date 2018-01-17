@@ -41,6 +41,10 @@ export default theme => {
     addLinkBoxLeft: {
       textAlign: 'end',
     },
+    gridContainer: {
+      paddingTop: 10,
+      paddingLeft: 15,
+    },
     linkInput: {
       maxHeight: 100,
       marginBottom: baseMargin,
