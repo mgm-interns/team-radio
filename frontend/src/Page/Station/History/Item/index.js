@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AccessTimeIcon from 'react-icons/lib/md/access-time';
 import { transformNumber } from 'Transformer';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -11,6 +10,7 @@ import Grid from 'material-ui/Grid';
 import Tooltip from 'material-ui/Tooltip';
 import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
+import ReplayIcon from 'react-icons/lib/md/replay';
 import { withNotification } from 'Component/Notification';
 import { Images } from 'Theme';
 import styles from './styles';
@@ -30,6 +30,7 @@ class HistoryItem extends Component {
 
   _onReplayClick() {
     const {
+      notification,
       addSong,
       match: { params: { stationId } },
       user: { userId, username, name, avatar_url },
@@ -37,6 +38,15 @@ class HistoryItem extends Component {
       title,
       thumbnail,
     } = this.props;
+
+    // Check if user is not authenticated
+    if (!userId) {
+      notification.app.warning({
+        message: 'You need to login to use this feature.',
+      });
+      return;
+    }
+
     addSong({
       songUrl: url,
       title,
@@ -53,15 +63,16 @@ class HistoryItem extends Component {
       <Grid container className={classes.container}>
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} />
-        </Grid>
-        <Grid item xs={8} className={classes.info}>
-          <div className={classes.name}>{title}</div>
-          <div className={classes.singer}>
-            <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
+          <div className={classes.duration}>
             <span className={classes.durationText}>
               {transformNumber.millisecondsToTime(duration)}
             </span>
           </div>
+        </Grid>
+        <Grid item xs={8} className={classes.info}>
+          <Tooltip placement={'bottom'} title={title}>
+            <div className={classes.name}>{title}</div>
+          </Tooltip>
           <div className={classes.creator}>
             Added by
             {creator === null ? (
@@ -79,13 +90,15 @@ class HistoryItem extends Component {
           </div>
         </Grid>
         <Grid item xs={1} className={classes.actions}>
-          <IconButton
-            className={classes.action}
-            color="default"
-            onClick={this._onReplayClick}
-          >
-            replay
-          </IconButton>
+          <Tooltip placement={'bottom'} title={`Replay this song`}>
+            <IconButton
+              className={classes.action}
+              color="default"
+              onClick={this._onReplayClick}
+            >
+              <ReplayIcon />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
     );

@@ -1,3 +1,5 @@
+import includes from 'lodash/includes';
+import { appNotificationInstance } from 'Component/Notification/AppNotification';
 import {
   SERVER_JOINED_STATION_SUCCESS,
   SERVER_UPDATE_PLAYLIST,
@@ -13,8 +15,9 @@ import {
   CLIENT_LEAVE_STATION,
   SERVER_USER_LEFT,
   SERVER_SKIP_SONG,
+  SERVER_UPDATE_SKIPPED_SONGS,
+  SERVER_ALREADY_IN_A_STATION,
 } from 'Redux/actions';
-import { appNotificationInstance } from 'Component/Notification/AppNotification';
 
 const INITIAL_STATE = {
   station: null,
@@ -34,6 +37,7 @@ const INITIAL_STATE = {
     loading: false,
     success: false,
     failed: false,
+    otherStation: null,
   },
 };
 
@@ -49,6 +53,7 @@ export default (state = INITIAL_STATE, action) => {
           station_id: action.payload.stationId,
         },
         joined: {
+          ...state.joined,
           loading: true,
           success: false,
           failed: false,
@@ -60,6 +65,7 @@ export default (state = INITIAL_STATE, action) => {
         station: action.payload.station,
         playlist: action.payload.station.playlist,
         joined: {
+          ...state.joined,
           loading: false,
           success: true,
           failed: false,
@@ -70,12 +76,30 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
         joined: {
+          ...state.joined,
           loading: false,
           success: false,
           failed: true,
         },
       };
-
+    case SERVER_ALREADY_IN_A_STATION: {
+      appNotificationInstance.warning({
+        message:
+          'You have already been in another station. You will be redirected to landing page.',
+      });
+      return {
+        ...state,
+        joined: {
+          ...state.joined,
+          loading: false,
+          success: false,
+          failed: true,
+          otherStation: {
+            stationId: action.payload.stationId,
+          },
+        },
+      };
+    }
     case CLIENT_LEAVE_STATION:
       return {
         ...INITIAL_STATE,
@@ -116,6 +140,20 @@ export default (state = INITIAL_STATE, action) => {
           delay: action.payload.delay,
           thumbnail: action.payload.now_playing.thumbnail,
         },
+      };
+    case SERVER_UPDATE_SKIPPED_SONGS:
+      return {
+        ...state,
+        playlist: state.playlist.map(song => {
+          let willBeSkipped = false;
+          if (includes(action.payload, song.song_id)) {
+            willBeSkipped = true;
+          }
+          return {
+            ...song,
+            willBeSkipped,
+          };
+        }),
       };
     /**
      * Notify when a new user join

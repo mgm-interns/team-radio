@@ -33,6 +33,7 @@
     "react-cropper": "^1.0.1",
     "react-dom": "^16.2.0",
     "react-flexbox-grid": "^2.0.0",
+    "react-flip-move": "^3.0.0",
     "react-icons": "^2.2.7",
     "react-notification-system": "^0.2.16",
     "react-player": "^0.25.3",

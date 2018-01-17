@@ -1,4 +1,15 @@
-export default ({ breakpoints, palette, spacing }) => ({
+export default ({ breakpoints, palette, spacing, typography }) => ({
+  logo: {
+    height: 80,
+    margin: spacing.doubleBaseMargin,
+  },
+  passiveContainer: {
+    width: '100%',
+    height: '100%',
+    background: 'rgba(0,0,0,0.99)',
+    zIndex: '1000',
+    position: 'absolute',
+  },
   containerWrapper: {
     width: spacing.fullWidth,
     margin: 0,
@@ -25,6 +36,20 @@ export default ({ breakpoints, palette, spacing }) => ({
       minWidth: 1024,
       maxWidth: 1280,
     },
+  },
+  playerContainer: {
+    transition: 'all 0.3s linear',
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: '1001',
+    width: '100%',
+    padding: `${spacing.doubleBaseMargin}px !important`,
+  },
+  nowPlayingContainer: {
+    width: '100%',
+    margin: 0,
   },
   content: {
     height: 300,
@@ -72,5 +97,17 @@ export default ({ breakpoints, palette, spacing }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'baseline',
+  },
+  nowPlayingInfo: {
+    color: 'white',
+    lineHeight: 1.8,
+  },
+  passiveStationMainColor: {
+    color: palette.lightGrey.A700,
+  },
+  loadingTitle: {
+    width: `${typography.display1.fontSize} !important`,
+    height: `${typography.display1.fontSize} !important`,
+    color: typography.display1.color,
   },
 });

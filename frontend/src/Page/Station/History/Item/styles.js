@@ -1,19 +1,38 @@
 export default ({ spacing, palette, typography }) => ({
   container: {
     margin: 0,
-    height: '80px',
+    height: 80,
     width: spacing.fullWidth,
     '&.playing': {
       background: palette.lightGrey['500'],
     },
   },
-  thumbnail: {},
+  thumbnail: {
+    position: 'relative',
+  },
   img: {
     width: spacing.fullWidth,
     height: spacing.fullHeight,
     display: 'block',
     objectFit: 'cover',
     background: '#FFFFFF',
+  },
+  duration: {
+    position: 'absolute',
+    bottom: spacing.baseMargin + spacing.smallMargin / 2,
+    right: spacing.baseMargin + spacing.smallMargin / 2,
+    display: 'flex',
+    alignItems: 'center',
+    padding: spacing.smallMargin / 2,
+    borderRadius: 2,
+    backgroundColor: palette.lightBlack,
+  },
+  durationText: {
+    ...typography.body2,
+    color: palette.white,
+    fontSize: '0.625em',
+    marginLeft: spacing.smallMargin,
+    marginRight: spacing.smallMargin,
   },
   info: {
     padding: spacing.baseMargin,
@@ -26,15 +45,12 @@ export default ({ spacing, palette, typography }) => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
-  },
-  singer: {
-    ...typography.body2,
-    fontSize: '0.725em',
+    cursor: 'default',
   },
   creator: {
+    ...typography.caption,
     position: 'absolute',
     bottom: spacing.baseMargin,
-    ...typography.caption,
     fontSize: '0.725em',
     display: 'flex',
     flexDirection: 'row',
@@ -45,9 +61,8 @@ export default ({ spacing, palette, typography }) => ({
     marginLeft: spacing.baseMargin,
     width: '1.6em',
     height: '1.6em',
-    border: '1px solid #ccc',
     borderRadius: '50%',
-    objectFit: 'contain',
+    objectFit: 'cover',
     cursor: 'pointer',
   },
   actions: {
@@ -62,9 +77,5 @@ export default ({ spacing, palette, typography }) => ({
     '& .material-icons': {
       fontSize: spacing.baseMargin * 3,
     },
-  },
-  durationText: {
-    color: 'rgba(0,0,0,0.54)',
-    marginLeft: spacing.smallMargin,
   },
 });

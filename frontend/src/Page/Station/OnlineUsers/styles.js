@@ -1,4 +1,4 @@
-export default ({ spacing, palette, typography }) => ({
+export default ({ spacing, palette, typography, zIndex }) => ({
   onlineCountContainer: {
     marginLeft: spacing.baseMargin,
     cursor: 'pointer',
@@ -48,6 +48,7 @@ export default ({ spacing, palette, typography }) => ({
     position: 'absolute',
     top: '100%',
     right: 0,
+    zIndex: zIndex.tooltip,
     backgroundColor: 'rgba(0,0,0,0.7)',
     padding: spacing.baseMargin,
     borderRadius: spacing.smallMargin,

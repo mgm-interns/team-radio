@@ -1,9 +1,7 @@
-import { jellyBean } from 'Theme/Color';
-
 export default theme => {
   const {
     spacing: { baseMargin, doubleBaseMargin, fullWidth, fullHeight },
-    palette: { lightGrey },
+    palette: { yellow },
     typography,
     breakpoints,
   } = theme;
@@ -26,7 +24,7 @@ export default theme => {
       color: 'rgba(0,0,0,0.54)',
     },
     warningText: {
-      color: jellyBean[900],
+      color: yellow[900],
     },
     addLinkBox: {
       backgroundColor: '#fafafa !important',
@@ -51,7 +49,6 @@ export default theme => {
     },
     addLinkBoxRight: {
       paddingLeft: '30px !important',
-      minHeight: 186,
       [breakpoints.down('md')]: {
         paddingLeft: '8px !important',
       },
@@ -84,7 +81,7 @@ export default theme => {
     content: {
       margin: 0,
       width: fullWidth,
-      height: fullHeight,
+      height: 186,
     },
     loadingContainer: {
       height: fullHeight,
@@ -92,7 +89,7 @@ export default theme => {
     },
     emptyCollection: {
       width: fullWidth,
-      height: 200,
+      height: 186,
       margin: 'auto',
     },
     emptyImg: {

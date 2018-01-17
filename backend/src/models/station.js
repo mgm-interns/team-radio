@@ -30,6 +30,16 @@ const stationSchema = mongoose.Schema({
       ],
       default: []
     },
+  user_points:
+    {
+      type: [
+        {
+          user_id: { type: mongoose.Schema.Types.ObjectId, require: true, },
+          points: { type: Number, require: true, default: 0, },
+        },
+      ],
+      default: []
+    },
   created_date: { type: Number, default: new Date().getTime(), },
 });
 
@@ -246,6 +256,14 @@ module.exports.updateValueOfDownvote = (stationId, songId, valueNeedUpdate) => {
     { $set: { 'playlist.$.down_vote': valueNeedUpdate } },
   );
 };
+
+
+module.exports.updateVotes = (stationId, songId, newUpVotes, newDownVotes) => {
+  return Station.update(
+    { station_id: stationId, 'playlist.song_id': songId },
+    { $set: { 'playlist.$.up_vote': newUpVotes, 'playlist.$.down_vote': newDownVotes } },
+  );
+};
 /*********************** Playlist (songs) ********************/
 
 /**
@@ -281,16 +299,23 @@ module.exports.getPlaylistOfStation = async (stationId, limit) => {
  * @param {string} stationId 
  * @param {string} userId 
  */
-module.exports.getStationHasSongUserAdded = (stationId, userId) => {
-  return Station.findOne({ station_id: stationId }, {
+module.exports.getStationHasSongUserAdded = (userId) => {
+  return Station.find({
     playlist: {
       $elemMatch: {
         creator: userId
       }
     }
-  })
+  }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 });
 }
 
+
+module.exports.increaseUserPoints = async (stationId, userId, increasingPoints) => {
+  return Station.findOneAndUpdate(
+    { station_id: stationId, 'users.userId': userId },
+    {$inc : {'users.$.points' : increasingPoints}},
+  );
+}
 
 // module.exports.getListSongHistory = async stationId => {
 //   // TODO : 
