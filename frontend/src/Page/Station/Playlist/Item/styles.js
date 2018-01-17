@@ -21,11 +21,10 @@ export default ({ spacing, palette, typography }) => ({
   },
   duration: {
     position: 'absolute',
-    bottom: spacing.baseMargin + spacing.smallMargin / 2,
-    right: spacing.baseMargin + spacing.smallMargin / 2,
+    bottom: spacing.baseMargin + 1,
+    right: spacing.baseMargin + 1,
     display: 'flex',
     alignItems: 'center',
-    padding: spacing.smallMargin / 2,
     borderRadius: 2,
     backgroundColor: palette.lightBlack,
   },

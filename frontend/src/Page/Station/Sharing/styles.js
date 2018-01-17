@@ -1,4 +1,4 @@
-export default ({ spacing }) => ({
+export default ({ spacing, palette }) => ({
   container: {},
   cardContainer: {
     width: '100%',
@@ -36,5 +36,8 @@ export default ({ spacing }) => ({
   twitterIcon: {
     color: '#1DA1F2',
     fontSize: 32,
+  },
+  passiveStationMainColor: {
+    color: palette.lightGrey.A700,
   },
 });

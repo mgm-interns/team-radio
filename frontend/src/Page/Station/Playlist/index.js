@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { passiveUserRequest, getNowPlaying } from 'Redux/page/station/actions';
 import Grid from 'material-ui/Grid';
 import FlipMoveList from 'react-flip-move';
 import { withStyles } from 'material-ui/styles';
@@ -11,6 +12,7 @@ import WarningIcon from 'react-icons/lib/md/warning';
 import Item from './Item';
 import styles from './styles';
 
+/* eslint-disable no-shadow */
 class Playlist extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +34,14 @@ class Playlist extends Component {
    * @returns {Array}
    */
   getFilteredPlaylist() {
-    const { playlist, nowPlaying } = this.props;
+    const { playlist, nowPlaying, getNowPlaying } = this.props;
+    /* eslint-disable consistent-return */
+    playlist.forEach((item, index) => {
+      if (index === 0) {
+        getNowPlaying(item);
+        return false;
+      }
+    });
 
     return orderBy(
       playlist,
@@ -107,10 +116,20 @@ Playlist.propTypes = {
   style: PropTypes.any,
   playlist: PropTypes.array,
   nowPlaying: PropTypes.object,
+  getNowPlaying: PropTypes.func,
+  passiveUserRequest: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
   nowPlaying: state.api.currentStation.nowPlaying,
 });
 
-export default compose(withStyles(styles), connect(mapStateToProps))(Playlist);
+const mapDispatchToProps = dispatch => ({
+  passiveUserRequest: passive => dispatch(passiveUserRequest(passive)),
+  getNowPlaying: data => dispatch(getNowPlaying(data)),
+});
+
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps, mapDispatchToProps),
+)(Playlist);
