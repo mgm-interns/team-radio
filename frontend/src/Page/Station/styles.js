@@ -1,4 +1,4 @@
-export default ({ breakpoints, palette, spacing }) => ({
+export default ({ breakpoints, palette, spacing, typography }) => ({
   containerWrapper: {
     width: '100%',
     margin: 0,
@@ -72,5 +72,10 @@ export default ({ breakpoints, palette, spacing }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'baseline',
+  },
+  loadingTitle: {
+    width: `${typography.display1.fontSize} !important`,
+    height: `${typography.display1.fontSize} !important`,
+    color: typography.display1.color,
   },
 });

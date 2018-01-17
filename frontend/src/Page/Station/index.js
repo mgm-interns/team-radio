@@ -6,6 +6,7 @@ import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import Tabs, { Tab } from 'material-ui/Tabs';
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
@@ -80,8 +81,15 @@ class StationPage extends Component {
       currentStation: { joined },
     } = props;
     // Station must be a valid string
-    if (!joined.loading && !joined.success) {
+    if (!joined.loading && !joined.success && !joined.otherStation) {
       this.props.joinStation({ stationId, userId });
+    }
+    // Check if user is already joined in other station
+    if (!joined.loading && joined.failed && !!joined.otherStation) {
+      setTimeout(() => {
+        history.replace('/');
+      }, 5000);
+      return;
     }
     if (!joined.loading && joined.failed) {
       history.replace('/');
@@ -181,8 +189,9 @@ class StationPage extends Component {
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <div className={classes.titleContainer}>
                     <Typography type={'display1'}>
-                      {(station && station.station_name) ||
-                        STATION_NAME_DEFAULT}
+                      {(station && station.station_name) || (
+                        <CircularProgress className={classes.loadingTitle} />
+                      )}
                     </Typography>
                     <OnlineUsers />
                   </div>
