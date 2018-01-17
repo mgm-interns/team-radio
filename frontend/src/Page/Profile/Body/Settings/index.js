@@ -8,7 +8,7 @@ import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
 import Modal from 'material-ui/Modal';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
-import Menu from 'material-ui/Menu';
+import Popover from 'material-ui/Popover';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
 import { withNotification } from 'Component/Notification';
@@ -55,6 +55,7 @@ class Settings extends Component {
     this._closeMenu = this._closeMenu.bind(this);
     this._submitModal = this._submitModal.bind(this);
     this._showNotification = this._showNotification.bind(this);
+    this._renderPopoverContent = this._renderPopoverContent.bind(this);
   }
 
   _showNotification(content) {
@@ -166,6 +167,25 @@ class Settings extends Component {
     );
   }
 
+  _renderPopoverContent() {
+    return (
+      <List>
+        <ListItem button onClick={this._onOpenEditInformation}>
+          <ListItemIcon>
+            <Icon>personal</Icon>
+          </ListItemIcon>
+          <ListItemText primary="Information" />
+        </ListItem>
+        <ListItem button onClick={this._onOpenEditPassword}>
+          <ListItemIcon>
+            <Icon>vpn_key</Icon>
+          </ListItemIcon>
+          <ListItemText primary="Password" />
+        </ListItem>
+      </List>
+    );
+  }
+
   render() {
     const { classes, loading } = this.props;
     const { anchorEl } = this.state;
@@ -187,28 +207,21 @@ class Settings extends Component {
           </Button>
         </div>
 
-        <Menu
-          id="simple-menu"
-          className={classes.menuPopover}
+        <Popover
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={this._closeMenu}
         >
-          <List>
-            <ListItem button onClick={this._onOpenEditInformation}>
-              <ListItemIcon>
-                <Icon>personal</Icon>
-              </ListItemIcon>
-              <ListItemText primary="Information" />
-            </ListItem>
-            <ListItem button onClick={this._onOpenEditPassword}>
-              <ListItemIcon>
-                <Icon>vpn_key</Icon>
-              </ListItemIcon>
-              <ListItemText primary="Password" />
-            </ListItem>
-          </List>
-        </Menu>
+          {this._renderPopoverContent()}
+        </Popover>
         {this._renderEditInformation()}
         {this._renderEditPassword()}
       </div>

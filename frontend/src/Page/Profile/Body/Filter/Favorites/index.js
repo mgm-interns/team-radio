@@ -17,7 +17,8 @@ class FilterFavorites extends Component {
     const { classes } = this.props;
     return (
       <Grid container className={classes.containerWrapper}>
-        <Grid item xs={12} className={classes.switcherContainer}>
+        <Typography type="title">{`Hear the tracks you've saved`}</Typography>
+        <Grid item xs={12} className={classes.favoritesContainer}>
           <Favorites favoriteSongs={pins[0].playlist} />
         </Grid>
       </Grid>

@@ -43,9 +43,6 @@ export default ({ palette }) => ({
     color: palette.white,
     fontSize: '1rem',
   },
-  menuPopover: {
-    marginTop: 30,
-  },
   profileLink: {
     textDecoration: 'none',
     color: '#000000de',

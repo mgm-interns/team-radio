@@ -24,10 +24,8 @@ class FilterAll extends Component {
     return (
       <Grid container className={classes.containerWrapper}>
         <Grid item xs={12} className={classes.container}>
-          <Typography type="display1" className={classes.titleLabel}>
-            My Stations
-          </Typography>
-          <div className={classes.stationsSection}>
+          <Typography type="title">My stations</Typography>
+          <div className={classes.stationSection}>
             <StationList
               stations={all.data.stations}
               loading={all.loading}
@@ -35,8 +33,8 @@ class FilterAll extends Component {
               disableOnlineCount
             />
           </div>
-          <Typography type="display1" className={classes.titleLabel}>
-            Interactive Stations
+          <Typography type="title" className={classes.titleLabel}>
+            Recent
           </Typography>
           <div className={classes.stationsSection}>
             <StationList

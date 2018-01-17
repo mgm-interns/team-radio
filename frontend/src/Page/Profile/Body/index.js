@@ -19,7 +19,7 @@ class Body extends Component {
     super(props);
 
     this.state = {
-      value: 0,
+      value: 1,
       open: false,
     };
 
@@ -40,7 +40,7 @@ class Body extends Component {
 
     return (
       <Grid container className={classes.container}>
-        <Grid item xs={12} md={7} xl={8}>
+        <Grid item xs={11}>
           <Grid container>
             <Grid item xs={12} className={classes.actions}>
               <Tabs
@@ -49,13 +49,23 @@ class Body extends Component {
                 indicatorColor="primary"
                 textColor="primary"
               >
-                <Tab label="All" />
-                <Tab label="Favorites" />
+                <Tab
+                  label="My Stations"
+                  classes={{
+                    label: classes.tabLabel,
+                  }}
+                />
+                <Tab
+                  label="Songs"
+                  classes={{
+                    label: classes.tabLabel,
+                  }}
+                />
               </Tabs>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} md={5} xl={4} className={classes.buttonEditProfile}>
+        <Grid item xs={1} className={classes.buttonEditProfile}>
           {isDisabled && <Settings user={user} />}
         </Grid>
         {this.state.value === 0 && (

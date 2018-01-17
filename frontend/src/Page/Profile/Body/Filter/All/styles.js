@@ -14,7 +14,4 @@ export default ({ breakpoints, spacing }) => ({
     width: '100% !important',
     margin: 'auto',
   },
-  titleLabel: {
-    paddingLeft: spacing.doubleBaseMargin,
-  },
 });

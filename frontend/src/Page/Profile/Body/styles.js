@@ -8,9 +8,15 @@ export default ({ breakpoints }) => ({
   },
   actions: {
     display: 'flex',
+    borderBottom: '1px solid #f2f2f2',
+    padding: '0px !important',
   },
   buttonEditProfile: {
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  tabLabel: {
+    fontStyle: 'bold',
+    textTransform: 'none',
   },
 });

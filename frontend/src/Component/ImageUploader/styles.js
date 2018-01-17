@@ -50,8 +50,8 @@ export default ({ palette, spacing }) => ({
     height: 100,
   },
   avatar: {
-    width: 150,
-    height: 150,
+    width: 120,
+    height: 120,
   },
   button: {
     color: palette.white,

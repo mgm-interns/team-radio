@@ -18,16 +18,15 @@ export default ({ breakpoints, palette, spacing }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  userInformation: {
+  userInformationContainer: {
     display: 'flex',
     alignItems: 'center',
   },
+  userInformationContent: {
+    paddingLeft: spacing.doubleBaseMargin,
+  },
   avatar: {
     margin: spacing.doubleBaseMargin,
-  },
-  bigAvatar: {
-    width: 150,
-    height: 150,
   },
   text: {
     color: palette.white,
@@ -45,6 +44,7 @@ export default ({ breakpoints, palette, spacing }) => ({
   summarize: {
     paddingLeft: 150,
     display: 'flex',
+    alignItems: 'center',
   },
   summarizeItem: {
     display: 'flex',

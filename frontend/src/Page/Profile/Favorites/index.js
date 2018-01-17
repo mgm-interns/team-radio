@@ -68,19 +68,9 @@ class Favorites extends Component {
     }
 
     return (
-      <Grid item xs={12}>
-        <GridList cellHeight={200} spacing={1} className={classes.gridList}>
-          <GridListTile
-            cols={2}
-            style={{
-              height: 'auto',
-            }}
-          >
-            <Subheader component="div">{`Hear the tracks you've saved`}</Subheader>
-          </GridListTile>
-          {favoriteSongs.map((video, index) => <Item key={index} {...video} />)}
-        </GridList>
-      </Grid>
+      <GridList cellHeight={200} spacing={1} className={classes.gridList}>
+        {favoriteSongs.map((video, index) => <Item key={index} {...video} />)}
+      </GridList>
     );
   }
 }

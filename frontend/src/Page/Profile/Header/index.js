@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
-import Icon from 'material-ui/Icon';
-import Button from 'material-ui/Button';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import ImageUploader from 'Component/ImageUploader';
 import styles from './styles';
@@ -27,43 +24,43 @@ class Header extends Component {
 
     return (
       <div className={classes.coverBackground}>
-        <div className={classes.userInformation}>
+        <div className={classes.userInformationContainer}>
           <ImageUploader user={user} />
-          <div>
+          <div className={classes.userInformationContent}>
             <Typography type="headline" className={classes.text}>
               {user.name}
             </Typography>
             <Typography className={classes.text}>@{user.username}</Typography>
           </div>
 
-          {/* <div className={classes.summarize}> */}
-          {/* <div className={classes.summarizeItem}> */}
-          {/* <Typography type="headline" className={classes.text}> */}
-          {/* Songs */}
-          {/* </Typography> */}
-          {/* <Typography type="subheading" className={classes.number}> */}
-          {/* 52 */}
-          {/* </Typography> */}
-          {/* </div> */}
+          <div className={classes.summarize}>
+            <div className={classes.summarizeItem}>
+              <Typography type="subheading" className={classes.text}>
+                Songs
+              </Typography>
+              <Typography type="body2" className={classes.number}>
+                0
+              </Typography>
+            </div>
 
-          {/* <div className={classes.summarizeItem}> */}
-          {/* <Typography type="headline" className={classes.text}> */}
-          {/* Votes */}
-          {/* </Typography> */}
-          {/* <Typography type="subheading" className={classes.number}> */}
-          {/* 3 */}
-          {/* </Typography> */}
-          {/* </div> */}
+            <div className={classes.summarizeItem}>
+              <Typography type="subheading" className={classes.text}>
+                Voted
+              </Typography>
+              <Typography type="body2" className={classes.number}>
+                0
+              </Typography>
+            </div>
 
-          {/* <div className={classes.summarizeItem}> */}
-          {/* <Typography type="headline" className={classes.text}> */}
-          {/* Score */}
-          {/* </Typography> */}
-          {/* <Typography type="subheading" className={classes.number}> */}
-          {/* 0 */}
-          {/* </Typography> */}
-          {/* </div> */}
-          {/* </div> */}
+            <div className={classes.summarizeItem}>
+              <Typography type="subheading" className={classes.text}>
+                Score
+              </Typography>
+              <Typography type="body2" className={classes.number}>
+                {user.reputation}
+              </Typography>
+            </div>
+          </div>
         </div>
 
         {/* <Button */}

@@ -6,6 +6,7 @@ import ListSubheader from 'material-ui/List/ListSubheader';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Icon from 'material-ui/Icon';
 import Menu from 'material-ui/Menu';
+import Popover from 'material-ui/Popover';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -26,6 +27,7 @@ class AuthLink extends Component {
       anchorEl: null,
     };
     this._logout = this._logout.bind(this);
+    this._renderPopoverContent = this._renderPopoverContent.bind(this);
   }
 
   _logout() {
@@ -45,6 +47,37 @@ class AuthLink extends Component {
   _closeMenu = () => {
     this.setState({ anchorEl: null });
   };
+
+  _renderPopoverContent() {
+    const { user, classes } = this.props;
+    return (
+      <List
+        subheader={
+          <ListSubheader>{`Signed in as: ${user.data.username ||
+            user.data.email}`}</ListSubheader>
+        }
+      >
+        <Link
+          className={classes.profileLink}
+          to={`/profile/${user.data.username}`}
+        >
+          <ListItem>
+            <ListItemIcon>
+              <Icon>personal</Icon>
+            </ListItemIcon>
+            <ListItemText primary="My Profile" />
+          </ListItem>
+        </Link>
+
+        <ListItem button onClick={this._logout}>
+          <ListItemIcon>
+            <Icon>exit_to_app</Icon>
+          </ListItemIcon>
+          <ListItemText primary="Logout" />
+        </ListItem>
+      </List>
+    );
+  }
 
   render() {
     const { classes, user } = this.props;
@@ -83,39 +116,21 @@ class AuthLink extends Component {
               <Icon className={classes.dropdownIcon}>arrow_drop_down</Icon>
             </div>
 
-            <Menu
-              id="simple-menu"
-              className={classes.menuPopover}
+            <Popover
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={this._closeMenu}
             >
-              <List
-                subheader={
-                  <ListSubheader>{`Signed in as: ${user.data.username ||
-                    user.data.email}`}</ListSubheader>
-                }
-              >
-                <Link
-                  className={classes.profileLink}
-                  to={`/profile/${user.data.username}`}
-                >
-                  <ListItem>
-                    <ListItemIcon>
-                      <Icon>personal</Icon>
-                    </ListItemIcon>
-                    <ListItemText primary="My Profile" />
-                  </ListItem>
-                </Link>
-
-                <ListItem button onClick={this._logout}>
-                  <ListItemIcon>
-                    <Icon>exit_to_app</Icon>
-                  </ListItemIcon>
-                  <ListItemText primary="Logout" />
-                </ListItem>
-              </List>
-            </Menu>
+              {this._renderPopoverContent()}
+            </Popover>
           </div>
         )}
       </Fragment>
