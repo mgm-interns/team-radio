@@ -32,16 +32,18 @@ export const getListSocketIdInStation = async (stationId, io) =>
   });
 
 // Return number of online users in station
-export const countOnlineOfStation = async (stationId, io) =>
-  new Promise(resolve => {
-    io
-      .of('/')
-      .in(stationId)
-      .clients((error, clients) => {
-        if (error) return resolve(0);
-        return resolve(clients.length);
-      });
+export const countOnlineOfStation = async (stationId, io) => {
+  const users = (await getListUserIdOnline(stationId, io)).size;
+  let anonymous = 0;
+  const listSocket = await getListSocketIdInStation(stationId, io);
+  listSocket.forEach(socketId => {
+    const socket = getSocketById(socketId, io);
+    if (!socket.userId || socket.userId === '0') {
+      anonymous += 1;
+    }
   });
+  return users + anonymous;
+};
 
 /**
  * Count number of online users for the stations
