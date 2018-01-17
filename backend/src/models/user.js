@@ -12,72 +12,43 @@ const userSchema = mongoose.Schema({
     require: [true, 'Email can not be empty'],
     unique: true,
   },
-  password: {
-    type: String,
-  },
-  is_password: {
-    type: Boolean,
-  },
-  name: {
-    type: String,
-    default: '',
-  },
-  firstname: {
-    type: String,
-    default: '',
-  },
-  lastname: {
-    type: String,
-    default: '',
-  },
-  country: {
-    type: String,
-    default: '',
-  },
-  city: {
-    type: String,
-    default: '',
-  },
-  bio: {
-    type: String,
-    default: '',
-  },
-  username: {
-    type: String,
-    unique: true,
-  },
-  avatar_url: {
-    type: String,
-    default: null,
-  },
-  cover_url: {
-    type: String,
-    default: null,
-  },
-  reputation: {
-    type: Number,
-    default: 0,
-  },
-  level: {
-    type: String,
-    default: 'Newbie',
-    enum: ['Newbie'],
-  },
-  facebook_id: {
-    type: String,
-  },
-  google_id: {
-    type: String,
+  password: { type: String },
+  is_password: { type: Boolean },
+  name: { type: String, default: '' },
+  firstname: { type: String, default: '' },
+  lastname: { type: String, default: '' },
+  country: { type: String, default: '' },
+  city: { type: String, default: '' },
+  bio: { type: String, default: '' },
+  username: { type: String, unique: true },
+  avatar_url: { type: String, default: null },
+  cover_url: { type: String, default: null },
+  reputation: { type: Number, default: 0 },
+  level: { type: String, default: 'Newbie', enum: ['Newbie'] },
+  facebook_id: { type: String },
+  google_id: { type: String },
+  favourited_songs: {
+    type: [
+      {
+        url: { type: String, required: true },
+        title: { type: String },
+        thumbnail: { type: String },
+        duration: { type: Number, min: 0 },
+        creator: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+        created_date: { type: Number, default: true },
+      },
+    ],
+    default: [],
   },
 });
 
 // generation a hash
-userSchema.methods.generateHash = function(pwd) {
+userSchema.methods.generateHash = function (pwd) {
   return bcrypt.hashSync(pwd, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
-userSchema.methods.validPassword = function(password) {
+userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
@@ -131,3 +102,61 @@ module.exports.setCover = async (userId, coverUrl) =>
     { cover_url: coverUrl },
     { multi: true },
   );
+
+/**
+ * The function update a field favourited_songs in db
+ *
+ * @param {string} userId
+ * @param {[]} valueNeedUpdate
+ */
+module.exports.updateFavouritedSongs = (userId, song) => {
+  const query = { _id: userId };
+  return user.update(query, {
+    $addToSet: {
+      favourited_songs: song,
+    },
+  });
+};
+
+/**
+ * The function delete a song of field favourited_songs in db
+ *
+ * @param {string} userId
+ * @param {string} songId
+ */
+module.exports.deleteAsongInFavouritedSongs = (userId, songId) => {
+  const query = { _id: userId };
+  return user.update(query, {
+    $pull: {
+      favourited_songs: { _id: songId },
+    },
+  });
+};
+/**
+ * The function get favourited_songs in db
+ *
+ * @param {string} userId
+ */
+module.exports.getFavouritedSongs = async userId => {
+  const query = { _id: userId };
+  return (await user.findOne(query, { favourited_songs: true }))
+    .favourited_songs;
+};
+
+/**
+ *
+ * @param {string} stationId
+ * @param {string} userId
+ */
+module.exports.getStationHasSongUserAdded = (userId, urlSong) => {
+  return user.find(
+    { _id: userId },
+    {
+      favourited_songs: {
+        $elemMatch: {
+          creator: userId,
+        },
+      },
+    },
+  );
+};

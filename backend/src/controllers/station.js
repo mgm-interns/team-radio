@@ -4,6 +4,8 @@ import deleteDiacriticMarks from 'khong-dau';
 import getSongDetails from './song';
 import * as players from '../players';
 import * as stationModels from './../models/station';
+import * as userControllers from './../controllers/user'
+import * as userModels from './../models/user'
 import { Error } from 'mongoose';
 import station from '../routes/station';
 import user from '../routes/user';
@@ -131,8 +133,11 @@ export const getStationsByUserId = async userId => {
  * @param {string} songUrl
  * @param {string} userId
  */
-export const addSong = async (stationId, songUrl, userId = null) => {
+export const addSong = async (stationId, songUrl, userId) => {
   let station;
+  if (!userId) {
+    throw new Error(`You need to login to use this feature.`);
+  }
   try {
     station = await stationModels.getStationById(stationId);
   } catch (err) {
@@ -141,27 +146,11 @@ export const addSong = async (stationId, songUrl, userId = null) => {
   if (!station) {
     throw new Error(`Station id ${stationId} is not exist!`);
   }
-  if (!userId || userId === 0 || userId === '0') {
-    let numOfSongsAddedByUnregistedUsers = 0;
-    station.playlist.forEach((song, index) => {
-      if (!song.creator && song.is_played === false) {
-        numOfSongsAddedByUnregistedUsers += 1;
-        if (
-          numOfSongsAddedByUnregistedUsers === MAX_SONG_UNREGISTED_USER_CAN_ADD
-        ) {
-          throw new Error(
-            `You need to login to add more song!\n` +
-            `Unlogged users are only allowed to add up to 3 songs to playlist at a time`,
-          );
-        }
-      }
-    });
-  }
-
   const songDetail = await getSongDetails(songUrl);
   if (!songDetail) {
     throw new Error('Song url is incorrect!');
   }
+
   try {
     const song = {
       song_id: new Date().getTime(),
@@ -454,18 +443,10 @@ export const downVote = async (stationId, songId, userId) => {
  */
 export const getListStationUserAddedSong = async userId => {
   try {
-    const stations = await stationModels.getAllStationLimitInfor();
-    const currentStation = [];
-    for (let i = 0; i < stations.length; i++) {
-      const playList = (await stationModels.getStationHasSongUserAdded(
-        stations[i].station_id,
-        userId,
-      )).playlist;
-      if (playList.length > 0) {
-        currentStation.push(stations[i]);
-      }
-    }
-    return currentStation;
+    const playList = await stationModels.getStationHasSongUserAdded(
+      userId
+    );
+    return playList;
   } catch (error) {
     throw error;
   }

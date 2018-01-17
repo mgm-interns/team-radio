@@ -299,14 +299,14 @@ module.exports.getPlaylistOfStation = async (stationId, limit) => {
  * @param {string} stationId 
  * @param {string} userId 
  */
-module.exports.getStationHasSongUserAdded = (stationId, userId) => {
-  return Station.findOne({ station_id: stationId }, {
+module.exports.getStationHasSongUserAdded = (userId) => {
+  return Station.find({
     playlist: {
       $elemMatch: {
         creator: userId
       }
     }
-  })
+  }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 });
 }
 
 
