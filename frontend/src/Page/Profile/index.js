@@ -34,7 +34,7 @@ class Profile extends Component {
   render() {
     const { classes, user, isOwner } = this.props;
 
-    if (!user) {
+    if (Object.keys(user).length === 0) {
       return this._renderLoading();
     }
 

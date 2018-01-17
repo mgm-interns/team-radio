@@ -14,8 +14,9 @@ import styles from './styles';
 
 class FilterAll extends Component {
   componentDidMount() {
-    // this.props.requestStationsByUserId(localStorage.getItem('userId'));
-    // this.props.requestRecentStationsByUserId(localStorage.getItem('userId'));
+    const { user: { userId } } = this.props;
+    this.props.requestStationsByUserId(userId);
+    this.props.requestRecentStationsByUserId(userId);
   }
 
   render() {

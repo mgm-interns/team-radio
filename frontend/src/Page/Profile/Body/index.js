@@ -36,6 +36,7 @@ class Body extends Component {
 
   render() {
     const { classes, user, isDisabled } = this.props;
+    console.log(user);
 
     return (
       <Grid container className={classes.container}>
