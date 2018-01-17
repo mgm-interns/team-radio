@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { Field, reduxForm, Form } from 'redux-form';
-import {
-  settingsValidate,
-  maxLength15,
-  minLength6,
-  required,
-} from 'Util/validate';
+import { Field, reduxForm } from 'redux-form';
+import { settingsValidate, minLength6, required } from 'Util/validate';
 import { TextView } from 'Component';
 import { withStyles } from 'material-ui/styles/index';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
@@ -17,8 +12,6 @@ import Button from 'material-ui/Button';
 
 import { connect } from 'react-redux';
 import { setPassword } from 'Redux/api/userProfile/actions';
-
-import { saveAuthenticationState } from 'Configuration';
 
 import styles from '../styles';
 
@@ -36,10 +29,10 @@ class Password extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { password: { message } } = nextProps;
-    if (message !== null) {
+    const { userProfile: { error } } = nextProps;
+    if (error !== null) {
       this.setState({
-        formErrors: message,
+        formErrors: error.response.message,
       });
     }
   }
@@ -55,11 +48,11 @@ class Password extends Component {
       is_password !== false && (
         <Field
           key={1}
-          name="oldPassword"
-          placeholder="Old password"
+          name="currentPassword"
+          placeholder="Current password"
           type="password"
           component={TextView}
-          label="Old password"
+          label="Current password"
           validate={[required, minLength6]}
         />
       ),
@@ -101,10 +94,6 @@ class Password extends Component {
   render() {
     const { classes, handleSubmit, pristine, submitting, loading } = this.props;
 
-    if (loading) {
-      return this._renderLoading();
-    }
-
     return (
       <Grid className={classes.content}>
         <form onSubmit={handleSubmit(this._submitModal)}>
@@ -142,16 +131,16 @@ Password.propTypes = {
 };
 
 const mapStateToProps = ({ api }) => ({
-  initialValues: api.user.data,
-  password: api.userProfile.password.data,
+  initialValues: api.userProfile.data,
+  userProfile: api.userProfile,
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: ({ userId, oldPassword, newPassword }) =>
+  onSubmit: ({ userId, currentPassword, newPassword }) =>
     dispatch(
       setPassword({
         userId,
-        oldPassword,
+        currentPassword,
         newPassword,
       }),
     ),

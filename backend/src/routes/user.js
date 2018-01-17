@@ -326,22 +326,23 @@ export default router => {
           req.app.get('superSecret'),
         );
         if (isOwner) {
-          if (user.password && !user.validPassword(req.body.oldPassword)) {
-            return res.json({
-              message: 'Old password is wrong!',
+          if (user.password && !user.validPassword(req.body.currentPassword)) {
+            return res.status(400).json({
+              message: 'Current password is incorrect!',
             });
           }
           const newPassword = user.generateHash(req.body.newPassword);
           await userController.setPassword(user.email, newPassword);
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
-            message: 'Success',
+            message: 'Update password successfully',
+            isOwner,
             ...user._doc,
             userId: user._id,
           });
         }
       }
-      return res.json({
+      return res.status(400).json({
         message: 'Can not update password!',
       });
     } catch (err) {
