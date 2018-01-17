@@ -29,7 +29,7 @@ class Player {
     const preSkippedSongs = new Set(this.skippedSongs);
     // Save the user ids
     this.userIds = userIds;
-    const playlist = await stationController.getListSong(this.stationId);
+    const playlist = await stationController.getAvailableListSong(this.stationId);
     // Check songs will be skipped
     playlist.forEach(song => {
       // Dem so vote co user
@@ -66,6 +66,8 @@ class Player {
           break;
         }
       }
+    } else {
+      this._emitSkippedSongs();
     }
   };
   _emitSkippedSongs = () => {
