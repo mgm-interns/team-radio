@@ -47,6 +47,11 @@ export default ({ spacing, palette, typography }) => ({
     overflowX: 'hidden',
     cursor: 'default',
   },
+  warningText: {
+    ...typography.caption,
+    fontSize: '0.725em',
+    cursor: 'default',
+  },
   creator: {
     ...typography.caption,
     position: 'absolute',
@@ -61,9 +66,8 @@ export default ({ spacing, palette, typography }) => ({
     marginLeft: spacing.baseMargin,
     width: '1.6em',
     height: '1.6em',
-    border: '1px solid #ccc',
     borderRadius: '50%',
-    objectFit: 'contain',
+    objectFit: 'cover',
     cursor: 'pointer',
   },
   actions: {

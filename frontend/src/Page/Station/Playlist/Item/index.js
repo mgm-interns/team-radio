@@ -159,6 +159,7 @@ class PlaylistItem extends Component {
       classes,
       creator,
       duration,
+      willBeSkipped,
     } = this.props;
 
     return (
@@ -174,6 +175,14 @@ class PlaylistItem extends Component {
         <Grid item xs={9} className={classes.info}>
           <Tooltip placement={'bottom'} title={title}>
             <div className={classes.name}>{title}</div>
+          </Tooltip>
+          <Tooltip
+            placement={'bottom'}
+            title={'This song will be skipped when player starts it.'}
+          >
+            <div className={classes.warningText}>
+              {willBeSkipped && 'Will be skipped'}
+            </div>
           </Tooltip>
           <div className={classes.creator}>
             Added by
@@ -245,6 +254,7 @@ PlaylistItem.propTypes = {
   downVoteSong: PropTypes.func,
   up_vote: PropTypes.array,
   down_vote: PropTypes.array,
+  willBeSkipped: PropTypes.bool,
   duration: PropTypes.number,
   userId: PropTypes.any,
   isAuthenticated: PropTypes.bool,

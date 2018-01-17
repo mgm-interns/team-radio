@@ -61,9 +61,8 @@ export default ({ spacing, palette, typography }) => ({
     marginLeft: spacing.baseMargin,
     width: '1.6em',
     height: '1.6em',
-    border: '1px solid #ccc',
     borderRadius: '50%',
-    objectFit: 'contain',
+    objectFit: 'cover',
     cursor: 'pointer',
   },
   actions: {
