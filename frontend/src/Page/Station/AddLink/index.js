@@ -328,6 +328,7 @@ class AddLink extends Component {
       notification.app.warning({
         message: 'You need to login to use this feature.',
       });
+      return;
     }
 
     // If authenticated

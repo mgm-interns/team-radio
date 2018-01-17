@@ -42,7 +42,7 @@ class HistoryItem extends Component {
     // Check if user is not authenticated
     if (!userId) {
       notification.app.warning({
-        message: 'Unregistered user is not allowed to do this.',
+        message: 'You need to login to use this feature.',
       });
       return;
     }
