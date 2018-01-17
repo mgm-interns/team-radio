@@ -1,36 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { Field, reduxForm, Form } from 'redux-form';
-import { connect } from 'react-redux';
-import classNames from 'classnames';
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
-import Tabs, { Tab } from 'material-ui/Tabs';
 import Modal from 'material-ui/Modal';
-import { FormHelperText } from 'material-ui/Form';
-import Typography from 'material-ui/Typography';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
+import Menu from 'material-ui/Menu';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
-import { TabContainer } from 'Component';
+import { withNotification } from 'Component/Notification';
 import { withRouter } from 'react-router';
 
-import {
-  customValidate,
-  required,
-  email,
-  minLength6,
-  maxLength15,
-} from 'Util/validate';
-
-import { Images } from 'Theme';
 import styles from './styles';
 
 import Information from './Information';
-import Security from './Security';
+import Password from './Password';
 
 function getModalStyle() {
   const top = 50;
@@ -54,130 +41,188 @@ class Settings extends Component {
     super(props);
 
     this.state = {
-      value: 0,
-      open: false,
-      secondSource:
-        'http://www.followingthenerd.com/site/wp-content/uploads/avatar.jpg_274898881.jpg',
+      openEditInformation: false,
+      openEditPassword: false,
+      anchorEl: null,
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this._onOpenModal = this._onOpenModal.bind(this);
+    this._renderEditInformation = this._renderEditInformation.bind(this);
+    this._onOpenEditInformation = this._onOpenEditInformation.bind(this);
+    this._onOpenEditPassword = this._onOpenEditPassword.bind(this);
     this._onCloseModal = this._onCloseModal.bind(this);
     this.onCancelButtonClick = this.onCancelButtonClick.bind(this);
+    this._openMenu = this._openMenu.bind(this);
+    this._closeMenu = this._closeMenu.bind(this);
+    this._submitModal = this._submitModal.bind(this);
+    this._showNotification = this._showNotification.bind(this);
+  }
+
+  _showNotification(content) {
+    const { notification } = this.props;
+
+    notification.app.success({
+      message: content,
+    });
   }
 
   onCancelButtonClick() {
-    this.setState({ open: !this.state.open });
+    this.setState({
+      openEditInformation: false,
+      openEditPassword: false,
+    });
+    this._closeMenu();
   }
 
-  onSubmitButtonClick(values) {
-    console.log(values);
+  _onOpenEditInformation() {
+    this._closeMenu();
+    this.setState({ openEditInformation: true, openEditPassword: false });
   }
 
-  handleChange(event, value) {
-    this.setState({ value });
-  }
-
-  _onOpenModal() {
-    this.setState({ open: true });
+  _onOpenEditPassword() {
+    this._closeMenu();
+    this.setState({ openEditInformation: false, openEditPassword: true });
   }
 
   _onCloseModal() {
-    this.setState({ open: false });
+    this.setState({
+      openEditInformation: false,
+      openEditPassword: false,
+    });
+    this._closeMenu();
   }
 
-  _renderSecondItem() {
-    const { classes } = this.props;
-    return () => (
-      <div className={classes.secondButton}>
-        <img width="150" height="150" src={this.state.secondSource} alt="" />
-      </div>
-    );
+  _openMenu(event) {
+    this.setState({ anchorEl: event.target });
   }
 
-  _renderLoading() {
+  _closeMenu() {
+    this.setState({ anchorEl: null });
+  }
+
+  _submitModal() {
+    this._onCloseModal();
+    this._showNotification('Your information has been changed successfully!');
+  }
+
+  static _renderLoading() {
     return <CircularProgress />;
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { userResponse } = nextProps;
-
-    if (
-      !userResponse.loading &&
-      userResponse.data.username !== this.props.userResponse.data.username
-      // (!userResponse.loading &&
-      //   userResponse.data.is_password !==
-      //     this.props.userResponse.data.is_password)
-    ) {
-      // if (!userResponse.loading) {
-      this.props.history.push(`/profile/${userResponse.data.username}`);
-    }
-  }
-
-  render() {
-    const { classes, user } = this.props;
-
-    if (!user) {
-      return this._renderLoading();
-    }
-
-    const SecondButton = this._renderSecondItem();
-    return [
-      <Button onClick={this._onOpenModal} key={1}>
-        <Icon className={classes.icon}>edit</Icon>
-      </Button>,
+  _renderEditInformation() {
+    const { classes, user, loading } = this.props;
+    return (
       <Modal
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
-        open={this.state.open}
+        open={this.state.openEditInformation}
         onClose={this._onCloseModal}
-        key={2}
       >
         <div style={getModalStyle()}>
           <Grid container>
             <Grid item xs={12} className={classes.modalHeadline}>
-              Edit your Account
+              Edit your Information
             </Grid>
             <div className="line" />
             <Grid item xs={12} className={classes.settingTabs}>
-              <Tabs
-                value={this.state.value}
-                onChange={this.handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-              >
-                <Tab label="Information" />
-                {/* <Tab label="Security" /> */}
-              </Tabs>
+              <Information
+                user={user}
+                loading={loading}
+                onCancel={this.onCancelButtonClick}
+                onDone={this._submitModal}
+              />
             </Grid>
-            {this.state.value === 0 && (
-              <TabContainer>
-                <Information onCancel={this.onCancelButtonClick} />
-              </TabContainer>
-            )}
-            {this.state.value === 1 && (
-              <TabContainer>
-                <Security onCancel={this.onCancelButtonClick} />
-              </TabContainer>
-            )}
           </Grid>
         </div>
-      </Modal>,
-    ];
+      </Modal>
+    );
+  }
+
+  _renderEditPassword() {
+    const { classes, user, loading } = this.props;
+    return (
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={this.state.openEditPassword}
+        onClose={this._onCloseModal}
+      >
+        <div style={getModalStyle()}>
+          <Grid container>
+            <Grid item xs={12} className={classes.modalHeadline}>
+              Edit your Password
+            </Grid>
+            <div className="line" />
+            <Grid item xs={12} className={classes.settingTabs}>
+              <Password
+                user={user}
+                loading={loading}
+                onCancel={this.onCancelButtonClick}
+                onDone={this._submitModal}
+              />
+            </Grid>
+          </Grid>
+        </div>
+      </Modal>
+    );
+  }
+
+  render() {
+    const { classes, loading } = this.props;
+    const { anchorEl } = this.state;
+
+    if (loading) {
+      return Settings._renderLoading();
+    }
+
+    return (
+      <div>
+        <div
+          className={classes.menuItem}
+          aria-owns={anchorEl ? 'simple-menu' : null}
+          aria-haspopup="true"
+          onClick={this._openMenu}
+        >
+          <Button key={1}>
+            <Icon>edit</Icon>
+          </Button>
+        </div>
+
+        <Menu
+          id="simple-menu"
+          className={classes.menuPopover}
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={this._closeMenu}
+        >
+          <List>
+            <ListItem button onClick={this._onOpenEditInformation}>
+              <ListItemIcon>
+                <Icon>personal</Icon>
+              </ListItemIcon>
+              <ListItemText primary="Information" />
+            </ListItem>
+            <ListItem button onClick={this._onOpenEditPassword}>
+              <ListItemIcon>
+                <Icon>vpn_key</Icon>
+              </ListItemIcon>
+              <ListItemText primary="Password" />
+            </ListItem>
+          </List>
+        </Menu>
+        {this._renderEditInformation()}
+        {this._renderEditPassword()}
+      </div>
+    );
   }
 }
 
 Settings.propTypes = {
   classes: PropTypes.any,
-  user: PropTypes.object,
+  user: PropTypes.any,
+  loading: PropTypes.bool,
+  notification: PropTypes.any,
 };
 
-const mapStateToProps = state => ({
-  userResponse: state.api.user,
-});
-
-export default compose(
-  withStyles(styles),
-  withRouter,
-  connect(mapStateToProps, null),
-)(Settings);
+export default compose(withStyles(styles), withRouter, withNotification)(
+  Settings,
+);

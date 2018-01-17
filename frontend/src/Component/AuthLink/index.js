@@ -2,15 +2,20 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
+import ListSubheader from 'material-ui/List/ListSubheader';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import Icon from 'material-ui/Icon';
+import Menu from 'material-ui/Menu';
+
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { withRouter } from 'react-router';
+
 import { withNotification } from 'Component/Notification';
 import { removeAuthenticationState } from 'Configuration';
 import { logout } from 'Redux/api/user/actions';
-import Icon from 'material-ui/Icon';
-import Menu, { MenuItem } from 'material-ui/Menu';
 import { Images } from 'Theme';
-import { withRouter } from 'react-router';
+
 import styles from './styles';
 
 class AuthLink extends Component {
@@ -34,7 +39,7 @@ class AuthLink extends Component {
   }
 
   _openMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
+    this.setState({ anchorEl: event.target });
   };
 
   _closeMenu = () => {
@@ -85,18 +90,31 @@ class AuthLink extends Component {
               open={Boolean(anchorEl)}
               onClose={this._closeMenu}
             >
-              {/* <MenuItem>{user.data.name}</MenuItem> */}
-              <MenuItem>
+              <List
+                subheader={
+                  <ListSubheader>{`Signed in as: ${user.data.username ||
+                    user.data.email}`}</ListSubheader>
+                }
+              >
                 <Link
                   className={classes.profileLink}
                   to={`/profile/${user.data.username}`}
                 >
-                  My Profile
+                  <ListItem>
+                    <ListItemIcon>
+                      <Icon>personal</Icon>
+                    </ListItemIcon>
+                    <ListItemText primary="My Profile" />
+                  </ListItem>
                 </Link>
-              </MenuItem>
-              <MenuItem>
-                <a onClick={this._logout}>Logout</a>
-              </MenuItem>
+
+                <ListItem button onClick={this._logout}>
+                  <ListItemIcon>
+                    <Icon>exit_to_app</Icon>
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </ListItem>
+              </List>
             </Menu>
           </div>
         )}

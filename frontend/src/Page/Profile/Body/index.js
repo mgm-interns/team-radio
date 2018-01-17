@@ -35,9 +35,9 @@ class Body extends Component {
   }
 
   render() {
-    const { classes, user } = this.props;
+    const { classes, user, isDisabled, loading } = this.props;
 
-    if (!user) {
+    if (loading) {
       return this._renderLoading();
     }
 
@@ -59,11 +59,11 @@ class Body extends Component {
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} xl={4} className={classes.buttonEditProfile}>
-          <Settings user={user} />
+          {isDisabled && <Settings user={user} loading={loading} />}
         </Grid>
         {this.state.value === 0 && (
           <TabContainer>
-            <FilterAll />
+            <FilterAll user={user} loading={loading} />
           </TabContainer>
         )}
         {this.state.value === 1 && (
@@ -79,6 +79,8 @@ class Body extends Component {
 Body.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.any,
+  loading: PropTypes.bool,
+  isDisabled: PropTypes.bool,
 };
 
 export default compose(withStyles(styles))(Body);

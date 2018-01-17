@@ -1,6 +1,6 @@
-export default ({ breakpoints, palette }) => ({
+export default ({ breakpoints, spacing }) => ({
   containerWrapper: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 0,
     [breakpoints.up('lg')]: {
       paddingBottom: 100, // Footer height
@@ -9,10 +9,9 @@ export default ({ breakpoints, palette }) => ({
   switcherContainer: {
     margin: 'auto',
     padding: '0 !important',
-    // background: palette.lightGrey['200'],
   },
   switcherContent: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 'auto',
     [breakpoints.up('lg')]: {
       minWidth: 1024,

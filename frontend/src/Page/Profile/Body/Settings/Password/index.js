@@ -10,26 +10,38 @@ import {
 } from 'Util/validate';
 import { TextView } from 'Component';
 import { withStyles } from 'material-ui/styles/index';
-import { connect } from 'react-redux';
-import { updatePassword } from 'Redux/api/user/actions';
-
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 import Grid from 'material-ui/Grid';
 import { FormHelperText } from 'material-ui/Form';
 import Button from 'material-ui/Button';
+
+import { connect } from 'react-redux';
+import { setPassword } from 'Redux/api/user/profile';
+
 import { saveAuthenticationState } from 'Configuration';
 
 import styles from '../styles';
 
-class Security extends Component {
+class Password extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      asyncError: '',
+      formErrors: '',
     };
 
     this._renderChangePasswordForm = this._renderChangePasswordForm.bind(this);
     this._onCancelButtonClick = this._onCancelButtonClick.bind(this);
+    this._submitModal = this._submitModal.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { password: { message } } = nextProps;
+    if (message !== null) {
+      this.setState({
+        formErrors: message,
+      });
+    }
   }
 
   _onCancelButtonClick() {
@@ -37,13 +49,10 @@ class Security extends Component {
   }
 
   _renderChangePasswordForm() {
-    const {
-      classes,
-      submitSucceeded,
-      userResponse: { is_password },
-    } = this.props;
+    const { classes, submitSucceeded, user: { is_password } } = this.props;
+
     return [
-      is_password === false && (
+      is_password !== false && (
         <Field
           key={1}
           name="oldPassword"
@@ -52,7 +61,6 @@ class Security extends Component {
           component={TextView}
           label="Old password"
           validate={[required, minLength6]}
-          border
         />
       ),
       <Field
@@ -63,7 +71,6 @@ class Security extends Component {
         component={TextView}
         label="New password"
         validate={[required, minLength6]}
-        border
       />,
       <Field
         key={3}
@@ -73,21 +80,35 @@ class Security extends Component {
         component={TextView}
         label="Confirm password"
         validate={[required]}
-        border
       />,
       <FormHelperText key={4} className={classes.error}>
-        {submitSucceeded && this.state.asyncError}
+        {submitSucceeded && this.state.formErrors}
       </FormHelperText>,
     ];
   }
 
+  _submitModal(values) {
+    this.props.onSubmit({ userId: this.props.initialValues.userId, ...values });
+    if (this.state.formErrors) {
+      this.props.onDone();
+    }
+  }
+
+  _renderLoading() {
+    return <CircularProgress />;
+  }
+
   render() {
-    const { classes, handleSubmit, pristine, submitting, reset } = this.props;
+    const { classes, handleSubmit, pristine, submitting, loading } = this.props;
+
+    if (loading) {
+      return this._renderLoading();
+    }
 
     return (
-      <Grid container className={classes.content}>
-        <form onSubmit={handleSubmit}>
-          <Grid item xs={12} className={classes.formInformation}>
+      <Grid className={classes.content}>
+        <form onSubmit={handleSubmit(this._submitModal)}>
+          <Grid item xs={12}>
             {this._renderChangePasswordForm()}
           </Grid>
           <Grid item xs={12} className={classes.modalFooter}>
@@ -107,27 +128,40 @@ class Security extends Component {
   }
 }
 
-Security.propTypes = {
+Password.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.object,
-  submitSucceeded: PropTypes.any,
+  onCancel: PropTypes.func,
   handleSubmit: PropTypes.func,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  onDone: PropTypes.func,
+  password: PropTypes.any,
+  loading: PropTypes.bool,
+  onSubmit: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-  userResponse: state.api.user.data,
+const mapStateToProps = ({ api }) => ({
+  initialValues: api.user.data,
+  password: api.userProfile.password.data,
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: ({ oldPassword, newPassword }) =>
-    dispatch(updatePassword(oldPassword, newPassword)),
+  onSubmit: ({ userId, oldPassword, newPassword }) =>
+    dispatch(
+      setPassword({
+        userId,
+        oldPassword,
+        newPassword,
+      }),
+    ),
 });
 
 export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
   reduxForm({
-    form: 'editProfileSecurityForm',
+    form: 'editProfilePasswordForm',
     validate: settingsValidate,
   }),
-)(Security);
+)(Password);

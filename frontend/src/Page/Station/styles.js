@@ -1,6 +1,6 @@
 export default ({ breakpoints, palette, spacing }) => ({
   containerWrapper: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 0,
     paddingBottom: 50, // Footer height
   },
@@ -19,7 +19,7 @@ export default ({ breakpoints, palette, spacing }) => ({
     marginBottom: 20,
   },
   switcherContent: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 'auto',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
@@ -51,7 +51,7 @@ export default ({ breakpoints, palette, spacing }) => ({
     },
   },
   emptyNowPlayingImage: {
-    width: '100%',
+    width: spacing.fullWidth,
   },
   emptyNowPlaying: {
     height: 0,

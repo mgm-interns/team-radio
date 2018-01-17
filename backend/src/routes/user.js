@@ -50,7 +50,7 @@ export default router => {
         if (!user.validPassword(req.body.password)) {
           res.status(401).json({
             success: false,
-            message: 'Incorrect email or password',
+            message: 'Incorrect username or password',
           });
         } else {
           const payload = {
