@@ -13,6 +13,8 @@ import Button from 'material-ui/Button';
 import { connect } from 'react-redux';
 import { setPassword } from 'Redux/api/userProfile/actions';
 
+import { trimText } from 'Transformer/transformText';
+
 import styles from '../styles';
 
 class Password extends Component {
@@ -140,8 +142,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(
       setPassword({
         userId,
-        currentPassword,
-        newPassword,
+        currentPassword: trimText(currentPassword),
+        newPassword: trimText(newPassword),
       }),
     ),
 });

@@ -2,17 +2,21 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { Field, reduxForm, Form } from 'redux-form';
-import { maxLength15, required } from 'Util/validate';
-import { TextView } from 'Component';
-import { withStyles } from 'material-ui/styles/index';
-import { connect } from 'react-redux';
 
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { FormHelperText } from 'material-ui/Form';
+import { withStyles } from 'material-ui/styles/index';
+
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import { setUsername, setUserInformation } from 'Redux/api/userProfile/actions';
+
+import { TextView } from 'Component';
+import { trimText } from 'Transformer/transformText';
+import { maxLength15, required } from 'Util/validate';
+
 import styles from '../styles';
 
 class Information extends Component {
@@ -183,18 +187,18 @@ const mapDispatchToProps = dispatch => ({
     dispatch(
       setUsername({
         userId,
-        username,
+        username: trimText(username),
       }),
     );
     dispatch(
       setUserInformation({
         userId,
-        name,
-        firstname,
-        lastname,
-        bio,
-        city,
-        country,
+        name: trimText(name),
+        firstname: trimText(firstname),
+        lastname: trimText(lastname),
+        bio: trimText(bio),
+        city: trimText(city),
+        country: trimText(country),
       }),
     );
   },
