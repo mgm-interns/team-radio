@@ -83,7 +83,7 @@ export default (state = INITIAL_STATE, action) => {
         },
       };
     case SERVER_ALREADY_IN_A_STATION: {
-      appNotificationInstance.error({
+      appNotificationInstance.warning({
         message:
           'You have already been in another station. You will be redirected to landing page.',
       });
