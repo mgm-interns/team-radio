@@ -211,17 +211,13 @@ class Player {
       } else {
         this._setNowPlaying(song, starting_time);
         if (this.skippedSongs.has(song.song_id)) {
-          // The song needs to skipped
-          // delete the song in skippedSongs
           this.skippedSongs.delete(song.song_id);
           // TODO: setSkippedSong not working well now
           await stationController.setSkippedSong(this.stationId, song.song_id);
-          // send _emit
           this._emitSkippedSong(TIME_BUFFER);
           this._nextSongByTimeout(TIME_BUFFER, this.nowPlaying.song_id);
         } else {
           this._emitStationState();
-          // Update starting time in the station
           stationController.updateStartingTime(
             this.stationId,
             this.nowPlaying.starting_time,
@@ -256,19 +252,18 @@ class Player {
   // TODO: [start server, add new song to empty station, next song nomarly]
   _setPlayableSong = async (station = null) => {
     if (!station) {
-      // Get the station if it is not available
       station = await stationController.getStation(this.stationId);
     }
     const { playlist } = station;
     // Filter songs wasn't played and is not the current playing song
-    const filteredPlaylist = _.filter(playlist, song => !song.is_played);
-    filteredPlaylist.forEach((song, i) => {
+    const playablePlaylist = _.filter(playlist, song => !song.is_played);
+    playablePlaylist.forEach((song, i) => {
       song.votes = song.up_vote.length - song.down_vote.length;
     });
 
-    // Sort the filteredPlaylist by votes and time (current the song_id is the song added time)
+    // Sort the playablePlaylist by votes and time (current the song_id is the song added time)
     const sortedPlaylist = _.orderBy(
-      filteredPlaylist,
+      playablePlaylist,
       ['votes', 'song_id'],
       ['desc', 'asc'],
     );
@@ -365,7 +360,7 @@ export const updatePlaylist = async stationId => {
 
 export const getNowPlaying = async stationId => {
   try {
-    return getPlayer(stationId).getNowPlaying();
+    return (await getPlayer(stationId)).getNowPlaying();
   } catch (err) {
     throw err;
   }

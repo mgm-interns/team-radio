@@ -335,91 +335,48 @@ export const upVote = async (stationId, songId, userId) => {
         message: "User need login.",
       });
     }
+    userId = _safeObjectId(userId);
     const currentSong = (await stationModels.getAsongInStation(
       stationId,
       songId,
     ))[0];
-    const upVoteArray = currentSong.up_vote;
-    const downVoteArray = currentSong.down_vote;
-    let userAddSong;
-
-    if (currentSong.creator) {
-      userAddSong = currentSong.creator.toString();
-    } else {
-      userAddSong = currentSong.creator;
-    }
-    if (userAddSong === userId) {
+    if (currentSong.creator.equals(userId)) {
       throw new Error({
         song: currentSong,
         message: "Can't up vote your own song.",
       });
     }
-    // divide upVoteArray.length > 0 and upVoteArray.length < 0 , if not error.
-    if (upVoteArray.length > 0) {
-      for (let i = 0; i < upVoteArray.length; i++) {
-        if (upVoteArray[i].toString() === userId) {
-          upVoteArray.remove(_safeObjectId(userId));
-          await stationModels.updateValueOfUpvote(
-            stationId,
-            songId,
-            upVoteArray,
-          );
-          const playList = await stationModels.getPlaylistOfStation(stationId);
-          return playList;
-        }
-      }
-      if (downVoteArray.length > 0) {
-        for (let i = 0; i < downVoteArray.length; i++) {
-          if (downVoteArray[i].toString() === userId) {
-            downVoteArray.remove(_safeObjectId(userId));
-            upVoteArray.push(_safeObjectId(userId));
-            await stationModels.updateValueOfUpvote(
-              stationId,
-              songId,
-              upVoteArray,
-            );
-            await stationModels.updateValueOfDownvote(
-              stationId,
-              songId,
-              downVoteArray,
-            );
+    const upVoteArray = currentSong.up_vote;
+    const downVoteArray = currentSong.down_vote;
+    let userAddedPoints = 0;
 
-            const playList = await stationModels.getPlaylistOfStation(
-              stationId,
-            );
-            return playList;
-          }
-        }
+    upVoteArray.forEach(votedUserId => {
+      if (votedUserId.equals(userId)){
+        userAddedPoints = -1;
+        upVoteArray.remove(userId);
       }
-      upVoteArray.push(_safeObjectId(userId));
-      await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
-      const playList = await stationModels.getPlaylistOfStation(stationId);
-      return playList;
-    }
-    if (downVoteArray.length > 0) {
-      for (let i = 0; i < downVoteArray.length; i++) {
-        if (downVoteArray[i].toString() === userId) {
-          downVoteArray.remove(_safeObjectId(userId));
-          upVoteArray.push(_safeObjectId(userId));
-          await stationModels.updateValueOfUpvote(
-            stationId,
-            songId,
-            upVoteArray,
-          );
-          await stationModels.updateValueOfDownvote(
-            stationId,
-            songId,
-            downVoteArray,
-          );
-          const playList = await stationModels.getPlaylistOfStation(stationId);
-          return playList;
-        }
+    });
+    downVoteArray.forEach(votedUserId => {
+      if (votedUserId.equals(userId)){
+        userAddedPoints = 2;
+        downVoteArray.remove(userId);
+        upVoteArray.push(userId);
       }
+    });
+    if (userAddedPoints == 0) {
+      userAddedPoints = 1;
+      upVoteArray.push(userId);
     }
-    upVoteArray.push(_safeObjectId(userId));
-    await stationModels.updateValueOfUpvote(stationId, songId, upVoteArray);
+    await stationModels.updateVotes(
+      stationId,
+      songId,
+      upVoteArray,
+      downVoteArray,
+    );
+    // TODO: update votes of users in the station
     const playList = await stationModels.getPlaylistOfStation(stationId);
     return playList;
+
   } catch (err) {
     console.log(err);
     throw new Error({ song: null, message: "Can't up vote song." });
@@ -444,80 +401,39 @@ export const downVote = async (stationId, songId, userId) => {
         message: "User need login.",
       });
     }
+    userId = _safeObjectId(userId);
     const currentSong = (await stationModels.getAsongInStation(
       stationId,
       songId,
     ))[0];
     const upVoteArray = currentSong.up_vote;
     const downVoteArray = currentSong.down_vote;
-    const _userId = _safeObjectId(userId);
-    if (downVoteArray.length > 0) {
-      for (let i = 0; i < downVoteArray.length; i++) {
-        if (downVoteArray[i].toString() === userId) {
-          downVoteArray.remove(_safeObjectId(userId));
-          await stationModels.updateValueOfDownvote(
-            stationId,
-            songId,
-            downVoteArray,
-          );
-          const playList = await stationModels.getPlaylistOfStation(stationId);
-          return playList;
-        }
+    let userAddedPoints = 0;
+
+    downVoteArray.forEach(votedUserId => {
+      if (votedUserId.equals(userId)){
+        userAddedPoints = 1;
+        downVoteArray.remove(userId);
       }
-      // divide upVoteArray.length > 0 and upVoteArray.length < 0 , if not error.
-      if (upVoteArray.length > 0) {
-        for (let i = 0; i < upVoteArray.length; i++) {
-          if (upVoteArray[i].toString() === userId) {
-            upVoteArray.remove(_safeObjectId(userId));
-            downVoteArray.push(_safeObjectId(userId));
-            await stationModels.updateValueOfUpvote(
-              stationId,
-              songId,
-              upVoteArray,
-            );
-            await stationModels.updateValueOfDownvote(
-              stationId,
-              songId,
-              downVoteArray,
-            );
-            const playList = await stationModels.getPlaylistOfStation(
-              stationId,
-            );
-            return playList;
-          }
-        }
+    });
+    upVoteArray.forEach(votedUserId => {
+      if (votedUserId.equals(userId)){
+        userAddedPoints = -2;
+        upVoteArray.remove(userId);
+        downVoteArray.push(userId);
       }
-      downVoteArray.push(_safeObjectId(userId));
-      await stationModels.updateValueOfDownvote(
-        stationId,
-        songId,
-        downVoteArray,
-      );
-      const playList = await stationModels.getPlaylistOfStation(stationId);
-      return playList;
+    });
+    if (userAddedPoints == 0) {
+      userAddedPoints = -1;
+      downVoteArray.push(userId);
     }
-    if (upVoteArray.length > 0) {
-      for (let i = 0; i < upVoteArray.length; i++) {
-        if (upVoteArray[i].toString() === userId) {
-          upVoteArray.remove(_safeObjectId(userId));
-          downVoteArray.push(_safeObjectId(userId));
-          await stationModels.updateValueOfUpvote(
-            stationId,
-            songId,
-            upVoteArray,
-          );
-          await stationModels.updateValueOfDownvote(
-            stationId,
-            songId,
-            downVoteArray,
-          );
-          const playList = await getPlaylistOfStation(stationId);
-          return playList;
-        }
-      }
-    }
-    downVoteArray.push(_safeObjectId(userId));
-    await stationModels.updateValueOfDownvote(stationId, songId, downVoteArray);
+    await stationModels.updateVotes(
+      stationId,
+      songId,
+      upVoteArray,
+      downVoteArray,
+    );
+    // TODO: update votes of users in the station
     const playList = await stationModels.getPlaylistOfStation(stationId);
     return playList;
   } catch (err) {
@@ -593,3 +509,4 @@ function _isStringOfArray(str, array) {
   }
   return false;
 }
+
