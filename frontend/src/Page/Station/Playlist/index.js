@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
-import List from 'material-ui/List';
-import Scrollbar from 'react-scrollbar';
+import FlipMoveList from 'react-flip-move';
 import { withStyles } from 'material-ui/styles';
 import orderBy from 'lodash/orderBy';
 import Typography from 'material-ui/Typography';
@@ -80,13 +79,23 @@ class Playlist extends Component {
         item
         xs={12}
         className={className}
-        style={{ ...style, overflowY: 'auto', overflowX: 'hidden' }}
+        style={{
+          ...style,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          position: 'relative',
+        }}
       >
-        <List style={{ paddingTop: 0, paddingBottom: 0 }}>
-          {playlist.map((video, index) => (
-            <Item key={index} {...video} playing={index === 0} />
+        <FlipMoveList
+          style={{
+            paddingTop: 0,
+            paddingBottom: 0,
+          }}
+        >
+          {playlist.map((song, index) => (
+            <Item key={song.song_id} {...song} playing={index === 0} />
           ))}
-        </List>
+        </FlipMoveList>
       </Grid>
     );
   }

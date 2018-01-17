@@ -88,6 +88,7 @@ class PlaylistItem extends Component {
       isUpVote: !isUpVote,
       isDownVote: isUpVote ? isDownVote : false,
       upVotes: this.state.upVotes + (isUpVote ? -1 : 1),
+      downVotes: this.state.downVotes + (isDownVote ? -1 : 0),
     });
   }
 
@@ -113,6 +114,7 @@ class PlaylistItem extends Component {
     this.setState({
       isDownVote: !isDownVote,
       isUpVote: isDownVote ? isUpVote : false,
+      upVotes: this.state.upVotes + (isUpVote ? -1 : 0),
       downVotes: this.state.downVotes + (isDownVote ? -1 : 1),
     });
   }

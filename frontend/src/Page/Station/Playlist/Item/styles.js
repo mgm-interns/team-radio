@@ -4,6 +4,7 @@ export default ({ spacing, palette, typography }) => ({
     height: 80,
     width: '100%',
     position: 'relative',
+    background: palette.white,
     '&.playing': {
       background: palette.lightGrey['500'],
     },
