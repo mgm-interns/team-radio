@@ -2,7 +2,7 @@ export default theme => {
   // console.log(theme);
   const {
     spacing: { baseMargin, doubleBaseMargin },
-    palette: { lightGrey },
+    palette: { yellow },
     typography,
     breakpoints,
   } = theme;
@@ -13,19 +13,20 @@ export default theme => {
     linkTitle: {
       marginBottom: doubleBaseMargin,
     },
-
-    primaryTitle: {
+    durationText: {
+      ...typography.caption,
+      fontSize: '0.9em',
+      marginLeft: baseMargin,
+    },
+    primaryText: {
       display: 'inline',
     },
-
-    secondaryTitle: {
-      color: lightGrey[900],
+    secondaryText: {
+      color: 'rgba(0,0,0,0.54)',
     },
-
     warningText: {
-      color: 'red',
+      color: yellow[900],
     },
-
     addLinkBox: {
       backgroundColor: '#fafafa !important',
       marginLeft: baseMargin,
@@ -36,29 +37,23 @@ export default theme => {
       padding: doubleBaseMargin,
       boxShadow: '0 0 10px -3px rgba(0, 0, 0, 0.5) !important',
     },
-
     addLinkBoxLeft: {
       textAlign: 'end',
     },
-
     linkInput: {
       maxHeight: 100,
       marginBottom: baseMargin,
     },
-
     addLinkBoxRight: {
       paddingLeft: '30px !important',
-      minHeight: 186,
       [breakpoints.down('md')]: {
         paddingLeft: '8px !important',
       },
     },
-
     previewRightContainer: {
       position: 'relative',
       lineHeight: 1.8,
     },
-
     previewTitle: {
       ...typography.title,
       marginBottom: baseMargin,
@@ -66,47 +61,39 @@ export default theme => {
         fontSize: '1rem',
       },
     },
-
     volume: {
       position: 'absolute',
       left: 0,
       bottom: 0,
     },
-
     sendBtn: {
       position: 'absolute',
       right: 0,
       bottom: 0,
     },
-
     sendIcon: {
       marginLeft: baseMargin,
       fontSize: doubleBaseMargin,
     },
-
     content: {
       margin: 0,
       width: '100%',
-      height: '100%',
+      height: 186,
     },
-
     loadingContainer: {
       height: '100%',
       minHeight: 158,
     },
-
     emptyCollection: {
       width: '100%',
-      height: 200,
+      height: 186,
       margin: 'auto',
     },
-
     emptyImg: {
       width: '100%',
       height: '100%',
       objectFit: 'contain',
     },
-
     notFound: {
       width: '40%',
     },
@@ -148,6 +135,11 @@ export default theme => {
       position: 'absolute',
       top: '-25%',
       right: 0,
+    },
+    durationContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: baseMargin,
     },
     /* End search */
   };

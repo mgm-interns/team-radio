@@ -22,6 +22,12 @@ class Player extends Component {
     this.refPlayer.seekTo(seektime);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.seektime !== nextProps.seektime) {
+      this.refPlayer.seekTo(nextProps.seektime);
+    }
+  }
+
   render() {
     const { url, playing, onPlay, onPause, ...othersProps } = this.props;
     return (

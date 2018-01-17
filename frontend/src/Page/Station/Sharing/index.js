@@ -16,6 +16,7 @@ import TwitterIcon from 'react-icons/lib/fa/twitter-square';
 import CopyIcon from 'react-icons/lib/go/clippy';
 import { withNotification } from 'Component/Notification';
 import { withScrollbarInstances } from 'Component/Scrollbar';
+import classNames from 'classnames';
 import styles from './styles';
 
 const FACEBOOK_SHARING = 'https://www.facebook.com/sharer/sharer.php?u=';
@@ -122,12 +123,13 @@ class StationSharing extends Component {
   }
 
   render() {
-    const { classes, currentStation } = this.props;
+    const { classes, currentStation, passive } = this.props;
     return (
       <div>
         <IconButton
           onClick={this._openPopover}
           color={this.state.open ? 'primary' : 'default'}
+          className={classNames({ [classes.passiveStationMainColor]: passive })}
         >
           share
         </IconButton>
@@ -222,10 +224,12 @@ StationSharing.propTypes = {
   currentStation: PropTypes.object,
   classes: PropTypes.object,
   notification: PropTypes.object,
+  passive: PropTypes.bool,
 };
 
-const mapStateToProps = ({ api }) => ({
+const mapStateToProps = ({ api, page }) => ({
   currentStation: api.currentStation.station,
+  passive: page.station.passive,
 });
 
 export default compose(

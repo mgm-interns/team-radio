@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
+import LinearProgress from 'material-ui/Progress/LinearProgress';
 import withStyles from 'material-ui/styles/withStyles';
+import ThumbUpIcon from 'react-icons/lib/md/thumb-up';
+import ThumbDownIcon from 'react-icons/lib/md/thumb-down';
 import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -24,7 +27,8 @@ class PlaylistItem extends Component {
     this.state = {
       isUpVote: false,
       isDownVote: false,
-      score: 0,
+      upVotes: 0,
+      downVotes: 0,
     };
 
     this.upVoteSong = this.upVoteSong.bind(this);
@@ -38,7 +42,8 @@ class PlaylistItem extends Component {
     this.setState({
       isUpVote: PlaylistItem.isUpVote(this.props),
       isDownVote: PlaylistItem.isDownVote(this.props),
-      score: up_vote.length - down_vote.length,
+      upVotes: up_vote.length,
+      downVotes: down_vote.length,
     });
   }
 
@@ -48,7 +53,8 @@ class PlaylistItem extends Component {
     this.setState({
       isUpVote: PlaylistItem.isUpVote(nextProps),
       isDownVote: PlaylistItem.isDownVote(nextProps),
-      score: up_vote.length - down_vote.length,
+      upVotes: up_vote.length,
+      downVotes: down_vote.length,
     });
   }
 
@@ -71,17 +77,18 @@ class PlaylistItem extends Component {
     }
     if (userId === creator._id) {
       notification.app.warning({
-        message: 'You can not up vote your song.',
+        message: 'You cannot up vote your song',
       });
       return;
     }
     // If authenticated
-    const { isDownVote, isUpVote, score } = this.state;
+    const { isDownVote, isUpVote } = this.state;
     upVoteSong({ songId: song_id, userId, stationId });
     this.setState({
       isUpVote: !isUpVote,
       isDownVote: isUpVote ? isDownVote : false,
-      score: !isUpVote ? score + (isDownVote ? 2 : 1) : score - 1,
+      upVotes: this.state.upVotes + (isUpVote ? -1 : 1),
+      downVotes: this.state.downVotes + (isDownVote ? -1 : 0),
     });
   }
 
@@ -102,12 +109,13 @@ class PlaylistItem extends Component {
       return;
     }
     // If authenticated
-    const { isDownVote, isUpVote, score } = this.state;
+    const { isDownVote, isUpVote } = this.state;
     downVoteSong({ songId: song_id, userId, stationId });
     this.setState({
       isDownVote: !isDownVote,
       isUpVote: isDownVote ? isUpVote : false,
-      score: !isDownVote ? score - (isUpVote ? 2 : 1) : score + 1,
+      upVotes: this.state.upVotes + (isUpVote ? -1 : 0),
+      downVotes: this.state.downVotes + (isDownVote ? -1 : 1),
     });
   }
 
@@ -127,6 +135,16 @@ class PlaylistItem extends Component {
     return false;
   }
 
+  static getScoreRatio(upVotes = 0, downVotes = 0) {
+    // Handle divide by zero
+    if (downVotes === 0) {
+      if (upVotes === downVotes) return 50;
+      return 100;
+    }
+    // Default case
+    return upVotes / (upVotes + downVotes) * 100;
+  }
+
   _onCreatorIconClicked(event) {
     event.preventDefault();
     const { notification } = this.props;
@@ -139,24 +157,35 @@ class PlaylistItem extends Component {
     const {
       thumbnail,
       title,
-      singer,
       playing,
       classes,
       creator,
       duration,
+      willBeSkipped,
     } = this.props;
 
     return (
       <Grid container className={classNames(classes.container, { playing })}>
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} alt="" />
-        </Grid>
-        <Grid item xs={8} className={classes.info}>
-          <div className={classes.name}>{title}</div>
-          <div className={classes.singer}>{singer}</div>
-          <div className={classes.singer}>
-            {transformNumber.millisecondsToTime(duration)}
+          <div className={classes.duration}>
+            <span className={classes.durationText}>
+              {transformNumber.millisecondsToTime(duration)}
+            </span>
           </div>
+        </Grid>
+        <Grid item xs={9} className={classes.info}>
+          <Tooltip placement={'bottom'} title={title}>
+            <div className={classes.name}>{title}</div>
+          </Tooltip>
+          <Tooltip
+            placement={'bottom'}
+            title={'This song will be skipped when player starts it.'}
+          >
+            <div className={classes.warningText}>
+              {willBeSkipped && 'Will be skipped'}
+            </div>
+          </Tooltip>
           <div className={classes.creator}>
             Added by
             {creator === null ? (
@@ -172,23 +201,42 @@ class PlaylistItem extends Component {
             )}
           </div>
         </Grid>
-        <Grid item xs={1} className={classes.actions}>
-          <IconButton
-            onClick={this.upVoteSong}
-            className={classes.action}
-            color={this.state.isUpVote ? 'primary' : 'default'}
-          >
-            arrow_drop_up
-          </IconButton>
-          <div className={classes.score}>{this.state.score}</div>
-          <IconButton
-            onClick={this.downVoteSong}
-            className={classes.action}
-            color={this.state.isDownVote ? 'primary' : 'default'}
-          >
-            arrow_drop_down
-          </IconButton>
-        </Grid>
+        <div className={classes.actions}>
+          <div className={classes.actionsWrapper}>
+            <IconButton
+              onClick={this.upVoteSong}
+              className={classes.action}
+              color={this.state.isUpVote ? 'primary' : 'default'}
+            >
+              <ThumbUpIcon />
+            </IconButton>
+            <div className={classes.score}>{this.state.upVotes}</div>
+            <IconButton
+              onClick={this.downVoteSong}
+              className={classes.action}
+              color={this.state.isDownVote ? 'primary' : 'default'}
+            >
+              <ThumbDownIcon />
+            </IconButton>
+            <div className={classes.score}>{this.state.downVotes}</div>
+          </div>
+          <div className={classes.scoreRatio}>
+            <Tooltip
+              placement={'bottom'}
+              title={`${this.state.upVotes} / ${this.state.downVotes}`}
+            >
+              <LinearProgress
+                className={classes.progressBar}
+                color={'primary'}
+                mode={'determinate'}
+                value={PlaylistItem.getScoreRatio(
+                  this.state.upVotes,
+                  this.state.downVotes,
+                )}
+              />
+            </Tooltip>
+          </div>
+        </div>
       </Grid>
     );
   }
@@ -199,7 +247,6 @@ PlaylistItem.propTypes = {
   song_id: PropTypes.any,
   playing: PropTypes.bool,
   score: PropTypes.number,
-  singer: PropTypes.string,
   thumbnail: PropTypes.string,
   title: PropTypes.any,
   creator: PropTypes.object,
@@ -209,6 +256,7 @@ PlaylistItem.propTypes = {
   downVoteSong: PropTypes.func,
   up_vote: PropTypes.array,
   down_vote: PropTypes.array,
+  willBeSkipped: PropTypes.bool,
   duration: PropTypes.number,
   userId: PropTypes.any,
   isAuthenticated: PropTypes.bool,

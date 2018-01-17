@@ -116,7 +116,8 @@ export default ({ palette, breakpoints }) => ({
     },
   },
   privateOption: {
-    textAlign: 'start',
+    textAlign: 'end',
+    fontSize: '14px',
     color: 'white',
   },
 });
