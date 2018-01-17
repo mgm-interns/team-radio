@@ -30,6 +30,7 @@ class HistoryItem extends Component {
 
   _onReplayClick() {
     const {
+      notification,
       addSong,
       match: { params: { stationId } },
       user: { userId, username, name, avatar_url },
@@ -37,6 +38,15 @@ class HistoryItem extends Component {
       title,
       thumbnail,
     } = this.props;
+
+    // Check if user is not authenticated
+    if (!userId) {
+      notification.app.warning({
+        message: 'Unregistered user is not allowed to do this.',
+      });
+      return;
+    }
+
     addSong({
       songUrl: url,
       title,
