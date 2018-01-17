@@ -126,6 +126,13 @@ class StationPage extends Component {
       { isPassive: !nowPlaying.url ? false : !this.state.isPassive },
       () => {
         passiveUserRequest(this.state.isPassive);
+        if (this.state.isPassive) {
+          document
+            .getElementsByTagName('body')[0]
+            .setAttribute('style', 'overflow-y: hidden');
+        } else {
+          document.getElementsByTagName('body')[0].removeAttribute('style');
+        }
       },
     );
   }
@@ -185,7 +192,7 @@ class StationPage extends Component {
   render() {
     const {
       classes,
-      currentStation: { station, nowPlaying, playlist,joined },
+      currentStation: { station, nowPlaying, playlist, joined },
       passive,
       nowPlayingFromPlaylist,
     } = this.props;
@@ -224,9 +231,13 @@ class StationPage extends Component {
                   <div className={classes.titleContainer}>
                     {!joined.loading && !joined.otherStation ? (
                       [
-                        <Typography key={1} type={'display1'} className={classNames({
-                          [classes.passiveStationMainColor]: passive,
-                        })}>
+                        <Typography
+                          key={1}
+                          type={'display1'}
+                          className={classNames({
+                            [classes.passiveStationMainColor]: passive,
+                          })}
+                        >
                           {station && station.station_name}
                         </Typography>,
                         passive ? null : <OnlineUsers key={2} />,
