@@ -1,4 +1,8 @@
 export default ({ breakpoints, palette, spacing, typography }) => ({
+  logo: {
+    height: '2.5em',
+    margin: spacing.doubleBaseMargin,
+  },
   passiveContainer: {
     width: '100%',
     height: '100%',
