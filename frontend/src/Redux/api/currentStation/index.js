@@ -1,3 +1,5 @@
+import includes from 'lodash/includes';
+import { appNotificationInstance } from 'Component/Notification/AppNotification';
 import {
   SERVER_JOINED_STATION_SUCCESS,
   SERVER_UPDATE_PLAYLIST,
@@ -13,8 +15,8 @@ import {
   CLIENT_LEAVE_STATION,
   SERVER_USER_LEFT,
   SERVER_SKIP_SONG,
+  SERVER_UPDATE_SKIPPED_SONGS,
 } from 'Redux/actions';
-import { appNotificationInstance } from 'Component/Notification/AppNotification';
 
 const INITIAL_STATE = {
   station: null,
@@ -116,6 +118,20 @@ export default (state = INITIAL_STATE, action) => {
           delay: action.payload.delay,
           thumbnail: action.payload.now_playing.thumbnail,
         },
+      };
+    case SERVER_UPDATE_SKIPPED_SONGS:
+      return {
+        ...state,
+        playlist: state.playlist.map(song => {
+          let willBeSkipped = false;
+          if (includes(action.payload, song.song_id)) {
+            willBeSkipped = true;
+          }
+          return {
+            ...song,
+            willBeSkipped,
+          };
+        }),
       };
     /**
      * Notify when a new user join
