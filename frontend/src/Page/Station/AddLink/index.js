@@ -457,8 +457,8 @@ class AddLink extends Component {
                   >
                     <p
                       className={classNames(
-                        classes.warningText,
                         classes.durationText,
+                        classes.warningText,
                       )}
                     >
                       {transformNumber.millisecondsToTime(videoDuration)}
@@ -467,8 +467,8 @@ class AddLink extends Component {
                 ) : (
                   <p
                     className={classNames(
-                      classes.secondaryText,
                       classes.durationText,
+                      classes.secondaryText,
                     )}
                   >
                     {transformNumber.millisecondsToTime(videoDuration)}
