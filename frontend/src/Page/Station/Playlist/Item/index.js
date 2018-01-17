@@ -140,7 +140,7 @@ class PlaylistItem extends Component {
       return 100;
     }
     // Default case
-    return upVotes / downVotes * 100;
+    return upVotes / (upVotes + downVotes) * 100;
   }
 
   _onCreatorIconClicked(event) {
