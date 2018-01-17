@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import AccessTimeIcon from 'react-icons/lib/md/access-time';
+import { transformNumber } from 'Transformer';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import withRouter from 'react-router-dom/withRouter';
+import { Link } from 'react-router-dom';
 import { addSong } from 'Redux/api/currentStation/actions';
 import Grid from 'material-ui/Grid';
 import Tooltip from 'material-ui/Tooltip';
 import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
+import { withNotification } from 'Component/Notification';
 import { Images } from 'Theme';
 import styles from './styles';
 
@@ -22,6 +26,7 @@ class HistoryItem extends Component {
     };
 
     this._onReplayClick = this._onReplayClick.bind(this);
+    this._onCreatorIconClicked = this._onCreatorIconClicked.bind(this);
   }
 
   _onReplayClick() {
@@ -44,7 +49,7 @@ class HistoryItem extends Component {
   }
 
   render() {
-    const { thumbnail, title, creator, classes } = this.props;
+    const { thumbnail, title, creator, duration, classes } = this.props;
     return (
       <Grid container className={classes.container}>
         <Grid item xs={3} className={classes.thumbnail}>
@@ -52,17 +57,24 @@ class HistoryItem extends Component {
         </Grid>
         <Grid item xs={8} className={classes.info}>
           <div className={classes.name}>{title}</div>
+          <div className={classes.singer}>
+            <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
+            <span className={classes.durationText}>
+              {transformNumber.millisecondsToTime(duration)}
+            </span>
+          </div>
           <div className={classes.creator}>
             Added by
             {creator === null ? (
               ' Unregistered User'
             ) : (
               <Tooltip placement={'bottom'} title={creator.name}>
-                <img
-                  src={creator.avatar_url || Images.avatar.male01}
-                  className={classes.creatorAvatar}
-                  onClick={this._onCreatorIconClicked}
-                />
+                <Link to={`/profile/${creator.username}`}>
+                  <img
+                    src={creator.avatar_url || Images.avatar.male01}
+                    className={classes.creatorAvatar}
+                  />
+                </Link>
               </Tooltip>
             )}
           </div>
@@ -86,11 +98,13 @@ HistoryItem.propTypes = {
   url: PropTypes.string,
   thumbnail: PropTypes.string,
   title: PropTypes.any,
+  duration: PropTypes.number,
   creator: PropTypes.object,
   addSong: PropTypes.func,
   match: PropTypes.any,
   user: PropTypes.object,
   replayRequest: PropTypes.func,
+  notification: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({
@@ -105,4 +119,5 @@ export default compose(
   withStyles(styles),
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
+  withNotification,
 )(HistoryItem);

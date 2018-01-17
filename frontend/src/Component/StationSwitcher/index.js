@@ -77,6 +77,8 @@ class StationSwitcher extends Component {
      * - higher online users higher position
      * - Active station
      */
+    return filteredStations;
+    /*
     return orderBy(
       filteredStations,
       [
@@ -89,6 +91,7 @@ class StationSwitcher extends Component {
       ],
       ['asc', 'desc', 'desc'],
     );
+    */
   }
 
   render() {

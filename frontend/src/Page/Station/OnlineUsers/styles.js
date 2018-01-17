@@ -16,6 +16,16 @@ export default ({ spacing, palette, typography }) => ({
     display: 'inline-block',
     fontSize: '1em',
   },
+  listItem: {},
+  activeListItem: {
+    background: palette.primary['500'],
+    '&:hover': {
+      background: palette.primary['600'],
+    },
+    '& h3': {
+      color: palette.white,
+    },
+  },
   userAvatar: {
     width: 30,
     height: 30,

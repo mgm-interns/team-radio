@@ -1,3 +1,5 @@
+import { jellyBean } from 'Theme/Color';
+
 export default theme => {
   const {
     spacing: { baseMargin, doubleBaseMargin, fullWidth, fullHeight },
@@ -12,19 +14,20 @@ export default theme => {
     linkTitle: {
       marginBottom: doubleBaseMargin,
     },
-
-    primaryTitle: {
+    durationText: {
+      ...typography.caption,
+      fontSize: '0.9em',
+      marginLeft: baseMargin,
+    },
+    primaryText: {
       display: 'inline',
     },
-
-    secondaryTitle: {
-      color: lightGrey[900],
+    secondaryText: {
+      color: 'rgba(0,0,0,0.54)',
     },
-
     warningText: {
-      color: 'red',
+      color: jellyBean[900],
     },
-
     addLinkBox: {
       backgroundColor: '#fafafa !important',
       marginLeft: baseMargin,
@@ -35,16 +38,17 @@ export default theme => {
       padding: doubleBaseMargin,
       boxShadow: '0 0 10px -3px rgba(0, 0, 0, 0.5) !important',
     },
-
     addLinkBoxLeft: {
       textAlign: 'end',
     },
-
+    gridContainer: {
+      paddingTop: 10,
+      paddingLeft: 15,
+    },
     linkInput: {
       maxHeight: 100,
       marginBottom: baseMargin,
     },
-
     addLinkBoxRight: {
       paddingLeft: '30px !important',
       minHeight: 186,
@@ -52,17 +56,10 @@ export default theme => {
         paddingLeft: '8px !important',
       },
     },
-
-    gridContainer: {
-      paddingTop: 10,
-      paddingLeft: 15,
-    },
-
     previewRightContainer: {
       position: 'relative',
       lineHeight: 1.8,
     },
-
     previewTitle: {
       ...typography.title,
       marginBottom: baseMargin,
@@ -70,47 +67,39 @@ export default theme => {
         fontSize: '1rem',
       },
     },
-
     volume: {
       position: 'absolute',
       left: 0,
       bottom: 0,
     },
-
     sendBtn: {
       position: 'absolute',
       right: 0,
       bottom: 0,
     },
-
     sendIcon: {
       marginLeft: baseMargin,
       fontSize: doubleBaseMargin,
     },
-
     content: {
       margin: 0,
       width: fullWidth,
       height: fullHeight,
     },
-
     loadingContainer: {
       height: fullHeight,
       minHeight: 158,
     },
-
     emptyCollection: {
       width: fullWidth,
       height: 200,
       margin: 'auto',
     },
-
     emptyImg: {
       width: fullWidth,
       height: fullHeight,
       objectFit: 'contain',
     },
-
     notFound: {
       width: '40%',
     },
@@ -152,6 +141,11 @@ export default theme => {
       position: 'absolute',
       top: '-25%',
       right: 0,
+    },
+    durationContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: baseMargin,
     },
     /* End search */
   };

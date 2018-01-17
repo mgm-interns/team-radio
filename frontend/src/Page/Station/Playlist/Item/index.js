@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import AccessTimeIcon from 'react-icons/lib/md/access-time';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
@@ -8,6 +9,7 @@ import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
+import { Link } from 'react-router-dom';
 import { Images } from 'Theme';
 import { upVoteSong, downVoteSong } from 'Redux/api/currentStation/actions';
 import { withNotification } from 'Component/Notification';
@@ -29,7 +31,6 @@ class PlaylistItem extends Component {
 
     this.upVoteSong = this.upVoteSong.bind(this);
     this.downVoteSong = this.downVoteSong.bind(this);
-    this._onCreatorIconClicked = this._onCreatorIconClicked.bind(this);
   }
 
   componentDidMount() {
@@ -127,14 +128,6 @@ class PlaylistItem extends Component {
     return false;
   }
 
-  _onCreatorIconClicked(event) {
-    event.preventDefault();
-    const { notification } = this.props;
-    notification.app.info({
-      message: 'This feature is not ready yet!',
-    });
-  }
-
   render() {
     const {
       thumbnail,
@@ -155,7 +148,10 @@ class PlaylistItem extends Component {
           <div className={classes.name}>{title}</div>
           <div className={classes.singer}>{singer}</div>
           <div className={classes.singer}>
-            {transformNumber.millisecondsToTime(duration)}
+            <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
+            <span className={classes.durationText}>
+              {transformNumber.millisecondsToTime(duration)}
+            </span>
           </div>
           <div className={classes.creator}>
             Added by
@@ -163,11 +159,12 @@ class PlaylistItem extends Component {
               ' Unregistered User'
             ) : (
               <Tooltip placement={'bottom'} title={creator.name}>
-                <img
-                  src={creator.avatar_url || Images.avatar.male01}
-                  className={classes.creatorAvatar}
-                  onClick={this._onCreatorIconClicked}
-                />
+                <Link to={`/profile/${creator.username}`}>
+                  <img
+                    src={creator.avatar_url || Images.avatar.male01}
+                    className={classes.creatorAvatar}
+                  />
+                </Link>
               </Tooltip>
             )}
           </div>

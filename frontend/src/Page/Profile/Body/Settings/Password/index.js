@@ -22,7 +22,7 @@ import { saveAuthenticationState } from 'Configuration';
 
 import styles from '../styles';
 
-class Security extends Component {
+class Password extends Component {
   constructor(props) {
     super(props);
 
@@ -128,7 +128,7 @@ class Security extends Component {
   }
 }
 
-Security.propTypes = {
+Password.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.object,
   onCancel: PropTypes.func,
@@ -138,6 +138,7 @@ Security.propTypes = {
   onDone: PropTypes.func,
   password: PropTypes.any,
   loading: PropTypes.bool,
+  onSubmit: PropTypes.func,
 };
 
 const mapStateToProps = ({ api }) => ({
@@ -160,7 +161,7 @@ export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
   reduxForm({
-    form: 'editProfileSecurityForm',
+    form: 'editProfilePasswordForm',
     validate: settingsValidate,
   }),
-)(Security);
+)(Password);

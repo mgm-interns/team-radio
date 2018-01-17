@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
+import Switch from 'material-ui/Switch';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Input, { InputLabel } from 'material-ui/Input';
 import Button from 'material-ui/Button';
@@ -21,9 +22,11 @@ class Backdrop extends Component {
     this.state = {
       stationName: '',
       message: '',
+      isPrivate: false,
     };
 
     this._handleStationNameChanged = this._handleStationNameChanged.bind(this);
+    this._handleSwitchChange = this._handleSwitchChange.bind(this);
     this._submit = this._submit.bind(this);
   }
 
@@ -45,16 +48,22 @@ class Backdrop extends Component {
     this.setState({ stationName: text });
   }
 
+  _handleSwitchChange(e, checked) {
+    this.setState({
+      isPrivate: checked,
+    });
+  }
+
   _submit() {
     const { createStation, userId } = this.props;
-    const { stationName } = this.state;
+    const { stationName, isPrivate } = this.state;
 
-    createStation({ stationName, userId });
+    createStation({ stationName, userId, isPrivate });
   }
 
   render() {
-    const { classes } = this.props;
-    const { message, autoFocus } = this.state;
+    const { classes, isAuthenticated } = this.props;
+    const { message, autoFocus, isPrivate } = this.state;
     return (
       <Grid container className={classes.container}>
         <Grid container className={classes.foreground}>
@@ -74,6 +83,20 @@ class Backdrop extends Component {
                 onChange={this._handleStationNameChanged}
                 value={this.state.stationName}
               />
+              {isAuthenticated ? (
+                <div className={classes.privateOption}>
+                  <span>Private Station</span>
+                  <Switch
+                    classes={{
+                      checked: classes.checked,
+                      bar: classes.bar,
+                    }}
+                    checked={isPrivate}
+                    onChange={this._handleSwitchChange}
+                    aria-label="isPrivate"
+                  />
+                </div>
+              ) : null}
               <FormHelperText style={{ color: 'white' }}>
                 {message}
               </FormHelperText>
@@ -108,18 +131,20 @@ Backdrop.propTypes = {
   station: PropTypes.object,
   history: PropTypes.object,
   message: PropTypes.string,
+  isAuthenticated: PropTypes.bool,
   userId: PropTypes.string,
 };
 
 const mapStateToProps = ({ api: { stations, user } }) => ({
   station: stations.station,
   message: stations.message,
+  isAuthenticated: user.isAuthenticated,
   userId: user.data.userId,
 });
 
 const mapDispatchToProps = dispatch => ({
-  createStation: ({ stationName, userId }) =>
-    dispatch(createStation({ stationName, userId })),
+  createStation: ({ stationName, userId, isPrivate }) =>
+    dispatch(createStation({ stationName, userId, isPrivate })),
 });
 
 export default compose(

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import AccessTimeIcon from 'react-icons/lib/md/access-time';
 import axios from 'axios';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -25,6 +26,7 @@ import { Player } from 'Component';
 import { withNotification } from 'Component/Notification';
 import { Images } from 'Theme';
 import { transformText, transformNumber } from 'Transformer';
+import classNames from 'classnames';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -446,24 +448,35 @@ class AddLink extends Component {
           <Grid item sm={8} xs={12} className={classes.previewRightContainer}>
             <p className={classes.previewTitle}>{preview.snippet.title}</p>
             {preview && (
-              <div>
+              <div className={classes.durationContainer}>
+                <AccessTimeIcon color={'rgba(0, 0, 0, 0.54)'} />
                 {videoDuration >= 300000 ? (
                   <Tooltip
                     placement={'bottom-start'}
                     title="This video has long duration."
                   >
-                    <p className={classes.warningText}>
+                    <p
+                      className={classNames(
+                        classes.durationText,
+                        classes.warningText,
+                      )}
+                    >
                       {transformNumber.millisecondsToTime(videoDuration)}
                     </p>
                   </Tooltip>
                 ) : (
-                  <p className={classes.secondaryTitle}>
+                  <p
+                    className={classNames(
+                      classes.durationText,
+                      classes.secondaryText,
+                    )}
+                  >
                     {transformNumber.millisecondsToTime(videoDuration)}
                   </p>
                 )}
               </div>
             )}
-            <p className={classes.secondaryTitle}>
+            <p className={classes.secondaryText}>
               Channel: {preview.snippet.channelTitle}
             </p>
             <IconButton
@@ -502,10 +515,10 @@ class AddLink extends Component {
       <Grid container className={classes.addLinkContainer}>
         <Grid item xs={12} className={classes.linkTitle}>
           <div>
-            <Typography type={'display1'} className={classes.primaryTitle}>
+            <Typography type={'display1'} className={classes.primaryText}>
               Add song
             </Typography>
-            <span className={classes.secondaryTitle} />
+            <span className={classes.secondaryText} />
           </div>
         </Grid>
         <Card className={classes.addLinkBox}>
