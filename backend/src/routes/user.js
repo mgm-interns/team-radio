@@ -195,6 +195,7 @@ export default router => {
     try {
       let user = await userController.getUserById(req.body.userId);
       const token = req.headers['access-token'];
+      console.log(req.body.userId);
       if (user) {
         // verify token
         const isOwner = await userController.isVerifidedToken(
@@ -207,7 +208,11 @@ export default router => {
             req.body.userId,
             req.body.avatar_url,
           );
-          return res.json({ ...user._doc, userId: user._id });
+          return res.json({
+            isOwner,
+            ...user._doc,
+            userId: user._id,
+          });
         }
       }
       return res.json({

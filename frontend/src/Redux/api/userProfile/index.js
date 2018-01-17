@@ -86,6 +86,26 @@ const userProfile = (state = INITIAL_STATE, action) => {
         error: { ...action.payload },
       };
 
+    case 'SET_AVATAR_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'SET_AVATAR_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'SET_AVATAR_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+      };
+
     default:
       return state;
   }

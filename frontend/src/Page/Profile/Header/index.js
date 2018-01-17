@@ -28,7 +28,7 @@ class Header extends Component {
     return (
       <div className={classes.coverBackground}>
         <div className={classes.userInformation}>
-          <ImageUploader avatarUrl={user.avatar_url} />
+          <ImageUploader user={user} />
           <div>
             <Typography type="headline" className={classes.text}>
               {user.name}
