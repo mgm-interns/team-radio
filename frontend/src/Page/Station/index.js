@@ -11,6 +11,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
+import fixture from 'Fixture/landing';
 import { transformNumber } from 'Transformer';
 import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
@@ -199,7 +200,11 @@ class StationPage extends Component {
     const { muted } = this.state;
 
     return [
-      passive ? <div key={0} className={classes.passiveContainer} /> : null,
+      passive ? (
+        <div key={0} className={classes.passiveContainer}>
+          <img src={fixture.logo} alt="Team Radio" className={classes.logo} />
+        </div>
+      ) : null,
       <NavBar key={1} color="primary" />,
       <Grid
         key={2}
