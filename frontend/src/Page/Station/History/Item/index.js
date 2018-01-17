@@ -10,6 +10,7 @@ import Grid from 'material-ui/Grid';
 import Tooltip from 'material-ui/Tooltip';
 import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
+import ReplayIcon from 'react-icons/lib/md/replay';
 import { withNotification } from 'Component/Notification';
 import { Images } from 'Theme';
 import styles from './styles';
@@ -73,9 +74,11 @@ class HistoryItem extends Component {
           <img className={classes.img} src={thumbnail} />
         </Grid>
         <Grid item xs={8} className={classes.info}>
-          <div className={classes.name}>{title}</div>
-          <div className={classes.singer}>
-            <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
+          <Tooltip placement={'bottom'} title={title}>
+            <div className={classes.name}>{title}</div>
+          </Tooltip>
+          <div className={classes.duration}>
+            <AccessTimeIcon className={classes.durationIcon} />
             <span className={classes.durationText}>
               {transformNumber.millisecondsToTime(duration)}
             </span>
@@ -96,13 +99,15 @@ class HistoryItem extends Component {
           </div>
         </Grid>
         <Grid item xs={1} className={classes.actions}>
-          <IconButton
-            className={classes.action}
-            color="default"
-            onClick={this._onReplayClick}
-          >
-            replay
-          </IconButton>
+          <Tooltip placement={'bottom'} title={`Replay this song`}>
+            <IconButton
+              className={classes.action}
+              color="default"
+              onClick={this._onReplayClick}
+            >
+              <ReplayIcon />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
     );

@@ -1,8 +1,9 @@
 export default ({ spacing, palette, typography }) => ({
   container: {
     margin: 0,
-    height: '80px',
+    height: 80,
     width: '100%',
+    position: 'relative',
     '&.playing': {
       background: palette.lightGrey['500'],
     },
@@ -17,7 +18,6 @@ export default ({ spacing, palette, typography }) => ({
   },
   info: {
     padding: spacing.baseMargin,
-    position: 'relative',
   },
   name: {
     ...typography.body2,
@@ -26,15 +26,26 @@ export default ({ spacing, palette, typography }) => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
+    cursor: 'default',
   },
-  singer: {
+  duration: {
     ...typography.body2,
     fontSize: '0.725em',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  durationIcon: {
+    color: palette.lightBlack,
+    fontSize: spacing.doubleBaseMargin,
+  },
+  durationText: {
+    color: 'rgba(0,0,0,0.54)',
+    marginLeft: spacing.smallMargin,
   },
   creator: {
+    ...typography.caption,
     position: 'absolute',
     bottom: spacing.baseMargin,
-    ...typography.caption,
     fontSize: '0.725em',
     display: 'flex',
     flexDirection: 'row',
@@ -51,30 +62,36 @@ export default ({ spacing, palette, typography }) => ({
     cursor: 'pointer',
   },
   actions: {
+    position: 'absolute',
+    right: spacing.baseMargin,
+    bottom: spacing.baseMargin,
+  },
+  actionsWrapper: {
+    display: 'flex',
     textAlign: 'center',
     alignSelf: 'center',
-    paddingLeft: '0 !important',
-    paddingRight: '0 !important',
   },
   action: {
-    width: spacing.baseMargin * 3,
-    height: spacing.baseMargin * 3,
-    '& .material-icons': {
-      fontSize: spacing.baseMargin * 3,
-    },
+    fontSize: spacing.baseMargin * 2,
+    width: 24,
+    height: 24,
   },
   score: {
     ...typography.body2,
+    textAlign: 'left',
     margin: 'auto',
+    marginLeft: spacing.baseMargin,
     width: spacing.baseMargin * 3,
-    fontSize: '0.825em',
+    fontSize: '0.925em',
     color: palette.secondary['500'],
     '&.active': {
       color: palette.primary['500'],
     },
   },
-  durationText: {
-    color: 'rgba(0,0,0,0.54)',
-    marginLeft: spacing.smallMargin,
+  scoreRatio: {
+    width: '100%',
+  },
+  progressBar: {
+    height: 2,
   },
 });

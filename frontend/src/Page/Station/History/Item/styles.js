@@ -1,7 +1,7 @@
 export default ({ spacing, palette, typography }) => ({
   container: {
     margin: 0,
-    height: '80px',
+    height: 80,
     width: '100%',
     '&.playing': {
       background: palette.lightGrey['500'],
@@ -26,15 +26,26 @@ export default ({ spacing, palette, typography }) => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
+    cursor: 'default',
   },
-  singer: {
+  duration: {
     ...typography.body2,
     fontSize: '0.725em',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  durationIcon: {
+    color: palette.lightBlack,
+    fontSize: spacing.doubleBaseMargin,
+  },
+  durationText: {
+    color: 'rgba(0,0,0,0.54)',
+    marginLeft: spacing.smallMargin,
   },
   creator: {
+    ...typography.caption,
     position: 'absolute',
     bottom: spacing.baseMargin,
-    ...typography.caption,
     fontSize: '0.725em',
     display: 'flex',
     flexDirection: 'row',
@@ -62,9 +73,5 @@ export default ({ spacing, palette, typography }) => ({
     '& .material-icons': {
       fontSize: spacing.baseMargin * 3,
     },
-  },
-  durationText: {
-    color: 'rgba(0,0,0,0.54)',
-    marginLeft: spacing.smallMargin,
   },
 });

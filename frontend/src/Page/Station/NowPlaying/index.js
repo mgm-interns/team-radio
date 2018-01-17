@@ -114,7 +114,7 @@ class NowPlaying extends Component {
           >
             {`Our listeners don't like this song.`}
             <br />
-            It will be skipped in {this.state.countDown / 1000}...
+            It will be skipped in {parseInt(this.state.countDown / 1000, 10)}...
             <br />
             {/* For more information about the skipping rule, refer to this link. */}
           </Typography>
