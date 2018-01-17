@@ -12,6 +12,7 @@ import Avatar from 'material-ui/Avatar';
 import { Images } from 'Theme';
 import CircleIcon from 'react-icons/lib/fa/circle';
 import { withNotification } from 'Component/Notification';
+import { reduceByCharacters } from 'Transformer/transformText';
 import styles from './styles';
 
 class OnlineUsers extends Component {
@@ -139,7 +140,9 @@ class OnlineUsers extends Component {
             type={'body1'}
             className={classes.tooltipItem}
           >
-            {currentUser.username === username ? 'You' : name}
+            {currentUser.username === username
+              ? 'You'
+              : reduceByCharacters(name, 10)}
           </Typography>
         ))}
         {anonymousUsersCount > 0 && (
