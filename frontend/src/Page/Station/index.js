@@ -165,7 +165,7 @@ class StationPage extends Component {
   render() {
     const {
       classes,
-      currentStation: { station, nowPlaying, playlist },
+      currentStation: { station, nowPlaying, playlist, joined },
     } = this.props;
     const { muted } = this.state;
 
@@ -188,12 +188,16 @@ class StationPage extends Component {
               <Grid container>
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <div className={classes.titleContainer}>
-                    <Typography type={'display1'}>
-                      {(station && station.station_name) || (
-                        <CircularProgress className={classes.loadingTitle} />
-                      )}
-                    </Typography>
-                    <OnlineUsers />
+                    {!joined.loading && !joined.otherStation ? (
+                      [
+                        <Typography key={1} type={'display1'}>
+                          {station && station.station_name}
+                        </Typography>,
+                        <OnlineUsers key={2} />,
+                      ]
+                    ) : (
+                      <CircularProgress className={classes.loadingTitle} />
+                    )}
                   </div>
                   <div className={classes.nowPlayingActions}>
                     {!nowPlaying.url ? null : (
