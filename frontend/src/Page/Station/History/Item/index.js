@@ -26,7 +26,6 @@ class HistoryItem extends Component {
     };
 
     this._onReplayClick = this._onReplayClick.bind(this);
-    this._onCreatorIconClicked = this._onCreatorIconClicked.bind(this);
   }
 
   _onReplayClick() {

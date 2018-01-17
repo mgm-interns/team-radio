@@ -55,10 +55,10 @@ class Information extends Component {
       <Field
         key={1}
         name="username"
-        placeholder="Profile URL"
+        placeholder="Username"
         type="text"
         component={TextView}
-        label="Profile URL"
+        label="Username"
         validate={[required]}
       />,
       <Field
