@@ -177,7 +177,7 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
   }
 };
 /**
- * 
+ * The function set favourite song
  * @param {string} songId 
  * @param {string} userId   -- > user id  : who is favourite song
  * @param {string} stationId  -- > station id of station has song
@@ -186,20 +186,16 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
 export const addFavouriteSong = async (songId, userId, stationId, songUrl) => {
   try {
     const songFavourited = await userModels.getSongInFavouriteds(userId, songUrl);
-
     if (songFavourited.length === 0) {
       const songInStation = (await stationModels.getAsongInStation(
         stationId,
         songId
       ))[0];
-      console.log("songInStation : " + " --> " + songInStation);
-
       await userModels.addFavouritedSongs(userId, songInStation);
       return {
         message: "Favourite successful"
       }
     } else {
-      console.log("delete : ");
       await userModels.deleteAsongInFavouritedSongs(userId, songUrl);
       return {
         message: "Unfavourite successful"
@@ -212,6 +208,10 @@ export const addFavouriteSong = async (songId, userId, stationId, songUrl) => {
   }
 }
 
+/**
+ * The function get info favourited songs
+ * @param {string} userId 
+ */
 export const getFavouritedSongs =async (userId) =>{
    try {
      const favouritedSongs = await userModels.getFavouritedSongs(userId);
