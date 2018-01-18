@@ -28,6 +28,7 @@ export const updateNumberOfOnlineUsersInStation = (stationId, numberOfUser) => {
     checkUpdatePopularStations();
   } else {
     onlineUsersInStations[stationId] = numberOfUser;
+    _emitUpdateChangedOnlineUserCount();
   }
 }
 
@@ -75,6 +76,12 @@ export const checkUpdatePopularStations = async () => {
 
 function _emitPopularStations() {
   _emit(EVENTS.SERVER_UPDATE_STATIONS, { stations: stations });
+}
+function _emitUpdateChangedOnlineUserCount(stationId, onlineUserCount) {
+  _emit(EVENTS.SERVER_STATION_CHANGE_ONLINE_USERS, {
+    station_id: stationId,
+    online_count: onlineUserCount,
+  });
 }
 
 function _emit(eventName, payload) {
