@@ -87,7 +87,7 @@ export default (state = INITIAL_STATE, action) => {
       appNotificationInstance.warning({
         message: `You are logging in station ${
           action.payload.stationName
-        }. You will be redirected to landing page.`,
+        }. You will be redirected to that station after 5 seconds.`,
       });
       return {
         ...state,

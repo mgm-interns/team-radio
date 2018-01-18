@@ -103,7 +103,7 @@ class StationPage extends Component {
     // Check if user is already joined in other station
     if (!joined.loading && joined.failed && !!joined.loggedInStation) {
       setTimeout(() => {
-        history.replace('/');
+        history.replace(`/station/${joined.loggedInStation.stationId}`);
       }, 5000);
       return;
     }
