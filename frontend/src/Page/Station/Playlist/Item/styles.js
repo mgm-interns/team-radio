@@ -2,7 +2,7 @@ export default ({ spacing, palette, typography }) => ({
   container: {
     margin: 0,
     height: 80,
-    width: '100%',
+    width: spacing.fullWidth,
     position: 'relative',
     background: palette.white,
     '&.playing': {
@@ -13,19 +13,18 @@ export default ({ spacing, palette, typography }) => ({
     position: 'relative',
   },
   img: {
-    width: '100%',
-    height: '100%',
+    width: spacing.fullWidth,
+    height: spacing.fullHeight,
     display: 'block',
     objectFit: 'cover',
     background: '#FFFFFF',
   },
   duration: {
     position: 'absolute',
-    bottom: spacing.baseMargin + spacing.smallMargin / 2,
-    right: spacing.baseMargin + spacing.smallMargin / 2,
+    bottom: spacing.baseMargin + 1,
+    right: spacing.baseMargin + 1,
     display: 'flex',
     alignItems: 'center',
-    padding: spacing.smallMargin / 2,
     borderRadius: 2,
     backgroundColor: palette.lightBlack,
   },
@@ -41,12 +40,14 @@ export default ({ spacing, palette, typography }) => ({
   },
   name: {
     ...typography.body2,
-    fontSize: '0.825em',
+    fontSize: '0.9em',
     fontWeight: 'bold',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
     cursor: 'default',
+    marginTop: -4,
+    color: 'rgba(0, 0, 0, 0.54)',
   },
   warningText: {
     ...typography.caption,
@@ -75,6 +76,9 @@ export default ({ spacing, palette, typography }) => ({
     position: 'absolute',
     right: spacing.baseMargin,
     bottom: spacing.baseMargin,
+  },
+  disabledAction: {
+    color: palette.minBlack,
   },
   actionsWrapper: {
     display: 'flex',

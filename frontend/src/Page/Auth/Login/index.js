@@ -122,8 +122,8 @@ class Login extends Component {
       >
         <Typography type="headline" component="h2">
           Log in
-        </Typography>{' '}
-        <Typography component="p">for listening and sharing music </Typography>{' '}
+        </Typography>
+        <Typography component="p">for listening and sharing music </Typography>
       </Grid>
     );
   }
@@ -142,12 +142,12 @@ class Login extends Component {
           onSuccess={this._onLoginSocialClick}
           isDisabled={this.state.isLoggedIn}
           onFailure={this._onLoginSocialFailure}
-        />{' '}
+        />
         <div
           style={{
             height: 16,
           }}
-        />{' '}
+        />
         <GoogleLogin
           onSuccess={this._onLoginSocialClick}
           offline={false}
@@ -158,24 +158,23 @@ class Login extends Component {
           onFailure={this._onLoginSocialFailure}
           autoLoad={false}
           onSignedIn={this._onSignedIn}
-        />{' '}
+        />
       </Grid>
     );
   }
 
   _renderLoginLocalForm() {
     const { classes, submitSucceeded } = this.props;
-    // console.log(this.props);
     return (
       <Grid>
         <Field
           name="email"
-          placeholde="Email"
+          placeholder="Email or Username"
           type="text"
           component={TextView}
-          label="Email"
-          validate={[required, email]}
-        />{' '}
+          label="Email or Username"
+          validate={[required]}
+        />
         <Field
           name="password"
           placeholder="Password"
@@ -185,8 +184,8 @@ class Login extends Component {
           validate={required}
         />
         <FormHelperText className={classes.error}>
-          {submitSucceeded && this.state.formErrors.message}{' '}
-        </FormHelperText>{' '}
+          {submitSucceeded && this.state.formErrors.message}
+        </FormHelperText>
       </Grid>
     );
   }
@@ -209,14 +208,14 @@ class Login extends Component {
             >
               Log in
             </Button>
-          )}{' '}
+          )}
           <FormHelperText className={classes.callout}>
-            <span> Not a member? </span>{' '}
+            <span> Not a member? </span>
             <Link to="/auth/register" className={classes.link}>
-              Create an account{' '}
-            </Link>{' '}
-          </FormHelperText>{' '}
-        </Grid>{' '}
+              Create an account
+            </Link>
+          </FormHelperText>
+        </Grid>
       </Grid>
     );
   }
@@ -229,7 +228,7 @@ class Login extends Component {
           src="https://images.unsplash.com/photo-1512692505538-1e7bb8980a77?auto=format&fit=crop&w=2600&q=80"
           alt="Team Radio - Cover"
           className={classes.backgroundImg}
-        />{' '}
+        />
       </Grid>
     );
   }
@@ -245,16 +244,15 @@ class Login extends Component {
             <Card raised className={classes.cardForm}>
               <form onSubmit={handleSubmit}>
                 <CardContent>
-                  {' '}
-                  {this._renderHeadline()} {this._renderLoginSocial()}{' '}
-                  {this._renderLoginLocalForm()}{' '}
-                </CardContent>{' '}
-                <CardActions> {this._renderLoginLocalActions()} </CardActions>{' '}
-              </form>{' '}
-            </Card>{' '}
-          </Grid>{' '}
-          {this._renderBackground()}{' '}
-        </Grid>{' '}
+                  {this._renderHeadline()} {this._renderLoginSocial()}
+                  {this._renderLoginLocalForm()}
+                </CardContent>
+                <CardActions> {this._renderLoginLocalActions()} </CardActions>
+              </form>
+            </Card>
+          </Grid>
+          {this._renderBackground()}
+        </Grid>
       </Grid>,
     ];
   }

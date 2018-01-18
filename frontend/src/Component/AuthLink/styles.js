@@ -1,4 +1,4 @@
-export default () => ({
+export default ({ palette, spacing }) => ({
   avatar: {
     width: 30,
     height: 30,
@@ -13,7 +13,7 @@ export default () => ({
     display: 'none',
     position: 'absolute',
     border: '1px solid #1b1f2326',
-    background: '#fff',
+    background: palette.white,
     minWidth: '160px',
     zIndex: '100',
     '& a': {
@@ -35,16 +35,13 @@ export default () => ({
     alignItems: 'center',
   },
   dropdownIcon: {
-    color: '#fff',
+    color: palette.white,
   },
   navItem: {
     marginLeft: '16px',
     textDecoration: 'none',
-    color: 'white',
+    color: palette.white,
     fontSize: '1rem',
-  },
-  menuPopover: {
-    marginTop: 30,
   },
   profileLink: {
     textDecoration: 'none',

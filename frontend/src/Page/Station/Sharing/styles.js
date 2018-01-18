@@ -1,7 +1,7 @@
-export default ({ spacing }) => ({
+export default ({ spacing, palette }) => ({
   container: {},
   cardContainer: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 'auto',
   },
   actionsContainer: {
@@ -9,14 +9,14 @@ export default ({ spacing }) => ({
     paddingTop: '0 !important',
     paddingBottom: '0 !important',
     margin: 0,
-    width: '100%',
+    width: spacing.fullWidth,
   },
   cardHeader: {
     fontSize: '1em',
   },
   input: {
     fontFamily: 'consolas',
-    width: '100%',
+    width: spacing.fullWidth,
     fontSize: '0.75em',
   },
   copyIcon: {
@@ -36,5 +36,8 @@ export default ({ spacing }) => ({
   twitterIcon: {
     color: '#1DA1F2',
     fontSize: 32,
+  },
+  passiveStationMainColor: {
+    color: palette.lightGrey.A700,
   },
 });

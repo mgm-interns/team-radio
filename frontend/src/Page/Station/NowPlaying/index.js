@@ -18,7 +18,8 @@ class NowPlaying extends Component {
       refPlayer: null,
       skipNotification: false,
       countDown: 0,
-      seektime: 0,
+      seektime: null,
+      receivedAt: new Date().getTime(),
     };
     this.renderSkipNotification = this.renderSkipNotification.bind(this);
     this.setStateAsync = this.setStateAsync.bind(this);
@@ -71,23 +72,20 @@ class NowPlaying extends Component {
     // Only trigger when the song_id has changed
     if (nowPlaying.song_id !== nextNowPlaying.song_id) {
       let seektime = 0;
-      const { starting_time } = nextNowPlaying;
-      if (
-        nowPlaying.url === nextNowPlaying.url &&
-        nowPlaying.starting_time !== nextNowPlaying.starting_time
-      ) {
-        /**
-         * If the old song is the same with the new song
-         * We need to plus 0.1 to make sure that
-         * new start time is different from the old one
-         */
-        seektime = NowPlaying.calculateSeekTime(starting_time) + 0.1;
+      if (nowPlaying.starting_time === nextNowPlaying.starting_time) {
+        seektime = NowPlaying.calculateSeekTime(nowPlaying.starting_time);
       } else {
         // If not
-        seektime = NowPlaying.calculateSeekTime(starting_time);
+        seektime = NowPlaying.calculateSeekTime(nextNowPlaying.starting_time);
       }
+      /**
+       * If the old song is the same with the new song
+       * We need to plus a small random number to make sure that
+       * new start time is different from the old one
+       */
       this.setState({
-        seektime,
+        seektime: seektime + Math.random() / 10,
+        receivedAt: new Date().getTime(),
       });
     }
   }
@@ -130,9 +128,11 @@ class NowPlaying extends Component {
     ) : (
       <Grid item xs={12} className={className}>
         <Player
+          songId={nowPlaying.song_id}
           url={nowPlaying ? nowPlaying.url : ''}
           playing={autoPlay}
           seektime={this.state.seektime}
+          receivedAt={this.state.receivedAt}
           muted={muted}
         />
       </Grid>

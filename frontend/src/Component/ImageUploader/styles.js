@@ -1,15 +1,15 @@
-export default ({ palette }) => ({
+export default ({ palette, spacing }) => ({
   avatarContainer: {
     position: 'relative',
     margin: 10,
     '& .hoverButton': {
       display: 'none',
-      color: '#fff',
+      color: palette.white,
     },
     '&:hover .hoverButton': {
       cursor: 'pointer',
-      width: '100%',
-      height: '100%',
+      width: spacing.fullWidth,
+      height: spacing.fullHeight,
       position: 'absolute',
       top: 0,
       left: 0,
@@ -35,8 +35,8 @@ export default ({ palette }) => ({
   },
   loadingBackdrop: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
+    width: spacing.fullWidth,
+    height: spacing.fullHeight,
     top: 0,
     left: 0,
     display: 'flex',
@@ -45,16 +45,16 @@ export default ({ palette }) => ({
     alignItems: 'center',
   },
   loadingIcon: {
-    color: 'white',
+    color: palette.white,
     width: 100,
     height: 100,
   },
   avatar: {
-    width: 150,
-    height: 150,
+    width: 120,
+    height: 120,
   },
   button: {
-    color: 'white',
+    color: palette.white,
     backgroundColor: palette.primary['500'],
   },
   cardActions: {

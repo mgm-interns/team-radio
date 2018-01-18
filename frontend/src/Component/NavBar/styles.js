@@ -1,8 +1,8 @@
-export default ({ breakpoints, spacing }) => ({
+export default ({ palette, breakpoints, spacing }) => ({
   container: {
     margin: 'auto',
     zIndex: '10',
-    width: '100%',
+    width: spacing.fullWidth,
     height: 56,
     position: 'fixed',
     top: 0,
@@ -31,11 +31,11 @@ export default ({ breakpoints, spacing }) => ({
   logoName: {
     fontSize: '1.5rem',
     fontFamily: 'Pacifico',
-    color: 'white',
+    color: palette.white,
     textDecoration: 'none',
   },
   navContainer: {
-    width: '100%',
+    width: spacing.fullWidth,
     justifyContent: 'flex-end',
   },
   navWrapper: {
@@ -45,7 +45,7 @@ export default ({ breakpoints, spacing }) => ({
   navItem: {
     marginLeft: spacing.doubleBaseMargin,
     textDecoration: 'none',
-    color: 'white',
+    color: palette.white,
     fontSize: '1rem',
   },
 });

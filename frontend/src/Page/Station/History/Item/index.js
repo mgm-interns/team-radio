@@ -4,6 +4,7 @@ import { transformNumber } from 'Transformer';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import withRouter from 'react-router-dom/withRouter';
+import { Link } from 'react-router-dom';
 import { addSong } from 'Redux/api/currentStation/actions';
 import Grid from 'material-ui/Grid';
 import Tooltip from 'material-ui/Tooltip';
@@ -25,7 +26,6 @@ class HistoryItem extends Component {
     };
 
     this._onReplayClick = this._onReplayClick.bind(this);
-    this._onCreatorIconClicked = this._onCreatorIconClicked.bind(this);
   }
 
   _onReplayClick() {
@@ -57,14 +57,6 @@ class HistoryItem extends Component {
     });
   }
 
-  _onCreatorIconClicked(event) {
-    event.preventDefault();
-    const { notification } = this.props;
-    notification.app.warning({
-      message: 'This feature is not ready yet!',
-    });
-  }
-
   render() {
     const { thumbnail, title, creator, duration, classes } = this.props;
     return (
@@ -87,11 +79,12 @@ class HistoryItem extends Component {
               ' Unregistered User'
             ) : (
               <Tooltip placement={'bottom'} title={creator.name}>
-                <img
-                  src={creator.avatar_url || Images.avatar.male01}
-                  className={classes.creatorAvatar}
-                  onClick={this._onCreatorIconClicked}
-                />
+                <Link to={`/profile/${creator.username}`}>
+                  <img
+                    src={creator.avatar_url || Images.avatar.male01}
+                    className={classes.creatorAvatar}
+                  />
+                </Link>
               </Tooltip>
             )}
           </div>

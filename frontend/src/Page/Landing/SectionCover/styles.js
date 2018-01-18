@@ -1,9 +1,9 @@
-export default ({ palette, breakpoints }) => ({
+export default ({ palette, breakpoints, spacing }) => ({
   container: {
     position: 'relative',
     marginTop: '-3em',
     zIndex: 3,
-    width: '100%',
+    width: spacing.fullWidth,
   },
   wrapper: {
     display: 'flex',

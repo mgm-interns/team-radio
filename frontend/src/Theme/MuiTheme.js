@@ -46,5 +46,9 @@ export default createMuiTheme({
     smallMargin: 4,
     baseMargin: 8,
     doubleBaseMargin: 16,
+    fullWidth: '100%',
+    fullHeight: '100%',
+    fullViewportWidth: '100vw',
+    fullViewportHeight: '100vh',
   },
 });
