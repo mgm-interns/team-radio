@@ -20,7 +20,7 @@ class Profile extends Component {
   constructor(props) {
     super(props);
 
-    this._renderLoading = this._renderLoading.bind(this);
+    this._showNotification = this._showNotification.bind(this);
   }
 
   componentDidMount() {
@@ -29,25 +29,54 @@ class Profile extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { user: { message } } = nextProps;
-    if (message !== this.props.user.message && message) {
+    const { user, user: { message } } = nextProps;
+    const currentUser = this.props.user;
+    if (message !== currentUser.message && message) {
       const { notification } = this.props;
 
       notification.app.success({
         message,
       });
     }
+
+    const increaseNumber = Profile._calculateIncreaseReputation(
+      currentUser.reputation,
+      user.reputation,
+    );
+
+    // show notification when user upload avatar on the first time
+    if (
+      currentUser.avatar_url !== user.avatar_url &&
+      currentUser.avatar_url === null &&
+      increaseNumber !== 0
+    ) {
+      this._showNotification(
+        `Congratulations! You just got ${increaseNumber} for a gift!`,
+      );
+    }
   }
 
-  _renderLoading() {
+  static _renderLoading() {
     return <CircularProgress />;
+  }
+
+  static _calculateIncreaseReputation(oldNumber, newNumber) {
+    return newNumber - oldNumber;
+  }
+
+  _showNotification(content) {
+    const { notification } = this.props;
+
+    notification.app.success({
+      message: content,
+    });
   }
 
   render() {
     const { classes, user, isOwner } = this.props;
 
     if (Object.keys(user).length === 0) {
-      return this._renderLoading();
+      return Profile._renderLoading();
     }
 
     return [
@@ -74,6 +103,7 @@ Profile.propTypes = {
   loading: PropTypes.bool,
   isOwner: PropTypes.bool,
   requestUserByUsername: PropTypes.func,
+  notification: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({

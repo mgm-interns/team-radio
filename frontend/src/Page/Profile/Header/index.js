@@ -57,7 +57,7 @@ class Header extends Component {
                 Score
               </Typography>
               <Typography type="body2" className={classes.number}>
-                {user.reputation}
+                {user.reputation || 0}
               </Typography>
             </div>
           </div>
