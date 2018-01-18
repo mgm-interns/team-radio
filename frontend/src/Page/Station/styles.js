@@ -110,4 +110,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     height: `${typography.display1.fontSize} !important`,
     color: typography.display1.color,
   },
+  tabs: {
+    borderBottom: '1px solid #f2f2f2',
+  },
 });

@@ -153,6 +153,7 @@ class StationPage extends Component {
         value={tabValue}
         onChange={this._handleTabChange}
         indicatorColor="primary"
+        className={classes.tabs}
       >
         <Tab
           classes={{
