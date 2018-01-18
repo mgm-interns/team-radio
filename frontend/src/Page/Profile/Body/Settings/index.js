@@ -55,7 +55,6 @@ class Settings extends Component {
   }
 
   onCancelButtonClick() {
-    console.log('_onCancelButtonClick');
     this.setState({
       openEditInformation: false,
       openEditPassword: false,
@@ -64,19 +63,16 @@ class Settings extends Component {
   }
 
   _onOpenEditInformation() {
-    console.log('_onOpenEditInformation');
     this._closeMenu();
     this.setState({ openEditInformation: true, openEditPassword: false });
   }
 
   _onOpenEditPassword() {
-    console.log('_onOpenEditPassword');
     this._closeMenu();
     this.setState({ openEditInformation: false, openEditPassword: true });
   }
 
   _onCloseModal() {
-    console.log('_onCloseModal');
     this.setState({
       openEditInformation: false,
       openEditPassword: false,
@@ -85,17 +81,14 @@ class Settings extends Component {
   }
 
   _openMenu(event) {
-    console.log('_openMenu');
     this.setState({ anchorEl: event.target });
   }
 
   _closeMenu() {
-    console.log('_closeMenu');
     this.setState({ anchorEl: null });
   }
 
   _submitModal() {
-    console.log('_submitModal');
     this._onCloseModal();
   }
 

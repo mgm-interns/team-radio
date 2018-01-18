@@ -24,19 +24,16 @@ class Information extends Component {
     super(props);
 
     this.state = {
-      formErrors: '',
+      formErrors: null,
     };
 
     this._renderChangeInformationForm = this._renderChangeInformationForm.bind(
       this,
     );
     this._onCancelButtonClick = this._onCancelButtonClick.bind(this);
-    this._submitModal = this._submitModal.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    // const { information: { message } } = nextProps;
-    // console.log(nextProps);
     const { user: { username }, userProfile: { error } } = nextProps;
 
     if (error !== null) {
@@ -45,18 +42,13 @@ class Information extends Component {
       });
     } else {
       this.setState({
-        formErrors: '',
+        formErrors: null,
       });
     }
 
     if (username !== this.props.user.username) {
       this.props.history.push(`/profile/${username}`);
     }
-    // if (message !== null) {
-    //   this.setState({
-    //     formErrors: message,
-    //   });
-    // }
   }
 
   _onCancelButtonClick() {
@@ -64,7 +56,7 @@ class Information extends Component {
   }
 
   _renderChangeInformationForm() {
-    const { classes, submitSucceeded, user } = this.props;
+    const { classes, submitSucceeded } = this.props;
     return [
       <Field
         key={1}
@@ -139,25 +131,14 @@ class Information extends Component {
     ];
   }
 
-  _submitModal(values) {
-    const { onSubmit, initialValues } = this.props;
-    // console.log(initialValues);
-    onSubmit({ userId: initialValues.userId, ...values });
-    if (!this.state.formErrors) {
-      // this.props.onDone();
-    }
-  }
-
   _renderLoading() {
     return <CircularProgress />;
   }
 
   render() {
     const { classes, handleSubmit, pristine, submitting } = this.props;
-    console.log('information render');
     return (
       <Grid className={classes.content}>
-        {/* <form onSubmit={handleSubmit(this._submitModal)}> */}
         <form onSubmit={handleSubmit}>
           <Grid item xs={12}>
             {this._renderChangeInformationForm()}
@@ -227,6 +208,8 @@ Information.propTypes = {
   onSubmit: PropTypes.func,
   initialValues: PropTypes.any,
   history: PropTypes.any,
+  userProfile: PropTypes.any,
+  submitSucceeded: PropTypes.any,
 };
 
 export default compose(

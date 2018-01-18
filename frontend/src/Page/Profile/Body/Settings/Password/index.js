@@ -102,11 +102,10 @@ class Password extends Component {
 
   render() {
     const { classes, handleSubmit, pristine, submitting } = this.props;
-    console.log('password render');
+
     return (
       <Grid className={classes.content}>
         <form onSubmit={handleSubmit(this._submitModal)}>
-          {/* <form onSubmit={handleSubmit}> */}
           <Grid item xs={12}>
             {this._renderChangePasswordForm()}
           </Grid>
@@ -140,6 +139,7 @@ Password.propTypes = {
   onSubmit: PropTypes.func,
   initialValues: PropTypes.any,
   submitSucceeded: PropTypes.any,
+  userProfile: PropTypes.any,
 };
 
 const mapStateToProps = ({ api }) => ({
