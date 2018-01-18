@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { transformNumber } from 'Transformer';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -11,6 +12,8 @@ import Tooltip from 'material-ui/Tooltip';
 import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
 import ReplayIcon from 'react-icons/lib/md/replay';
+import StarIcon from 'react-icons/lib/md/star';
+import OutlineStarIcon from 'react-icons/lib/md/star-outline';
 import { withNotification } from 'Component/Notification';
 import { Images } from 'Theme';
 import styles from './styles';
@@ -23,6 +26,7 @@ class HistoryItem extends Component {
 
     this.state = {
       replay: false,
+      isFavourite: false,
     };
 
     this._onReplayClick = this._onReplayClick.bind(this);
@@ -72,6 +76,22 @@ class HistoryItem extends Component {
         <Grid item xs={8} className={classes.info}>
           <Tooltip placement={'bottom'} title={title}>
             <div className={classes.name}>{title}</div>
+          </Tooltip>
+          <Tooltip
+            placement={'bottom'}
+            title={
+              this.state.isFavourite
+                ? 'Remove from favourite'
+                : 'Add to favourite'
+            }
+          >
+            <div
+              className={classNames(classes.favouriteWrapper, 'hiddenAction')}
+            >
+              <IconButton color={'primary'} className={classes.favouriteBtn}>
+                {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />}
+              </IconButton>
+            </div>
           </Tooltip>
           <div className={classes.creator}>
             Added by

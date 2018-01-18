@@ -4,12 +4,15 @@ import { compose } from 'redux';
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
-import Icon from 'material-ui/Icon';
-import Button from 'material-ui/Button';
+import IconButton from 'material-ui/IconButton';
+import EditIcon from 'react-icons/lib/md/edit';
+import PersonIcon from 'react-icons/lib/md/person';
+import KeyIcon from 'react-icons/lib/md/vpn-key';
 import Modal from 'material-ui/Modal';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import Popover from 'material-ui/Popover';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import Tooltip from 'material-ui/Tooltip';
 
 import styles from './styles';
 
@@ -88,10 +91,6 @@ class Settings extends Component {
     this.setState({ anchorEl: null });
   }
 
-  _submitModal() {
-    this._onCloseModal();
-  }
-
   static _renderLoading() {
     return <CircularProgress />;
   }
@@ -104,7 +103,6 @@ class Settings extends Component {
         aria-labelledby="information-modal-title"
         aria-describedby="information-modal-description"
         open={this.state.openEditInformation}
-        // onClose={this._onCloseModal}
       >
         <div style={getModalStyle()}>
           <Grid container>
@@ -117,7 +115,6 @@ class Settings extends Component {
                 user={user}
                 loading={loading}
                 onCancel={this.onCancelButtonClick}
-                // onDone={this._onCloseModal}
               />
             </Grid>
           </Grid>
@@ -159,15 +156,19 @@ class Settings extends Component {
     return (
       <List>
         <ListItem button onClick={this._onOpenEditInformation}>
-          <ListItemIcon>
-            <Icon>personal</Icon>
-          </ListItemIcon>
+          <span>
+            <IconButton>
+              <PersonIcon />
+            </IconButton>
+          </span>
           <ListItemText primary="Information" />
         </ListItem>
         <ListItem button onClick={this._onOpenEditPassword}>
-          <ListItemIcon>
-            <Icon>vpn_key</Icon>
-          </ListItemIcon>
+          <span>
+            <IconButton>
+              <KeyIcon />
+            </IconButton>
+          </span>
           <ListItemText primary="Password" />
         </ListItem>
       </List>
@@ -186,9 +187,13 @@ class Settings extends Component {
           aria-haspopup="true"
           onClick={this._openMenu}
         >
-          <Button key={1}>
-            <Icon>edit</Icon>
-          </Button>
+          <Tooltip placement={'bottom'} title={'Edit your account'}>
+            <span>
+              <IconButton key={1}>
+                <EditIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
         </div>
 
         <Popover

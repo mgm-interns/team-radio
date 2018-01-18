@@ -8,6 +8,10 @@ import Icon from 'material-ui/Icon';
 import Popover from 'material-ui/Popover';
 import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
+import IconButton from 'material-ui/IconButton';
+import PersonIcon from 'react-icons/lib/md/person';
+import ExitIcon from 'react-icons/lib/md/exit-to-app';
+import ArrowDropDownIcon from 'react-icons/lib/md/arrow-drop-down';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -54,7 +58,7 @@ class AuthLink extends Component {
     return (
       <List
         subheader={
-          <ListSubheader>
+          <ListSubheader style={{ paddingLeft: 30 }}>
             {`Signed in as:`}
             <Typography type="body1">
               {`${user.data.username || user.data.email}`}
@@ -68,17 +72,21 @@ class AuthLink extends Component {
           to={`/profile/${user.data.username}`}
         >
           <ListItem button>
-            <ListItemIcon>
-              <Icon>personal</Icon>
-            </ListItemIcon>
+            <span>
+              <IconButton>
+                <PersonIcon />
+              </IconButton>
+            </span>
             <ListItemText primary="My Profile" />
           </ListItem>
         </Link>
 
         <ListItem button onClick={this._logout}>
-          <ListItemIcon>
-            <Icon>exit_to_app</Icon>
-          </ListItemIcon>
+          <span>
+            <IconButton>
+              <ExitIcon />
+            </IconButton>
+          </span>
           <ListItemText primary="Logout" />
         </ListItem>
       </List>
@@ -119,7 +127,11 @@ class AuthLink extends Component {
                 }
                 alt="avatar"
               />
-              <Icon className={classes.dropdownIcon}>arrow_drop_down</Icon>
+              <span>
+                <IconButton className={classes.dropdownIcon}>
+                  <ArrowDropDownIcon />
+                </IconButton>
+              </span>
             </div>
 
             <Popover

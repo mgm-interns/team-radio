@@ -307,8 +307,8 @@ export const getListSong = async stationId => {
 
 /**
  * - Check :
- * - If user id has up vote then remove user in upvote
- * - If user id have not up vote the add user in upvote
+ * - If user id has upvote then remove user in upvote
+ * - If user id have not upvote the add user in upvote
  * - If user id has down vote :
  *  + if user down vote then remove user in down vote
  *
@@ -332,7 +332,7 @@ export const upVote = async (stationId, songId, userId) => {
     if (currentSong.creator.equals(userId)) {
       throw new Error({
         song: currentSong,
-        message: "Can't up vote your own song.",
+        message: "Can't upvote your own song.",
       });
     }
     const upVoteArray = currentSong.up_vote;
@@ -369,7 +369,7 @@ export const upVote = async (stationId, songId, userId) => {
 
   } catch (err) {
     console.log(err);
-    throw new Error({ song: null, message: "Can't up vote song." });
+    throw new Error({ song: null, message: "Can't upvote song." });
   }
 };
 
@@ -377,7 +377,7 @@ export const upVote = async (stationId, songId, userId) => {
  *- Check :
  * - If user id has down vote then remove user in downvote
  * - If user id have not down vote the add user in downvote
- * - If user id has up vote the remove user in up vote and add user in down vote
+ * - If user id has upvote the remove user in upvote and add user in down vote
  *
  * @param {string} stationId
  * @param {string} songId
@@ -429,7 +429,7 @@ export const downVote = async (stationId, songId, userId) => {
     return playList;
   } catch (err) {
     console.log(err);
-    throw new Error({ song: null, message: "Can't up vote song." });
+    throw new Error({ song: null, message: "Can't upvote song." });
   }
 };
 
