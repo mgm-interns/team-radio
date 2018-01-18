@@ -131,12 +131,18 @@ class Information extends Component {
     ];
   }
 
-  _renderLoading() {
+  static _renderLoading() {
     return <CircularProgress />;
   }
 
   render() {
-    const { classes, handleSubmit, pristine, submitting } = this.props;
+    const {
+      classes,
+      handleSubmit,
+      pristine,
+      submitting,
+      userProfile: { loading },
+    } = this.props;
     return (
       <Grid className={classes.content}>
         <form onSubmit={handleSubmit}>
@@ -144,14 +150,20 @@ class Information extends Component {
             {this._renderChangeInformationForm()}
           </Grid>
           <Grid item xs={12} className={classes.modalFooter}>
-            <Button onClick={this._onCancelButtonClick}>Cancel</Button>
+            <Button
+              onClick={this._onCancelButtonClick}
+              className={classes.button}
+            >
+              Cancel
+            </Button>
             <Button
               raised
               disabled={pristine || submitting}
               color="primary"
               type="submit"
+              className={classes.button}
             >
-              Save changes
+              {loading ? Information._renderLoading() : 'Save changes'}
             </Button>
           </Grid>
         </form>

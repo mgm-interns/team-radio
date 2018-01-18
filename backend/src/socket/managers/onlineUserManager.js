@@ -62,6 +62,21 @@ export const countOnlineOfAllStations = async (stations, io) =>
     }),
   );
 
+export const leaveStationAlreadyIn = async (userId, stId, stName, io) => {
+  const listSocket = await getAllSocketConnected(io);
+  listSocket.forEach(socketId => {
+    const socket = getSocketById(socketId, io);
+    const oldStation = getAllStationsSocketIn(socket)[0];
+    if (socket.userId === userId && oldStation !== stId) {
+      const emitter = createEmitter(socket, io);
+      emitter.emit(EVENTS.SERVER_NO_MULTI_STATIONS, {
+        stationId: stId,
+        stationName: stName,
+      });
+    }
+  });
+};
+
 /**
  * This function allows socket to leave all the stations it is in
  * With each station, it will send a leave notification
@@ -112,7 +127,6 @@ export const getListUserIdOnline = async (stationId, io) => {
 };
 
 export const getListUserOnline = async (stationId, io) => {
-  // name, username, avatar_url
   const setOfUserId = await getListUserIdOnline(stationId, io);
   const list = [...setOfUserId];
 
@@ -163,7 +177,7 @@ export const leaveNotification = async (stationId, name, emitter, io) => {
     user: name,
   });
 
-  emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
+  emitter.broadcastToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
     online_count: count,
     users: users,
   });
@@ -177,7 +191,7 @@ export const joinNotification = async (stationId, name, emitter, io) => {
     user: name,
   });
 
-  emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
+  emitter.broadcastToStation(stationId, EVENTS.SERVER_UPDATE_ONLINE_USERS, {
     online_count: count,
     users: users,
   });

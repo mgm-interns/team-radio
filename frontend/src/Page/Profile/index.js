@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
-import withRouter from 'react-router-dom/withRouter';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { NavBar, Footer } from 'Component';
@@ -15,7 +14,6 @@ import sleep from 'Util/sleep';
 import Header from './Header';
 import Body from './Body';
 import styles from './styles';
-import Divider from 'material-ui/Divider/Divider';
 
 /* eslint-disable no-shadow */
 class Profile extends Component {
@@ -25,13 +23,20 @@ class Profile extends Component {
     this._showNotification = this._showNotification.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { match: { params } } = this.props;
     this.props.requestUserByUsername(params.username);
   }
 
   async componentWillReceiveProps(nextProps) {
-    const { user, user: { message } } = nextProps;
+    const { user, user: { message }, match: { params } } = nextProps;
+    console.log(params.username);
+
+    if (params.username !== this.props.match.params.username) {
+      this.props.requestUserByUsername(params.username);
+      return;
+    }
+
     const currentUser = this.props.user;
     const increaseNumber = Profile._calculateIncreaseReputation(
       currentUser.reputation,
@@ -42,17 +47,18 @@ class Profile extends Component {
       this._showNotification(message);
     }
 
-    // show notification when user upload avatar on the first time
-    if (
-      currentUser.avatar_url !== user.avatar_url &&
-      currentUser.avatar_url === null &&
-      increaseNumber !== 0
-    ) {
-      await sleep(1000);
-      this._showNotification(
-        `Congratulations! You just got ${increaseNumber} for a gift!`,
-      );
-    }
+    // show notification when user upload avatar on the first timeT
+    // TOFIX
+    // if (
+    //   currentUser.avatar_url !== user.avatar_url &&
+    //   currentUser.avatar_url === null &&
+    //   increaseNumber !== 0
+    // ) {
+    //   await sleep(1000);
+    //   this._showNotification(
+    //     `Congratulations! You just got ${increaseNumber} for a gift!`,
+    //   );
+    // }
   }
 
   static _renderLoading() {
@@ -110,6 +116,7 @@ Profile.propTypes = {
   isOwner: PropTypes.bool,
   requestUserByUsername: PropTypes.func,
   notification: PropTypes.object,
+  match: PropTypes.any,
 };
 
 const mapStateToProps = ({ api }) => ({
@@ -125,6 +132,5 @@ const mapDispatchToProps = dispatch => ({
 export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
-  withRouter,
   withNotification,
 )(Profile);

@@ -49,8 +49,8 @@ var Station = (module.exports = mongoose.model('stations', stationSchema));
 
 /**
  * Add station
- * 
- * @param {{}} station 
+ *
+ * @param {{}} station
  */
 module.exports.addStation = station => {
   try {
@@ -61,10 +61,10 @@ module.exports.addStation = station => {
 };
 
 /**
- * Delete station 
- * 
- * @param {string} stationId 
- * @param {string} userId 
+ * Delete station
+ *
+ * @param {string} stationId
+ * @param {string} userId
  */
 module.exports.deleteStation = (stationId, userId) => {
   try {
@@ -77,20 +77,20 @@ module.exports.deleteStation = (stationId, userId) => {
 /**
  * Get all station has is_private : fasle (station is public)
  * return info :
- * - station_name 
+ * - station_name
  * - created_date
  * - station_id
- * 
- * @param {number} limit 
+ *
+ * @param {number} limit
  */
 module.exports.getAllAvailableStations = (limit) => {
   return Station.find({ is_private: false }, { station_name: 1, created_date: 1, station_id: 1, _id: 0 }).limit(limit);
 };
 
 /**
- * Get all info station 
- * 
- * @param {number} limit 
+ * Get all info station
+ *
+ * @param {number} limit
  */
 module.exports.getStationDetails = limit => {
   return Station.find()
@@ -100,13 +100,13 @@ module.exports.getStationDetails = limit => {
 };
 
 /**
- * Get info of station  : 
- * - station_id 
+ * Get info of station  :
+ * - station_id
  * - created_date
  * - station_name
  * - owner_id
- * 
- * @param {number} limit 
+ *
+ * @param {number} limit
  */
 module.exports.getAllStationLimitInfor = limit => {
   return Station.find({}, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 })
@@ -116,8 +116,8 @@ module.exports.getAllStationLimitInfor = limit => {
 
 /**
  * Get station by name
- * 
- * @param {string} stationNameToFind 
+ *
+ * @param {string} stationNameToFind
  */
 module.exports.getStationByName = stationNameToFind => {
   return Station.findOne({ station_name: stationNameToFind })
@@ -127,8 +127,8 @@ module.exports.getStationByName = stationNameToFind => {
 
 /**
  * Get station by id
- * 
- * @param {string} idToFind 
+ *
+ * @param {string} idToFind
  */
 module.exports.getStationById = idToFind => {
   return Station.findOne({ station_id: idToFind })
@@ -140,11 +140,11 @@ module.exports.getStationById = idToFind => {
  * Get station by id
  * return info :
  * - station_id
- * - created_date 
+ * - created_date
  * - station_name
  * - owner_id
- * 
- * @param {string} userId 
+ *
+ * @param {string} userId
  */
 module.exports.getStationsByUserId = userId => {
   return Station.find({ owner_id: userId }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 });
@@ -153,9 +153,9 @@ module.exports.getStationsByUserId = userId => {
 
 /**
  * The function update a field starting_time in db
- * 
- * @param {string} stationId 
- * @param {boolean} valueNeedUpdate 
+ *
+ * @param {string} stationId
+ * @param {boolean} valueNeedUpdate
  */
 module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
   try {
@@ -175,10 +175,10 @@ module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
  * valueNeedUpdate : false => station is public
  * valueNeedUpdate : true => station is private
  *
- * 
- * @param {string} stationId 
- * @param {string} userId 
- * @param {boolean} valueNeedUpdate 
+ *
+ * @param {string} stationId
+ * @param {string} userId
+ * @param {boolean} valueNeedUpdate
  */
 module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) => {
   try {
@@ -197,7 +197,7 @@ module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) =
 
 /**
  * Add a song
- * 
+ *
  * @param {string} stationId
  * @param {{}} song
  */
@@ -215,9 +215,9 @@ module.exports.addSong = (stationId, song) => {
 
 /**
  * Get a song in station
- * 
- * @param {string} stationId 
- * @param {string} songId 
+ *
+ * @param {string} stationId
+ * @param {string} songId
  */
 module.exports.getAsongInStation = async (stationId, songId) => {
   let query = {
@@ -233,11 +233,11 @@ module.exports.getAsongInStation = async (stationId, songId) => {
 };
 
 /**
- * Update a field of up vote in a song
- * 
- * @param {string} stationId 
- * @param {string} songId 
- * @param {[]} valueNeedUpdate 
+ * Update a field of upvote in a song
+ *
+ * @param {string} stationId
+ * @param {string} songId
+ * @param {[]} valueNeedUpdate
  */
 module.exports.updateValueOfUpvote = (stationId, songId, valueNeedUpdate) => {
   return Station.update(
@@ -248,10 +248,10 @@ module.exports.updateValueOfUpvote = (stationId, songId, valueNeedUpdate) => {
 
 /**
  * Update a field of down vote in a song
- * 
- * @param {string} stationId 
- * @param {string} songId 
- * @param {[]} valueNeedUpdate 
+ *
+ * @param {string} stationId
+ * @param {string} songId
+ * @param {[]} valueNeedUpdate
  */
 module.exports.updateValueOfDownvote = (stationId, songId, valueNeedUpdate) => {
   return Station.update(
@@ -271,7 +271,7 @@ module.exports.updateVotes = (stationId, songId, newUpVotes, newDownVotes) => {
 
 /**
  * The function update a field playlist in db
- * 
+ *
  * @param {string} stationId
  * @param {[]} valueNeedUpdate
  */
@@ -286,8 +286,8 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
 
 /**
  * Get playlist of station
- * 
- * @param {string} stationId 
+ *
+ * @param {string} stationId
  */
 module.exports.getPlaylistOfStation = async (stationId, limit) => {
   let query = { station_id: stationId };
@@ -298,9 +298,9 @@ module.exports.getPlaylistOfStation = async (stationId, limit) => {
 };
 
 /**
- * 
- * @param {string} stationId 
- * @param {string} userId 
+ *
+ * @param {string} stationId
+ * @param {string} userId
  */
 module.exports.getStationHasSongUserAdded = (userId) => {
   return Station.find({
@@ -346,7 +346,7 @@ module.exports.increaseUserPoints = async (stationId, userId, increasingPoints) 
 }
 
 // module.exports.getListSongHistory = async stationId => {
-//   // TODO : 
+//   // TODO :
 //   const station = await Station.aggregate(
 //     { $match: { station_id: 'bac-test' } },
 //     { $unwind: '$playlist' },

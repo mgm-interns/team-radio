@@ -16,13 +16,14 @@ import {
   SERVER_USER_LEFT,
   SERVER_SKIP_SONG,
   SERVER_UPDATE_SKIPPED_SONGS,
-  SERVER_ALREADY_IN_A_STATION,
+  SERVER_NO_MULTI_STATIONS,
 } from 'Redux/actions';
 
 const INITIAL_STATE = {
   station: null,
   playlist: [],
   tempPlaylist: [],
+  skipList: [],
   nowPlaying: {
     url: '',
     starting_time: 0,
@@ -37,7 +38,7 @@ const INITIAL_STATE = {
     loading: false,
     success: false,
     failed: false,
-    otherStation: null,
+    loggedInStation: null,
   },
 };
 
@@ -53,7 +54,7 @@ export default (state = INITIAL_STATE, action) => {
           station_id: action.payload.stationId,
         },
         joined: {
-          ...state.joined,
+          ...state,
           loading: true,
           success: false,
           failed: false,
@@ -65,10 +66,10 @@ export default (state = INITIAL_STATE, action) => {
         station: action.payload.station,
         playlist: action.payload.station.playlist,
         joined: {
-          ...state.joined,
           loading: false,
           success: true,
           failed: false,
+          loggedInStation: null,
         },
       };
 
@@ -76,26 +77,27 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
         joined: {
-          ...state.joined,
           loading: false,
           success: false,
           failed: true,
+          loggedInStation: null,
         },
       };
-    case SERVER_ALREADY_IN_A_STATION: {
+    case SERVER_NO_MULTI_STATIONS: {
       appNotificationInstance.warning({
-        message:
-          'You have already been in another station. You will be redirected to landing page.',
+        message: `You are logging in station ${
+          action.payload.stationName
+        }. You will be redirected to that station after 5 seconds.`,
       });
       return {
         ...state,
         joined: {
-          ...state.joined,
           loading: false,
           success: false,
           failed: true,
-          otherStation: {
+          loggedInStation: {
             stationId: action.payload.stationId,
+            stationName: action.payload.stationName,
           },
         },
       };

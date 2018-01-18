@@ -14,7 +14,7 @@ import WarningIcon from 'react-icons/lib/md/warning';
 import Item from './Item';
 import styles from './styles';
 
-class Favorites extends Component {
+class Favourites extends Component {
   /**
    * Filter all song that have not been played
    * Then order the list by:
@@ -24,14 +24,14 @@ class Favorites extends Component {
    *
    * @returns {Array}
    */
-  // getFilteredFavorites() {
+  // getFilteredFavourites() {
   //   const { favoriteSongs, nowPlaying } = this.props;
   //
   //   return orderBy(
   //     favoriteSongs,
   //     [
   //       ({ song_id }) => (song_id === nowPlaying.song_id ? -1 : 1),
-  //       Favorites.getSongScore,
+  //       Favourites.getSongScore,
   //       'created_date',
   //     ],
   //     ['asc', 'desc', 'asc'],
@@ -39,9 +39,9 @@ class Favorites extends Component {
   // }
 
   render() {
-    const { className, classes, style, favoriteSongs } = this.props;
+    const { className, classes, style, favouriteSongs } = this.props;
 
-    if (favoriteSongs.length === 0) {
+    if (favouriteSongs.length === 0) {
       return (
         <Grid item xs={12} className={className}>
           <Grid
@@ -60,7 +60,7 @@ class Favorites extends Component {
             >
               There is no song in your list.
               <br />
-              Please favorite any song.
+              Please favourite any song.
             </Typography>
           </Grid>
         </Grid>
@@ -69,19 +69,21 @@ class Favorites extends Component {
 
     return (
       <GridList cellHeight={200} spacing={1} className={classes.gridList}>
-        {favoriteSongs.map((video, index) => <Item key={index} {...video} />)}
+        {favouriteSongs.map((video, index) => <Item key={index} {...video} />)}
       </GridList>
     );
   }
 }
 
-Favorites.propTypes = {
+Favourites.propTypes = {
   className: PropTypes.any,
   classes: PropTypes.any,
   style: PropTypes.any,
-  favoriteSongs: PropTypes.array,
+  favouriteSongs: PropTypes.array,
 };
 
 const mapStateToProps = state => ({});
 
-export default compose(withStyles(styles), connect(mapStateToProps))(Favorites);
+export default compose(withStyles(styles), connect(mapStateToProps))(
+  Favourites,
+);

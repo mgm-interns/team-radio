@@ -4,10 +4,12 @@ export default ({ palette, spacing }) => ({
     height: 30,
     marginLeft: '16px',
     borderRadius: '40px',
+    cursor: 'pointer',
   },
   dropdown: {
     position: 'relative',
     display: 'inline-block',
+    cursor: 'pointer',
   },
   dropdownContent: {
     display: 'none',
