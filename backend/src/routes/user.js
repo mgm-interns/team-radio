@@ -408,7 +408,25 @@ export default router => {
     }
   });
 
-  //router.use(authController);
+  // TODO :
+  router.put('/addfavouritesong', async (req, res) => {
+    console.log('addFavouriteSong');
+    const favourite = await userController.addFavouriteSong(
+      req.body.song_id,
+      req.body.user_id,
+      req.body.station_id,
+      req.body.song_url,
+    );
+    res.json(favourite);
+  });
+  // TODO :
+  router.put('/getfavouriedsongs', async (req, res) => {
+    console.log('addFavouriteSong');
+    const favourite = await userController.getFavouritedSongs(req.body.user_id);
+    res.json(favourite);
+  });
+
+  router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

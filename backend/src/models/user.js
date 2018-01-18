@@ -30,6 +30,7 @@ const userSchema = mongoose.Schema({
   favourited_songs: {
     type: [
       {
+        song_id: { type: Number, require: true },
         url: { type: String, required: true },
         title: { type: String },
         thumbnail: { type: String },
@@ -43,12 +44,12 @@ const userSchema = mongoose.Schema({
 });
 
 // generation a hash
-userSchema.methods.generateHash = function (pwd) {
+userSchema.methods.generateHash = function(pwd) {
   return bcrypt.hashSync(pwd, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
-userSchema.methods.validPassword = function (password) {
+userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
 
@@ -109,8 +110,8 @@ module.exports.setCover = async (userId, coverUrl) =>
  * @param {string} userId
  * @param {[]} valueNeedUpdate
  */
-module.exports.updateFavouritedSongs = (userId, song) => {
-  const query = { _id: userId };
+module.exports.addFavouritedSongs = (userId, song) => {
+  const query = { _id: _safeObjectId(userId) };
   return user.update(query, {
     $addToSet: {
       favourited_songs: song,
@@ -122,13 +123,13 @@ module.exports.updateFavouritedSongs = (userId, song) => {
  * The function delete a song of field favourited_songs in db
  *
  * @param {string} userId
- * @param {string} songId
+ * @param {string} songUrl
  */
-module.exports.deleteAsongInFavouritedSongs = (userId, songId) => {
-  const query = { _id: userId };
+module.exports.deleteAsongInFavouritedSongs = (userId, songUrl) => {
+  const query = { _id: _safeObjectId(userId) };
   return user.update(query, {
     $pull: {
-      favourited_songs: { _id: songId },
+      favourited_songs: { url: songUrl },
     },
   });
 };
@@ -138,25 +139,23 @@ module.exports.deleteAsongInFavouritedSongs = (userId, songId) => {
  * @param {string} userId
  */
 module.exports.getFavouritedSongs = async userId => {
-  const query = { _id: userId };
+  const query = { _id: _safeObjectId(userId) };
   return (await user.findOne(query, { favourited_songs: true }))
     .favourited_songs;
 };
 
 /**
  *
- * @param {string} stationId
+ * @param {string} songUrl
  * @param {string} userId
  */
-module.exports.getStationHasSongUserAdded = (userId, urlSong) => {
-  return user.find(
-    { _id: userId },
+module.exports.getSongInFavouriteds = async (userId, songUrl) => (await user.findOne(
+    { _id: _safeObjectId(userId) },
     {
       favourited_songs: {
         $elemMatch: {
-          creator: userId,
+          url: songUrl,
         },
       },
     },
-  );
-};
+  )).favourited_songs;
