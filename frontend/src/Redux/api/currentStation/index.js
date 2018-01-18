@@ -54,7 +54,7 @@ export default (state = INITIAL_STATE, action) => {
           station_id: action.payload.stationId,
         },
         joined: {
-          ...state.joined,
+          ...state,
           loading: true,
           success: false,
           failed: false,
@@ -92,7 +92,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         joined: {
-          ...state.joined,
           loading: false,
           success: false,
           failed: true,
