@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema({
   level: { type: String, default: 'Newbie', enum: ['Newbie'] },
   facebook_id: { type: String },
   google_id: { type: String },
-  favourited_songs: {
+  favourite_songs: {
     type: [
       {
         song_id: { type: Number, require: true },
@@ -44,12 +44,12 @@ const userSchema = mongoose.Schema({
 });
 
 // generation a hash
-userSchema.methods.generateHash = function(pwd) {
+userSchema.methods.generateHash = function (pwd) {
   return bcrypt.hashSync(pwd, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
-userSchema.methods.validPassword = function(password) {
+userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
@@ -114,13 +114,13 @@ module.exports.addFavouritedSongs = (userId, song) => {
   const query = { _id: _safeObjectId(userId) };
   return user.update(query, {
     $addToSet: {
-      favourited_songs: song,
+      favourite_songs: song,
     },
   });
 };
 
 /**
- * The function delete a song of field favourited_songs in db
+ * The function delete a song of field favourite_songs in db
  *
  * @param {string} userId
  * @param {string} songUrl
@@ -129,19 +129,18 @@ module.exports.deleteAsongInFavouritedSongs = (userId, songUrl) => {
   const query = { _id: _safeObjectId(userId) };
   return user.update(query, {
     $pull: {
-      favourited_songs: { url: songUrl },
+      favourite_songs: { url: songUrl },
     },
   });
 };
 /**
- * The function get favourited_songs in db
+ * The function get favourite_songs in db
  *
  * @param {string} userId
  */
 module.exports.getFavouritedSongs = async userId => {
   const query = { _id: _safeObjectId(userId) };
-  return (await user.findOne(query, { favourited_songs: true }))
-    .favourited_songs;
+  return (await user.findOne(query, { favourite_songs: true })).favourite_songs;
 };
 
 /**
@@ -149,13 +148,14 @@ module.exports.getFavouritedSongs = async userId => {
  * @param {string} songUrl
  * @param {string} userId
  */
-module.exports.getSongInFavouriteds = async (userId, songUrl) => (await user.findOne(
+module.exports.getSongInFavouriteds = async (userId, songUrl) =>
+  (await user.findOne(
     { _id: _safeObjectId(userId) },
     {
-      favourited_songs: {
+      favourite_songs: {
         $elemMatch: {
           url: songUrl,
         },
       },
     },
-  )).favourited_songs;
+  )).favourite_songs;

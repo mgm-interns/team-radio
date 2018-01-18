@@ -421,9 +421,7 @@ export default router => {
     }
   });
 
-  // TODO :
-  router.put('/addfavouritesong', async (req, res) => {
-    console.log('addFavouriteSong');
+  router.post('/addFavouriteSongs', async (req, res) => {
     const favourite = await userController.addFavouriteSong(
       req.body.song_id,
       req.body.user_id,
@@ -433,9 +431,10 @@ export default router => {
     res.json(favourite);
   });
   // TODO :
-  router.put('/getfavouriedsongs', async (req, res) => {
-    console.log('addFavouriteSong');
-    const favourite = await userController.getFavouritedSongs(req.body.user_id);
+  router.get('/getFavouriteSongs/:user_id', async (req, res) => {
+    const favourite = await userController.getFavouritedSongs(
+      req.params.user_id,
+    );
     res.json(favourite);
   });
 
