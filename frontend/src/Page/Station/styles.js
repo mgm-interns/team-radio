@@ -68,7 +68,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     flexDirection: 'row',
   },
   nowPlaying: {
-    height: 400,
+    height: '60vh',
   },
   playlistHeader: {
     padding: spacing.baseMargin,
