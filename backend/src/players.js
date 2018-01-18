@@ -25,7 +25,6 @@ class Player {
     this.updatePlaylist(station);
   }
   updateOnlineUsers = async userIds => {
-    switcher.updateNumberOfOnlineUsersInStation(this.stationId, userIds.size);
     const preSkippedSongs = new Set(this.skippedSongs);
     // Save the user ids
     this.userIds = userIds;

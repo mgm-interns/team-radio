@@ -155,6 +155,7 @@ class PlaylistItem extends Component {
 
   render() {
     const {
+      song_id,
       thumbnail,
       title,
       playing,
@@ -201,42 +202,48 @@ class PlaylistItem extends Component {
             )}
           </div>
         </Grid>
-        <div className={classes.actions}>
-          <div className={classes.actionsWrapper}>
-            <IconButton
-              onClick={this.upVoteSong}
-              className={classes.action}
-              color={this.state.isUpVote ? 'primary' : 'default'}
-            >
-              <ThumbUpIcon />
-            </IconButton>
-            <div className={classes.score}>{this.state.upVotes}</div>
-            <IconButton
-              onClick={this.downVoteSong}
-              className={classes.action}
-              color={this.state.isDownVote ? 'primary' : 'default'}
-            >
-              <ThumbDownIcon />
-            </IconButton>
-            <div className={classes.score}>{this.state.downVotes}</div>
-          </div>
-          <div className={classes.scoreRatio}>
-            <Tooltip
-              placement={'bottom'}
-              title={`${this.state.upVotes} / ${this.state.downVotes}`}
-            >
-              <LinearProgress
-                className={classes.progressBar}
+        {song_id && (
+          <div className={classes.actions}>
+            <div className={classes.actionsWrapper}>
+              <IconButton
+                onClick={this.upVoteSong}
+                className={classNames(classes.action, {
+                  [classes.disabledAction]: !this.state.isUpVote,
+                })}
                 color={'primary'}
-                mode={'determinate'}
-                value={PlaylistItem.getScoreRatio(
-                  this.state.upVotes,
-                  this.state.downVotes,
-                )}
-              />
-            </Tooltip>
+              >
+                <ThumbUpIcon />
+              </IconButton>
+              <div className={classes.score}>{this.state.upVotes}</div>
+              <IconButton
+                onClick={this.downVoteSong}
+                className={classNames(classes.action, {
+                  [classes.disabledAction]: !this.state.isDownVote,
+                })}
+                color={'primary'}
+              >
+                <ThumbDownIcon />
+              </IconButton>
+              <div className={classes.score}>{this.state.downVotes}</div>
+            </div>
+            <div className={classes.scoreRatio}>
+              <Tooltip
+                placement={'bottom'}
+                title={`${this.state.upVotes} / ${this.state.downVotes}`}
+              >
+                <LinearProgress
+                  className={classes.progressBar}
+                  color={'primary'}
+                  mode={'determinate'}
+                  value={PlaylistItem.getScoreRatio(
+                    this.state.upVotes,
+                    this.state.downVotes,
+                  )}
+                />
+              </Tooltip>
+            </div>
           </div>
-        </div>
+        )}
       </Grid>
     );
   }

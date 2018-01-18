@@ -18,7 +18,7 @@ class NowPlaying extends Component {
       refPlayer: null,
       skipNotification: false,
       countDown: 0,
-      seektime: 0,
+      seektime: null,
       receivedAt: new Date().getTime(),
     };
     this.renderSkipNotification = this.renderSkipNotification.bind(this);
@@ -82,7 +82,8 @@ class NowPlaying extends Component {
           NowPlaying.calculateSeekTime(nowPlaying.starting_time) + 0.001;
       } else {
         // If not
-        seektime = this.state.seektime + 0.002;
+        seektime =
+          (this.state.seektime || nextNowPlaying.starting_time) + 0.002;
       }
       this.setState({
         seektime,

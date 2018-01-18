@@ -1,6 +1,6 @@
 import * as EVENTS from '../../const/actions';
 import * as userController from '../../controllers/user';
-import * as stationController from '../../controllers/station';
+import * as switcher from '../../switcher';
 import createEmitter from './createEmitter';
 import skipDecider from './skipDecider';
 
@@ -73,28 +73,18 @@ export const leaveAllStation = async (io, socket, userId) => {
 
   try {
     const user = await userController.getUserById(userId);
-    if (user.name) {
-      const name = user.name;
-      allStations.forEach(stationId => {
-        leaveStationPromises.push(
-          _leaveStation(io, socket, stationId, userId, name),
-        );
-      });
-    } else if (user.username) {
-      const name = user.username;
-      allStations.forEach(stationId => {
-        leaveStationPromises.push(
-          _leaveStation(io, socket, stationId, userId, name),
-        );
-      });
-    } else {
-      const name = 'Someone';
-      allStations.forEach(stationId => {
-        leaveStationPromises.push(
-          _leaveStation(io, socket, stationId, userId, name),
-        );
-      });
-    }
+    if (!user) throw new Error('UserId is not exist!');
+    allStations.forEach(stationId => {
+      leaveStationPromises.push(
+        _leaveStation(
+          io,
+          socket,
+          stationId,
+          userId,
+          user.name || user.username || 'Someone',
+        ),
+      );
+    });
   } catch (err) {
     allStations.forEach(stationId => {
       leaveStationPromises.push(
@@ -177,14 +167,6 @@ export const leaveNotification = async (stationId, name, emitter, io) => {
     online_count: count,
     users: users,
   });
-
-  const station = await stationController.getStation(stationId);
-  if (!station.is_private) {
-    emitter.emitAll(EVENTS.SERVER_STATION_CHANGE_ONLINE_USERS, {
-      station_id: stationId,
-      online_count: count,
-    });
-  }
 };
 
 export const joinNotification = async (stationId, name, emitter, io) => {
@@ -199,20 +181,16 @@ export const joinNotification = async (stationId, name, emitter, io) => {
     online_count: count,
     users: users,
   });
-
-  const station = await stationController.getStation(stationId);
-  if (!station.is_private) {
-    emitter.emitAll(EVENTS.SERVER_STATION_CHANGE_ONLINE_USERS, {
-      station_id: stationId,
-      online_count: count,
-    });
-  }
 };
 
 const _leaveStation = (io, socket, stationId, userId, name) => {
   const emitter = createEmitter(socket, io);
   return new Promise(async resolve => {
     socket.leave(stationId, resolve);
+    switcher.updateNumberOfOnlineUsersInStation(
+      stationId,
+      await countOnlineOfStation(stationId, io),
+    );
     const alredyInRoom = await userAlreadyInRoom(stationId, userId, io);
     if (!alredyInRoom) {
       skipDecider(io, stationId);

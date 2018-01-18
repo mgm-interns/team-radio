@@ -13,7 +13,6 @@ let io = null;
 
 export const getPopularStations = () => stations;
 
-
 export const updateNumberOfOnlineUsersInStation = (stationId, numberOfUser) => {
   // TODO: make high performance
   if (
@@ -28,8 +27,9 @@ export const updateNumberOfOnlineUsersInStation = (stationId, numberOfUser) => {
     checkUpdatePopularStations();
   } else {
     onlineUsersInStations[stationId] = numberOfUser;
+    _emitUpdateChangedOnlineUserCount();
   }
-}
+};
 
 export const attachWebSocket = _io => {
   io = _io;
@@ -62,19 +62,22 @@ export const checkUpdatePopularStations = async () => {
     oldStations,
     station => station.thumbnail !== '',
   );
-  let inactiveStations = _.filter(
-    oldStations,
-    station => !station.thumbnail,
-  );
+  let inactiveStations = _.filter(oldStations, station => !station.thumbnail);
   activeStations = _.orderBy(activeStations, ['online_count'], ['desc']);
   inactiveStations = _.orderBy(inactiveStations, ['online_count'], ['desc']);
   stations = newStationsWithActiveUsers.concat(activeStations);
   stations = stations.concat(inactiveStations);
   _emitPopularStations();
-}
+};
 
 function _emitPopularStations() {
   _emit(EVENTS.SERVER_UPDATE_STATIONS, { stations: stations });
+}
+function _emitUpdateChangedOnlineUserCount(stationId, onlineUserCount) {
+  _emit(EVENTS.SERVER_STATION_CHANGE_ONLINE_USERS, {
+    station_id: stationId,
+    online_count: onlineUserCount,
+  });
 }
 
 function _emit(eventName, payload) {
@@ -82,5 +85,4 @@ function _emit(eventName, payload) {
     type: eventName,
     payload: payload,
   });
-
-};
+}
