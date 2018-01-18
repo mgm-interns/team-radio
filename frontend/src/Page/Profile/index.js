@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -15,6 +15,7 @@ import sleep from 'Util/sleep';
 import Header from './Header';
 import Body from './Body';
 import styles from './styles';
+import Divider from 'material-ui/Divider/Divider';
 
 /* eslint-disable no-shadow */
 class Profile extends Component {
@@ -72,24 +73,31 @@ class Profile extends Component {
 
   render() {
     const { classes, user, isOwner } = this.props;
+    let content = null;
 
     if (Object.keys(user).length === 0) {
-      return Profile._renderLoading();
+      content = <CircularProgress />;
+    } else {
+      content = (
+        <Grid
+          key={2}
+          direction="row"
+          container
+          className={classes.containerWrapper}
+        >
+          <Header user={user} isDisabled={isOwner} />
+          <Body user={user} isDisabled={isOwner} />
+        </Grid>
+      );
     }
 
-    return [
-      <NavBar key={1} color="primary" />,
-      <Grid
-        key={2}
-        direction="row"
-        container
-        className={classes.containerWrapper}
-      >
-        <Header user={user} isDisabled={isOwner} />
-        <Body user={user} isDisabled={isOwner} />
-      </Grid>,
-      <Footer key={3} />,
-    ];
+    return (
+      <Fragment>
+        <NavBar key={1} color="primary" />
+        {content}
+        <Footer key={3} />
+      </Fragment>
+    );
   }
 }
 
