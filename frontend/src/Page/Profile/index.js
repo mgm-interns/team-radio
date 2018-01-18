@@ -10,6 +10,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { NavBar, Footer } from 'Component';
 import { getUserByUsername } from 'Redux/api/userProfile/actions';
 import { withNotification } from 'Component/Notification';
+import sleep from 'Util/sleep';
 
 import Header from './Header';
 import Body from './Body';
@@ -28,7 +29,7 @@ class Profile extends Component {
     this.props.requestUserByUsername(params.username);
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     const { user, user: { message } } = nextProps;
     const currentUser = this.props.user;
     const increaseNumber = Profile._calculateIncreaseReputation(
@@ -46,6 +47,7 @@ class Profile extends Component {
       currentUser.avatar_url === null &&
       increaseNumber !== 0
     ) {
+      await sleep(1000);
       this._showNotification(
         `Congratulations! You just got ${increaseNumber} for a gift!`,
       );
