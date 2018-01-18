@@ -1,35 +1,61 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 
-class Player extends Component {
-  static defaultProps = {
-    width: '100%',
-    height: '100%',
-  };
-
+class Player extends PureComponent {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
-      startAt: null,
-    };
     this._onStart = this._onStart.bind(this);
+    this.seekToTime = this.seekToTime.bind(this);
   }
 
   _onStart() {
-    const { seektime } = this.props;
-    this.refPlayer.seekTo(seektime);
+    this.seekToTime(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
+    // Force update seektime when component receive new props
     if (this.props.seektime !== nextProps.seektime) {
-      this.refPlayer.seekTo(nextProps.seektime);
+      this.seekToTime(nextProps);
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (this.props.seektime !== nextProps.seektime) {
+      return false;
+    }
+    return true;
+  }
+
+  componentDidUpdate(prevProps) {
+    // Re update seektime after change video url
+    if (
+      this.props.url !== prevProps.url ||
+      this.props.songId !== prevProps.songId
+    ) {
+      this.seekToTime(this.props);
+    }
+  }
+
+  seekToTime({ seektime, receivedAt }) {
+    const currentTime = new Date().getTime();
+    const delayedTime = parseInt(currentTime - receivedAt, 10) / 1000;
+    console.log(delayedTime);
+    const exactlySeektime = seektime + delayedTime;
+    this.refPlayer.seekTo(exactlySeektime);
+  }
+
   render() {
-    const { url, playing, onPlay, onPause, ...othersProps } = this.props;
+    const {
+      receivedAt, // unused
+      songId, // unused
+      url,
+      playing,
+      onPlay,
+      onPause,
+      ...othersProps
+    } = this.props;
     return (
       <ReactPlayer
         url={url}
@@ -53,9 +79,16 @@ Player.propTypes = {
   url: PropTypes.string,
   ref: PropTypes.object,
   seektime: PropTypes.number,
+  receivedAt: PropTypes.number,
+  songId: PropTypes.any,
   playing: PropTypes.bool,
   onPlay: PropTypes.func,
   onPause: PropTypes.func,
+};
+
+Player.defaultProps = {
+  width: '100%',
+  height: '100%',
 };
 
 export default Player;
