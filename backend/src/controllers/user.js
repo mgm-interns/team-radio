@@ -2,8 +2,8 @@
 import userModels from '../models/user';
 import jwt from 'jsonwebtoken';
 import deleteDiacriticMarks from "khong-dau";
-// import bhs from 'nodemailer-express-handlebars';
-// import nodemailer from 'nodemailer'
+import { ObjectId } from 'mongodb';
+import * as stationController from './station';
 // import * as stationModels from "../models/station";
 
 export const isExistUserHandler = async email => {
@@ -20,15 +20,27 @@ export const isExistUserHandler = async email => {
     throw err;
   }
 };
-
-export const getUserById = async userId => {
+/**
+ *
+ * @param userId
+ * @returns {Promise<*>}
+ */
+export const getUserById = async (userId) => {
   try {
     return await userModels.getUserById(userId);
   } catch (err) {
     throw err;
   }
 };
-
+/**
+ *
+ * @param email
+ * @param googleId
+ * @param facebookId
+ * @param avatar_url
+ * @param name
+ * @returns {Promise<*>}
+ */
 export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null,name) => {
     try {
         let user = await userModels.getUserByEmail(email);
@@ -63,13 +75,20 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
     throw err;
   }
 };
-
+/**
+ *
+ * @param email
+ * @param password
+ * @param name
+ * @returns {Promise<*>}
+ */
 export const createUser = async (email,password,name) => {
     try{
         let user = await new userModels({
             email : email,
             name: name,
             is_password: true,
+            favourited_songs: []
         });
 
         user.password = user.generateHash(password)
@@ -83,7 +102,11 @@ export const createUser = async (email,password,name) => {
     throw err;
   }
 };
-
+/**
+ *
+ * @param username
+ * @returns {Promise<*>}
+ */
 export const getUserProfile = async username => {
   try {
     return await userModels.getUserByUsername(username);
@@ -91,7 +114,12 @@ export const getUserProfile = async username => {
     throw err;
   }
 };
-
+/**
+ *
+ * @param userId
+ * @param avatar_url
+ * @returns {Promise<*>}
+ */
 export const setAvatar = async (userId, avatar_url) => {
     try {
         const user = await userModels.getUserById(userId);
@@ -103,7 +131,12 @@ export const setAvatar = async (userId, avatar_url) => {
         throw err;
     }
 };
-
+/**
+ *
+ * @param userId
+ * @param cover_url
+ * @returns {Promise<*>}
+ */
 export const setCover = async (userId, cover_url) => {
     try {
         await userModels.setCover(userId, cover_url);
@@ -112,7 +145,12 @@ export const setCover = async (userId, cover_url) => {
         throw err;
     }
 };
-
+/**
+ *
+ * @param email
+ * @param username
+ * @returns {Promise<*>}
+ */
 export const setUsername = async (email, username) => {
   try {
     const newUsername = await _createUsername(username);
@@ -122,7 +160,12 @@ export const setUsername = async (email, username) => {
     throw err;
   }
 };
-
+/**
+ *
+ * @param email
+ * @param password
+ * @returns {Promise<*>}
+ */
 export const setPassword = async (email, password) => {
   try {
     await userModels.setPassword(email, password);
@@ -131,7 +174,17 @@ export const setPassword = async (email, password) => {
     throw err;
   }
 };
-
+/**
+ *
+ * @param userId
+ * @param name
+ * @param firstname
+ * @param lastname
+ * @param bio
+ * @param city
+ * @param country
+ * @returns {Promise<*>}
+ */
 export const setUserInformation = async (userId, name, firstname, lastname, bio, city, country) => {
     try {
         let data = {}, point = 0;
@@ -156,7 +209,13 @@ export const setUserInformation = async (userId, name, firstname, lastname, bio,
         throw err;
     }
 };
-
+/**
+ *
+ * @param userId
+ * @param token
+ * @param superSecret
+ * @returns {Promise<boolean>}
+ */
 export const isVerifidedToken = async (userId, token, superSecret) => {
   try {
     let result = false;
@@ -171,18 +230,67 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
   }
 };
 
+export const updateHistory = async (userId, station_id) => {
+    try{
+        const option = { history : 1, _id: 0}
+        const user = await userModels.getUserById(userId, option)
+        let history = user.history
+        if (history.length && (history.indexOf(_safeObjectId(station_id)) !== -1))
+            history.remove(station_id)
+        history.push(station_id)
+        await userModels.updateHistory(userId, history)
+        history = await userModels.getUserById(userId, option)
+    } catch (err) {
+        throw err
+    }
+}
+
+export const getHistory = async (userId, limited) => {
+    try{
+        const option = { history : 1, _id: 0}
+        const user = await userModels.getUserById(userId, option)
+        let history = user.history
+        let historyDetail = [];
+
+        forEach(station_id in history)
+            historyDetail.push(stationController.countSongAddByUserId(userId, station_id))
+
+        return historyDetail
+    } catch (err) {
+        throw err
+    }
+}
+
+// This is private function
+/**
+ *
+ * @param email
+ * @param point
+ * @returns {Promise<void>}
+ * @private
+ */
 async function _increaseReputation(email, point){
     const user = await userModels.getUserByEmail(email);
     await userModels.updateReputation(email, user.reputation + point)
 }
-
+/**
+ *
+ * @param str
+ * @returns {string}
+ * @private
+ */
 function _stringToId(str) {
     return str
         .toLowerCase()
         .replace(/ /g, '-')
         .replace(/[^a-z0-9-]/g, '');
 }
-
+/**
+ *
+ * @param username
+ * @returns {Promise<string>}
+ * @private
+ */
 async function _createUsername(username) {
     const id = _stringToId(deleteDiacriticMarks(username));
     let currentId = id;
@@ -195,3 +303,5 @@ async function _createUsername(username) {
     }
     return currentId;
 }
+
+const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);

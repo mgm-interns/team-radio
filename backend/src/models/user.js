@@ -69,6 +69,32 @@ const userSchema = mongoose.Schema({
   google_id: {
     type: String,
   },
+  my_station: {
+    type: [
+      {
+        station_id: String,
+      },
+    ],
+  },
+  history: {
+    type: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Stations', index: true },
+    ],
+  },
+  favourite_songs: {
+    type: [
+      {
+        song_id: { type: Number, require: true },
+        url: { type: String, required: true },
+        title: { type: String },
+        thumbnail: { type: String },
+        duration: { type: Number, min: 0 },
+        creator: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+        created_date: { type: Number, default: true },
+      },
+    ],
+    default: [],
+  },
 });
 
 // generation a hash
@@ -81,6 +107,7 @@ userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
 
+userSchema.set('autoIndex', true);
 // create the model for users and expose it to our app
 
 var user = (module.exports = mongoose.model('users', userSchema));
@@ -91,8 +118,10 @@ module.exports.getUserByEmail = async email =>
 module.exports.getUserByUsername = async username =>
   user.findOne({ username: username }, { password: 0 });
 
-module.exports.getUserById = async userId =>
-  user.findOne({ _id: _safeObjectId(userId) }, { password: 0 });
+module.exports.getUserById = async (userId, option) => {
+  if (option) return user.findOne({ _id: _safeObjectId(userId) }, option);
+  return user.findOne({ _id: _safeObjectId(userId) }, { password: 0 });
+};
 
 module.exports.setFacebookId = async (email, facebookId) =>
   user.update({ email: email }, { facebook_id: facebookId }, { multi: true });
@@ -131,3 +160,13 @@ module.exports.setCover = async (userId, coverUrl) =>
     { cover_url: coverUrl },
     { multi: true },
   );
+module.exports.updateHistory = async (userId, history) =>
+  user.update(
+    { _id: _safeObjectId(userId) },
+    { history: history },
+    { multi: true },
+  );
+module.exports.getHistoryDetail = async userId =>
+  user.find({ _id: _safeObjectId(userId) }, { history: 1, _id: 0 });
+
+// .populate('history', { station_name: 1 });

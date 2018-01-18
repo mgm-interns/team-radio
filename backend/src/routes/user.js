@@ -408,6 +408,16 @@ export default router => {
     }
   });
 
+  router.post('/test', async (req, res) => {
+    const A = await userController.getHistory(
+      req.body.userId,
+      req.body.limit,
+    );
+    res.json({
+      A: A,
+    });
+  });
+
   router.use(authController);
 
   // test function *************************************
