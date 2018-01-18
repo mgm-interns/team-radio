@@ -81,7 +81,7 @@ class PlaylistItem extends Component {
     }
     if (userId === creator._id) {
       notification.app.warning({
-        message: 'You cannot up vote your song',
+        message: 'You cannot upvote your song',
       });
       return;
     }
