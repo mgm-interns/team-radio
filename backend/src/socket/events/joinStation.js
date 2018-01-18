@@ -9,29 +9,11 @@ import skipDecider from '../managers/skipDecider';
 
 export default async (io, socket, userId, stationId) => {
   const emitter = createEmitter(socket, io);
-
-  // Get station that the user already in
-  // eslint-disable-next-line
-  const stationAlreadyIn =
-    await onlineManager.getStationUserAlreadyIn(userId, socket, io);
-
-  /**
-   * This condition checks if the user is in a station.
-   * Then, if the user requests to join a station that is not the current station
-   * => join decline and send an error message
-   */
-  if (stationAlreadyIn && stationAlreadyIn !== stationId) {
-    emitter.emit(EVENTS.SERVER_ALREADY_IN_A_STATION, {
-      stationId: stationAlreadyIn,
-    });
-    return;
-  }
-
-  // Join station
   try {
     // Check if stationId is not exist, decline join request
     const station = await stationController.getStation(stationId);
-    _leaveAllAndJoinStation(socket, io, userId, station);
+    await onlineManager.leaveAllStation(io, socket, userId);
+    _joinStationProcess(socket, io, userId, station);
   } catch (err) {
     socket.leaveAll();
     emitter.emit(EVENTS.SERVER_JOINED_STATION_FAILURE, {
@@ -40,28 +22,21 @@ export default async (io, socket, userId, stationId) => {
   }
 };
 
-const _leaveAllAndJoinStation = async (socket, io, userId, station) => {
-  await onlineManager.leaveAllStation(io, socket, userId);
-  _joinStationProcess(socket, io, userId, station);
-};
-
 const _joinStationProcess = async (socket, io, userId, station) => {
   const emitter = createEmitter(socket, io);
   const stationId = station.station_id;
 
-  try {
-    const user = await userController.getUserById(userId);
-    if (!user) throw new Error('UserId is not exist!');
-    socket.userId = userId;
+  const user = await userController.getUserById(userId);
+  socket.userId = user ? userId : undefined;
 
-    // eslint-disable-next-line
-    const alreadyInRoom =
-      await onlineManager.userAlreadyInRoom(stationId, userId, io);
+  // eslint-disable-next-line
+  const alreadyInRoom =
+    await onlineManager.userAlreadyInRoom(stationId, userId, io);
 
-
-    if (!alreadyInRoom) {
-      _join(emitter, socket, station, io);
-      skipDecider(io, station.station_id);
+  if (!alreadyInRoom) {
+    _join(emitter, socket, userId, station, io);
+    skipDecider(io, station.station_id);
+    if (user) {
       onlineManager.joinNotification(
         station.station_id,
         user.name || user.username || 'Someone',
@@ -69,25 +44,29 @@ const _joinStationProcess = async (socket, io, userId, station) => {
         io,
       );
     } else {
-      _join(emitter, socket, station, io);
-      const count = await onlineManager.countOnlineOfStation(stationId, io);
-      const users = await onlineManager.getListUserOnline(stationId, io);
-      emitter.emit(EVENTS.SERVER_UPDATE_ONLINE_USERS, {
-        online_count: count,
-        users: users,
-      });
+      onlineManager.joinNotification(
+        station.station_id,
+        'Someone',
+        emitter,
+        io,
+      );
     }
-  } catch (err) {
-    _join(emitter, socket, station, io);
-    onlineManager.joinNotification(station.station_id, 'Someone', emitter, io);
+  } else {
+    _join(emitter, socket, userId, station, io);
   }
 };
 
-const _join = async (emitter, socket, station, io) => {
+const _join = async (emitter, socket, userId, station, io) => {
+  const stationId = station.station_id;
   socket.join(station.station_id);
+  const count = await onlineManager.countOnlineOfStation(stationId, io);
+  const users = await onlineManager.getListUserOnline(stationId, io);
+
   emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
     station: station,
   });
+
+  onlineManager.leaveStationAlreadyIn(userId, stationId, io);
 
   // Get nowplaying and emit to user
   try {
@@ -97,6 +76,11 @@ const _join = async (emitter, socket, station, io) => {
   } catch (err) {
     console.log('Players error: ' + err.message);
   }
+
+  emitter.emit(EVENTS.SERVER_UPDATE_ONLINE_USERS, {
+    online_count: count,
+    users: users,
+  });
 
   switcher.updateNumberOfOnlineUsersInStation(
     station.station_id,
