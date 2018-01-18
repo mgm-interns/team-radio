@@ -35,7 +35,6 @@ export default ({ spacing }) => ({
     },
   },
   content: {
-    display: 'flex',
     '& div': {
       flexDirection: 'flex-start',
     },
@@ -44,5 +43,11 @@ export default ({ spacing }) => ({
     color: '#ff1744',
     fontWeight: 'bold',
     marginBottom: '10px',
+  },
+  button: {
+    marginLeft: spacing.doubleBaseMargin,
+  },
+  menuItem: {
+    cursor: 'pointer',
   },
 });

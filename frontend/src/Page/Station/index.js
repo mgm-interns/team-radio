@@ -97,15 +97,21 @@ class StationPage extends Component {
       currentStation: { joined },
     } = props;
     // Station must be a valid string
-    if (!joined.loading && !joined.success && !joined.otherStation) {
+    if (!joined.loading && !joined.success && !joined.loggedInStation) {
       this.props.joinStation({ stationId, userId });
     }
     // Check if user is already joined in other station
-    if (!joined.loading && joined.failed && !!joined.otherStation) {
-      setTimeout(() => {
-        history.replace('/');
+    if (!joined.loading && joined.failed && !!joined.loggedInStation) {
+      this.loggedInStationTimeout = setTimeout(() => {
+        const { stationId } = joined.loggedInStation;
+        history.replace(`/station/${stationId}`);
+        this.props.joinStation({ stationId, userId });
       }, 5000);
       return;
+    }
+    // Clear timeout instance when user is about to login other station
+    if (!joined.loggedInStation) {
+      clearTimeout(this.loggedInStationTimeout);
     }
     if (!joined.loading && joined.failed) {
       history.replace('/');
@@ -235,7 +241,7 @@ class StationPage extends Component {
               >
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <div className={classes.titleContainer}>
-                    {!joined.loading && !joined.otherStation ? (
+                    {!joined.loading && !joined.loggedInStation ? (
                       [
                         <Typography
                           key={1}

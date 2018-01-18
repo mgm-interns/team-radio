@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AccessTimeIcon from 'react-icons/lib/md/access-time';
+import VolumeOffIcon from 'react-icons/lib/md/volume-off';
+import VolumeUpIcon from 'react-icons/lib/md/volume-up';
+import CloseIcon from 'react-icons/lib/md/close';
+import SendIcon from 'react-icons/lib/md/send';
 import axios from 'axios';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -163,7 +167,7 @@ class AddLink extends Component {
         onClick={this._clearSearchInput}
         className={classes.closeIcon}
       >
-        close
+        <CloseIcon />
       </IconButton>,
     ];
   }
@@ -489,7 +493,7 @@ class AddLink extends Component {
               className={classes.volume}
               color="default"
             >
-              {muted ? 'volume_off' : 'volume_up'}
+              {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
             </IconButton>
             <Button
               className={classes.sendBtn}
@@ -499,7 +503,10 @@ class AddLink extends Component {
               mini={true}
               onClick={this._onAddClick}
             >
-              Add <Icon className={classes.sendIcon}>send</Icon>
+              Add{' '}
+              <Icon className={classes.sendIcon}>
+                <SendIcon />
+              </Icon>
             </Button>
           </Grid>
         </Grid>

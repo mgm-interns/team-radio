@@ -35,7 +35,7 @@ class Player {
       // Dem so down votes co user
       let points = 0;
       /*
-      // Skip song base on up votes and down votes.
+      // Skip song base on upvotes and down votes.
       song.up_vote.forEach(user => {
         userIds.forEach(childUser => {
           if (user.toString() === childUser.toString()) {

@@ -11,7 +11,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { TabContainer } from 'Component';
 
 import Settings from './Settings';
-import { FilterAll, FilterFavorites } from './Filter';
+import { FilterAll, FilterFavourites } from './Filter';
 import styles from './styles';
 
 class Body extends Component {
@@ -19,7 +19,7 @@ class Body extends Component {
     super(props);
 
     this.state = {
-      value: 0,
+      value: 1,
       open: false,
     };
 
@@ -30,7 +30,7 @@ class Body extends Component {
     this.setState({ value });
   }
 
-  _renderLoading() {
+  static _renderLoading() {
     return <CircularProgress />;
   }
 
@@ -55,7 +55,7 @@ class Body extends Component {
                   }}
                 />
                 <Tab
-                  label="Favorite songs"
+                  label="Favourite songs"
                   classes={{
                     label: classes.tabLabel,
                   }}
@@ -74,7 +74,7 @@ class Body extends Component {
         )}
         {this.state.value === 1 && (
           <TabContainer>
-            <FilterFavorites />
+            <FilterFavourites />
           </TabContainer>
         )}
       </Grid>

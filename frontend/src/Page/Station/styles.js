@@ -107,6 +107,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
   nowPlayingInfo: {
     color: 'white',
     lineHeight: 1.8,
+    marginTop: spacing.doubleBaseMargin,
   },
   passiveStationMainColor: {
     color: palette.lightGrey.A700,

@@ -5,28 +5,28 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles/index';
 
-import Favorites from 'Page/Profile/Favorites';
+import Favourites from 'Page/Profile/Favourites';
 import classNames from 'classnames';
 
 import styles from './styles';
 import pins from './fixtures';
 
 /* eslint-disable no-shadow */
-class FilterFavorites extends Component {
+class FilterFavourites extends Component {
   render() {
     const { classes } = this.props;
     return (
       <Grid container className={classes.containerWrapper}>
         <Typography type="title">{`Hear the tracks you've saved`}</Typography>
-        <Grid item xs={12} className={classes.favoritesContainer}>
-          <Favorites favoriteSongs={pins[0].playlist} />
+        <Grid item xs={12} className={classes.favouritesContainer}>
+          <Favourites favouriteSongs={pins[0].playlist} />
         </Grid>
       </Grid>
     );
   }
 }
 
-FilterFavorites.propTypes = {
+FilterFavourites.propTypes = {
   classes: PropTypes.any,
   createStation: PropTypes.func,
   redirectToStationPageRequest: PropTypes.func,
@@ -34,4 +34,4 @@ FilterFavorites.propTypes = {
   history: PropTypes.object,
 };
 
-export default withStyles(styles)(FilterFavorites);
+export default withStyles(styles)(FilterFavourites);
