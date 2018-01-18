@@ -83,7 +83,10 @@ class NowPlaying extends Component {
       } else {
         // If not
         seektime =
-          (this.state.seektime || nextNowPlaying.starting_time) + 0.002;
+          (this.state.seektime !== null
+            ? this.state.seektime
+            : NowPlaying.calculateSeekTime(nextNowPlaying.starting_time)) +
+          0.002;
       }
       this.setState({
         seektime,
