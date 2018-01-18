@@ -6,7 +6,7 @@ export default ({ breakpoints, spacing }) => ({
       paddingBottom: 100, // Footer height
     },
   },
-  favoritesContainer: {
+  favouritesContainer: {
     margin: 'auto',
     padding: '0 !important',
   },

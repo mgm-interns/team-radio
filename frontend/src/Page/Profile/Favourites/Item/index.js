@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AccessTimeIcon from 'react-icons/lib/md/access-time';
+import StarIcon from 'react-icons/lib/md/star';
+import StarOutlineIcon from 'react-icons/lib/md/star-outline';
 import withStyles from 'material-ui/styles/withStyles';
 import { GridListTile } from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
@@ -14,6 +16,10 @@ import styles from './styles';
 class FavoriteItem extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isFavourite: true,
+    };
 
     this.deleteSong = this.deleteSong.bind(this);
   }
@@ -43,7 +49,14 @@ class FavoriteItem extends Component {
           </span>
         </div>
         <div className={classes.actions}>
-          <IconButton onClick={this.deleteSong}>star_rate</IconButton>
+          <span>
+            <IconButton
+              onClick={this.deleteSong}
+              color={this.state.isFavourite ? 'primary' : 'default'}
+            >
+              {this.state.isFavourite ? <StarIcon /> : <StarOutlineIcon />}
+            </IconButton>
+          </span>
         </div>
       </div>,
     ];
