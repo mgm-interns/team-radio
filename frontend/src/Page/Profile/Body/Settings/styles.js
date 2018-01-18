@@ -35,7 +35,6 @@ export default ({ spacing }) => ({
     },
   },
   content: {
-    display: 'flex',
     '& div': {
       flexDirection: 'flex-start',
     },
