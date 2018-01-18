@@ -1,11 +1,9 @@
-export default () => ({
+export default ({ spacing }) => ({
   container: {
-    width: '100%',
-    minHeight: '100vh',
+    width: spacing.fullWidth,
+    minHeight: spacing.fullViewportHeight,
     marginLeft: 'auto',
     marginRight: 'auto',
     position: 'relative',
-    // paddingLeft: 8,
-    // paddingRight: 8,
   },
 });

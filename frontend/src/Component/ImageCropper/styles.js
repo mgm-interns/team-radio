@@ -1,4 +1,4 @@
-export default ({ breakpoints }) => ({
+export default ({ palette, spacing }) => ({
   modalContainer: {
     margin: 'auto',
     minWidth: 768,
@@ -14,12 +14,12 @@ export default ({ breakpoints }) => ({
     maxHeight: 512,
   },
   rightContainerImage: {
-    width: '100%',
+    width: spacing.fullWidth,
   },
   loadingBackdrop: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
+    width: spacing.fullWidth,
+    height: spacing.fullHeight,
     top: 0,
     left: 0,
     display: 'flex',
@@ -28,12 +28,12 @@ export default ({ breakpoints }) => ({
     alignItems: 'center',
   },
   loadingIcon: {
-    color: 'white',
+    color: palette.white,
     width: 100,
     height: 100,
   },
   button: {
-    width: '100%',
+    width: spacing.fullWidth,
   },
   buttonIcon: {
     marginRight: 8,

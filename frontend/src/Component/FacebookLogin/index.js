@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import styles from '../styles/facebook.scss';
 import getParamsFromObject from 'Util/objectToParams';
 
 const CLIENT_ID = process.env.REACT_APP_FACEBOOK_API_CLIENT_ID;
@@ -240,12 +239,6 @@ class FacebookLogin extends Component {
 
     return (
       <span style={this.containerStyle()}>
-        {isIconString && (
-          <link
-            rel="stylesheet"
-            href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
-          />
-        )}
         <this.props.tag
           type={typeButton}
           className={`${cssClass} ${size}`}
@@ -253,8 +246,6 @@ class FacebookLogin extends Component {
           onClick={this.click}
           {...optionalProps}
         >
-          {icon && isIconString && <i className={`fa ${icon}`} />}
-          {icon && !isIconString && icon}
           {buttonText}
         </this.props.tag>
         {this.style()}

@@ -50,7 +50,7 @@ export default router => {
         if (!user.validPassword(req.body.password)) {
           res.status(401).json({
             success: false,
-            message: 'Incorrect email or password',
+            message: 'Incorrect username or password',
           });
         } else {
           const payload = {
@@ -168,9 +168,9 @@ export default router => {
           req.app.get('superSecret'),
         );
         return res.json({
-          message: 'Success',
           isOwner: isOwner,
-          user: user,
+          ...user._doc,
+          userId: user._id,
         });
       }
       return res.json({
@@ -194,6 +194,7 @@ export default router => {
     try {
       let user = await userController.getUserById(req.body.userId);
       const token = req.headers['access-token'];
+      console.log(req.body.userId);
       if (user) {
         // verify token
         const isOwner = await userController.isVerifidedToken(
@@ -206,7 +207,12 @@ export default router => {
             req.body.userId,
             req.body.avatar_url,
           );
-          return res.json({ ...user._doc, userId: user._id });
+          return res.json({
+            message: 'Update avatar successfully!',
+            isOwner,
+            ...user._doc,
+            userId: user._id,
+          });
         }
       }
       return res.json({
@@ -270,7 +276,6 @@ export default router => {
       );
       if (AlreadyUser && AlreadyUser.username === user.username)
         return res.json({
-          message: 'Success',
           ...user._doc,
           userId: user._id,
         });
@@ -287,14 +292,15 @@ export default router => {
             req.body.username,
           );
           return res.json({
-            message: 'Success',
+            message: 'Update username successfully',
+            isOwner: isOwner,
             ...user._doc,
             userId: user._id,
           });
         }
       }
-      return res.json({
-        message: 'Can not update username!',
+      return res.status(400).json({
+        message: 'Username already in use!',
       });
     } catch (err) {
       throw err;
@@ -324,22 +330,23 @@ export default router => {
           req.app.get('superSecret'),
         );
         if (isOwner) {
-          if (user.password && !user.validPassword(req.body.oldPassword)) {
-            return res.json({
-              message: 'Old password is wrong!',
+          if (user.password && !user.validPassword(req.body.currentPassword)) {
+            return res.status(400).json({
+              message: 'Current password is incorrect!',
             });
           }
           const newPassword = user.generateHash(req.body.newPassword);
           await userController.setPassword(user.email, newPassword);
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
-            message: 'Success',
+            message: 'Update password successfully',
+            isOwner,
             ...user._doc,
             userId: user._id,
           });
         }
       }
-      return res.json({
+      return res.status(400).json({
         message: 'Can not update password!',
       });
     } catch (err) {
@@ -387,6 +394,7 @@ export default router => {
           token,
           req.app.get('superSecret'),
         );
+
         if (isOwner) {
           user = await userController.setUserInformation(
             req.body.userId,
@@ -397,10 +405,15 @@ export default router => {
             req.body.city,
             req.body.country,
           );
-          return res.json(user);
+          return res.json({
+            message: 'Update user information successfully',
+            isOwner: isOwner,
+            ...user._doc,
+            userId: user._id,
+          });
         }
       }
-      return res.json({
+      return res.status(400).json({
         message: 'Can not update user information!',
       });
     } catch (err) {
@@ -408,7 +421,7 @@ export default router => {
     }
   });
 
-  //router.use(authController);
+  // router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

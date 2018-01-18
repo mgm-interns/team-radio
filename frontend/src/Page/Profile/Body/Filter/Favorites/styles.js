@@ -6,12 +6,8 @@ export default ({ breakpoints, spacing }) => ({
       paddingBottom: 100, // Footer height
     },
   },
-  container: {
+  favoritesContainer: {
     margin: 'auto',
     padding: '0 !important',
-  },
-  stationSection: {
-    width: '100% !important',
-    margin: 'auto',
   },
 });

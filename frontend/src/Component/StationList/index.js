@@ -57,7 +57,7 @@ class StationList extends Component {
           classes.emptyContainer,
         ])}
       >
-        <Typography type={'display1'}>{emptyMessage}</Typography>
+        <Typography type={'subheading'}>{emptyMessage}</Typography>
       </div>
     );
   }

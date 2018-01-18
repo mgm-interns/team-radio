@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import Avatar from 'material-ui/Avatar';
 import { Images } from 'Theme';
 import { connect } from 'react-redux';
-import { updateAvatar } from 'Redux/api/user/actions';
+import { setAvatar } from 'Redux/api/userProfile/actions';
 import { withNotification } from 'Component/Notification';
 import { compose } from 'redux';
 import styles from './styles';
@@ -27,9 +27,9 @@ class ImageUploader extends Component {
       open: false,
       uploading: false,
       uploadedFile: null,
-      // avatarUrl:
+      // avatar_url:
       //   'https://res.cloudinary.com/cocacode2/image/upload/v1515550702/wwsqbsi7kxcz0zgj70j6.png',
-      avatarUrl: null,
+      avatar_url: null,
     };
 
     this._openFilePickerDialog = this._openFilePickerDialog.bind(this);
@@ -37,7 +37,7 @@ class ImageUploader extends Component {
   }
 
   componentDidMount() {
-    this.setState({ avatarUrl: this.props.avatarUrl });
+    this.setState({ avatar_url: this.props.user.avatar_url });
   }
 
   setStateAsync(state) {
@@ -48,7 +48,7 @@ class ImageUploader extends Component {
 
   _crop() {
     this.setState({
-      avatarUrl: this.cropper.getCroppedCanvas().toDataURL(),
+      avatar_url: this.cropper.getCroppedCanvas().toDataURL(),
     });
   }
 
@@ -69,18 +69,19 @@ class ImageUploader extends Component {
         // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
 
         this.setState({
-          avatarUrl: response.secure_url,
+          avatar_url: response.secure_url,
           uploading: false,
           open: false,
         });
-
-        this.props.updateAvatar(response.secure_url);
+        const { user: { userId } } = this.props;
+        console.log(userId);
+        this.props.updateAvatar(userId, response.secure_url);
       }
     };
 
     fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
     fd.append('tags', 'browser_upload'); // Optional - add tag for image admin in Cloudinary
-    fd.append('file', this.state.avatarUrl);
+    fd.append('file', this.state.avatar_url);
     xhr.send(fd);
   }
 
@@ -113,7 +114,7 @@ class ImageUploader extends Component {
   };
 
   render() {
-    const { classes, avatarUrl } = this.props;
+    const { classes, user: { avatar_url } } = this.props;
     return (
       <div>
         <div className={classes.avatarContainer} style={this.state.size}>
@@ -124,7 +125,7 @@ class ImageUploader extends Component {
           <div>
             <Avatar
               className={classes.avatar}
-              src={!avatarUrl ? Images.avatar.male01 : avatarUrl}
+              src={!avatar_url ? Images.avatar.male01 : avatar_url}
             />
           </div>
         </div>
@@ -187,7 +188,7 @@ class ImageUploader extends Component {
 
 ImageUploader.propTypes = {
   classes: PropTypes.any,
-  avatarUrl: PropTypes.any,
+  avatar_url: PropTypes.any,
   updateAvatar: PropTypes.any,
 };
 
@@ -196,7 +197,8 @@ ImageUploader.propTypes = {
 // });
 
 const mapDispatchToProps = dispatch => ({
-  updateAvatar: avatar_url => dispatch(updateAvatar(avatar_url)),
+  updateAvatar: (userId, avatar_url) =>
+    dispatch(setAvatar({ userId, avatar_url })),
 });
 
 export default compose(withNotification, connect(null, mapDispatchToProps))(

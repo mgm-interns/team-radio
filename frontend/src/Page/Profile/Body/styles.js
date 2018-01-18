@@ -1,4 +1,4 @@
-export default ({ breakpoints, palette, spacing, transitions }) => ({
+export default ({ breakpoints }) => ({
   container: {
     margin: 'auto',
     [breakpoints.up('lg')]: {
@@ -8,9 +8,15 @@ export default ({ breakpoints, palette, spacing, transitions }) => ({
   },
   actions: {
     display: 'flex',
+    borderBottom: '1px solid #f2f2f2',
+    padding: '0px !important',
   },
   buttonEditProfile: {
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  tabLabel: {
+    fontStyle: 'bold',
+    textTransform: 'none',
   },
 });

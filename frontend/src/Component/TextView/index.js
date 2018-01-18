@@ -13,7 +13,6 @@ class TextView extends Component {
       type,
       placeholder,
       classes,
-      border,
       value,
       ...others
     } = this.props;
@@ -28,21 +27,6 @@ class TextView extends Component {
         helperText={touched && error}
         {...input}
         style={{ marginBottom: '20px' }}
-        InputProps={
-          border && {
-            disableUnderline: true,
-            classes: {
-              root: classes.textFieldRoot,
-              input: classes.textFieldInput,
-            },
-          }
-        }
-        InputLabelProps={
-          border && {
-            shrink: true,
-            className: classes.textFieldFormLabel,
-          }
-        }
         {...others}
       />
     );

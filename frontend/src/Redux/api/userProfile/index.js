@@ -1,122 +1,106 @@
 const INITIAL_STATE = {
-  data: { userId: localStorage.getItem('userId') },
+  data: {},
   error: null,
   loading: false,
-  isAuthenticated: !!localStorage.getItem('token'),
-  isOwner: false,
 };
 
-const user = (state = INITIAL_STATE, action) => {
+const userProfile = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'FETCH_USER':
+    case 'FETCH_USER_BY_USERNAME_REQUEST':
       return {
         data: {},
         error: null,
         loading: true,
-        isAuthenticated: false,
       };
-    case 'FETCH_USER_SUCCESS':
+    case 'FETCH_USER_BY_USERNAME_SUCCESS':
       return {
         ...state,
         data: action.payload,
         loading: false,
-        isAuthenticated: true,
       };
 
-    case 'FETCH_USER_FAILURE':
+    case 'FETCH_USER_BY_USERNAME_FAILURE':
       return {
         ...state,
         loading: false,
         error: { ...action.payload },
-        isAuthenticated: false,
       };
 
-    case 'ADD_USER':
+    case 'SET_USERNAME_REQUEST':
       return {
-        data: {},
+        ...state,
         error: null,
         loading: true,
-        isAuthenticated: false,
       };
-    case 'ADD_USER_SUCCESS':
+    case 'SET_USERNAME_SUCCESS':
       return {
         ...state,
         data: action.payload,
         loading: false,
-        isAuthenticated: true,
       };
 
-    case 'ADD_USER_FAILURE':
+    case 'SET_USERNAME_FAILURE':
       return {
         ...state,
         loading: false,
         error: { ...action.payload },
-        isAuthenticated: false,
       };
-    case 'ADD_USER_WITH_SOCIAL':
+
+    case 'SET_PASSWORD_REQUEST':
       return {
-        data: {},
+        ...state,
+        data: { ...state.data, message: '' },
         error: null,
         loading: true,
-        isAuthenticated: false,
       };
-    case 'ADD_USER_WITH_SOCIAL_SUCCESS':
+    case 'SET_PASSWORD_SUCCESS':
       return {
         ...state,
         data: action.payload,
         loading: false,
-        isAuthenticated: true,
       };
 
-    case 'ADD_USER_WITH_SOCIAL_FAILURE':
+    case 'SET_PASSWORD_FAILURE':
       return {
         ...state,
         loading: false,
         error: { ...action.payload },
-        isAuthenticated: false,
       };
-    case 'VERIFY_TOKEN':
+
+    case 'SET_USER_INFORMATION_REQUEST':
       return {
-        data: {},
+        ...state,
         error: null,
         loading: true,
-        isAuthenticated: false,
       };
-    case 'VERIFY_TOKEN_SUCCESS':
+    case 'SET_USER_INFORMATION_SUCCESS':
       return {
         ...state,
         data: action.payload,
         loading: false,
-        isAuthenticated: true,
       };
 
-    case 'VERIFY_TOKEN_FAILURE':
+    case 'SET_USER_INFORMATION_FAILURE':
       return {
         ...state,
         loading: false,
         error: { ...action.payload },
-        isAuthenticated: false,
       };
 
-    case 'LOGOUT_REQUEST':
+    case 'SET_AVATAR_REQUEST':
       return {
         ...state,
-        data: {},
-        isAuthenticated: false,
+        error: null,
+        loading: true,
       };
-
-    case 'UPDATE_AVATAR':
-      return {
-        ...state,
-      };
-    case 'UPDATE_AVATAR_SUCCESS':
+    case 'SET_AVATAR_SUCCESS':
       return {
         ...state,
         data: action.payload,
         loading: false,
       };
 
-    case 'UPDATE_AVATAR_FAILURE':
+    case 'SET_AVATAR_FAILURE':
       return {
         ...state,
         loading: false,
@@ -128,4 +112,4 @@ const user = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default user;
+export default userProfile;
