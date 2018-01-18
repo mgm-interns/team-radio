@@ -7,6 +7,9 @@ import LinearProgress from 'material-ui/Progress/LinearProgress';
 import withStyles from 'material-ui/styles/withStyles';
 import ThumbUpIcon from 'react-icons/lib/md/thumb-up';
 import ThumbDownIcon from 'react-icons/lib/md/thumb-down';
+import StarIcon from 'react-icons/lib/md/star';
+import OutlineStarIcon from 'react-icons/lib/md/star-outline';
+import SkipNextIcon from 'react-icons/lib/md/skip-next';
 import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -30,6 +33,7 @@ class PlaylistItem extends Component {
       isDownVote: false,
       upVotes: 0,
       downVotes: 0,
+      isFavourite: false,
     };
 
     this.upVoteSong = this.upVoteSong.bind(this);
@@ -134,7 +138,7 @@ class PlaylistItem extends Component {
     }
     return false;
   }
-  
+
   static getScoreRatio(upVotes = 0, downVotes = 0) {
     // Handle divide by zero
     if (downVotes === 0) {
@@ -152,7 +156,7 @@ class PlaylistItem extends Component {
       message: 'This feature is not ready yet!',
     });
   }
-  
+
   render() {
     const {
       song_id,
@@ -174,6 +178,18 @@ class PlaylistItem extends Component {
               {transformNumber.millisecondsToTime(duration)}
             </span>
           </div>
+          {willBeSkipped && (
+            <Tooltip
+              placement={'bottom'}
+              title={'This song will be skipped when player starts it.'}
+            >
+              <div className={classes.warningWrapper}>
+                <IconButton className={classes.warningIcon}>
+                  <SkipNextIcon />
+                </IconButton>
+              </div>
+            </Tooltip>
+          )}
         </Grid>
         <Grid item xs={9} className={classes.info}>
           <Tooltip placement={'bottom'} title={title}>
@@ -181,10 +197,18 @@ class PlaylistItem extends Component {
           </Tooltip>
           <Tooltip
             placement={'bottom'}
-            title={'This song will be skipped when player starts it.'}
+            title={
+              this.state.isFavourite
+                ? 'Remove from favourite'
+                : 'Add to favourite'
+            }
           >
-            <div className={classes.warningText}>
-              {willBeSkipped && 'Will be skipped'}
+            <div
+              className={classNames(classes.favouriteWrapper, 'hiddenAction')}
+            >
+              <IconButton color={'primary'} className={classes.favouriteBtn}>
+                {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />}
+              </IconButton>
             </div>
           </Tooltip>
           <div className={classes.creator}>

@@ -3,10 +3,16 @@ export default ({ spacing, palette, typography }) => ({
     margin: 0,
     height: 80,
     width: spacing.fullWidth,
-    position: 'relative',
     background: palette.white,
+    position: 'relative',
     '&.playing': {
-      background: palette.lightGrey['500'],
+      background: palette.lightGrey['300'],
+    },
+    '& .hiddenAction': {
+      display: 'none',
+    },
+    '&:hover .hiddenAction': {
+      display: 'flex',
     },
   },
   thumbnail: {
@@ -49,10 +55,19 @@ export default ({ spacing, palette, typography }) => ({
     marginTop: -4,
     color: 'rgba(0, 0, 0, 0.54)',
   },
-  warningText: {
-    ...typography.caption,
-    fontSize: '0.725em',
-    cursor: 'default',
+  warningWrapper: {
+    position: 'absolute',
+    width: `calc(100% - ${spacing.doubleBaseMargin}px)`,
+    height: `calc(100% - ${spacing.doubleBaseMargin}px)`,
+    top: spacing.baseMargin,
+    left: spacing.baseMargin,
+    backgroundColor: palette.lightBlack,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  warningIcon: {
+    color: palette.white,
   },
   creator: {
     ...typography.caption,
@@ -105,7 +120,18 @@ export default ({ spacing, palette, typography }) => ({
   scoreRatio: {
     width: '100%',
   },
+  favouriteWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    cursor: 'pointer',
+  },
+  favouriteBtn: {
+    fontSize: spacing.doubleBaseMargin * 1.5,
+    width: spacing.doubleBaseMargin * 2.5,
+    height: spacing.doubleBaseMargin * 2.5,
+  },
   progressBar: {
-    height: 2,
+    height: 1,
   },
 });

@@ -97,11 +97,11 @@ class StationPage extends Component {
       currentStation: { joined },
     } = props;
     // Station must be a valid string
-    if (!joined.loading && !joined.success && !joined.otherStation) {
+    if (!joined.loading && !joined.success && !joined.loggedInStation) {
       this.props.joinStation({ stationId, userId });
     }
     // Check if user is already joined in other station
-    if (!joined.loading && joined.failed && !!joined.otherStation) {
+    if (!joined.loading && joined.failed && !!joined.loggedInStation) {
       setTimeout(() => {
         history.replace('/');
       }, 5000);
@@ -235,7 +235,7 @@ class StationPage extends Component {
               >
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <div className={classes.titleContainer}>
-                    {!joined.loading && !joined.otherStation ? (
+                    {!joined.loading && !joined.loggedInStation ? (
                       [
                         <Typography
                           key={1}

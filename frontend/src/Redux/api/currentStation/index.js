@@ -23,6 +23,7 @@ const INITIAL_STATE = {
   station: null,
   playlist: [],
   tempPlaylist: [],
+  skipList: [],
   nowPlaying: {
     url: '',
     starting_time: 0,
@@ -37,7 +38,7 @@ const INITIAL_STATE = {
     loading: false,
     success: false,
     failed: false,
-    otherStation: null,
+    loggedInStation: null,
   },
 };
 
@@ -84,8 +85,9 @@ export default (state = INITIAL_STATE, action) => {
       };
     case SERVER_NO_MULTI_STATIONS: {
       appNotificationInstance.warning({
-        message:
-          'You have already been in another station. You will be redirected to landing page.',
+        message: `You are logging in station ${
+          action.payload.stationName
+        }. You will be redirected to landing page.`,
       });
       return {
         ...state,
@@ -94,8 +96,9 @@ export default (state = INITIAL_STATE, action) => {
           loading: false,
           success: false,
           failed: true,
-          otherStation: {
+          loggedInStation: {
             stationId: action.payload.stationId,
+            stationName: action.payload.stationName,
           },
         },
       };

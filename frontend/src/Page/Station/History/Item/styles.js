@@ -3,8 +3,15 @@ export default ({ spacing, palette, typography }) => ({
     margin: 0,
     height: 80,
     width: spacing.fullWidth,
+    position: 'relative',
     '&.playing': {
       background: palette.lightGrey['500'],
+    },
+    '& .hiddenAction': {
+      display: 'none',
+    },
+    '&:hover .hiddenAction': {
+      display: 'flex',
     },
   },
   thumbnail: {
@@ -36,7 +43,6 @@ export default ({ spacing, palette, typography }) => ({
   },
   info: {
     padding: spacing.baseMargin,
-    position: 'relative',
   },
   name: {
     ...typography.body2,
@@ -77,5 +83,16 @@ export default ({ spacing, palette, typography }) => ({
     '& .material-icons': {
       fontSize: spacing.baseMargin * 3,
     },
+  },
+  favouriteWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    cursor: 'pointer',
+  },
+  favouriteBtn: {
+    fontSize: spacing.doubleBaseMargin * 1.5,
+    width: spacing.doubleBaseMargin * 2.5,
+    height: spacing.doubleBaseMargin * 2.5,
   },
 });
