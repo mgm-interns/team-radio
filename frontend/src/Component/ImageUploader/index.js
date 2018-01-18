@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import Avatar from 'material-ui/Avatar';
 import { Images } from 'Theme';
 import { connect } from 'react-redux';
-import { setAvatar } from 'Redux/api/userProfile/actions';
+import { setAvatar } from 'Redux/api/user/profile';
 import { withNotification } from 'Component/Notification';
 import { compose } from 'redux';
 import styles from './styles';

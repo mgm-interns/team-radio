@@ -11,7 +11,7 @@ import { FormHelperText } from 'material-ui/Form';
 import Button from 'material-ui/Button';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { setPassword } from 'Redux/api/userProfile/actions';
+import { setPassword } from 'Redux/api/user/profile';
 
 import { trimText } from 'Transformer/transformText';
 
@@ -31,7 +31,7 @@ class Password extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { userProfile: { error } } = nextProps;
+    const { user: { error } } = nextProps;
     if (error !== null) {
       this.setState({
         formErrors: error.response.message,
@@ -106,7 +106,7 @@ class Password extends Component {
       handleSubmit,
       pristine,
       submitting,
-      userProfile: { loading },
+      user: { loading },
     } = this.props;
 
     return (
@@ -151,12 +151,11 @@ Password.propTypes = {
   onSubmit: PropTypes.func,
   initialValues: PropTypes.any,
   submitSucceeded: PropTypes.any,
-  userProfile: PropTypes.any,
 };
 
 const mapStateToProps = ({ api }) => ({
-  initialValues: api.userProfile.data,
-  userProfile: api.userProfile,
+  initialValues: api.user.data,
+  user: api.user,
 });
 
 const mapDispatchToProps = dispatch => ({

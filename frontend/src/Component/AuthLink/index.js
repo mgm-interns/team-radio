@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
 import ListSubheader from 'material-ui/List/ListSubheader';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Icon from 'material-ui/Icon';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 import Popover from 'material-ui/Popover';
 import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 import PersonIcon from 'react-icons/lib/md/person';
 import ExitIcon from 'react-icons/lib/md/exit-to-app';
 import ArrowDropDownIcon from 'react-icons/lib/md/arrow-drop-down';
@@ -19,7 +19,7 @@ import { withRouter } from 'react-router';
 
 import { withNotification } from 'Component/Notification';
 import { removeAuthenticationState } from 'Configuration';
-import { logout } from 'Redux/api/user/actions';
+import { logout } from 'Redux/api/user/user';
 import { Images } from 'Theme';
 
 import styles from './styles';
@@ -93,9 +93,12 @@ class AuthLink extends Component {
     );
   }
 
+  static _renderLoading() {
+    return <CircularProgress />;
+  }
+
   render() {
     const { classes, user } = this.props;
-
     const { anchorEl } = this.state;
 
     return (

@@ -24,41 +24,40 @@ class Profile extends Component {
   }
 
   componentWillMount() {
-    const { match: { params } } = this.props;
-    this.props.requestUserByUsername(params.username);
+    const { match: { params }, user } = this.props;
+    if (user.username !== params.username) {
+      this.props.getUserByUsername(params.username);
+    }
   }
 
   async componentWillReceiveProps(nextProps) {
-    const { user, user: { message }, match: { params } } = nextProps;
-    console.log(params.username);
+    const { userProfile, match: { params } } = nextProps;
 
     if (params.username !== this.props.match.params.username) {
-      this.props.requestUserByUsername(params.username);
-      return;
+      this.props.getUserByUsername(params.username);
     }
 
-    const currentUser = this.props.user;
+    const currentUser = this.props.userProfile;
     const increaseNumber = Profile._calculateIncreaseReputation(
       currentUser.reputation,
-      user.reputation,
+      userProfile.reputation,
     );
 
-    if (message !== currentUser.message && message) {
-      this._showNotification(message);
+    if (userProfile.message !== currentUser.message && userProfile.message) {
+      this._showNotification(userProfile.message);
     }
 
-    // show notification when user upload avatar on the first timeT
-    // TOFIX
-    // if (
-    //   currentUser.avatar_url !== user.avatar_url &&
-    //   currentUser.avatar_url === null &&
-    //   increaseNumber !== 0
-    // ) {
-    //   await sleep(1000);
-    //   this._showNotification(
-    //     `Congratulations! You just got ${increaseNumber} for a gift!`,
-    //   );
-    // }
+    // show notification when user upload avatar on the first time
+    if (
+      currentUser.avatar_url !== userProfile.avatar_url &&
+      currentUser.avatar_url === null &&
+      increaseNumber !== 0
+    ) {
+      await sleep(1000);
+      this._showNotification(
+        `Congratulations! You just got ${increaseNumber} for a gift!`,
+      );
+    }
   }
 
   static _renderLoading() {
@@ -78,10 +77,10 @@ class Profile extends Component {
   }
 
   render() {
-    const { classes, user, isOwner } = this.props;
+    const { classes, userProfile, isOwner } = this.props;
     let content = null;
 
-    if (Object.keys(user).length === 0) {
+    if (Object.keys(userProfile).length === 0) {
       content = <CircularProgress />;
     } else {
       content = (
@@ -91,8 +90,8 @@ class Profile extends Component {
           container
           className={classes.containerWrapper}
         >
-          <Header user={user} isDisabled={isOwner} />
-          <Body user={user} isDisabled={isOwner} />
+          <Header user={userProfile} isDisabled={isOwner} />
+          <Body user={userProfile} isDisabled={isOwner} />
         </Grid>
       );
     }
@@ -109,24 +108,24 @@ class Profile extends Component {
 
 Profile.propTypes = {
   classes: PropTypes.any,
-  fetchUserWithUsername: PropTypes.func,
   user: PropTypes.object,
   userProfile: PropTypes.object,
   loading: PropTypes.bool,
   isOwner: PropTypes.bool,
-  requestUserByUsername: PropTypes.func,
+  getUserByUsername: PropTypes.func,
   notification: PropTypes.object,
   match: PropTypes.any,
 };
 
 const mapStateToProps = ({ api }) => ({
-  user: api.userProfile.data,
-  isOwner: api.userProfile.data.isOwner,
-  loading: api.user.loading,
+  user: api.user.data,
+  userProfile: api.userProfile.data,
+  isOwner: api.userProfile.isOwner,
+  loading: api.userProfile.loading,
 });
 
 const mapDispatchToProps = dispatch => ({
-  requestUserByUsername: username => dispatch(getUserByUsername(username)),
+  getUserByUsername: username => dispatch(getUserByUsername(username)),
 });
 
 export default compose(
