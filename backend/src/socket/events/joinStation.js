@@ -3,6 +3,7 @@ import * as stationController from '../../controllers/station';
 import * as userController from '../../controllers/user';
 import * as players from '../../players';
 import * as onlineManager from '../managers/onlineUserManager';
+import * as switcher from '../../switcher';
 import createEmitter from '../managers/createEmitter';
 import skipDecider from '../managers/skipDecider';
 
@@ -50,38 +51,23 @@ const _joinStationProcess = async (socket, io, userId, station) => {
 
   try {
     const user = await userController.getUserById(userId);
+    if (!user) throw new Error('UserId is not exist!');
     socket.userId = userId;
 
     // eslint-disable-next-line
     const alreadyInRoom =
       await onlineManager.userAlreadyInRoom(stationId, userId, io);
 
-    if (!alreadyInRoom) {
-      _join(emitter, socket, station);
-      skipDecider(io, station.station_id);
 
-      if (user.name) {
-        onlineManager.joinNotification(
-          station.station_id,
-          user.name,
-          emitter,
-          io,
-        );
-      } else if (user.username) {
-        onlineManager.joinNotification(
-          station.station_id,
-          user.username,
-          emitter,
-          io,
-        );
-      } else {
-        onlineManager.joinNotification(
-          station.station_id,
-          'Someone',
-          emitter,
-          io,
-        );
-      }
+    if (!alreadyInRoom) {
+      _join(emitter, socket, station, io);
+      skipDecider(io, station.station_id);
+      onlineManager.joinNotification(
+        station.station_id,
+        user.name || user.username || 'Someone',
+        emitter,
+        io,
+      );
     } else {
       _join(emitter, socket, station);
       const count = await onlineManager.countOnlineOfStation(stationId, io);
@@ -92,13 +78,13 @@ const _joinStationProcess = async (socket, io, userId, station) => {
       });
     }
   } catch (err) {
+    _join(emitter, socket, station, io);
     onlineManager.joinNotification(station.station_id, 'Someone', emitter, io);
   }
 };
 
-const _join = async (emitter, socket, station) => {
+const _join = async (emitter, socket, station, io) => {
   socket.join(station.station_id);
-
   emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
     station: station,
   });
@@ -111,4 +97,9 @@ const _join = async (emitter, socket, station) => {
   } catch (err) {
     console.log('Players error: ' + err.message);
   }
+
+  switcher.updateNumberOfOnlineUsersInStation(
+    station.station_id,
+    await onlineManager.countOnlineOfStation(station.station_id, io),
+  );
 };

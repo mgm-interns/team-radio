@@ -20,28 +20,25 @@ export default async (emitter, userId, stationName, isPrivate) => {
     emitter.emit(EVENTS.SERVER_CREATE_STATION_FAILURE, {
       message: err.message,
     });
+    return;
   }
 
   //  If station is created, create player
-  if (station) {
-    try {
-      await players.getPlayer(station.station_id);
-    } catch (err) {
-      console.error('Players error: ' + err.message);
-    }
+  try {
+    await players.getPlayer(station.station_id);
+  } catch (err) {
+    console.error('Players error: ' + err.message);
   }
 
   // If station is created, let all user of Team Radio update station list
-  if (station) {
-    if (station.is_private === false) {
-      try {
-        const stations = await stationController.getAllAvailableStations();
-        emitter.emitAll(EVENTS.SERVER_UPDATE_STATIONS, {
-          stations: stations,
-        });
-      } catch (err) {
-        console.error('Station controller error: ' + err.message);
-      }
+  if (station.is_private === false) {
+    try {
+      const stations = await stationController.getAllAvailableStations();
+      emitter.emitAll(EVENTS.SERVER_UPDATE_STATIONS, {
+        stations: stations,
+      });
+    } catch (err) {
+      console.error('Station controller error: ' + err.message);
     }
   }
 };
