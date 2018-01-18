@@ -1,17 +1,22 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import ReactPlayer from 'react-player';
+import { LinearProgress } from 'material-ui/Progress';
 
 class Player extends PureComponent {
   constructor(props, context) {
     super(props, context);
 
-    this._onStart = this._onStart.bind(this);
-    this.seekToTime = this.seekToTime.bind(this);
-  }
+    this.state = {
+      played: 0,
+      buffer: 0,
+    };
 
-  _onStart() {
-    this.seekToTime(this.props);
+    this._onStart = this._onStart.bind(this);
+    this._onProgress = this._onProgress.bind(this);
+    this.seekToTime = this.seekToTime.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,18 +51,29 @@ class Player extends PureComponent {
     this.refPlayer.seekTo(exactlySeektime);
   }
 
+  _onStart() {
+    this.seekToTime(this.props);
+  }
+
+  _onProgress(state) {
+    this.setState({ played: state.played * 100, buffer: state.loaded * 100 });
+  }
+
   render() {
     const {
       receivedAt, // unused
       songId, // unused
+      nowPlaying,
       url,
       playing,
       onPlay,
       onPause,
       ...othersProps
     } = this.props;
-    return (
+    const { played, buffer } = this.state;
+    return [
       <ReactPlayer
+        key={1}
         url={url}
         ref={input => {
           this.refPlayer = input;
@@ -67,11 +83,20 @@ class Player extends PureComponent {
         onStart={this._onStart}
         onPlay={onPlay}
         onPause={onPause}
+        onProgress={this._onProgress}
         youtubeConfig={{ playerVars: { disablekb: 1 } }}
         style={{ pointerEvents: 'none' }}
         {...othersProps}
-      />
-    );
+      />,
+      nowPlaying.url && (
+        <LinearProgress
+          key={2}
+          mode={'buffer'}
+          value={played}
+          valueBuffer={buffer}
+        />
+      ),
+    ];
   }
 }
 
@@ -84,6 +109,7 @@ Player.propTypes = {
   playing: PropTypes.bool,
   onPlay: PropTypes.func,
   onPause: PropTypes.func,
+  nowPlaying: PropTypes.object,
 };
 
 Player.defaultProps = {
@@ -91,4 +117,8 @@ Player.defaultProps = {
   height: '100%',
 };
 
-export default Player;
+const mapStateToProps = ({ api }) => ({
+  nowPlaying: api.currentStation.nowPlaying,
+});
+
+export default compose(connect(mapStateToProps, undefined))(Player);

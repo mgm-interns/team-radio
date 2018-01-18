@@ -275,7 +275,7 @@ class StationPage extends Component {
                 <NowPlaying
                   className={classNames([classes.content], {
                     [classes.emptyNowPlaying]: !playlist,
-                    [classes.nowPlaying]: passive,
+                    [classes.nowPlayingPassive]: passive,
                   })}
                   autoPlay={true}
                   muted={muted}
