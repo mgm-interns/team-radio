@@ -94,10 +94,10 @@ class Settings extends Component {
     this.setState({ anchorEl: null });
   }
 
-  // _submitModal() {
-  //   console.log('_submitModal');
-  //   this._onCloseModal();
-  // }
+  _submitModal() {
+    console.log('_submitModal');
+    this._onCloseModal();
+  }
 
   static _renderLoading() {
     return <CircularProgress />;
@@ -153,7 +153,7 @@ class Settings extends Component {
                 user={user}
                 loading={loading}
                 onCancel={this.onCancelButtonClick}
-                // onDone={this._onCloseModal}
+                onDone={this._onCloseModal}
               />
             </Grid>
           </Grid>

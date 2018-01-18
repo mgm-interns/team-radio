@@ -22,7 +22,7 @@ class Password extends Component {
     super(props);
 
     this.state = {
-      formErrors: '',
+      formErrors: null,
     };
 
     this._renderChangePasswordForm = this._renderChangePasswordForm.bind(this);
@@ -38,7 +38,7 @@ class Password extends Component {
       });
     } else {
       this.setState({
-        formErrors: '',
+        formErrors: null,
       });
     }
   }
@@ -86,11 +86,14 @@ class Password extends Component {
     ];
   }
 
-  _submitModal(values) {
-    this.props.onSubmit({ userId: this.props.initialValues.userId, ...values });
-    // if (!this.state.formErrors) {
-    //   this.props.onDone();
-    // }
+  async _submitModal(values) {
+    await this.props.onSubmit({
+      userId: this.props.initialValues.userId,
+      ...values,
+    });
+    if (!this.state.formErrors) {
+      await this.props.onDone();
+    }
   }
 
   _renderLoading() {
@@ -102,8 +105,8 @@ class Password extends Component {
     console.log('password render');
     return (
       <Grid className={classes.content}>
-        {/* <form onSubmit={handleSubmit(this._submitModal)}> */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(this._submitModal)}>
+          {/* <form onSubmit={handleSubmit}> */}
           <Grid item xs={12}>
             {this._renderChangePasswordForm()}
           </Grid>
