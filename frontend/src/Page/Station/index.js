@@ -2,16 +2,23 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import LightBuldIcon from 'react-icons/lib/fa/lightbulb-o';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import Tabs, { Tab } from 'material-ui/Tabs';
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
 import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
+import fixture from 'Fixture/landing';
+import { transformNumber } from 'Transformer';
 import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
-import { muteVideoRequest } from 'Redux/page/station/actions';
+import {
+  muteVideoRequest,
+  passiveUserRequest,
+} from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
@@ -32,9 +39,11 @@ class StationPage extends Component {
       tabValue: 0,
       playlist: [],
       history: [],
+      isPassive: false,
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
+    this._onLightClick = this._onLightClick.bind(this);
     this._renderTabs = this._renderTabs.bind(this);
     this._handleTabChange = this._handleTabChange.bind(this);
     this._checkValidStation = this._checkValidStation.bind(this);
@@ -62,8 +71,16 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { muteNowPlaying, currentStation: { playlist } } = nextProps;
+    const {
+      muteNowPlaying,
+      currentStation: { playlist, nowPlaying },
+    } = nextProps;
     this._checkValidStation(nextProps);
+
+    if (!nowPlaying.url) {
+      this.props.passiveUserRequest();
+    }
+
     this.setState({
       muted: muteNowPlaying,
       playlist: playlist.filter(item => item.is_played === false),
@@ -80,8 +97,15 @@ class StationPage extends Component {
       currentStation: { joined },
     } = props;
     // Station must be a valid string
-    if (!joined.loading && !joined.success) {
+    if (!joined.loading && !joined.success && !joined.otherStation) {
       this.props.joinStation({ stationId, userId });
+    }
+    // Check if user is already joined in other station
+    if (!joined.loading && joined.failed && !!joined.otherStation) {
+      setTimeout(() => {
+        history.replace('/');
+      }, 5000);
+      return;
     }
     if (!joined.loading && joined.failed) {
       history.replace('/');
@@ -96,19 +120,31 @@ class StationPage extends Component {
     });
   }
 
+  _onLightClick() {
+    const { passiveUserRequest, currentStation: { nowPlaying } } = this.props;
+
+    this.setState(
+      { isPassive: !nowPlaying.url ? false : !this.state.isPassive },
+      () => {
+        passiveUserRequest(this.state.isPassive);
+        if (this.state.isPassive) {
+          document
+            .getElementsByTagName('body')[0]
+            .setAttribute('style', 'overflow-y: hidden');
+        } else {
+          document.getElementsByTagName('body')[0].removeAttribute('style');
+        }
+      },
+    );
+  }
+
   _handleTabChange(e, value) {
     this.setState({ tabValue: value });
   }
 
   _renderTabs() {
-    const {
-      classes,
-      // currentStation: { playlist }
-    } = this.props;
+    const { classes } = this.props;
     const { tabValue, playlist, history } = this.state;
-
-    // const updatedPlaylist = playlist.filter(item => item.is_played === false);
-    // const updatedHistory = playlist.filter(item => item.is_played === true);
 
     return [
       <Tabs
@@ -117,6 +153,7 @@ class StationPage extends Component {
         value={tabValue}
         onChange={this._handleTabChange}
         indicatorColor="primary"
+        className={classes.tabs}
       >
         <Tab
           classes={{
@@ -128,7 +165,7 @@ class StationPage extends Component {
           classes={{
             label: classes.tabLabel,
           }}
-          label={`History (${history.length})`}
+          label={`History`}
         />
       </Tabs>,
       tabValue === 0 && (
@@ -157,11 +194,18 @@ class StationPage extends Component {
   render() {
     const {
       classes,
-      currentStation: { station, nowPlaying, playlist },
+      currentStation: { station, nowPlaying, playlist, joined },
+      passive,
+      nowPlayingFromPlaylist,
     } = this.props;
     const { muted } = this.state;
 
     return [
+      passive && (
+        <div key={0} className={classes.passiveContainer}>
+          <img src={fixture.logo} alt="Team Radio" className={classes.logo} />
+        </div>
+      ),
       <NavBar key={1} color="primary" />,
       <Grid
         key={2}
@@ -176,39 +220,77 @@ class StationPage extends Component {
         </Grid>
         <Grid item xs={12} className={classes.container}>
           <Grid container>
-            <Grid item xs={12} md={7} lg={8}>
-              <Grid container>
+            <Grid
+              item
+              xs={12}
+              md={7}
+              lg={8}
+              className={passive ? classes.playerContainer : null}
+            >
+              <Grid
+                container
+                className={classNames({
+                  [classes.nowPlayingContainer]: passive,
+                })}
+              >
                 <Grid item xs={12} className={classes.nowPlayingHeader}>
                   <div className={classes.titleContainer}>
-                    <Typography type={'display1'}>
-                      {(station && station.station_name) ||
-                        STATION_NAME_DEFAULT}
-                    </Typography>
-                    <OnlineUsers />
+                    {!joined.loading && !joined.otherStation ? (
+                      [
+                        <Typography
+                          key={1}
+                          type={'display1'}
+                          className={classNames({
+                            [classes.passiveStationMainColor]: passive,
+                          })}
+                        >
+                          {station && station.station_name}
+                        </Typography>,
+                        passive ? null : <OnlineUsers key={2} />,
+                      ]
+                    ) : (
+                      <CircularProgress className={classes.loadingTitle} />
+                    )}
                   </div>
                   <div className={classes.nowPlayingActions}>
                     {!nowPlaying.url ? null : (
                       <IconButton
                         onClick={this._onVolumeClick}
                         className={classNames({
-                          [classes.volume]: nowPlaying.url !== '',
+                          [classes.passiveStationMainColor]: passive,
                         })}
-                        color="default"
                       >
                         {muted ? 'volume_off' : 'volume_up'}
                       </IconButton>
                     )}
-                    <StationSharing />
+                    <IconButton
+                      color={passive ? 'primary' : 'default'}
+                      onClick={this._onLightClick}
+                    >
+                      <LightBuldIcon />
+                    </IconButton>
+                    {passive ? null : <StationSharing />}
                   </div>
                 </Grid>
                 <NowPlaying
-                  className={classNames([classes.content, classes.nowPlaying], {
+                  className={classNames([classes.content], {
                     [classes.emptyNowPlaying]: !playlist,
+                    [classes.nowPlayingPassive]: passive,
                   })}
                   autoPlay={true}
                   muted={muted}
                   nowPlaying={nowPlaying}
                 />
+                {nowPlayingFromPlaylist && passive ? (
+                  <div className={classes.nowPlayingInfo}>
+                    <p>{nowPlayingFromPlaylist.title}</p>
+                    <p>
+                      {transformNumber.millisecondsToTime(
+                        nowPlayingFromPlaylist.duration,
+                      )}
+                    </p>
+                  </div>
+                ) : null}
               </Grid>
             </Grid>
             <Grid item xs={12} md={5} lg={4}>
@@ -237,6 +319,9 @@ StationPage.propTypes = {
   muteNowPlaying: PropTypes.bool,
   mutedPreview: PropTypes.bool,
   preview: PropTypes.object,
+  passiveUserRequest: PropTypes.func,
+  passive: PropTypes.bool,
+  nowPlayingFromPlaylist: PropTypes.object,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -245,6 +330,8 @@ const mapStateToProps = ({ api, page }) => ({
   mutedPreview: page.station.mutedPreview,
   preview: page.station.preview,
   userId: api.user.data.userId,
+  passive: page.station.passive,
+  nowPlayingFromPlaylist: page.station.nowPlaying,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -252,6 +339,7 @@ const mapDispatchToProps = dispatch => ({
   leaveStation: option => dispatch(leaveStation(option)),
   muteVideoRequest: ({ muteNowPlaying, mutePreview, userDid }) =>
     dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
+  passiveUserRequest: isPassive => dispatch(passiveUserRequest(isPassive)),
 });
 
 export default compose(

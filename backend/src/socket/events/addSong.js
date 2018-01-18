@@ -8,7 +8,9 @@ export default async (emitter, userId, stationId, songUrl) => {
   if (user) {
     _addSongProcess(emitter, userId, stationId, songUrl);
   } else {
-    _addSongProcess(emitter, null, stationId, songUrl);
+    emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
+      message: 'You need to login to use this feature.',
+    });
   }
 };
 
@@ -22,20 +24,19 @@ const _addSongProcess = async (emitter, userId, stationId, songUrl) => {
     emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
       message: err.message,
     });
+    return;
   }
 
   // If add success, notify update playlist
-  if (playlist) {
-    try {
-      const player = await players.getPlayer(stationId);
-      const nowPlaying = await player.getNowPlaying();
-      if (nowPlaying.url) {
-        emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_PLAYLIST, {
-          playlist: playlist,
-        });
-      }
-    } catch (err) {
-      console.log('Players error: ' + err);
+  try {
+    const player = await players.getPlayer(stationId);
+    const nowPlaying = await player.getNowPlaying();
+    if (nowPlaying.url) {
+      emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_PLAYLIST, {
+        playlist: playlist,
+      });
     }
+  } catch (err) {
+    console.log('Players error: ' + err);
   }
 };

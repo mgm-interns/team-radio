@@ -1,6 +1,6 @@
-export default ({ breakpoints, palette }) => ({
+export default ({ breakpoints, palette, spacing }) => ({
   container: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 'auto',
     fontFamily: 'Lato',
     height: '50px',

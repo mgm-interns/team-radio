@@ -1,4 +1,4 @@
-export default ({ breakpoints, palette }) => ({
+export default ({ breakpoints, palette, spacing }) => ({
   coverContainer: {
     margin: 'auto',
     padding: '0 !important',
@@ -6,7 +6,6 @@ export default ({ breakpoints, palette }) => ({
   },
   coverWrapper: {
     margin: 'auto',
-    // padding: '0 !important',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
@@ -19,33 +18,33 @@ export default ({ breakpoints, palette }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  userInformation: {
+  userInformationContainer: {
     display: 'flex',
     alignItems: 'center',
   },
-  avatar: {
-    margin: 10,
+  userInformationContent: {
+    paddingLeft: spacing.doubleBaseMargin,
   },
-  bigAvatar: {
-    width: 150,
-    height: 150,
+  avatar: {
+    margin: spacing.doubleBaseMargin,
   },
   text: {
-    color: 'white',
+    color: palette.white,
   },
   number: {
     color: palette.primary['500'],
   },
   buttonCover: {
-    color: 'white',
+    color: palette.white,
     backgroundColor: palette.primary['500'],
   },
   icon: {
-    paddingRight: 10,
+    paddingRight: spacing.baseMargin,
   },
   summarize: {
     paddingLeft: 150,
     display: 'flex',
+    alignItems: 'center',
   },
   summarizeItem: {
     display: 'flex',

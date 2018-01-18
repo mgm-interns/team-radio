@@ -1,4 +1,4 @@
-export default ({ spacing, palette, typography }) => ({
+export default ({ spacing, palette, typography, zIndex }) => ({
   onlineCountContainer: {
     marginLeft: spacing.baseMargin,
     cursor: 'pointer',
@@ -16,6 +16,16 @@ export default ({ spacing, palette, typography }) => ({
     display: 'inline-block',
     fontSize: '1em',
   },
+  listItem: {},
+  activeListItem: {
+    background: palette.primary['500'],
+    '&:hover': {
+      background: palette.primary['600'],
+    },
+    '& h3': {
+      color: palette.white,
+    },
+  },
   userAvatar: {
     width: 30,
     height: 30,
@@ -29,7 +39,7 @@ export default ({ spacing, palette, typography }) => ({
     borderRadius: '50%',
     fontSize: '.725em',
     backgroundColor: 'rgba(0,0,0,0.6)',
-    color: 'white',
+    color: palette.white,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -38,6 +48,7 @@ export default ({ spacing, palette, typography }) => ({
     position: 'absolute',
     top: '100%',
     right: 0,
+    zIndex: zIndex.tooltip,
     backgroundColor: 'rgba(0,0,0,0.7)',
     padding: spacing.baseMargin,
     borderRadius: spacing.smallMargin,

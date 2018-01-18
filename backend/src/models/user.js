@@ -12,75 +12,21 @@ const userSchema = mongoose.Schema({
     require: [true, 'Email can not be empty'],
     unique: true,
   },
-  password: {
-    type: String,
-  },
-  is_password: {
-    type: Boolean,
-  },
-  name: {
-    type: String,
-    default: '',
-  },
-  firstname: {
-    type: String,
-    default: '',
-  },
-  lastname: {
-    type: String,
-    default: '',
-  },
-  country: {
-    type: String,
-    default: '',
-  },
-  city: {
-    type: String,
-    default: '',
-  },
-  bio: {
-    type: String,
-    default: '',
-  },
-  username: {
-    type: String,
-    unique: true,
-  },
-  avatar_url: {
-    type: String,
-    default: null,
-  },
-  cover_url: {
-    type: String,
-    default: null,
-  },
-  reputation: {
-    type: Number,
-    default: 0,
-  },
-  level: {
-    type: String,
-    default: 'Newbie',
-    enum: ['Newbie'],
-  },
-  facebook_id: {
-    type: String,
-  },
-  google_id: {
-    type: String,
-  },
-  my_station: {
-    type: [
-      {
-        station_id: String,
-      },
-    ],
-  },
-  history: {
-    type: [
-      { type: mongoose.Schema.Types.ObjectId, ref: 'Stations', index: true },
-    ],
-  },
+  password: { type: String },
+  is_password: { type: Boolean },
+  name: { type: String, default: '' },
+  firstname: { type: String, default: '' },
+  lastname: { type: String, default: '' },
+  country: { type: String, default: '' },
+  city: { type: String, default: '' },
+  bio: { type: String, default: '' },
+  username: { type: String, unique: true },
+  avatar_url: { type: String, default: null },
+  cover_url: { type: String, default: null },
+  reputation: { type: Number, default: 0 },
+  level: { type: String, default: 'Newbie', enum: ['Newbie'] },
+  facebook_id: { type: String },
+  google_id: { type: String },
   favourite_songs: {
     type: [
       {
@@ -95,15 +41,27 @@ const userSchema = mongoose.Schema({
     ],
     default: [],
   },
+  my_station: {
+    type: [
+      {
+        station_id: String,
+      },
+    ],
+  },
+  history: {
+    type: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Stations', index: true },
+    ],
+  },
 });
 
 // generation a hash
-userSchema.methods.generateHash = function(pwd) {
+userSchema.methods.generateHash = function (pwd) {
   return bcrypt.hashSync(pwd, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
-userSchema.methods.validPassword = function(password) {
+userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
@@ -160,6 +118,7 @@ module.exports.setCover = async (userId, coverUrl) =>
     { cover_url: coverUrl },
     { multi: true },
   );
+
 module.exports.updateHistory = async (userId, history) =>
   user.update(
     { _id: _safeObjectId(userId) },
@@ -170,3 +129,58 @@ module.exports.getHistoryDetail = async userId =>
   user.find({ _id: _safeObjectId(userId) }, { history: 1, _id: 0 });
 
 // .populate('history', { station_name: 1 });
+/**
+ * The function update a field favourited_songs in db
+ *
+ * @param {string} userId
+ * @param {[]} valueNeedUpdate
+ */
+module.exports.addFavouritedSongs = (userId, song) => {
+  const query = { _id: _safeObjectId(userId) };
+  return user.update(query, {
+    $addToSet: {
+      favourite_songs: song,
+    },
+  });
+};
+
+/**
+ * The function delete a song of field favourite_songs in db
+ *
+ * @param {string} userId
+ * @param {string} songUrl
+ */
+module.exports.deleteAsongInFavouritedSongs = (userId, songUrl) => {
+  const query = { _id: _safeObjectId(userId) };
+  return user.update(query, {
+    $pull: {
+      favourite_songs: { url: songUrl },
+    },
+  });
+};
+/**
+ * The function get favourite_songs in db
+ *
+ * @param {string} userId
+ */
+module.exports.getFavouritedSongs = async userId => {
+  const query = { _id: _safeObjectId(userId) };
+  return (await user.findOne(query, { favourite_songs: true })).favourite_songs;
+};
+
+/**
+ *
+ * @param {string} songUrl
+ * @param {string} userId
+ */
+module.exports.getSongInFavouriteds = async (userId, songUrl) =>
+  (await user.findOne(
+    { _id: _safeObjectId(userId) },
+    {
+      favourite_songs: {
+        $elemMatch: {
+          url: songUrl,
+        },
+      },
+    },
+  )).favourite_songs;

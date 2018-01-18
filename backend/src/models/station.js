@@ -30,6 +30,16 @@ const stationSchema = mongoose.Schema({
       ],
       default: []
     },
+  user_points:
+    {
+      type: [
+        {
+          user_id: { type: mongoose.Schema.Types.ObjectId, require: true, },
+          points: { type: Number, require: true, default: 0, },
+        },
+      ],
+      default: []
+    },
   created_date: { type: Number, default: new Date().getTime(), },
 });
 
@@ -192,6 +202,9 @@ module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) =
  * @param {{}} song
  */
 module.exports.addSong = (stationId, song) => {
+  if (song.creator){
+    addUserPoints(stationId, song.creator);
+  }
   let query = { station_id: stationId };
   return Station.update(query, {
     $addToSet: {
@@ -246,6 +259,14 @@ module.exports.updateValueOfDownvote = (stationId, songId, valueNeedUpdate) => {
     { $set: { 'playlist.$.down_vote': valueNeedUpdate } },
   );
 };
+
+
+module.exports.updateVotes = (stationId, songId, newUpVotes, newDownVotes) => {
+  return Station.update(
+    { station_id: stationId, 'playlist.song_id': songId },
+    { $set: { 'playlist.$.up_vote': newUpVotes, 'playlist.$.down_vote': newDownVotes } },
+  );
+};
 /*********************** Playlist (songs) ********************/
 
 /**
@@ -268,10 +289,11 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
  * 
  * @param {string} stationId 
  */
-module.exports.getPlaylistOfStation = async stationId => {
+module.exports.getPlaylistOfStation = async (stationId, limit) => {
   let query = { station_id: stationId };
   const station = await Station.findOne(query, { playlist: true, _id: false })
-    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 });
+    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
+    .limit(limit);
   return station.playlist;
 };
 
@@ -280,16 +302,48 @@ module.exports.getPlaylistOfStation = async stationId => {
  * @param {string} stationId 
  * @param {string} userId 
  */
-module.exports.getStationHasSongUserAdded = (stationId, userId) => {
-  return Station.findOne({ station_id: stationId }, {
+module.exports.getStationHasSongUserAdded = (userId) => {
+  return Station.find({
     playlist: {
       $elemMatch: {
         creator: userId
       }
     }
-  })
+  }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 });
 }
 
+async function addUserPoints(stationId, userId) {
+  const station = await module.exports.getStationById(stationId);
+  const user_points = station.user_points;
+  console.log('user_points:', user_points);
+  for(let i=0; i<user_points.length; i++){
+    if (user_points[i].user_id.equals(userId)){
+      return;
+    }
+  }
+  return Station.update({ station_id: stationId }, {
+    $addToSet: {
+      user_points: {user_id: userId, points: 0},
+    }
+  });
+}
+
+module.exports.increaseUserPoints = async (stationId, userId, increasingPoints) => {
+  const station = await module.exports.getStationById(stationId);
+  const user_points = station.user_points;
+  for(let i=0; i<user_points.length; i++){
+    if (user_points[i].user_id.equals(userId)){
+      user_points[i].points += increasingPoints;
+    }
+  }
+
+  return Station.update({ station_id: stationId }, {
+    $set: {
+      user_points: user_points,
+    }
+  });
+
+}
 
 // module.exports.getListSongHistory = async stationId => {
 //   // TODO : 

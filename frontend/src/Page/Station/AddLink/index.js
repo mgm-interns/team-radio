@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import AccessTimeIcon from 'react-icons/lib/md/access-time';
 import axios from 'axios';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { addSong } from 'Redux/api/currentStation/actions';
@@ -9,6 +11,7 @@ import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import Grid from 'material-ui/Grid';
+import Tooltip from 'material-ui/Tooltip';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
@@ -22,7 +25,8 @@ import { MenuItem } from 'material-ui/Menu';
 import { Player } from 'Component';
 import { withNotification } from 'Component/Notification';
 import { Images } from 'Theme';
-import { checkValidYoutubeUrl } from 'Transformer/transformText';
+import { transformText, transformNumber } from 'Transformer';
+import classNames from 'classnames';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -83,14 +87,11 @@ class AddLink extends Component {
     }
   }
 
-  /* Get video info */
+  /* Get info of a video or list of videos based on ids from search results */
   _getVideoUrl(video) {
-    return typeof video.id === 'string'
-      ? process.env.REACT_APP_YOUTUBE_URL + video.id
-      : process.env.REACT_APP_YOUTUBE_URL + video.id.videoId;
+    return process.env.REACT_APP_YOUTUBE_URL + video.id;
   }
 
-  // use for link
   async _getVideoInfo(id) {
     const { data: { items } } = await axios.get(
       `${process.env.REACT_APP_YOUTUBE_API_URL}/videos`,
@@ -115,15 +116,25 @@ class AddLink extends Component {
           q: value,
           part: 'snippet',
           safeSearch: 'strict',
+          // regionCode: 'VN', //	STAMEQ
           type: 'video',
           videoEmbeddable: 'true',
+          // videoSyndicated: 'true',
           maxResults: 5,
           videoDefinition: 'any',
           relevanceLanguage: 'en',
         },
       },
     );
-    return items;
+
+    // Get all video ids from search results that used to get info of those (contains more params like containDetails, status,...)
+    let videoIds = '';
+    items.forEach(item => {
+      videoIds += `${item.id.videoId},`;
+    });
+    const result = await this._getVideoInfo(videoIds);
+
+    return result;
   }
 
   /** AutoComplete Search */
@@ -176,7 +187,7 @@ class AddLink extends Component {
     );
   }
 
-  _renderSuggestionsContainer(options) {
+  static _renderSuggestionsContainer(options) {
     const { containerProps, children } = options;
 
     return (
@@ -186,7 +197,7 @@ class AddLink extends Component {
     );
   }
 
-  _getSuggestionValue(suggestion) {
+  static _getSuggestionValue(suggestion) {
     return suggestion.snippet.title;
   }
 
@@ -198,31 +209,39 @@ class AddLink extends Component {
       clearTimeout(this._timeoutSearchFunc);
       this._timeoutSearchFunc = setTimeout(async () => {
         // Display preview if result is a youtube link without search
-        if (checkValidYoutubeUrl(value)) {
+        if (transformText.checkValidYoutubeUrl(value)) {
           // skip the other params of youtube link
           // just get the main part: https://www.youtube.com/watch?v={video_id}
           const input = `${value.split('&')[0]}&t=0s`;
-          const videoId = checkValidYoutubeUrl(input);
+          const videoId = transformText.checkValidYoutubeUrl(input);
           const data = await this._getVideoInfo(videoId);
-          const embeddableVideo = data[0].status.embeddable;
 
-          setPreviewVideo(data[0]);
-          // The "Add" button will be depended on that the video is embeddable onto your website or not
-          this.setState({
-            isDisableButton: !embeddableVideo,
-          });
-
-          if (!embeddableVideo) {
-            notification.app.warning({
-              message:
-                'Your video cannot be added because of copyright issue or it is prevented from the owner.',
-              duration: 10000,
+          // if the video is deleted from youtube
+          if (data.length === 0) {
+            this.setState({
+              notFoundSearchResults: true,
             });
+          } else {
+            const embeddableVideo = data[0].status.embeddable;
+
+            setPreviewVideo(data[0]);
+            // The "Add" button will be depended on that the video is embeddable onto your website or not
+            this.setState({
+              isDisableButton: !embeddableVideo,
+            });
+
+            if (!embeddableVideo) {
+              notification.app.warning({
+                message:
+                  'Your video cannot be added because of copyright issue or it is blocked from the owner.',
+                duration: 10000,
+              });
+            }
           }
         }
 
         // Search by keyword if value is not a youtube link
-        if (!checkValidYoutubeUrl(value)) {
+        if (!transformText.checkValidYoutubeUrl(value)) {
           const data = await this._getSearchResults(value);
           this.setState(
             {
@@ -262,7 +281,7 @@ class AddLink extends Component {
     this.setState({
       isDisableButton: false,
       searchText: suggestion.snippet.title,
-      videoId: suggestion.id.videoId,
+      videoId: suggestion.videoId,
     });
   }
   /** End of autoComplete search  */
@@ -302,15 +321,16 @@ class AddLink extends Component {
       match: { params: { stationId } },
       user: { userId, username, name, avatar_url },
       notification,
-      isAuthenticated,
     } = this.props;
+
     // Show warning message if not authenticated
-    if (!isAuthenticated) {
+    if (!userId) {
       notification.app.warning({
         message: 'You need to login to use this feature.',
       });
       return;
     }
+
     // If authenticated
     setPreviewVideo();
     muteVideoRequest({
@@ -394,8 +414,8 @@ class AddLink extends Component {
               onSuggestionsFetchRequested={this._onSuggestionsFetchRequested}
               onSuggestionsClearRequested={this._onSuggestionsClearRequested}
               onSuggestionSelected={this._onSuggestionSelected}
-              renderSuggestionsContainer={this._renderSuggestionsContainer}
-              getSuggestionValue={this._getSuggestionValue}
+              renderSuggestionsContainer={AddLink._renderSuggestionsContainer}
+              getSuggestionValue={AddLink._getSuggestionValue}
               renderSuggestion={this._renderSuggestion}
               inputProps={{
                 classes,
@@ -419,18 +439,49 @@ class AddLink extends Component {
     if (preview === null) {
       view = this._renderEmptyComponent();
     } else {
+      const videoDuration = moment.duration(preview.contentDetails.duration);
       view = (
         <Grid container className={classes.content}>
           <Grid item sm={4} xs={12} className={classes.previewImg}>
             <Player
               url={this._getVideoUrl(preview)}
+              showProgressbar={false}
               muted={muted}
               playing={true}
             />
           </Grid>
           <Grid item sm={8} xs={12} className={classes.previewRightContainer}>
             <p className={classes.previewTitle}>{preview.snippet.title}</p>
-            <p className={classes.secondaryTitle}>
+            {preview && (
+              <div className={classes.durationContainer}>
+                <AccessTimeIcon color={'rgba(0, 0, 0, 0.54)'} />
+                {videoDuration >= 300000 ? (
+                  <Tooltip
+                    placement={'bottom-start'}
+                    title="This video has long duration."
+                  >
+                    <p
+                      className={classNames(
+                        classes.durationText,
+                        classes.warningText,
+                      )}
+                    >
+                      {transformNumber.millisecondsToTime(videoDuration)}
+                    </p>
+                  </Tooltip>
+                ) : (
+                  <p
+                    className={classNames(
+                      classes.durationText,
+                      classes.secondaryText,
+                    )}
+                  >
+                    {transformNumber.millisecondsToTime(videoDuration)}
+                  </p>
+                )}
+              </div>
+            )}
+            <p className={classes.secondaryText}>
               Channel: {preview.snippet.channelTitle}
             </p>
             <IconButton
@@ -469,10 +520,10 @@ class AddLink extends Component {
       <Grid container className={classes.addLinkContainer}>
         <Grid item xs={12} className={classes.linkTitle}>
           <div>
-            <Typography type={'display1'} className={classes.primaryTitle}>
+            <Typography type={'display1'} className={classes.primaryText}>
               Add song
             </Typography>
-            <span className={classes.secondaryTitle} />
+            <span className={classes.secondaryText} />
           </div>
         </Grid>
         <Card className={classes.addLinkBox}>

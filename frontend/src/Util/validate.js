@@ -33,5 +33,8 @@ export const settingsValidate = values => {
   if (values.newPassword !== values.confirmPassword) {
     errors.confirmPassword = 'Password and confirm password does not match';
   }
+  else if(values.currentPassword === values.newPassword){
+    errors.newPassword = 'Current password and new password is the same';
+  }
   return errors;
 };

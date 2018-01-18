@@ -18,9 +18,15 @@ class NowPlaying extends Component {
       refPlayer: null,
       skipNotification: false,
       countDown: 0,
+      seektime: null,
+      receivedAt: new Date().getTime(),
     };
     this.renderSkipNotification = this.renderSkipNotification.bind(this);
     this.setStateAsync = this.setStateAsync.bind(this);
+  }
+
+  static calculateSeekTime(start) {
+    return parseInt(start, 10) / 1000;
   }
 
   setStateAsync(state) {
@@ -30,6 +36,7 @@ class NowPlaying extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
+    // Replace player with skipping notification
     const { currentStation } = this.props;
     const nextCurrentStation = nextProps.currentStation;
     // only trigger when received a new skip notification
@@ -58,6 +65,21 @@ class NowPlaying extends Component {
         countDown: 0,
       });
     }
+
+    // Force player to re-render after the song has changed
+    const { nowPlaying } = this.props;
+    const nextNowPlaying = nextProps.nowPlaying;
+    // Only trigger when the song_id has changed
+    if (nowPlaying.song_id !== nextNowPlaying.song_id) {
+      const player = {
+        seektime: NowPlaying.calculateSeekTime(nextNowPlaying.starting_time),
+        receivedAt: new Date().getTime(),
+      };
+      this.setState(player);
+      if (this.playerRef) {
+        this.playerRef.seekToTime(player);
+      }
+    }
   }
 
   renderSkipNotification() {
@@ -82,7 +104,7 @@ class NowPlaying extends Component {
           >
             {`Our listeners don't like this song.`}
             <br />
-            It will be skipped in {this.state.countDown / 1000}...
+            It will be skipped in {parseInt(this.state.countDown / 1000, 10)}...
             <br />
             {/* For more information about the skipping rule, refer to this link. */}
           </Typography>
@@ -98,10 +120,16 @@ class NowPlaying extends Component {
     ) : (
       <Grid item xs={12} className={className}>
         <Player
+          songId={nowPlaying.song_id}
           url={nowPlaying ? nowPlaying.url : ''}
           playing={autoPlay}
-          seektime={parseInt(nowPlaying && nowPlaying.starting_time, 10) / 1000}
+          seektime={this.state.seektime}
+          receivedAt={this.state.receivedAt}
+          showProgressbar={true}
           muted={muted}
+          ref={ref => {
+            this.playerRef = ref;
+          }}
         />
       </Grid>
     );

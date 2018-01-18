@@ -1,8 +1,7 @@
 export default theme => {
-  // console.log(theme);
   const {
-    spacing: { baseMargin, doubleBaseMargin },
-    palette: { lightGrey },
+    spacing: { baseMargin, doubleBaseMargin, fullWidth, fullHeight },
+    palette: { yellow },
     typography,
     breakpoints,
   } = theme;
@@ -13,47 +12,50 @@ export default theme => {
     linkTitle: {
       marginBottom: doubleBaseMargin,
     },
-
-    primaryTitle: {
+    durationText: {
+      ...typography.caption,
+      fontSize: '0.9em',
+      marginLeft: baseMargin,
+    },
+    primaryText: {
       display: 'inline',
     },
-
-    secondaryTitle: {
-      color: lightGrey[900],
+    secondaryText: {
+      color: 'rgba(0,0,0,0.54)',
     },
-
+    warningText: {
+      color: yellow[900],
+    },
     addLinkBox: {
       backgroundColor: '#fafafa !important',
       marginLeft: baseMargin,
       marginRight: baseMargin,
       marginTop: 0,
       marginBottom: doubleBaseMargin * 3,
-      width: '100%',
+      width: fullWidth,
       padding: doubleBaseMargin,
       boxShadow: '0 0 10px -3px rgba(0, 0, 0, 0.5) !important',
     },
-
     addLinkBoxLeft: {
       textAlign: 'end',
     },
-
+    gridContainer: {
+      padding: baseMargin,
+    },
     linkInput: {
       maxHeight: 100,
       marginBottom: baseMargin,
     },
-
     addLinkBoxRight: {
       paddingLeft: '30px !important',
-      minHeight: 186,
       [breakpoints.down('md')]: {
         paddingLeft: '8px !important',
       },
     },
-
     previewRightContainer: {
       position: 'relative',
+      lineHeight: 1.8,
     },
-
     previewTitle: {
       ...typography.title,
       marginBottom: baseMargin,
@@ -61,47 +63,39 @@ export default theme => {
         fontSize: '1rem',
       },
     },
-
     volume: {
       position: 'absolute',
       left: 0,
       bottom: 0,
     },
-
     sendBtn: {
       position: 'absolute',
-      right: 0,
-      bottom: 0,
+      right: baseMargin,
+      bottom: baseMargin,
     },
-
     sendIcon: {
       marginLeft: baseMargin,
       fontSize: doubleBaseMargin,
     },
-
     content: {
       margin: 0,
-      width: '100%',
-      height: '100%',
+      width: fullWidth,
+      height: 186,
     },
-
     loadingContainer: {
-      height: '100%',
+      height: fullHeight,
       minHeight: 158,
     },
-
     emptyCollection: {
-      width: '100%',
-      height: 200,
+      width: fullWidth,
+      height: 186,
       margin: 'auto',
     },
-
     emptyImg: {
-      width: '100%',
-      height: '100%',
+      width: fullWidth,
+      height: fullHeight,
       objectFit: 'contain',
     },
-
     notFound: {
       width: '40%',
     },
@@ -130,19 +124,24 @@ export default theme => {
       listStyleType: 'none',
     },
     textField: {
-      width: '100%',
+      width: fullWidth,
     },
     input: {
       paddingRight: 50,
     },
     searchItemImg: {
-      height: '100%',
+      height: fullHeight,
       marginRight: baseMargin,
     },
     closeIcon: {
       position: 'absolute',
       top: '-25%',
       right: 0,
+    },
+    durationContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: baseMargin,
     },
     /* End search */
   };

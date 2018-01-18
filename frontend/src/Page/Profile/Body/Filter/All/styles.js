@@ -1,6 +1,6 @@
 export default ({ breakpoints, spacing }) => ({
   containerWrapper: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 0,
     [breakpoints.up('lg')]: {
       paddingBottom: 100, // Footer height
@@ -13,8 +13,5 @@ export default ({ breakpoints, spacing }) => ({
   stationSection: {
     width: '100% !important',
     margin: 'auto',
-  },
-  titleLabel: {
-    paddingLeft: spacing.doubleBaseMargin,
   },
 });

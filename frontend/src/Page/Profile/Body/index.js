@@ -11,7 +11,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { TabContainer } from 'Component';
 
 import Settings from './Settings';
-import { FilterAll, FilterPins } from './Filter';
+import { FilterAll, FilterFavourites } from './Filter';
 import styles from './styles';
 
 class Body extends Component {
@@ -19,7 +19,7 @@ class Body extends Component {
     super(props);
 
     this.state = {
-      value: 0,
+      value: 1,
       open: false,
     };
 
@@ -35,15 +35,11 @@ class Body extends Component {
   }
 
   render() {
-    const { classes, user } = this.props;
-
-    if (!user) {
-      return this._renderLoading();
-    }
+    const { classes, user, isDisabled } = this.props;
 
     return (
       <Grid container className={classes.container}>
-        <Grid item xs={12} md={7} xl={8}>
+        <Grid item xs={11}>
           <Grid container>
             <Grid item xs={12} className={classes.actions}>
               <Tabs
@@ -52,23 +48,33 @@ class Body extends Component {
                 indicatorColor="primary"
                 textColor="primary"
               >
-                <Tab label="All" />
-                {/* <Tab label="Pins" /> */}
+                <Tab
+                  label="My stations"
+                  classes={{
+                    label: classes.tabLabel,
+                  }}
+                />
+                <Tab
+                  label="Favourite songs"
+                  classes={{
+                    label: classes.tabLabel,
+                  }}
+                />
               </Tabs>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} md={5} xl={4} className={classes.buttonEditProfile}>
-          <Settings user={user} />
+        <Grid item xs={1} className={classes.buttonEditProfile}>
+          {isDisabled && <Settings user={user} />}
         </Grid>
         {this.state.value === 0 && (
           <TabContainer>
-            <FilterAll />
+            <FilterAll user={user} />
           </TabContainer>
         )}
         {this.state.value === 1 && (
           <TabContainer>
-            <FilterPins />
+            <FilterFavourites />
           </TabContainer>
         )}
       </Grid>
@@ -79,6 +85,8 @@ class Body extends Component {
 Body.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.any,
+  loading: PropTypes.bool,
+  isDisabled: PropTypes.bool,
 };
 
 export default compose(withStyles(styles))(Body);

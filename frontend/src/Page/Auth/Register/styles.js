@@ -1,12 +1,12 @@
-export default ({ palette, breakpoints }) => ({
+export default ({ palette, breakpoints, spacing }) => ({
   container: {
     margin: 'auto',
-    width: '100vw',
+    width: spacing.fullViewportWidth,
     background: palette.darkGreen['500'],
   },
   foreground: {
-    height: '100vh',
-    width: '100%',
+    height: spacing.fullViewportHeight,
+    width: spacing.fullWidth,
     zIndex: 0,
     margin: 'auto',
     [breakpoints.up('lg')]: {
@@ -21,8 +21,8 @@ export default ({ palette, breakpoints }) => ({
   },
   backgroundImg: {
     position: 'absolute',
-    width: '100vw',
-    height: '100vh',
+    width: spacing.fullViewportWidth,
+    height: spacing.fullViewportHeight,
     top: 0,
     left: 0,
     margin: 'auto',
@@ -52,7 +52,7 @@ export default ({ palette, breakpoints }) => ({
     boxShadow: 'none',
   },
   textField: {
-    width: '100%',
+    width: spacing.fullWidth,
   },
   sendIcon: {
     paddingLeft: '0.5em',
@@ -88,7 +88,7 @@ export default ({ palette, breakpoints }) => ({
     marginTop: 20,
   },
   listItem: {
-    color: '#fff',
+    color: palette.white,
 
     padding: 10,
     fontSize: 18,
@@ -110,7 +110,7 @@ export default ({ palette, breakpoints }) => ({
     justifyContent: 'flex-end',
   },
   buttonSend: {
-    width: '100%',
+    width: spacing.fullWidth,
   },
   callout: {
     display: 'flex',
@@ -122,7 +122,7 @@ export default ({ palette, breakpoints }) => ({
     },
   },
   link: {
-    color: '#0000008a',
+    color: palette.primary['500'],
   },
   cardActionContainer: {
     display: 'flex',

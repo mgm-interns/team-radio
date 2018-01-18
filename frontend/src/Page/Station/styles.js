@@ -1,6 +1,17 @@
-export default ({ breakpoints, palette, spacing }) => ({
-  containerWrapper: {
+export default ({ breakpoints, palette, spacing, typography }) => ({
+  logo: {
+    height: 35,
+    margin: spacing.doubleBaseMargin,
+  },
+  passiveContainer: {
     width: '100%',
+    height: '100vh',
+    background: 'rgba(0,0,0,0.99)',
+    zIndex: '1000',
+    position: 'fixed',
+  },
+  containerWrapper: {
+    width: spacing.fullWidth,
     margin: 0,
     paddingBottom: 50, // Footer height
   },
@@ -19,14 +30,31 @@ export default ({ breakpoints, palette, spacing }) => ({
     marginBottom: 20,
   },
   switcherContent: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 'auto',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
     },
   },
+  playerContainer: {
+    transition: 'all 0.3s linear',
+    position: 'fixed',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: '1001',
+    width: '100%',
+    padding: `${spacing.doubleBaseMargin}px !important`,
+  },
+  nowPlayingContainer: {
+    width: '100%',
+    margin: 0,
+  },
   content: {
+    position: 'relative',
+    width: '100%',
+    margin: 'auto',
     height: 300,
     [breakpoints.up('md')]: {
       height: 600,
@@ -35,13 +63,16 @@ export default ({ breakpoints, palette, spacing }) => ({
   nowPlayingHeader: {
     display: 'flex',
     justifyContent: 'space-between',
+    height: '100%',
   },
   nowPlayingActions: {
     display: 'flex',
     marginLeft: spacing.baseMargin,
     flexDirection: 'row',
   },
-  nowPlaying: {},
+  nowPlayingPassive: {
+    height: '60vh',
+  },
   playlistHeader: {
     padding: spacing.baseMargin,
   },
@@ -51,7 +82,7 @@ export default ({ breakpoints, palette, spacing }) => ({
     },
   },
   emptyNowPlayingImage: {
-    width: '100%',
+    width: spacing.fullWidth,
   },
   emptyNowPlaying: {
     height: 0,
@@ -72,5 +103,20 @@ export default ({ breakpoints, palette, spacing }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'baseline',
+  },
+  nowPlayingInfo: {
+    color: 'white',
+    lineHeight: 1.8,
+  },
+  passiveStationMainColor: {
+    color: palette.lightGrey.A700,
+  },
+  loadingTitle: {
+    width: `${typography.display1.fontSize} !important`,
+    height: `${typography.display1.fontSize} !important`,
+    color: typography.display1.color,
+  },
+  tabs: {
+    borderBottom: '1px solid #f2f2f2',
   },
 });
