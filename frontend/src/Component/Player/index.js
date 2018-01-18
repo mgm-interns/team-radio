@@ -14,13 +14,6 @@ class Player extends PureComponent {
     this.seekToTime(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
-    // Force update seektime when component receive new props
-    if (this.props.seektime !== nextProps.seektime) {
-      this.seekToTime(nextProps);
-    }
-  }
-
   shouldComponentUpdate(nextProps) {
     if (this.props.seektime !== nextProps.seektime) {
       return false;
@@ -28,20 +21,9 @@ class Player extends PureComponent {
     return true;
   }
 
-  componentDidUpdate(prevProps) {
-    // Re update seektime after change video url
-    if (
-      this.props.url !== prevProps.url ||
-      this.props.songId !== prevProps.songId
-    ) {
-      this.seekToTime(this.props);
-    }
-  }
-
   seekToTime({ seektime, receivedAt }) {
     const currentTime = new Date().getTime();
     const delayedTime = parseInt(currentTime - receivedAt, 10) / 1000;
-    console.log(delayedTime);
     const exactlySeektime = seektime + delayedTime;
     this.refPlayer.seekTo(exactlySeektime);
   }
