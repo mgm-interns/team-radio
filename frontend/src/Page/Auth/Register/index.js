@@ -19,6 +19,7 @@ import { Field, reduxForm } from 'redux-form';
 
 import { NavBar, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
+import { trimText } from 'Transformer/transformText';
 
 import {
   saveAuthenticationState,
@@ -35,6 +36,8 @@ import {
 
 import styles from './styles';
 
+/* eslint-disable no-shadow */
+/* eslint-disable camelcase */
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -141,15 +144,24 @@ class Register extends Component {
       />,
       <Field
         key={2}
-        name="email"
-        placeholde="hello@example.com"
+        name="username"
+        placeholder="Enter your username"
         type="text"
         component={TextView}
-        label="Email"
-        validate={[required, email]}
+        label="Username"
+        validate={[required]}
       />,
       <Field
         key={3}
+        name="email"
+        placeholder="hello@example.com"
+        type="text"
+        component={TextView}
+        label="Email"
+        validate={[email]}
+      />,
+      <Field
+        key={4}
         name="password"
         placeholder="Must be at least 6 characters"
         type="password"
@@ -158,7 +170,7 @@ class Register extends Component {
         validate={[required, minLength6]}
       />,
       <Field
-        key={4}
+        key={5}
         name="confirmPassword"
         placeholder="Re-enter your password"
         type="password"
@@ -166,14 +178,13 @@ class Register extends Component {
         label="Confirm Password"
         validate={[required]}
       />,
-      <FormHelperText key={5} className={classes.error}>
+      <FormHelperText key={6} className={classes.error}>
         {submitSucceeded && this.state.asyncError}
       </FormHelperText>,
     ];
   }
 
   _renderRegisterLocalActions() {
-    console.log(this.props.submitting);
     const { classes, submitting } = this.props;
     return (
       <Grid container>
@@ -265,7 +276,15 @@ Register.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: values => dispatch(addUser(values)),
+  onSubmit: ({ name, username, email, password }) =>
+    dispatch(
+      addUser({
+        name: trimText(name),
+        username: trimText(username),
+        email: trimText(email),
+        password: trimText(password),
+      }),
+    ),
 });
 
 const mapStateToProps = state => ({
