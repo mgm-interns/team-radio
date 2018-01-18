@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
 import ReactPlayer from 'react-player';
 import { LinearProgress } from 'material-ui/Progress';
 
@@ -52,7 +50,6 @@ class Player extends PureComponent {
     const {
       receivedAt, // unused
       songId, // unused
-      nowPlaying,
       url,
       playing,
       onPlay,
@@ -77,7 +74,7 @@ class Player extends PureComponent {
         style={{ pointerEvents: 'none' }}
         {...othersProps}
       />,
-      nowPlaying.url && (
+      url && (
         <LinearProgress
           key={2}
           mode={'buffer'}
@@ -98,7 +95,6 @@ Player.propTypes = {
   playing: PropTypes.bool,
   onPlay: PropTypes.func,
   onPause: PropTypes.func,
-  nowPlaying: PropTypes.object,
 };
 
 Player.defaultProps = {
@@ -106,8 +102,4 @@ Player.defaultProps = {
   height: '100%',
 };
 
-const mapStateToProps = ({ api }) => ({
-  nowPlaying: api.currentStation.nowPlaying,
-});
-
-export default compose(connect(mapStateToProps, undefined))(Player);
+export default Player;

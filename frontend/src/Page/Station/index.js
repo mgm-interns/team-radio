@@ -165,7 +165,7 @@ class StationPage extends Component {
           classes={{
             label: classes.tabLabel,
           }}
-          label={`History (${history.length})`}
+          label={`History`}
         />
       </Tabs>,
       tabValue === 0 && (
