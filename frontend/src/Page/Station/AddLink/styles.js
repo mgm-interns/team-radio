@@ -1,7 +1,6 @@
 export default theme => {
-  // console.log(theme);
   const {
-    spacing: { baseMargin, doubleBaseMargin },
+    spacing: { baseMargin, doubleBaseMargin, fullWidth, fullHeight },
     palette: { yellow },
     typography,
     breakpoints,
@@ -33,12 +32,16 @@ export default theme => {
       marginRight: baseMargin,
       marginTop: 0,
       marginBottom: doubleBaseMargin * 3,
-      width: '100%',
+      width: fullWidth,
       padding: doubleBaseMargin,
       boxShadow: '0 0 10px -3px rgba(0, 0, 0, 0.5) !important',
     },
     addLinkBoxLeft: {
       textAlign: 'end',
+    },
+    gridContainer: {
+      paddingTop: 10,
+      paddingLeft: 15,
     },
     linkInput: {
       maxHeight: 100,
@@ -77,21 +80,21 @@ export default theme => {
     },
     content: {
       margin: 0,
-      width: '100%',
+      width: fullWidth,
       height: 186,
     },
     loadingContainer: {
-      height: '100%',
+      height: fullHeight,
       minHeight: 158,
     },
     emptyCollection: {
-      width: '100%',
+      width: fullWidth,
       height: 186,
       margin: 'auto',
     },
     emptyImg: {
-      width: '100%',
-      height: '100%',
+      width: fullWidth,
+      height: fullHeight,
       objectFit: 'contain',
     },
     notFound: {
@@ -122,13 +125,13 @@ export default theme => {
       listStyleType: 'none',
     },
     textField: {
-      width: '100%',
+      width: fullWidth,
     },
     input: {
       paddingRight: 50,
     },
     searchItemImg: {
-      height: '100%',
+      height: fullHeight,
       marginRight: baseMargin,
     },
     closeIcon: {

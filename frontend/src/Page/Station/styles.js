@@ -11,7 +11,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     position: 'fixed',
   },
   containerWrapper: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 0,
     paddingBottom: 50, // Footer height
   },
@@ -30,7 +30,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     marginBottom: 20,
   },
   switcherContent: {
-    width: '100%',
+    width: spacing.fullWidth,
     margin: 'auto',
     [breakpoints.up('lg')]: {
       minWidth: 1024,
@@ -79,7 +79,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     },
   },
   emptyNowPlayingImage: {
-    width: '100%',
+    width: spacing.fullWidth,
   },
   emptyNowPlaying: {
     height: 0,

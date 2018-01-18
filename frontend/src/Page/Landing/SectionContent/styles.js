@@ -1,7 +1,7 @@
-export default ({ palette, breakpoints }) => ({
+export default ({ palette, breakpoints, spacing }) => ({
   container: {
     zIndex: 10,
-    width: '100%',
+    width: spacing.fullWidth,
     paddingBottom: 50,
   },
   wrapper: {

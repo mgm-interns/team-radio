@@ -8,7 +8,9 @@ import withRouter from 'react-router-dom/withRouter';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { NavBar, Footer } from 'Component';
-import { logout, fetchUserWithUsername } from 'Redux/api/user/actions';
+import { getUserByUsername } from 'Redux/api/userProfile/actions';
+import { withNotification } from 'Component/Notification';
+import sleep from 'Util/sleep';
 
 import Header from './Header';
 import Body from './Body';
@@ -19,35 +21,62 @@ class Profile extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      loading: false,
-      isOwner: false,
-    };
-
-    this._renderLoading = this._renderLoading.bind(this);
+    this._showNotification = this._showNotification.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.loading === false) {
-      // const { match: { params: { username } }, history } = this.props;
-      // if (username !== nextProps.user.username) {
-      //   // Go to landing page
-      //   console.log('redirect landing');
-      //   history.push('/');
-      // }
+  componentDidMount() {
+    const { match: { params } } = this.props;
+    this.props.requestUserByUsername(params.username);
+  }
+
+  async componentWillReceiveProps(nextProps) {
+    const { user, user: { message } } = nextProps;
+    const currentUser = this.props.user;
+    const increaseNumber = Profile._calculateIncreaseReputation(
+      currentUser.reputation,
+      user.reputation,
+    );
+
+    if (message !== currentUser.message && message) {
+      this._showNotification(message);
+    }
+
+    // show notification when user upload avatar on the first time
+    if (
+      currentUser.avatar_url !== user.avatar_url &&
+      currentUser.avatar_url === null &&
+      increaseNumber !== 0
+    ) {
+      await sleep(1000);
+      this._showNotification(
+        `Congratulations! You just got ${increaseNumber} for a gift!`,
+      );
     }
   }
 
-  _renderLoading() {
+  static _renderLoading() {
     return <CircularProgress />;
   }
 
-  render() {
-    const { classes, user } = this.props;
+  static _calculateIncreaseReputation(oldNumber, newNumber) {
+    return newNumber - oldNumber;
+  }
 
-    if (!user) {
-      this._renderLoading();
+  _showNotification(content) {
+    const { notification } = this.props;
+
+    notification.app.success({
+      message: content,
+    });
+  }
+
+  render() {
+    const { classes, user, isOwner } = this.props;
+
+    if (Object.keys(user).length === 0) {
+      return Profile._renderLoading();
     }
+
     return [
       <NavBar key={1} color="primary" />,
       <Grid
@@ -56,8 +85,8 @@ class Profile extends Component {
         container
         className={classes.containerWrapper}
       >
-        <Header user={user} />
-        <Body user={user} />
+        <Header user={user} isDisabled={isOwner} />
+        <Body user={user} isDisabled={isOwner} />
       </Grid>,
       <Footer key={3} />,
     ];
@@ -68,19 +97,26 @@ Profile.propTypes = {
   classes: PropTypes.any,
   fetchUserWithUsername: PropTypes.func,
   user: PropTypes.object,
+  userProfile: PropTypes.object,
+  loading: PropTypes.bool,
+  isOwner: PropTypes.bool,
+  requestUserByUsername: PropTypes.func,
+  notification: PropTypes.object,
 };
 
-const mapStateToProps = state => ({
-  user: state.api.user.data,
-  loading: state.api.user.loading,
+const mapStateToProps = ({ api }) => ({
+  user: api.userProfile.data,
+  isOwner: api.userProfile.data.isOwner,
+  loading: api.user.loading,
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchUserWithUsername: username => dispatch(fetchUserWithUsername(username)),
+  requestUserByUsername: username => dispatch(getUserByUsername(username)),
 });
 
 export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
   withRouter,
+  withNotification,
 )(Profile);
