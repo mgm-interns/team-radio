@@ -75,8 +75,10 @@ class NowPlaying extends Component {
         seektime: NowPlaying.calculateSeekTime(nextNowPlaying.starting_time),
         receivedAt: new Date().getTime(),
       };
-      this.playerRef.seekToTime(player);
       this.setState(player);
+      if (this.playerRef) {
+        this.playerRef.seekToTime(player);
+      }
     }
   }
 
