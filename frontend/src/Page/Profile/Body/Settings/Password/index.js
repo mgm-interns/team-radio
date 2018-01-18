@@ -9,7 +9,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import Grid from 'material-ui/Grid';
 import { FormHelperText } from 'material-ui/Form';
 import Button from 'material-ui/Button';
-
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { setPassword } from 'Redux/api/userProfile/actions';
 
@@ -35,6 +35,10 @@ class Password extends Component {
     if (error !== null) {
       this.setState({
         formErrors: error.response.message,
+      });
+    } else {
+      this.setState({
+        formErrors: '',
       });
     }
   }
@@ -84,9 +88,9 @@ class Password extends Component {
 
   _submitModal(values) {
     this.props.onSubmit({ userId: this.props.initialValues.userId, ...values });
-    if (this.state.formErrors) {
-      this.props.onDone();
-    }
+    // if (!this.state.formErrors) {
+    //   this.props.onDone();
+    // }
   }
 
   _renderLoading() {
@@ -94,11 +98,12 @@ class Password extends Component {
   }
 
   render() {
-    const { classes, handleSubmit, pristine, submitting, loading } = this.props;
-
+    const { classes, handleSubmit, pristine, submitting } = this.props;
+    console.log('password render');
     return (
       <Grid className={classes.content}>
-        <form onSubmit={handleSubmit(this._submitModal)}>
+        {/* <form onSubmit={handleSubmit(this._submitModal)}> */}
+        <form onSubmit={handleSubmit}>
           <Grid item xs={12}>
             {this._renderChangePasswordForm()}
           </Grid>
@@ -130,6 +135,8 @@ Password.propTypes = {
   password: PropTypes.any,
   loading: PropTypes.bool,
   onSubmit: PropTypes.func,
+  initialValues: PropTypes.any,
+  submitSucceeded: PropTypes.any,
 };
 
 const mapStateToProps = ({ api }) => ({
@@ -151,6 +158,7 @@ const mapDispatchToProps = dispatch => ({
 export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
   reduxForm({
     form: 'editProfilePasswordForm',
     validate: settingsValidate,

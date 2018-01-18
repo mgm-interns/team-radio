@@ -11,9 +11,6 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import Popover from 'material-ui/Popover';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
-import { withNotification } from 'Component/Notification';
-import { withRouter } from 'react-router';
-
 import styles from './styles';
 
 import Information from './Information';
@@ -46,27 +43,19 @@ class Settings extends Component {
       anchorEl: null,
     };
 
-    this._renderEditInformation = this._renderEditInformation.bind(this);
+    // this._renderEditInformation = this._renderEditInformation.bind(this);
     this._onOpenEditInformation = this._onOpenEditInformation.bind(this);
     this._onOpenEditPassword = this._onOpenEditPassword.bind(this);
     this._onCloseModal = this._onCloseModal.bind(this);
     this.onCancelButtonClick = this.onCancelButtonClick.bind(this);
     this._openMenu = this._openMenu.bind(this);
     this._closeMenu = this._closeMenu.bind(this);
-    this._submitModal = this._submitModal.bind(this);
-    this._showNotification = this._showNotification.bind(this);
+    // this._submitModal = this._submitModal.bind(this);
     this._renderPopoverContent = this._renderPopoverContent.bind(this);
   }
 
-  _showNotification(content) {
-    const { notification } = this.props;
-
-    notification.app.success({
-      message: content,
-    });
-  }
-
   onCancelButtonClick() {
+    console.log('_onCancelButtonClick');
     this.setState({
       openEditInformation: false,
       openEditPassword: false,
@@ -75,16 +64,19 @@ class Settings extends Component {
   }
 
   _onOpenEditInformation() {
+    console.log('_onOpenEditInformation');
     this._closeMenu();
     this.setState({ openEditInformation: true, openEditPassword: false });
   }
 
   _onOpenEditPassword() {
+    console.log('_onOpenEditPassword');
     this._closeMenu();
     this.setState({ openEditInformation: false, openEditPassword: true });
   }
 
   _onCloseModal() {
+    console.log('_onCloseModal');
     this.setState({
       openEditInformation: false,
       openEditPassword: false,
@@ -93,17 +85,19 @@ class Settings extends Component {
   }
 
   _openMenu(event) {
+    console.log('_openMenu');
     this.setState({ anchorEl: event.target });
   }
 
   _closeMenu() {
+    console.log('_closeMenu');
     this.setState({ anchorEl: null });
   }
 
-  _submitModal() {
-    this._onCloseModal();
-    this._showNotification('Your information has been changed successfully!');
-  }
+  // _submitModal() {
+  //   console.log('_submitModal');
+  //   this._onCloseModal();
+  // }
 
   static _renderLoading() {
     return <CircularProgress />;
@@ -111,12 +105,13 @@ class Settings extends Component {
 
   _renderEditInformation() {
     const { classes, user, loading } = this.props;
+
     return (
       <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        aria-labelledby="information-modal-title"
+        aria-describedby="information-modal-description"
         open={this.state.openEditInformation}
-        onClose={this._onCloseModal}
+        // onClose={this._onCloseModal}
       >
         <div style={getModalStyle()}>
           <Grid container>
@@ -129,7 +124,7 @@ class Settings extends Component {
                 user={user}
                 loading={loading}
                 onCancel={this.onCancelButtonClick}
-                onDone={this._submitModal}
+                // onDone={this._onCloseModal}
               />
             </Grid>
           </Grid>
@@ -142,8 +137,8 @@ class Settings extends Component {
     const { classes, user, loading } = this.props;
     return (
       <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        aria-labelledby="password-modal-title"
+        aria-describedby="password-modal-description"
         open={this.state.openEditPassword}
         onClose={this._onCloseModal}
       >
@@ -158,7 +153,7 @@ class Settings extends Component {
                 user={user}
                 loading={loading}
                 onCancel={this.onCancelButtonClick}
-                onDone={this._submitModal}
+                // onDone={this._onCloseModal}
               />
             </Grid>
           </Grid>
@@ -187,18 +182,14 @@ class Settings extends Component {
   }
 
   render() {
-    const { classes, loading } = this.props;
+    const { classes } = this.props;
     const { anchorEl } = this.state;
-
-    if (loading) {
-      return Settings._renderLoading();
-    }
 
     return (
       <div>
         <div
           className={classes.menuItem}
-          aria-owns={anchorEl ? 'simple-menu' : null}
+          aria-owns={anchorEl ? 'edit-menu' : null}
           aria-haspopup="true"
           onClick={this._openMenu}
         >
@@ -233,9 +224,6 @@ Settings.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.any,
   loading: PropTypes.bool,
-  notification: PropTypes.any,
 };
 
-export default compose(withStyles(styles), withRouter, withNotification)(
-  Settings,
-);
+export default compose(withStyles(styles))(Settings);

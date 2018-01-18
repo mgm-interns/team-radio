@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { Field, reduxForm, Form } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
@@ -37,8 +37,18 @@ class Information extends Component {
   componentWillReceiveProps(nextProps) {
     // const { information: { message } } = nextProps;
     // console.log(nextProps);
-    const { user: { username } } = nextProps;
-    console.log(username);
+    const { user: { username }, userProfile: { error } } = nextProps;
+
+    if (error !== null) {
+      this.setState({
+        formErrors: error.response.message,
+      });
+    } else {
+      this.setState({
+        formErrors: '',
+      });
+    }
+
     if (username !== this.props.user.username) {
       this.props.history.push(`/profile/${username}`);
     }
@@ -54,7 +64,7 @@ class Information extends Component {
   }
 
   _renderChangeInformationForm() {
-    const { classes, submitSucceeded } = this.props;
+    const { classes, submitSucceeded, user } = this.props;
     return [
       <Field
         key={1}
@@ -133,8 +143,8 @@ class Information extends Component {
     const { onSubmit, initialValues } = this.props;
     // console.log(initialValues);
     onSubmit({ userId: initialValues.userId, ...values });
-    if (this.state.formErrors !== '') {
-      this.props.onDone();
+    if (!this.state.formErrors) {
+      // this.props.onDone();
     }
   }
 
@@ -144,10 +154,11 @@ class Information extends Component {
 
   render() {
     const { classes, handleSubmit, pristine, submitting } = this.props;
-
+    console.log('information render');
     return (
       <Grid className={classes.content}>
-        <form onSubmit={handleSubmit(this._submitModal)}>
+        {/* <form onSubmit={handleSubmit(this._submitModal)}> */}
+        <form onSubmit={handleSubmit}>
           <Grid item xs={12}>
             {this._renderChangeInformationForm()}
           </Grid>
@@ -170,7 +181,7 @@ class Information extends Component {
 
 const mapStateToProps = ({ api }) => ({
   initialValues: api.userProfile.data,
-  // information: api.userProfile.information.data,
+  userProfile: api.userProfile,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -183,25 +194,26 @@ const mapDispatchToProps = dispatch => ({
     bio,
     city,
     country,
-  }) => {
-    dispatch(
-      setUsername({
-        userId,
-        username: trimText(username),
-      }),
-    );
-    dispatch(
-      setUserInformation({
-        userId,
-        name: trimText(name),
-        firstname: trimText(firstname),
-        lastname: trimText(lastname),
-        bio: trimText(bio),
-        city: trimText(city),
-        country: trimText(country),
-      }),
-    );
-  },
+  }) =>
+    Promise.all([
+      dispatch(
+        setUsername({
+          userId,
+          username: trimText(username),
+        }),
+      ),
+      dispatch(
+        setUserInformation({
+          userId,
+          name: trimText(name),
+          firstname: trimText(firstname),
+          lastname: trimText(lastname),
+          bio: trimText(bio),
+          city: trimText(city),
+          country: trimText(country),
+        }),
+      ),
+    ]),
 });
 
 Information.propTypes = {
@@ -213,6 +225,8 @@ Information.propTypes = {
   submitting: PropTypes.bool.isRequired,
   loading: PropTypes.bool,
   onSubmit: PropTypes.func,
+  initialValues: PropTypes.any,
+  history: PropTypes.any,
 };
 
 export default compose(

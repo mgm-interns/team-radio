@@ -168,7 +168,6 @@ export default router => {
           req.app.get('superSecret'),
         );
         return res.json({
-          message: 'Success',
           isOwner: isOwner,
           ...user._doc,
           userId: user._id,
@@ -209,6 +208,7 @@ export default router => {
             req.body.avatar_url,
           );
           return res.json({
+            message: 'Update avatar successfully!',
             isOwner,
             ...user._doc,
             userId: user._id,
@@ -276,7 +276,6 @@ export default router => {
       );
       if (AlreadyUser && AlreadyUser.username === user.username)
         return res.json({
-          message: 'Success',
           ...user._doc,
           userId: user._id,
         });
@@ -293,7 +292,7 @@ export default router => {
             req.body.username,
           );
           return res.json({
-            message: 'Success',
+            message: 'Update username successfully',
             isOwner: isOwner,
             ...user._doc,
             userId: user._id,
@@ -301,7 +300,7 @@ export default router => {
         }
       }
       return res.status(400).json({
-        message: 'Can not update username!',
+        message: 'Username already in use!',
       });
     } catch (err) {
       throw err;
@@ -422,7 +421,7 @@ export default router => {
     }
   });
 
-  //router.use(authController);
+  // router.use(authController);
 
   // test function *************************************
   router.get('/', (req, res) => {

@@ -49,6 +49,7 @@ const userProfile = (state = INITIAL_STATE, action) => {
     case 'SET_PASSWORD_REQUEST':
       return {
         ...state,
+        data: { ...state.data, message: '' },
         error: null,
         loading: true,
       };

@@ -9,6 +9,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { NavBar, Footer } from 'Component';
 import { getUserByUsername } from 'Redux/api/userProfile/actions';
+import { withNotification } from 'Component/Notification';
 
 import Header from './Header';
 import Body from './Body';
@@ -25,6 +26,17 @@ class Profile extends Component {
   componentDidMount() {
     const { match: { params } } = this.props;
     this.props.requestUserByUsername(params.username);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { user: { message } } = nextProps;
+    if (message !== this.props.user.message && message) {
+      const { notification } = this.props;
+
+      notification.app.success({
+        message,
+      });
+    }
   }
 
   _renderLoading() {
@@ -78,4 +90,5 @@ export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
   withRouter,
+  withNotification,
 )(Profile);
