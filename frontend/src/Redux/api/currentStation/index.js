@@ -16,7 +16,7 @@ import {
   SERVER_USER_LEFT,
   SERVER_SKIP_SONG,
   SERVER_UPDATE_SKIPPED_SONGS,
-  SERVER_ALREADY_IN_A_STATION,
+  SERVER_NO_MULTI_STATIONS,
 } from 'Redux/actions';
 
 const INITIAL_STATE = {
@@ -82,7 +82,7 @@ export default (state = INITIAL_STATE, action) => {
           failed: true,
         },
       };
-    case SERVER_ALREADY_IN_A_STATION: {
+    case SERVER_NO_MULTI_STATIONS: {
       appNotificationInstance.warning({
         message:
           'You have already been in another station. You will be redirected to landing page.',

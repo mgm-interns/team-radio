@@ -62,15 +62,16 @@ export const countOnlineOfAllStations = async (stations, io) =>
     }),
   );
 
-export const leaveStationAlreadyIn = async (userId, stationId, io) => {
+export const leaveStationAlreadyIn = async (userId, stId, stName, io) => {
   const listSocket = await getAllSocketConnected(io);
   listSocket.forEach(socketId => {
     const socket = getSocketById(socketId, io);
     const oldStation = getAllStationsSocketIn(socket)[0];
-    if (socket.userId === userId && oldStation !== stationId) {
+    if (socket.userId === userId && oldStation !== stId) {
       const emitter = createEmitter(socket, io);
-      emitter.emit(EVENTS.SERVER_ALREADY_IN_A_STATION, {
-        stationId: stationId,
+      emitter.emit(EVENTS.SERVER_NO_MULTI_STATIONS, {
+        stationId: stId,
+        stationName: stName,
       });
     }
   });

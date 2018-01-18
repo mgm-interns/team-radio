@@ -57,16 +57,17 @@ const _joinStationProcess = async (socket, io, userId, station) => {
 };
 
 const _join = async (emitter, socket, userId, station, io) => {
-  const stationId = station.station_id;
+  const stId = station.station_id;
+  const stName = station.station_name;
   socket.join(station.station_id);
-  const count = await onlineManager.countOnlineOfStation(stationId, io);
-  const users = await onlineManager.getListUserOnline(stationId, io);
+  const count = await onlineManager.countOnlineOfStation(stId, io);
+  const users = await onlineManager.getListUserOnline(stId, io);
 
   emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
     station: station,
   });
 
-  onlineManager.leaveStationAlreadyIn(userId, stationId, io);
+  onlineManager.leaveStationAlreadyIn(userId, stId, stName, io);
 
   // Get nowplaying and emit to user
   try {
