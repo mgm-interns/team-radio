@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as userModels from '../models/user';
+import userModels from '../models/user';
 import * as stationModels from '../models/station';
 import jwt from 'jsonwebtoken';
 import deleteDiacriticMarks from "khong-dau";
@@ -212,13 +212,13 @@ export const addFavouriteSong = async (songId, userId, stationId, songUrl) => {
  * The function get info favourited songs
  * @param {string} userId 
  */
-export const getFavouritedSongs =async (userId) =>{
-   try {
-     const favouritedSongs = await userModels.getFavouritedSongs(userId);
-     return favouritedSongs;
-   } catch (error) {
-     throw new Error("Can't get favourited songs");
-   }
+export const getFavouritedSongs = async (userId) => {
+  try {
+    const favouritedSongs = await userModels.getFavouritedSongs(userId);
+    return favouritedSongs;
+  } catch (error) {
+    throw new Error("Can't get favourited songs");
+  }
 }
 
 async function _increaseReputation(email, point) {

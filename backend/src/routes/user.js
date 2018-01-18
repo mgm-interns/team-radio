@@ -430,7 +430,6 @@ export default router => {
     );
     res.json(favourite);
   });
-  // TODO :
   router.get('/getFavouriteSongs/:user_id', async (req, res) => {
     const favourite = await userController.getFavouritedSongs(
       req.params.user_id,
