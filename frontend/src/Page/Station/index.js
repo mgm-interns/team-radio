@@ -153,6 +153,7 @@ class StationPage extends Component {
         value={tabValue}
         onChange={this._handleTabChange}
         indicatorColor="primary"
+        className={classes.tabs}
       >
         <Tab
           classes={{
@@ -272,8 +273,9 @@ class StationPage extends Component {
                   </div>
                 </Grid>
                 <NowPlaying
-                  className={classNames([classes.content, classes.nowPlaying], {
+                  className={classNames([classes.content], {
                     [classes.emptyNowPlaying]: !playlist,
+                    [classes.nowPlaying]: passive,
                   })}
                   autoPlay={true}
                   muted={muted}

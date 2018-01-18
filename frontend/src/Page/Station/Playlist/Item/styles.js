@@ -40,12 +40,14 @@ export default ({ spacing, palette, typography }) => ({
   },
   name: {
     ...typography.body2,
-    fontSize: '0.825em',
+    fontSize: '0.9em',
     fontWeight: 'bold',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
     cursor: 'default',
+    marginTop: -4,
+    color: 'rgba(0, 0, 0, 0.54)',
   },
   warningText: {
     ...typography.caption,
@@ -74,6 +76,9 @@ export default ({ spacing, palette, typography }) => ({
     position: 'absolute',
     right: spacing.baseMargin,
     bottom: spacing.baseMargin,
+    '& button': {
+      color: 'rgba(0, 0, 0, 0.24)',
+    },
   },
   actionsWrapper: {
     display: 'flex',

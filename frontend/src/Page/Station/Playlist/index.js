@@ -102,7 +102,7 @@ class Playlist extends Component {
           }}
         >
           {playlist.map((song, index) => (
-            <Item key={song.song_id} {...song} playing={index === 0} />
+            <Item key={song.song_id || index} {...song} playing={index === 0} />
           ))}
         </FlipMoveList>
       </Grid>
