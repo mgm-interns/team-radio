@@ -31,18 +31,14 @@ class Profile extends Component {
   componentWillReceiveProps(nextProps) {
     const { user, user: { message } } = nextProps;
     const currentUser = this.props.user;
-    if (message !== currentUser.message && message) {
-      const { notification } = this.props;
-
-      notification.app.success({
-        message,
-      });
-    }
-
     const increaseNumber = Profile._calculateIncreaseReputation(
       currentUser.reputation,
       user.reputation,
     );
+
+    if (message !== currentUser.message && message) {
+      this._showNotification(message);
+    }
 
     // show notification when user upload avatar on the first time
     if (
