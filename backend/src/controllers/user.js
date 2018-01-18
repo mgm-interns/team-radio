@@ -1,8 +1,11 @@
 /* eslint-disable */
-import userModels from '../models/user';
+import * as userModels from '../models/user';
+import * as stationModels from '../models/station';
 import jwt from 'jsonwebtoken';
 import deleteDiacriticMarks from "khong-dau";
 import user from '../routes/user';
+import { throws } from 'assert';
+import { Error } from 'mongoose';
 // import bhs from 'nodemailer-express-handlebars';
 // import nodemailer from 'nodemailer'
 // import * as stationModels from "../models/station";
@@ -48,7 +51,8 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
         google_id: googleId,
         facebook_id: facebookId,
         name: name,
-        is_password: false
+        is_password: false,
+        favourited_songs: []
       });
       await user.save();
       const username = await _createUsername(name);
@@ -71,6 +75,7 @@ export const createUser = async (email, password, name) => {
       email: email,
       name: name,
       is_password: true,
+      favourited_songs: []
     });
 
     user.password = user.generateHash(password)
@@ -171,24 +176,50 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
     throw err;
   }
 };
-
-
-export const addFavouriteSong = async (songFavourite, userId) => {
+/**
+ * 
+ * @param {string} songId 
+ * @param {string} userId   -- > user id  : who is favourite song
+ * @param {string} stationId  -- > station id of station has song
+ * @param {string} songUrl  --> url of song which is favourite
+ */
+export const addFavouriteSong = async (songId, userId, stationId, songUrl) => {
   try {
-    const song = {
-      url : songFavourite.url,
-      title : songFavourite.url,
-      thumbnail : songFavourite.thumbnail,
-      duration : songFavourite.duration,
-      creator : songFavourite.creator,
-      created_date : songFavourite.created_date
+    const songFavourited = await userModels.getSongInFavouriteds(userId, songUrl);
+
+    if (songFavourited.length === 0) {
+      const songInStation = (await stationModels.getAsongInStation(
+        stationId,
+        songId
+      ))[0];
+      console.log("songInStation : " + " --> " + songInStation);
+
+      await userModels.addFavouritedSongs(userId, songInStation);
+      return {
+        message: "Favourite successful"
+      }
+    } else {
+      console.log("delete : ");
+      await userModels.deleteAsongInFavouritedSongs(userId, songUrl);
+      return {
+        message: "Unfavourite successful"
+      }
     }
-   await userModels.updateFavouritedSongs(userId,song);
+
   } catch (error) {
     console.log(error);
+
   }
 }
 
+export const getFavouritedSongs =async (userId) =>{
+   try {
+     const favouritedSongs = await userModels.getFavouritedSongs(userId);
+     return favouritedSongs;
+   } catch (error) {
+     throw new Error("Can't get favourited songs");
+   }
+}
 
 async function _increaseReputation(email, point) {
   const user = await userModels.getUserByEmail(email);

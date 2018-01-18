@@ -87,7 +87,9 @@ class ImageUploader extends Component {
 
   _openFilePickerDialog(event) {
     event.preventDefault();
-    this.input.click();
+    if (this.props.isDisabled) {
+      this.input.click();
+    }
   }
 
   async _onImagePicked(event) {
@@ -190,6 +192,7 @@ ImageUploader.propTypes = {
   classes: PropTypes.any,
   avatar_url: PropTypes.any,
   updateAvatar: PropTypes.any,
+  isDisabled: PropTypes.any,
 };
 
 // const mapStateToProps = state => ({

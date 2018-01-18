@@ -71,27 +71,12 @@ class NowPlaying extends Component {
     const nextNowPlaying = nextProps.nowPlaying;
     // Only trigger when the song_id has changed
     if (nowPlaying.song_id !== nextNowPlaying.song_id) {
-      let seektime = 0;
-      if (nowPlaying.starting_time === nextNowPlaying.starting_time) {
-        /**
-         * If the old song is the same with the new song
-         * We need to plus 0.1 to make sure that
-         * new start time is different from the old one
-         */
-        seektime =
-          NowPlaying.calculateSeekTime(nowPlaying.starting_time) + 0.001;
-      } else {
-        // If not
-        seektime =
-          (this.state.seektime !== null
-            ? this.state.seektime
-            : NowPlaying.calculateSeekTime(nextNowPlaying.starting_time)) +
-          0.002;
-      }
-      this.setState({
-        seektime,
+      const player = {
+        seektime: NowPlaying.calculateSeekTime(nextNowPlaying.starting_time),
         receivedAt: new Date().getTime(),
-      });
+      };
+      this.playerRef.seekToTime(player);
+      this.setState(player);
     }
   }
 
@@ -139,6 +124,9 @@ class NowPlaying extends Component {
           seektime={this.state.seektime}
           receivedAt={this.state.receivedAt}
           muted={muted}
+          ref={ref => {
+            this.playerRef = ref;
+          }}
         />
       </Grid>
     );
