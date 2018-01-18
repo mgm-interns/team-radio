@@ -32,20 +32,29 @@ class Profile extends Component {
     const { user } = nextProps;
     const currentUser = this.props.user;
 
+    const increaseNumber = Profile._calculateIncreaseReputation(
+      currentUser.reputation,
+      user.reputation,
+    );
+
     // show notification when user upload avatar on the first time
     if (
       currentUser.avatar_url !== user.avatar_url &&
-      currentUser.avatar_url === null
+      currentUser.avatar_url === null &&
+      increaseNumber !== 0
     ) {
       this._showNotification(
-        `Congratulations! You just got ${user.reputation -
-          currentUser.reputation} for a gift!`,
+        `Congratulations! You just got ${increaseNumber} for a gift!`,
       );
     }
   }
 
   static _renderLoading() {
     return <CircularProgress />;
+  }
+
+  static _calculateIncreaseReputation(oldNumber, newNumber) {
+    return newNumber - oldNumber;
   }
 
   _showNotification(content) {
