@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Cropper from 'react-cropper';
 import withStyles from 'material-ui/styles/withStyles';
 import Icon from 'material-ui/Icon';
@@ -87,7 +87,9 @@ class ImageUploader extends Component {
 
   _openFilePickerDialog(event) {
     event.preventDefault();
-    this.input.click();
+    if (this.props.isDisabled) {
+      this.input.click();
+    }
   }
 
   async _onImagePicked(event) {
@@ -114,13 +116,17 @@ class ImageUploader extends Component {
   };
 
   render() {
-    const { classes, user: { avatar_url } } = this.props;
+    const { classes, user: { avatar_url }, isDisabled } = this.props;
     return (
       <div>
         <div className={classes.avatarContainer} style={this.state.size}>
           <div className="hoverButton" onClick={this._openFilePickerDialog}>
-            <Icon className={classes.uploadIcon}>camera_alt</Icon>
-            <p style={{ textAlign: 'center' }}>Upload profile photo</p>
+            {isDisabled && (
+              <Fragment>
+                <Icon className={classes.uploadIcon}>camera_alt</Icon>
+                <p style={{ textAlign: 'center' }}>Upload profile photo</p>
+              </Fragment>
+            )}
           </div>
           <div>
             <Avatar
@@ -190,6 +196,7 @@ ImageUploader.propTypes = {
   classes: PropTypes.any,
   avatar_url: PropTypes.any,
   updateAvatar: PropTypes.any,
+  isDisabled: PropTypes.any,
 };
 
 // const mapStateToProps = state => ({

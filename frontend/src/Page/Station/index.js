@@ -165,7 +165,7 @@ class StationPage extends Component {
           classes={{
             label: classes.tabLabel,
           }}
-          label={`History (${history.length})`}
+          label={`History`}
         />
       </Tabs>,
       tabValue === 0 && (
@@ -275,7 +275,7 @@ class StationPage extends Component {
                 <NowPlaying
                   className={classNames([classes.content], {
                     [classes.emptyNowPlaying]: !playlist,
-                    [classes.nowPlaying]: passive,
+                    [classes.nowPlayingPassive]: passive,
                   })}
                   autoPlay={true}
                   muted={muted}

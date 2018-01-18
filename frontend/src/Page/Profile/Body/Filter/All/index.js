@@ -65,7 +65,7 @@ class FilterAll extends Component {
             />
           </div>
           <Typography type="title" className={classes.titleLabel}>
-            Recent
+            Recently Visited
           </Typography>
           <div className={classes.stationsSection}>
             <StationList

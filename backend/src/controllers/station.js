@@ -3,9 +3,9 @@ import { ObjectId } from 'mongodb';
 import deleteDiacriticMarks from 'khong-dau';
 import getSongDetails from './song';
 import * as players from '../players';
-import * as stationModels from './../models/station';
-import * as userControllers from './../controllers/user'
-import * as userModels from './../models/user'
+import * as stationModels from '../models/station';
+import * as userControllers from '../controllers/user'
+import * as userModels from '../models/user'
 import { Error } from 'mongoose';
 import station from '../routes/station';
 import user from '../routes/user';

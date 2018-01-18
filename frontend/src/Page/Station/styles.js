@@ -52,6 +52,9 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     margin: 0,
   },
   content: {
+    position: 'relative',
+    width: '100%',
+    margin: 'auto',
     height: 300,
     [breakpoints.up('md')]: {
       height: 600,
@@ -67,7 +70,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     marginLeft: spacing.baseMargin,
     flexDirection: 'row',
   },
-  nowPlaying: {
+  nowPlayingPassive: {
     height: '60vh',
   },
   playlistHeader: {

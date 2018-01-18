@@ -1,17 +1,20 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
+import { LinearProgress } from 'material-ui/Progress';
 
 class Player extends PureComponent {
   constructor(props, context) {
     super(props, context);
 
-    this._onStart = this._onStart.bind(this);
-    this.seekToTime = this.seekToTime.bind(this);
-  }
+    this.state = {
+      played: 0,
+      buffer: 0,
+    };
 
-  _onStart() {
-    this.seekToTime(this.props);
+    this._onStart = this._onStart.bind(this);
+    this._onProgress = this._onProgress.bind(this);
+    this.seekToTime = this.seekToTime.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -28,22 +31,19 @@ class Player extends PureComponent {
     return true;
   }
 
-  componentDidUpdate(prevProps) {
-    // Re update seektime after change video url
-    if (
-      this.props.url !== prevProps.url ||
-      this.props.songId !== prevProps.songId
-    ) {
-      this.seekToTime(this.props);
-    }
-  }
-
   seekToTime({ seektime, receivedAt }) {
     const currentTime = new Date().getTime();
     const delayedTime = parseInt(currentTime - receivedAt, 10) / 1000;
-    console.log(delayedTime);
     const exactlySeektime = seektime + delayedTime;
     this.refPlayer.seekTo(exactlySeektime);
+  }
+
+  _onStart() {
+    this.seekToTime(this.props);
+  }
+
+  _onProgress(state) {
+    this.setState({ played: state.played * 100, buffer: state.loaded * 100 });
   }
 
   render() {
@@ -56,8 +56,10 @@ class Player extends PureComponent {
       onPause,
       ...othersProps
     } = this.props;
-    return (
+    const { played, buffer } = this.state;
+    return [
       <ReactPlayer
+        key={1}
         url={url}
         ref={input => {
           this.refPlayer = input;
@@ -67,11 +69,20 @@ class Player extends PureComponent {
         onStart={this._onStart}
         onPlay={onPlay}
         onPause={onPause}
+        onProgress={this._onProgress}
         youtubeConfig={{ playerVars: { disablekb: 1 } }}
         style={{ pointerEvents: 'none' }}
         {...othersProps}
-      />
-    );
+      />,
+      url && (
+        <LinearProgress
+          key={2}
+          mode={'buffer'}
+          value={played}
+          valueBuffer={buffer}
+        />
+      ),
+    ];
   }
 }
 
