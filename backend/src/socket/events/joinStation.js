@@ -69,7 +69,7 @@ const _joinStationProcess = async (socket, io, userId, station) => {
         io,
       );
     } else {
-      _join(emitter, socket, station);
+      _join(emitter, socket, station, io);
       const count = await onlineManager.countOnlineOfStation(stationId, io);
       const users = await onlineManager.getListUserOnline(stationId, io);
       emitter.emit(EVENTS.SERVER_UPDATE_ONLINE_USERS, {
