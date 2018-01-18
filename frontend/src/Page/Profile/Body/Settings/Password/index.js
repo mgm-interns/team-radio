@@ -96,12 +96,18 @@ class Password extends Component {
     }
   }
 
-  _renderLoading() {
+  static _renderLoading() {
     return <CircularProgress />;
   }
 
   render() {
-    const { classes, handleSubmit, pristine, submitting } = this.props;
+    const {
+      classes,
+      handleSubmit,
+      pristine,
+      submitting,
+      userProfile: { loading },
+    } = this.props;
 
     return (
       <Grid className={classes.content}>
@@ -110,14 +116,20 @@ class Password extends Component {
             {this._renderChangePasswordForm()}
           </Grid>
           <Grid item xs={12} className={classes.modalFooter}>
-            <Button onClick={this._onCancelButtonClick}>Cancel</Button>
+            <Button
+              onClick={this._onCancelButtonClick}
+              className={classes.button}
+            >
+              Cancel
+            </Button>
             <Button
               raised
               disabled={pristine || submitting}
               color="primary"
               type="submit"
+              className={classes.button}
             >
-              Save changes
+              {loading ? Password._renderLoading() : 'Save changes'}
             </Button>
           </Grid>
         </form>

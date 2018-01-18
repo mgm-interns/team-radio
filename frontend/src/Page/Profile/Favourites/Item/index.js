@@ -6,6 +6,7 @@ import StarOutlineIcon from 'react-icons/lib/md/star-outline';
 import withStyles from 'material-ui/styles/withStyles';
 import { GridListTile } from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
+import Tooltip from 'material-ui/Tooltip';
 import { compose } from 'redux';
 import { withNotification } from 'Component/Notification';
 import { transformNumber } from 'Transformer';
@@ -49,14 +50,23 @@ class FavoriteItem extends Component {
           </span>
         </div>
         <div className={classes.actions}>
-          <span>
-            <IconButton
-              onClick={this.deleteSong}
-              color={this.state.isFavourite ? 'primary' : 'default'}
-            >
-              {this.state.isFavourite ? <StarIcon /> : <StarOutlineIcon />}
-            </IconButton>
-          </span>
+          <Tooltip
+            placement={'bottom'}
+            title={
+              this.state.isFavourite
+                ? 'Un-favourite this song'
+                : 'Favourite this song'
+            }
+          >
+            <span>
+              <IconButton
+                onClick={this.deleteSong}
+                color={this.state.isFavourite ? 'primary' : 'default'}
+              >
+                {this.state.isFavourite ? <StarIcon /> : <StarOutlineIcon />}
+              </IconButton>
+            </span>
+          </Tooltip>
         </div>
       </div>,
     ];

@@ -45,4 +45,10 @@ export default ({ spacing }) => ({
     fontWeight: 'bold',
     marginBottom: '10px',
   },
+  button: {
+    marginLeft: spacing.doubleBaseMargin,
+  },
+  menuItem: {
+    cursor: 'pointer',
+  },
 });

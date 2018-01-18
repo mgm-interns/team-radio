@@ -30,7 +30,7 @@ class Body extends Component {
     this.setState({ value });
   }
 
-  _renderLoading() {
+  static _renderLoading() {
     return <CircularProgress />;
   }
 
