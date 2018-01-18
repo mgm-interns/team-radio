@@ -1,14 +1,14 @@
 export default ({ breakpoints, palette, spacing, typography }) => ({
   logo: {
-    height: 80,
+    height: 35,
     margin: spacing.doubleBaseMargin,
   },
   passiveContainer: {
     width: '100%',
-    height: '100%',
+    height: '100vh',
     background: 'rgba(0,0,0,0.99)',
     zIndex: '1000',
-    position: 'absolute',
+    position: 'fixed',
   },
   containerWrapper: {
     width: '100%',
@@ -39,7 +39,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
   },
   playerContainer: {
     transition: 'all 0.3s linear',
-    position: 'absolute',
+    position: 'fixed',
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
@@ -60,13 +60,16 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
   nowPlayingHeader: {
     display: 'flex',
     justifyContent: 'space-between',
+    height: '100%',
   },
   nowPlayingActions: {
     display: 'flex',
     marginLeft: spacing.baseMargin,
     flexDirection: 'row',
   },
-  nowPlaying: {},
+  nowPlaying: {
+    height: 400,
+  },
   playlistHeader: {
     padding: spacing.baseMargin,
   },

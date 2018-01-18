@@ -273,8 +273,9 @@ class StationPage extends Component {
                   </div>
                 </Grid>
                 <NowPlaying
-                  className={classNames([classes.content, classes.nowPlaying], {
+                  className={classNames([classes.content], {
                     [classes.emptyNowPlaying]: !playlist,
+                    [classes.nowPlaying]: passive,
                   })}
                   autoPlay={true}
                   muted={muted}
