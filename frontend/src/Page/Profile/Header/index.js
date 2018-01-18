@@ -20,12 +20,12 @@ class Header extends Component {
   }
 
   _renderHeader() {
-    const { classes, user } = this.props;
+    const { classes, user, isDisabled } = this.props;
 
     return (
       <div className={classes.coverBackground}>
         <div className={classes.userInformationContainer}>
-          <ImageUploader user={user} />
+          <ImageUploader user={user} isDisabled={isDisabled} />
           <div className={classes.userInformationContent}>
             <Typography type="headline" className={classes.text}>
               {user.name}
