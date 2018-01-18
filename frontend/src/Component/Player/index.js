@@ -52,6 +52,7 @@ class Player extends PureComponent {
       songId, // unused
       url,
       playing,
+      showProgressbar,
       onPlay,
       onPause,
       ...othersProps
@@ -74,14 +75,15 @@ class Player extends PureComponent {
         style={{ pointerEvents: 'none' }}
         {...othersProps}
       />,
-      url && (
-        <LinearProgress
-          key={2}
-          mode={'buffer'}
-          value={played}
-          valueBuffer={buffer}
-        />
-      ),
+      showProgressbar &&
+        url && (
+          <LinearProgress
+            key={2}
+            mode={'buffer'}
+            value={played}
+            valueBuffer={buffer}
+          />
+        ),
     ];
   }
 }
@@ -95,6 +97,7 @@ Player.propTypes = {
   playing: PropTypes.bool,
   onPlay: PropTypes.func,
   onPause: PropTypes.func,
+  showProgressbar: PropTypes.bool,
 };
 
 Player.defaultProps = {

@@ -445,6 +445,7 @@ class AddLink extends Component {
           <Grid item sm={4} xs={12} className={classes.previewImg}>
             <Player
               url={this._getVideoUrl(preview)}
+              showProgressbar={false}
               muted={muted}
               playing={true}
             />

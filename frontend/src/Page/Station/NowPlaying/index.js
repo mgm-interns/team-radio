@@ -125,6 +125,7 @@ class NowPlaying extends Component {
           playing={autoPlay}
           seektime={this.state.seektime}
           receivedAt={this.state.receivedAt}
+          showProgressbar={true}
           muted={muted}
           ref={ref => {
             this.playerRef = ref;
