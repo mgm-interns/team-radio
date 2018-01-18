@@ -40,8 +40,7 @@ export default theme => {
       textAlign: 'end',
     },
     gridContainer: {
-      paddingTop: 10,
-      paddingLeft: 15,
+      padding: baseMargin,
     },
     linkInput: {
       maxHeight: 100,
@@ -71,8 +70,8 @@ export default theme => {
     },
     sendBtn: {
       position: 'absolute',
-      right: 0,
-      bottom: 0,
+      right: baseMargin,
+      bottom: baseMargin,
     },
     sendIcon: {
       marginLeft: baseMargin,
