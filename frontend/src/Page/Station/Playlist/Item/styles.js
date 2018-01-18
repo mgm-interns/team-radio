@@ -76,9 +76,9 @@ export default ({ spacing, palette, typography }) => ({
     position: 'absolute',
     right: spacing.baseMargin,
     bottom: spacing.baseMargin,
-    '& button': {
-      color: 'rgba(0, 0, 0, 0.24)',
-    },
+  },
+  disabledAction: {
+    color: palette.minBlack,
   },
   actionsWrapper: {
     display: 'flex',
