@@ -66,10 +66,10 @@ export default (state = INITIAL_STATE, action) => {
         station: action.payload.station,
         playlist: action.payload.station.playlist,
         joined: {
-          ...state.joined,
           loading: false,
           success: true,
           failed: false,
+          loggedInStation: null,
         },
       };
 
@@ -77,10 +77,10 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
         joined: {
-          ...state.joined,
           loading: false,
           success: false,
           failed: true,
+          loggedInStation: null,
         },
       };
     case SERVER_NO_MULTI_STATIONS: {
