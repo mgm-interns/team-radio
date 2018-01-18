@@ -9,6 +9,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { NavBar, Footer } from 'Component';
 import { getUserByUsername } from 'Redux/api/userProfile/actions';
+import { withNotification } from 'Component/Notification';
 
 import Header from './Header';
 import Body from './Body';
@@ -19,7 +20,7 @@ class Profile extends Component {
   constructor(props) {
     super(props);
 
-    this._renderLoading = this._renderLoading.bind(this);
+    this._showNotification = this._showNotification.bind(this);
   }
 
   componentDidMount() {
@@ -27,15 +28,39 @@ class Profile extends Component {
     this.props.requestUserByUsername(params.username);
   }
 
-  _renderLoading() {
+  componentWillReceiveProps(nextProps) {
+    const { user } = nextProps;
+    const currentUser = this.props.user;
+
+    // show notification when user upload avatar on the first time
+    if (
+      currentUser.avatar_url !== user.avatar_url &&
+      currentUser.avatar_url === null
+    ) {
+      this._showNotification(
+        `Congratulations! You just got ${user.reputation -
+          currentUser.reputation} for a gift!`,
+      );
+    }
+  }
+
+  static _renderLoading() {
     return <CircularProgress />;
+  }
+
+  _showNotification(content) {
+    const { notification } = this.props;
+
+    notification.app.success({
+      message: content,
+    });
   }
 
   render() {
     const { classes, user, isOwner } = this.props;
 
     if (Object.keys(user).length === 0) {
-      return this._renderLoading();
+      return Profile._renderLoading();
     }
 
     return [
@@ -62,6 +87,7 @@ Profile.propTypes = {
   loading: PropTypes.bool,
   isOwner: PropTypes.bool,
   requestUserByUsername: PropTypes.func,
+  notification: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({
@@ -78,4 +104,5 @@ export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
   withRouter,
+  withNotification,
 )(Profile);
