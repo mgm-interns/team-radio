@@ -73,23 +73,18 @@ class NowPlaying extends Component {
     if (nowPlaying.song_id !== nextNowPlaying.song_id) {
       let seektime = 0;
       if (nowPlaying.starting_time === nextNowPlaying.starting_time) {
-        /**
-         * If the old song is the same with the new song
-         * We need to plus 0.1 to make sure that
-         * new start time is different from the old one
-         */
-        seektime =
-          NowPlaying.calculateSeekTime(nowPlaying.starting_time) + 0.001;
+        seektime = NowPlaying.calculateSeekTime(nowPlaying.starting_time);
       } else {
         // If not
-        seektime =
-          (this.state.seektime !== null
-            ? this.state.seektime
-            : NowPlaying.calculateSeekTime(nextNowPlaying.starting_time)) +
-          0.002;
+        seektime = NowPlaying.calculateSeekTime(nextNowPlaying.starting_time);
       }
+      /**
+       * If the old song is the same with the new song
+       * We need to plus a small random number to make sure that
+       * new start time is different from the old one
+       */
       this.setState({
-        seektime,
+        seektime: seektime + Math.random() / 10,
         receivedAt: new Date().getTime(),
       });
     }
