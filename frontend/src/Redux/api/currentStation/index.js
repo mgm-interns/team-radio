@@ -124,7 +124,16 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_UPDATE_PLAYLIST:
       return {
         ...state,
-        playlist: action.payload.playlist,
+        playlist: action.payload.playlist.map(song => {
+          let willBeSkipped = false;
+          if (includes(state.skipList, song.song_id)) {
+            willBeSkipped = true;
+          }
+          return {
+            ...song,
+            willBeSkipped,
+          };
+        }),
       };
 
     /**
@@ -151,6 +160,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_UPDATE_SKIPPED_SONGS:
       return {
         ...state,
+        skipList: action.payload,
         playlist: state.playlist.map(song => {
           let willBeSkipped = false;
           if (includes(action.payload, song.song_id)) {
