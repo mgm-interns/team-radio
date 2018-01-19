@@ -66,6 +66,7 @@ class Profile extends Component {
     if (
       nextProps.user.username === this.props.user.username &&
       nextProps.user.avatar_url !== this.props.user.avatar_url &&
+      !nextProps.user &&
       this.user.avatar_url === null &&
       increaseNumber !== 0
     ) {
@@ -131,6 +132,7 @@ Profile.propTypes = {
   getUserByUsername: PropTypes.func,
   notification: PropTypes.object,
   match: PropTypes.any,
+  history: PropTypes.any,
 };
 
 const mapStateToProps = ({ api }) => ({

@@ -55,14 +55,14 @@ class Body extends Component {
                     label: classes.tabLabel,
                   }}
                 />
-                {isDisabled && (
-                  <Tab
-                    label="Favourite songs"
-                    classes={{
-                      label: classes.tabLabel,
-                    }}
-                  />
-                )}
+                {/* {isDisabled && ( */}
+                {/* <Tab */}
+                {/* label="Favourite songs" */}
+                {/* classes={{ */}
+                {/* label: classes.tabLabel, */}
+                {/* }} */}
+                {/* /> */}
+                {/* )} */}
               </Tabs>
             </Grid>
           </Grid>
