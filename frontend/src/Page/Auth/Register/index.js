@@ -14,7 +14,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { FormHelperText } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
 
-import { addUser } from 'Redux/api/user/actions';
+import { addUser } from 'Redux/api/user/user';
 import { Field, reduxForm } from 'redux-form';
 
 import { NavBar, TextView } from 'Component';
@@ -62,7 +62,7 @@ class Register extends Component {
     this._renderBackground = this._renderBackground.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     const { addUserResponse: { error, data, isAuthenticated } } = nextProps;
     const { addUserResponse: { data: { token } } } = this.props;
 
@@ -73,7 +73,7 @@ class Register extends Component {
     } else if (isAuthenticated && token !== data.token) {
       this._showNotification('Register successfully!');
 
-      saveAuthenticationState(data);
+      await saveAuthenticationState(data);
       if (window.history.length > 2) {
         this.props.history.go(-1);
       } else {

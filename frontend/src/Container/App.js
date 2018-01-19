@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { Notification } from 'Component';
 import { compose } from 'redux';
-import { verifyToken } from 'Redux/api/user/actions';
+import { verifyToken } from 'Redux/api/user/user';
 import { removeAuthenticationState } from 'Configuration';
 import Router from './Router';
 import styles from './styles';
 
 class App extends Component {
-  componentDidMount() {
-    this.props.getAuth();
+  componentWillMount() {
+    this.props.getAuth({ token: localStorage.getItem('token') });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -43,8 +43,8 @@ App.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getAuth: () => {
-    dispatch(verifyToken());
+  getAuth: token => {
+    dispatch(verifyToken(token));
   },
 });
 

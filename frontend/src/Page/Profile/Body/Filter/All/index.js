@@ -9,7 +9,7 @@ import { StationList } from 'Component';
 import {
   getStationsByUserId,
   getRecentStationsByUserId,
-} from 'Redux/api/userProfile/stations';
+} from 'Redux/api/user/stations';
 import { joinStation } from 'Redux/api/currentStation/actions';
 import { setPreviewVideo } from 'Redux/page/station/actions';
 import { withRouter } from 'react-router-dom';
@@ -96,6 +96,7 @@ FilterAll.propTypes = {
   notification: PropTypes.object,
   setPreviewVideo: PropTypes.func,
   joinStationRequest: PropTypes.func,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({

@@ -301,13 +301,13 @@ export const getHistory = async (userId, limited) => {
  * The function get info favourited songs
  * @param {string} userId 
  */
-export const getFavouritedSongs =async (userId) =>{
-   try {
-     const favouritedSongs = await userModels.getFavouritedSongs(userId);
-     return favouritedSongs;
-   } catch (error) {
-     throw new Error("Can't get favourited songs");
-   }
+export const getFavouritedSongs = async (userId) => {
+  try {
+    const favouritedSongs = await userModels.getFavouritedSongs(userId);
+    return favouritedSongs;
+  } catch (error) {
+    throw new Error("Can't get favourited songs");
+  }
 }
 
 // This is private function

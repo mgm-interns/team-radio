@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema({
   level: { type: String, default: 'Newbie', enum: ['Newbie'] },
   facebook_id: { type: String },
   google_id: { type: String },
-  favourite_songs: {
+  favourited_songs: {
     type: [
       {
         song_id: { type: Number, require: true },
@@ -139,13 +139,13 @@ module.exports.addFavouritedSongs = (userId, song) => {
   const query = { _id: _safeObjectId(userId) };
   return user.update(query, {
     $addToSet: {
-      favourite_songs: song,
+      favourited_songs: song,
     },
   });
 };
 
 /**
- * The function delete a song of field favourite_songs in db
+ * The function delete a song of field favourited_songs in db
  *
  * @param {string} userId
  * @param {string} songUrl
@@ -154,18 +154,19 @@ module.exports.deleteAsongInFavouritedSongs = (userId, songUrl) => {
   const query = { _id: _safeObjectId(userId) };
   return user.update(query, {
     $pull: {
-      favourite_songs: { url: songUrl },
+      favourited_songs: { url: songUrl },
     },
   });
 };
 /**
- * The function get favourite_songs in db
+ * The function get favourited_songs in db
  *
  * @param {string} userId
  */
 module.exports.getFavouritedSongs = async userId => {
   const query = { _id: _safeObjectId(userId) };
-  return (await user.findOne(query, { favourite_songs: true })).favourite_songs;
+  return (await user.findOne(query, { favourited_songs: true }))
+    .favourited_songs;
 };
 
 /**
@@ -177,10 +178,10 @@ module.exports.getSongInFavouriteds = async (userId, songUrl) =>
   (await user.findOne(
     { _id: _safeObjectId(userId) },
     {
-      favourite_songs: {
+      favourited_songs: {
         $elemMatch: {
           url: songUrl,
         },
       },
     },
-  )).favourite_songs;
+  )).favourited_songs;

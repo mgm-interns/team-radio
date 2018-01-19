@@ -11,7 +11,7 @@ import { withStyles } from 'material-ui/styles/index';
 
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { setUsername, setUserInformation } from 'Redux/api/userProfile/actions';
+import { setUsername, setUserInformation } from 'Redux/api/user/profile';
 
 import { TextView } from 'Component';
 import { trimText } from 'Transformer/transformText';
@@ -34,7 +34,7 @@ class Information extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { user: { username }, userProfile: { error } } = nextProps;
+    const { user: { username }, user: { error } } = nextProps;
 
     if (error !== null) {
       this.setState({
@@ -141,7 +141,7 @@ class Information extends Component {
       handleSubmit,
       pristine,
       submitting,
-      userProfile: { loading },
+      user: { loading },
     } = this.props;
     return (
       <Grid className={classes.content}>
@@ -173,8 +173,8 @@ class Information extends Component {
 }
 
 const mapStateToProps = ({ api }) => ({
-  initialValues: api.userProfile.data,
-  userProfile: api.userProfile,
+  initialValues: api.user.data,
+  user: api.user,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -220,7 +220,6 @@ Information.propTypes = {
   onSubmit: PropTypes.func,
   initialValues: PropTypes.any,
   history: PropTypes.any,
-  userProfile: PropTypes.any,
   submitSucceeded: PropTypes.any,
 };
 

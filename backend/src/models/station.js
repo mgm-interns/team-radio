@@ -43,7 +43,7 @@ const stationSchema = mongoose.Schema({
   created_date: { type: Number, default: new Date().getTime(), },
 });
 
-var Station = (module.exports = mongoose.model('Stations', stationSchema));
+var Station = (module.exports = mongoose.model('stations', stationSchema));
 
 /******************** STATION **************************/
 
