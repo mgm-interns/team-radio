@@ -10,6 +10,9 @@ import { throws } from 'assert';
 import { Error } from 'mongoose';
 // import * as stationModels from "../models/station";
 
+export const ADD_FAVOURITE_SUCCESS = 1000;
+export const UN_FAVOURITE_SUCCESS = 1001;
+
 export const isExistUserHandler = async email => {
   try {
     let alreadyUser = await userModels.getUserByEmail(email);
@@ -253,18 +256,14 @@ export const addFavouriteSong = async (songId, userId, stationId, songUrl) => {
         songId
       ))[0];
       await userModels.addFavouritedSongs(userId, songInStation);
-      return {
-        message: "Favourite successful"
-      }
+      return ADD_FAVOURITE_SUCCESS;
     } else {
       await userModels.deleteAsongInFavouritedSongs(userId, songUrl);
-      return {
-        message: "Unfavourite successful"
-      }
+      return UN_FAVOURITE_SUCCESS;
     }
   } catch (error) {
     console.log(error);
-
+    throw error;
   }
 }
 export const updateHistory = async (userId, station_id) => {

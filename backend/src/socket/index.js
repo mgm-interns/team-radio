@@ -9,7 +9,7 @@ const io = SocketIO();
 export const UPVOTE_ACTION = 1;
 export const DOWNVOTE_ACTION = -1;
 
-io.on('connection', async function(socket) {
+io.on('connection', async function (socket) {
   console.log('Connected with ' + socket.id);
   eventHandlers.socketConnect(io, socket);
 
@@ -81,6 +81,16 @@ io.on('connection', async function(socket) {
           action.payload.userId,
           action.payload.stationId,
           action.payload.songId,
+        );
+        break;
+      case EVENTS.CLIENT_FAVOURITE_SONG:
+        console.log('Action received: ' + EVENTS.CLIENT_FAVOURITE_SONG);
+        eventHandlers.addFavourite(
+          createEmitter(socket, io),
+          action.payload.songId,
+          action.payload.userId,
+          action.payload.stationId,
+          action.payload.songUrl,
         );
         break;
       default:
