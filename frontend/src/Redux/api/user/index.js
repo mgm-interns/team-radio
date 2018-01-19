@@ -1,5 +1,7 @@
 const INITIAL_STATE = {
-  data: {},
+  data: {
+    userId: localStorage.getItem('userId'),
+  },
   error: null,
   loading: false,
   isAuthenticated: !!localStorage.getItem('token'),
