@@ -13,13 +13,14 @@ import { TabContainer } from 'Component';
 import Settings from './Settings';
 import { FilterAll, FilterFavourites } from './Filter';
 import styles from './styles';
+import { connect } from 'react-redux';
 
 class Body extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      value: 1,
+      value: 0,
       open: false,
     };
 
@@ -35,7 +36,7 @@ class Body extends Component {
   }
 
   render() {
-    const { classes, user, isDisabled } = this.props;
+    const { classes, user, isDisabled, userProfile } = this.props;
 
     return (
       <Grid container className={classes.container}>
@@ -54,22 +55,24 @@ class Body extends Component {
                     label: classes.tabLabel,
                   }}
                 />
-                <Tab
-                  label="Favourite songs"
-                  classes={{
-                    label: classes.tabLabel,
-                  }}
-                />
+                {isDisabled && (
+                  <Tab
+                    label="Favourite songs"
+                    classes={{
+                      label: classes.tabLabel,
+                    }}
+                  />
+                )}
               </Tabs>
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={1} className={classes.buttonEditProfile}>
-          {isDisabled && <Settings user={user} />}
+          {isDisabled && <Settings />}
         </Grid>
         {this.state.value === 0 && (
           <TabContainer>
-            <FilterAll user={user} />
+            <FilterAll user={userProfile} />
           </TabContainer>
         )}
         {this.state.value === 1 && (
@@ -82,11 +85,16 @@ class Body extends Component {
   }
 }
 
+const mapStateToProps = ({ api }) => ({
+  user: api.user.data,
+});
+
 Body.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.any,
+  userProfile: PropTypes.any,
   loading: PropTypes.bool,
   isDisabled: PropTypes.bool,
 };
 
-export default compose(withStyles(styles))(Body);
+export default compose(withStyles(styles), connect(mapStateToProps))(Body);

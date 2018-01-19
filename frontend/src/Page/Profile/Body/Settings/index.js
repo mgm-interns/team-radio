@@ -112,7 +112,7 @@ class Settings extends Component {
             <div className="line" />
             <Grid item xs={12} className={classes.settingTabs}>
               <Information
-                user={user}
+                // user={user}
                 loading={loading}
                 onCancel={this.onCancelButtonClick}
               />
@@ -140,7 +140,7 @@ class Settings extends Component {
             <div className="line" />
             <Grid item xs={12} className={classes.settingTabs}>
               <Password
-                user={user}
+                // user={user}
                 loading={loading}
                 onCancel={this.onCancelButtonClick}
                 onDone={this._onCloseModal}

@@ -48,10 +48,10 @@ class Password extends Component {
   }
 
   _renderChangePasswordForm() {
-    const { classes, submitSucceeded, user: { is_password } } = this.props;
+    const { classes, submitSucceeded, user: { data } } = this.props;
 
     return [
-      is_password !== false && (
+      data.is_password !== false && (
         <Field
           key={1}
           name="currentPassword"
