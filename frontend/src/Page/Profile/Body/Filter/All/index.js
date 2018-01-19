@@ -100,7 +100,7 @@ FilterAll.propTypes = {
   notification: PropTypes.object,
   setPreviewVideo: PropTypes.func,
   joinStationRequest: PropTypes.func,
-  user: PropTypes.object,
+  user: PropTypes.any,
   isDisabled: PropTypes.bool,
 };
 

@@ -63,26 +63,20 @@ class Profile extends Component {
     );
 
     // show notification when user upload avatar on the first time
-    if (
-      nextProps.user.username === this.props.user.username &&
-      nextProps.user.avatar_url !== this.props.user.avatar_url &&
-      !nextProps.user &&
-      this.user.avatar_url === null &&
-      increaseNumber !== 0
-    ) {
-      await sleep(1000);
-      this._showNotification(
-        `Congratulations! You just got ${increaseNumber} for a gift!`,
-      );
-    }
+    // if (increaseNumber > 0) {
+    //   // await sleep(1000);
+    //   this._showNotification(
+    //     `Congratulations! You just got ${increaseNumber || 0} for a gift!`,
+    //   );
+    // }
   }
 
   static _renderLoading() {
     return <CircularProgress />;
   }
 
-  static _calculateIncreaseReputation(oldNumber, newNumber) {
-    return newNumber - oldNumber;
+  static _calculateIncreaseReputation(oldNumber, newNumber = 0) {
+    return newNumber - oldNumber || 0;
   }
 
   _showNotification(content) {
