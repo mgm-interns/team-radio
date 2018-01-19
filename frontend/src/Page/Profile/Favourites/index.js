@@ -39,7 +39,7 @@ class Favourites extends Component {
   // }
 
   render() {
-    const { className, classes, style, favouriteSongs } = this.props;
+    const { className, classes, favouriteSongs } = this.props;
 
     if (favouriteSongs.length === 0) {
       return (

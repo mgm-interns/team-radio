@@ -13,10 +13,25 @@ class Header extends Component {
     super(props);
 
     this._renderHeader = this._renderHeader.bind(this);
+    this._renderSummarizeItem = this._renderSummarizeItem.bind(this);
   }
 
   static _renderLoading() {
     return <CircularProgress />;
+  }
+
+  _renderSummarizeItem(text, number = 0) {
+    const { classes } = this.props;
+    return (
+      <div className={classes.summarizeItem}>
+        <Typography type="subheading" className={classes.text}>
+          {text}
+        </Typography>
+        <Typography type="body2" className={classes.number}>
+          {number}
+        </Typography>
+      </div>
+    );
   }
 
   _renderHeader() {
@@ -34,32 +49,9 @@ class Header extends Component {
           </div>
 
           <div className={classes.summarize}>
-            <div className={classes.summarizeItem}>
-              <Typography type="subheading" className={classes.text}>
-                Songs
-              </Typography>
-              <Typography type="body2" className={classes.number}>
-                0
-              </Typography>
-            </div>
-
-            <div className={classes.summarizeItem}>
-              <Typography type="subheading" className={classes.text}>
-                Voted
-              </Typography>
-              <Typography type="body2" className={classes.number}>
-                0
-              </Typography>
-            </div>
-
-            <div className={classes.summarizeItem}>
-              <Typography type="subheading" className={classes.text}>
-                Reputation
-              </Typography>
-              <Typography type="body2" className={classes.number}>
-                {user.reputation || 0}
-              </Typography>
-            </div>
+            {this._renderSummarizeItem('Song', 0)}
+            {this._renderSummarizeItem('Voted', 0)}
+            {this._renderSummarizeItem('Reputation', user.reputation)}
           </div>
         </div>
 

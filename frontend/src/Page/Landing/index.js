@@ -3,22 +3,25 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
+
 import { NavBar, Footer } from 'Component';
 import { withNotification } from 'Component/Notification';
+
 import Backdrop from './Backdrop';
-import SectionCover from './SectionCover';
-import SectionContent from './SectionContent';
+import Cover from './Cover';
+import Content from './Content';
 import Stations from './Stations';
 
 class Landing extends Component {
   componentWillReceiveProps(nextProps) {
     const { history } = this.props;
+    const { currentStation: { station } } = nextProps;
+
     const currentStationId =
       this.props.currentStation.station &&
       this.props.currentStation.station.station_id;
-    const nextStationId =
-      nextProps.currentStation.station &&
-      nextProps.currentStation.station.station_id;
+
+    const nextStationId = station && station.station_id;
     if (nextStationId && currentStationId !== nextStationId) {
       history.replace(`/station/${nextStationId}`);
     }
@@ -29,8 +32,8 @@ class Landing extends Component {
       <NavBar key={1} />,
       <Backdrop key={2} />,
       <Stations key={3} />,
-      <SectionCover key={4} />,
-      <SectionContent key={5} />,
+      <Cover key={4} />,
+      <Content key={5} />,
       <Footer key={6} />,
     ];
   }
@@ -42,8 +45,8 @@ Landing.propTypes = {
   history: PropTypes.object,
 };
 
-const mapStateToProps = state => ({
-  currentStation: state.api.currentStation,
+const mapStateToProps = ({ api }) => ({
+  currentStation: api.currentStation,
 });
 
 export default compose(connect(mapStateToProps), withRouter, withNotification)(

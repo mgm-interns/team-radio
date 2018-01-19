@@ -25,6 +25,7 @@ const landing = {
       description: `No need to register an account. Your station will be ready, in just one click.`,
       windows: Images.windows.stations,
       alt: 'Create your own',
+      buttonText: 'Try it now',
     },
     content1: {
       title: 'Search & add song to playlist',

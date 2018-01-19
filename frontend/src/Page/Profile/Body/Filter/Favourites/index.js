@@ -16,7 +16,7 @@ import pins from './fixtures';
 /* eslint-disable no-shadow */
 class FilterFavourites extends Component {
   componentDidMount() {
-    this.props.getFavouriteSongs('5a5f285889e2421cf07ed0f8');
+    this.props.requestFavouriteSongs('5a5f285889e2421cf07ed0f8');
   }
 
   render() {
@@ -40,6 +40,7 @@ FilterFavourites.propTypes = {
   station: PropTypes.object,
   history: PropTypes.object,
   favouriteSongs: PropTypes.object,
+  requestFavouriteSongs: PropTypes.func,
 };
 
 const mapStateToProps = ({ api }) => ({
@@ -48,7 +49,7 @@ const mapStateToProps = ({ api }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getFavouriteSongs: userId => dispatch(getFavouriteSongs(userId)),
+  requestFavouriteSongs: userId => dispatch(getFavouriteSongs(userId)),
 });
 
 export default compose(

@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+
 import Grid from 'material-ui/Grid';
 import Switch from 'material-ui/Switch';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Input, { InputLabel } from 'material-ui/Input';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
+
 import { withStyles } from 'material-ui/styles';
-import fixture from 'Fixture/landing';
 import { createStation } from 'Redux/api/stations/actions';
+
+import fixture from 'Fixture/landing';
 import styles from './styles';
 
 /* eslint-disable no-shadow */

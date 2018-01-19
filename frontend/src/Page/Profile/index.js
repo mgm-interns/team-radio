@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
+
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
@@ -100,7 +101,7 @@ class Profile extends Component {
     let content = null;
 
     if (Array.isArray(visitor)) {
-      content = <CircularProgress />;
+      content = Profile._renderLoading();
     } else {
       content = (
         <Grid
