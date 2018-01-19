@@ -113,7 +113,7 @@ class Profile extends Component {
 Profile.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.object,
-  userProfile: PropTypes.object,
+  userProfile: PropTypes.any,
   loading: PropTypes.bool,
   isOwner: PropTypes.bool,
   getUserByUsername: PropTypes.func,
