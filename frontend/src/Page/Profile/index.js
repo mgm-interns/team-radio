@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { withRouter } from 'react-router';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
@@ -32,7 +33,7 @@ class Profile extends Component {
     const { userProfile, match: { params } } = nextProps;
 
     if (params.username !== this.props.match.params.username) {
-      this.props.getUserByUsername(params.username);
+      await this.props.getUserByUsername(params.username);
     }
 
     const currentUser = this.props.userProfile;
@@ -43,6 +44,10 @@ class Profile extends Component {
 
     if (userProfile.message !== currentUser.message && userProfile.message) {
       this._showNotification(userProfile.message);
+
+      if (userProfile.message === 'User not found!') {
+        this.props.history.replace('/');
+      }
     }
 
     // show notification when user upload avatar on the first time
@@ -130,4 +135,5 @@ export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
   withNotification,
+  withRouter,
 )(Profile);
