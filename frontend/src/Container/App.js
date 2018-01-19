@@ -10,7 +10,7 @@ import Router from './Router';
 import styles from './styles';
 
 class App extends Component {
-  componentDidMount() {
+  componentWillMount() {
     this.props.getAuth({ token: localStorage.getItem('token') });
   }
 

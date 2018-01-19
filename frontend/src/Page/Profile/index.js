@@ -7,7 +7,7 @@ import { withStyles } from 'material-ui/styles';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { NavBar, Footer } from 'Component';
-import { getUserByUsername } from 'Redux/api/userProfile/actions';
+import { getUserByUsername } from 'Redux/api/userProfile/';
 import { withNotification } from 'Component/Notification';
 import sleep from 'Util/sleep';
 
@@ -23,11 +23,9 @@ class Profile extends Component {
     this._showNotification = this._showNotification.bind(this);
   }
 
-  componentWillMount() {
-    const { match: { params }, user } = this.props;
-    if (user.username !== params.username) {
-      this.props.getUserByUsername(params.username);
-    }
+  componentDidMount() {
+    const { match: { params } } = this.props;
+    this.props.getUserByUsername(params.username);
   }
 
   async componentWillReceiveProps(nextProps) {
@@ -77,10 +75,10 @@ class Profile extends Component {
   }
 
   render() {
-    const { classes, userProfile, isOwner } = this.props;
+    const { classes, userProfile, isOwner, loading } = this.props;
     let content = null;
 
-    if (Object.keys(userProfile).length === 0) {
+    if (loading) {
       content = <CircularProgress />;
     } else {
       content = (
@@ -119,9 +117,9 @@ Profile.propTypes = {
 
 const mapStateToProps = ({ api }) => ({
   user: api.user.data,
-  userProfile: api.userProfile.data,
-  isOwner: api.userProfile.isOwner,
-  loading: api.userProfile.loading,
+  userProfile: api.userProfile.user.data,
+  isOwner: api.userProfile.user.data.isOwner,
+  loading: api.userProfile.user.data.loading,
 });
 
 const mapDispatchToProps = dispatch => ({

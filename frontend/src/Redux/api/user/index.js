@@ -1,3 +1,5 @@
+import { combineReducers } from 'redux';
+
 const INITIAL_STATE = {
   data: {},
   error: null,
@@ -5,7 +7,7 @@ const INITIAL_STATE = {
   isAuthenticated: !!localStorage.getItem('token'),
 };
 
-const user = (state = INITIAL_STATE, action) => {
+const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'FETCH_USER':
       return {
@@ -105,27 +107,6 @@ const user = (state = INITIAL_STATE, action) => {
         isAuthenticated: false,
       };
 
-    //  new code
-    case 'FETCH_USER_BY_USERNAME_REQUEST':
-      return {
-        data: {},
-        error: null,
-        loading: true,
-      };
-    case 'FETCH_USER_BY_USERNAME_SUCCESS':
-      return {
-        ...state,
-        data: action.payload,
-        loading: false,
-      };
-
-    case 'FETCH_USER_BY_USERNAME_FAILURE':
-      return {
-        ...state,
-        loading: false,
-        error: { ...action.payload },
-      };
-
     case 'SET_USERNAME_REQUEST':
       return {
         ...state,
@@ -212,4 +193,4 @@ const user = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default user;
+export default userReducer;

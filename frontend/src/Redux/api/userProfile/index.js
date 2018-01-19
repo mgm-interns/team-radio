@@ -1,37 +1,19 @@
-const INITIAL_STATE = {
-  data: {},
-  error: null,
-  loading: false,
-};
+import HttpRequest from 'Util/redux/HttpRequest';
+import { combineReducers } from 'redux';
 
-const userProfile = (state = INITIAL_STATE, action) => {
-  switch (action.type) {
-    case 'FETCH_USER_BY_USERNAME_REQUEST':
-      return {
-        ...state,
-        data: {},
-        error: null,
-        loading: true,
-      };
+const ENDPOINT = process.env.REACT_APP_SERVER_END_POINT;
 
-    case 'FETCH_USER_BY_USERNAME_SUCCESS':
-      return {
-        ...state,
-        data: action.payload,
-        error: null,
-        loading: false,
-      };
+const getUserByUsernameRequest = new HttpRequest({
+  method: 'GET',
+  type: 'FETCH_USER_BY_USERNAME',
+  endpoint: `${ENDPOINT}/profile`,
+  headers: {
+    'access-token': localStorage.getItem('token'),
+  },
+});
 
-    case 'FETCH_USER_BY_USERNAME_FAILURE':
-      return {
-        ...state,
-        loading: false,
-        error: { ...action.payload },
-      };
+export const getUserByUsername = getUserByUsernameRequest.getAction();
 
-    default:
-      return state;
-  }
-};
-
-export default userProfile;
+export default combineReducers({
+  user: getUserByUsernameRequest.getReducer(),
+});
