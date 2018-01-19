@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import classNames from 'classnames';
+import { connect } from 'react-redux';
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
@@ -12,8 +12,8 @@ import { TabContainer } from 'Component';
 
 import Settings from './Settings';
 import { FilterAll, FilterFavourites } from './Filter';
+
 import styles from './styles';
-import { connect } from 'react-redux';
 
 class Body extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class Body extends Component {
   }
 
   render() {
-    const { classes, user, isDisabled, userProfile } = this.props;
+    const { classes, user, isDisabled } = this.props;
 
     return (
       <Grid container className={classes.container}>
@@ -55,14 +55,14 @@ class Body extends Component {
                     label: classes.tabLabel,
                   }}
                 />
-                {/* {isDisabled && ( */}
-                {/* <Tab */}
-                {/* label="Favourite songs" */}
-                {/* classes={{ */}
-                {/* label: classes.tabLabel, */}
-                {/* }} */}
-                {/* /> */}
-                {/* )} */}
+                {isDisabled && (
+                  <Tab
+                    label="Favourite songs"
+                    classes={{
+                      label: classes.tabLabel,
+                    }}
+                  />
+                )}
               </Tabs>
             </Grid>
           </Grid>
@@ -72,7 +72,7 @@ class Body extends Component {
         </Grid>
         {this.state.value === 0 && (
           <TabContainer>
-            <FilterAll user={userProfile} isDisabled={isDisabled} />
+            <FilterAll user={user} isDisabled={isDisabled} />
           </TabContainer>
         )}
         {this.state.value === 1 && (
@@ -85,16 +85,12 @@ class Body extends Component {
   }
 }
 
-const mapStateToProps = ({ api }) => ({
-  user: api.user.data,
-});
-
 Body.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.any,
-  userProfile: PropTypes.any,
+  visitor: PropTypes.any,
   loading: PropTypes.bool,
   isDisabled: PropTypes.bool,
 };
 
-export default compose(withStyles(styles), connect(mapStateToProps))(Body);
+export default compose(withStyles(styles))(Body);

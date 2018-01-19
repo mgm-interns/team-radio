@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import Hidden from 'material-ui/Hidden';
-import Button from 'material-ui/Button';
+import classnames from 'classnames';
 
 import { withStyles } from 'material-ui/styles';
 import fixture from '../../../Fixture/landing';
@@ -16,7 +16,7 @@ class SectionContent extends Component {
         key={1}
         container
         justify="center"
-        className={[classes.container, classes.containerLight]}
+        className={classnames([classes.container, classes.containerLight])}
       >
         <Grid container className={classes.wrapper}>
           <Hidden mdDown>

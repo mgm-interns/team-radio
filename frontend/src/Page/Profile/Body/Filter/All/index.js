@@ -2,18 +2,22 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { withRouter } from 'react-router-dom';
+
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
-import { StationList } from 'Component';
+
 import {
   getStationsByUserId,
   getRecentStationsByUserId,
-} from 'Redux/api/user/stations';
+} from 'Redux/api/visitor';
 import { joinStation } from 'Redux/api/currentStation/actions';
 import { setPreviewVideo } from 'Redux/page/station/actions';
-import { withRouter } from 'react-router-dom';
+
+import { StationList } from 'Component';
 import { withNotification } from 'Component/Notification';
+
 import styles from './styles';
 
 class FilterAll extends Component {
@@ -69,7 +73,7 @@ class FilterAll extends Component {
             />
           </div>
           <Typography type="title" className={classes.titleLabel}>
-            Recently Visited
+            Recent
           </Typography>
           <div className={classes.stationsSection}>
             <StationList
@@ -105,8 +109,8 @@ FilterAll.propTypes = {
 };
 
 const mapStateToProps = ({ api }) => ({
-  all: api.userStations.all,
-  recent: api.userStations.recent,
+  all: api.visitor.all,
+  recent: api.visitor.recent,
 });
 
 const mapDispatchToProps = dispatch => ({

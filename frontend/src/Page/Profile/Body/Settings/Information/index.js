@@ -60,21 +60,21 @@ class Information extends Component {
     return [
       <Field
         key={1}
-        name="username"
-        placeholder="Username"
-        type="text"
-        component={TextView}
-        label="Username"
-        validate={[required]}
-      />,
-      <Field
-        key={2}
         name="name"
         placeholder="Display name"
         type="text"
         component={TextView}
         label="Display name"
         validate={[required, maxLength15]}
+      />,
+      <Field
+        key={2}
+        name="username"
+        placeholder="Username"
+        type="text"
+        component={TextView}
+        label="Username"
+        validate={[required]}
       />,
       <Field
         key={3}
