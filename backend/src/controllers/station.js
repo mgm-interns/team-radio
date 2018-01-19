@@ -320,13 +320,13 @@ export const getListSong = async stationId => {
  */
 export const upVote = async (stationId, songId, userId) => {
   try {
+    userId = _safeObjectId(userId);
     if (userId === null) {
       throw new Error({
         song: currentSong,
         message: "User need login.",
       });
     }
-    userId = _safeObjectId(userId);
     const currentSong = (await stationModels.getAsongInStation(
       stationId,
       songId,
@@ -387,13 +387,13 @@ export const upVote = async (stationId, songId, userId) => {
  */
 export const downVote = async (stationId, songId, userId) => {
   try {
+    userId = _safeObjectId(userId);
     if (userId === null) {
       throw new Error({
         song: currentSong,
         message: "User need login.",
       });
     }
-    userId = _safeObjectId(userId);
     const currentSong = (await stationModels.getAsongInStation(
       stationId,
       songId,
@@ -475,12 +475,9 @@ export const addPointsByPlayedSong = async (stationId, songId) => {
   try {
     let song = await stationModels.getAsongInStation(stationId, songId);
     song = song[0];
-    console.log('addPointsByPlayedSong = async (stationId, songId):', stationId, songId);
     if (!song) {
       throw new Error('Song id is not avalable: ', songId);
     }
-    console.log('station:', song);
-    console.log('stationId, song.song_id, song.url:', stationId, song.song_id, song.url);
     if (await stationModels.isFirstAddedSong(stationId, song.song_id, song.url)){
       stationModels.increaseUserPoints(stationId, song.creator, POINTS_FOR_FIRST_SONG);
     } else {
