@@ -71,6 +71,9 @@ class Register extends Component {
         asyncError: error.response.message,
       });
     } else if (isAuthenticated && token !== data.token) {
+      this.setState({
+        asyncError: null,
+      });
       this._showNotification('Register successfully!');
 
       await saveAuthenticationState(data);

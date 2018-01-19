@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'FETCH_USER':
+    case 'FETCH_USER_REQUEST':
       return {
         data: {},
         error: null,
@@ -32,7 +32,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         isAuthenticated: false,
       };
 
-    case 'ADD_USER':
+    case 'ADD_USER_REQUEST':
       return {
         data: {},
         error: null,
@@ -54,7 +54,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         error: { ...action.payload },
         isAuthenticated: false,
       };
-    case 'ADD_USER_BY_SOCIAL':
+    case 'ADD_USER_BY_SOCIAL_REQUEST':
       return {
         data: {},
         error: null,
@@ -76,7 +76,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         error: { ...action.payload },
         isAuthenticated: false,
       };
-    case 'VERIFY_TOKEN':
+    case 'VERIFY_TOKEN_REQUEST':
       return {
         ...state,
         data: {},
