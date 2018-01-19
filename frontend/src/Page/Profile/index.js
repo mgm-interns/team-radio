@@ -8,9 +8,8 @@ import { withStyles } from 'material-ui/styles';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { NavBar, Footer } from 'Component';
-import { getUserByUsername } from 'Redux/api/userProfile/';
+import { getVisitorByUsername } from 'Redux/api/visitor';
 import { withNotification } from 'Component/Notification';
-import sleep from 'Util/sleep';
 
 import Header from './Header';
 import Body from './Body';
@@ -21,54 +20,63 @@ class Profile extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      reputation: 0,
+    };
+
     this._showNotification = this._showNotification.bind(this);
   }
 
   componentDidMount() {
     const { match: { params } } = this.props;
-    this.props.getUserByUsername(params.username);
+    this.props.getVisitorByUsername(params.username);
   }
 
-  async componentWillReceiveProps(nextProps) {
-    const { userProfile, match: { params }, user } = nextProps;
+  componentWillReceiveProps(nextProps) {
+    const { visitor, match: { params }, user, isOwner } = nextProps;
+    const authenticatedUser = this.props.user;
+    const visitedUser = this.props.visitor;
 
     // fetch user profile from react router
     if (params.username !== this.props.match.params.username) {
-      await this.props.getUserByUsername(params.username);
+      this.props.getVisitorByUsername(params.username);
+    }
+
+    // save reputation to check when something changes
+    if (isOwner) {
+      this.setState({
+        reputation: user.reputation,
+      });
     }
 
     // get message for user activities
-    if (
-      this.props.user.message !== nextProps.user.message &&
-      nextProps.user.message
-    ) {
+    if (authenticatedUser.message !== user.message && user.message) {
       this._showNotification(user.message);
+
+      const increaseReputation = Profile._calculateIncreaseReputation(
+        this.state.reputation, // current reputation
+        user.reputation, // new reputation
+      );
+
+      // show notification when user upload avatar on the first time
+      if (increaseReputation > 0) {
+        // await sleep(1000);
+        this._showNotification(
+          `Congratulations! You just got ${increaseReputation ||
+            0} for a gift!`,
+        );
+      }
+
       // fetch again when user change information
-      this.props.getUserByUsername(nextProps.user.username);
+      this.props.getVisitorByUsername(user.username);
     }
 
     // check user is available and redirect to homepage
-    if (
-      nextProps.userProfile.message !== this.props.userProfile.message &&
-      nextProps.userProfile.message
-    ) {
-      if (userProfile.message === 'User not found!') {
+    if (visitor.message !== visitedUser.message && visitor.message) {
+      if (visitor.message === 'User not found!') {
         this.props.history.replace('/');
       }
     }
-
-    const increaseNumber = Profile._calculateIncreaseReputation(
-      nextProps.user.reputation,
-      this.props.user.reputation,
-    );
-
-    // show notification when user upload avatar on the first time
-    // if (increaseNumber > 0) {
-    //   // await sleep(1000);
-    //   this._showNotification(
-    //     `Congratulations! You just got ${increaseNumber || 0} for a gift!`,
-    //   );
-    // }
   }
 
   static _renderLoading() {
@@ -88,10 +96,10 @@ class Profile extends Component {
   }
 
   render() {
-    const { classes, userProfile, isOwner, loading } = this.props;
+    const { classes, visitor, isOwner } = this.props;
     let content = null;
 
-    if (Array.isArray(userProfile)) {
+    if (Array.isArray(visitor)) {
       content = <CircularProgress />;
     } else {
       content = (
@@ -101,8 +109,8 @@ class Profile extends Component {
           container
           className={classes.containerWrapper}
         >
-          <Header user={userProfile} isDisabled={isOwner} />
-          <Body userProfile={userProfile} isDisabled={isOwner} />
+          <Header user={visitor} isDisabled={isOwner} />
+          <Body user={visitor} isDisabled={isOwner} />
         </Grid>
       );
     }
@@ -120,10 +128,10 @@ class Profile extends Component {
 Profile.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.object,
-  userProfile: PropTypes.any,
+  visitor: PropTypes.any,
   loading: PropTypes.bool,
   isOwner: PropTypes.bool,
-  getUserByUsername: PropTypes.func,
+  getVisitorByUsername: PropTypes.func,
   notification: PropTypes.object,
   match: PropTypes.any,
   history: PropTypes.any,
@@ -131,13 +139,12 @@ Profile.propTypes = {
 
 const mapStateToProps = ({ api }) => ({
   user: api.user.data,
-  userProfile: api.userProfile.user.data,
-  isOwner: api.userProfile.user.data.isOwner,
-  loading: api.userProfile.user.data.loading,
+  visitor: api.visitor.visitor.data,
+  isOwner: api.visitor.visitor.data.isOwner,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getUserByUsername: username => dispatch(getUserByUsername(username)),
+  getVisitorByUsername: username => dispatch(getVisitorByUsername(username)),
 });
 
 export default compose(

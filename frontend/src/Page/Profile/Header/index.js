@@ -15,7 +15,7 @@ class Header extends Component {
     this._renderHeader = this._renderHeader.bind(this);
   }
 
-  _renderLoading() {
+  static _renderLoading() {
     return <CircularProgress />;
   }
 
@@ -54,7 +54,7 @@ class Header extends Component {
 
             <div className={classes.summarizeItem}>
               <Typography type="subheading" className={classes.text}>
-                Score
+                Reputation
               </Typography>
               <Typography type="body2" className={classes.number}>
                 {user.reputation || 0}
@@ -97,6 +97,7 @@ Header.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.any,
   loading: PropTypes.bool,
+  isDisabled: PropTypes.bool,
 };
 
 Header.defaultProps = {
