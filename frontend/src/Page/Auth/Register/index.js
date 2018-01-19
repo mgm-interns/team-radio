@@ -70,10 +70,9 @@ class Register extends Component {
       this.setState({
         asyncError: error.response.message,
       });
-    } else if (isAuthenticated && token !== data.token) {
-      this.setState({
-        asyncError: null,
-      });
+    }
+
+    if (isAuthenticated && token !== data.token) {
       this._showNotification('Register successfully!');
 
       await saveAuthenticationState(data);
@@ -139,10 +138,10 @@ class Register extends Component {
       <Field
         key={1}
         name="name"
-        placeholder="Enter your full name"
+        placeholder="Enter your display name"
         type="text"
         component={TextView}
-        label="Full name"
+        label="Display name"
         validate={[required, maxLength15]}
       />,
       <Field
@@ -152,7 +151,6 @@ class Register extends Component {
         type="text"
         component={TextView}
         label="Username"
-        validate={[required]}
       />,
       <Field
         key={3}
@@ -161,7 +159,7 @@ class Register extends Component {
         type="text"
         component={TextView}
         label="Email"
-        validate={[email]}
+        validate={[required, email]}
       />,
       <Field
         key={4}

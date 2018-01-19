@@ -54,7 +54,7 @@ class FavoriteItem extends Component {
             placement={'bottom'}
             title={
               this.state.isFavourite
-                ? 'Un-favourite this song'
+                ? 'Remove this from favourite songs'
                 : 'Favourite this song'
             }
           >
