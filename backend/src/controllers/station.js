@@ -469,11 +469,18 @@ function _stringToId(str) {
 }
 
 export const countSongAddByUserId = async (userId, staion_id) => {
-  let counter = 0;
-  const station = await stationmodels.getStationById(station_id)
-  forEach(song in station.playlist)
-    if (song.creator === userId) counter++;
-  return {station_name: station.station_name, }
+  try {
+    let counter = 0;
+    const station = await stationmodels.getStationById(station_id)
+    if (station){
+      forEach(song in station.playlist)
+      if (song.creator === userId) counter++;
+      return {station_name: station.station_name, }
+    }
+    return new Error ('Station is not exist.')
+  } catch (err) {
+    throw err
+  }
 }
 
 async function _createStationId(stationName) {

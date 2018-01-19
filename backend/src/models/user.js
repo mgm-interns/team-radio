@@ -56,12 +56,12 @@ const userSchema = mongoose.Schema({
 });
 
 // generation a hash
-userSchema.methods.generateHash = function (pwd) {
+userSchema.methods.generateHash = function(pwd) {
   return bcrypt.hashSync(pwd, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
-userSchema.methods.validPassword = function (password) {
+userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
 
@@ -126,9 +126,9 @@ module.exports.updateHistory = async (userId, history) =>
     { multi: true },
   );
 module.exports.getHistoryDetail = async userId =>
-  user.find({ _id: _safeObjectId(userId) }, { history: 1, _id: 0 });
-
-// .populate('history', { station_name: 1 });
+  user
+    .find({ _id: _safeObjectId(userId) }, { history: 1, _id: 0 })
+    .populate('history', { station_name: 1 });
 /**
  * The function update a field favourited_songs in db
  *

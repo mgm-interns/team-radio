@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as userModels from '../models/user';
+import userModels from '../models/user';
 import * as stationModels from '../models/station';
 import jwt from 'jsonwebtoken';
 import deleteDiacriticMarks from "khong-dau";
@@ -204,14 +204,14 @@ export const setUserInformation = async (userId, name, firstname, lastname, bio,
     if (city) data.city = city;
     if (bio) data.bio = bio;
 
-    if (firstname && user.firstname === "") point += 5;
-    if (lastname && user.lastname === "") point += 5;
-    if (country && user.country === "") point += 5;
-    if (city && user.city === "") point += 5;
-    if (bio && user.bio === "") point += 5;
+    // if (firstname && user.firstname === "") point += 5;
+    // if (lastname && user.lastname === "") point += 5;
+    // if (country && user.country === "") point += 5;
+    // if (city && user.city === "") point += 5;
+    // if (bio && user.bio === "") point += 5;
 
     await userModels.setUserInformation(userId, data);
-    await _increaseReputation(user.email, point)
+    // await _increaseReputation(user.email, point)
     return await userModels.getUserById(userId);
   } catch (err) {
     throw err;
