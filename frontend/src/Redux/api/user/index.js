@@ -1,5 +1,3 @@
-import { combineReducers } from 'redux';
-
 const INITIAL_STATE = {
   data: {},
   error: null,
@@ -187,7 +185,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
         loading: false,
         error: { ...action.payload },
       };
-
     default:
       return state;
   }

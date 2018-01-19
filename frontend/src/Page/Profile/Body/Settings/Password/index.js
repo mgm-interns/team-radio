@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { settingsValidate, minLength6, required } from 'Util/validate';
 import { TextView } from 'Component';
@@ -10,7 +11,6 @@ import Grid from 'material-ui/Grid';
 import { FormHelperText } from 'material-ui/Form';
 import Button from 'material-ui/Button';
 import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
 import { setPassword } from 'Redux/api/user/profile';
 
 import { trimText } from 'Transformer/transformText';

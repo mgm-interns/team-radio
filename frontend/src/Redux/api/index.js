@@ -5,6 +5,7 @@ import currentStation from './currentStation';
 import user from './user';
 import userStations from './user/stations';
 import userProfile from './userProfile';
+import favouriteSongs from './favouriteSongs';
 
 export default combineReducers({
   stations,
@@ -12,4 +13,5 @@ export default combineReducers({
   user,
   userStations,
   userProfile,
+  favouriteSongs,
 });
