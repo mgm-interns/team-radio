@@ -90,8 +90,9 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
  * @returns {Promise<*>}
  */
 
-export const createUser = async (email, password, name) => {
+export const createUser = async (email, password, name, username) => {
   try {
+    let usernameAutoGenerate;
     let user = await new userModels({
       email: email,
       name: name,
@@ -99,10 +100,17 @@ export const createUser = async (email, password, name) => {
       favourited_songs: []
     });
 
-    user.password = user.generateHash(password)
+    const alreadyUser = await userModels.getUserByUsername(username);
+    if (username && !alreadyUser) {
+      usernameAutoGenerate = username
+    } else {
+      usernameAutoGenerate = await _createUsername(name);
+    }
+
+    user.password = user.generateHash(password);
+    user.username = usernameAutoGenerate;
+
     await user.save();
-    const username = await _createUsername(name);
-    await userModels.setUsername(email, username);
 
     user = await userModels.getUserByEmail(email);
     return user;
@@ -110,6 +118,16 @@ export const createUser = async (email, password, name) => {
     throw err;
   }
 };
+
+export const isExistUsername = async (username) => {
+  try {
+    const user = await userModels.getUserByUsername(username);
+    if (user) return true;
+    return false
+  } catch (err){
+    throw err
+  }
+}
 /**
  *
  * @param username
@@ -267,6 +285,12 @@ export const addFavouriteSong = async (songId, userId, stationId, songUrl) => {
 
   }
 }
+/**
+ *
+ * @param userId
+ * @param station_id
+ * @returns {Promise<void>}
+ */
 export const updateHistory = async (userId, station_id) => {
     try{
         const option = { history : 1, _id: 0}
@@ -281,16 +305,21 @@ export const updateHistory = async (userId, station_id) => {
         throw err
     }
 }
-
+/**
+ *
+ * @param userId
+ * @param limited
+ * @returns {Promise<Array>}
+ */
 export const getHistory = async (userId, limited) => {
     try{
-        const option = { history : 1, _id: 0}
-        const user = await userModels.getUserById(userId, option)
-        let history = user.history
+        const option = { history : 1, _id: 0};
+        const user = await userModels.getUserById(userId, option);
+        let history = user.history;
         let historyDetail = [];
 
-        forEach(station_id in history)
-        historyDetail.push(stationController.countSongAddByUserId(userId, station_id))
+        forEach(station_id in history);
+        historyDetail.push(stationController.countSongAddByUserId(userId, station_id));
 
         return historyDetail
     } catch (err) {
