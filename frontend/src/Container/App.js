@@ -5,7 +5,10 @@ import { withStyles } from 'material-ui/styles';
 import { Notification } from 'Component';
 import { compose } from 'redux';
 import { verifyToken } from 'Redux/api/user/user';
-import { removeAuthenticationState } from 'Configuration';
+import {
+  removeAuthenticationState,
+  saveAuthenticationState,
+} from 'Configuration';
 import Router from './Router';
 import styles from './styles';
 
@@ -22,6 +25,8 @@ class App extends Component {
       if (tokenError) {
         removeAuthenticationState();
       }
+    } else {
+      saveAuthenticationState(nextProps);
     }
   }
 
