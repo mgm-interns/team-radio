@@ -26,6 +26,7 @@ export default ({ palette, breakpoints, spacing }) => ({
   },
   button: {
     color: palette.primary['500'],
+    cursor: 'pointer',
   },
   textDescription: {
     marginBottom: '1em',
