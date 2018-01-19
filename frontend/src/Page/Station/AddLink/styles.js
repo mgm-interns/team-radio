@@ -1,6 +1,12 @@
 export default theme => {
   const {
-    spacing: { baseMargin, doubleBaseMargin, fullWidth, fullHeight },
+    spacing: {
+      smallMargin,
+      baseMargin,
+      doubleBaseMargin,
+      fullWidth,
+      fullHeight,
+    },
     palette: { yellow },
     typography,
     breakpoints,
@@ -75,6 +81,7 @@ export default theme => {
     },
     sendIcon: {
       marginLeft: baseMargin,
+      marginBottom: smallMargin - 1,
       fontSize: doubleBaseMargin,
     },
     content: {
