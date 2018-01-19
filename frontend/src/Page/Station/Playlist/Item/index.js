@@ -42,7 +42,7 @@ class PlaylistItem extends Component {
 
     this.upVoteSong = this.upVoteSong.bind(this);
     this.downVoteSong = this.downVoteSong.bind(this);
-    this._onFavouriteIconClick = this._onFavouriteIconClick.bind(this);
+    // this._onFavouriteIconClick = this._onFavouriteIconClick.bind(this);
   }
 
   componentDidMount() {
@@ -162,11 +162,11 @@ class PlaylistItem extends Component {
     });
   }
 
-  _onFavouriteIconClick(songId, songUrl) {
-    const { userId, stationId, favouriteSongRequest } = this.props;
-    favouriteSongRequest({ songId, userId, stationId, songUrl });
-    this.setState({ isFavourite: !this.state.isFavourite });
-  }
+  // _onFavouriteIconClick(songId, songUrl) {
+  //   const { userId, stationId, favouriteSongRequest } = this.props;
+  //   favouriteSongRequest({ songId, userId, stationId, songUrl });
+  //   this.setState({ isFavourite: !this.state.isFavourite });
+  // }
 
   render() {
     const {
@@ -205,20 +205,20 @@ class PlaylistItem extends Component {
         </Grid>
         <Grid item xs={9} className={classes.info}>
           <Grid container>
-            <Grid item xs={10}>
+            <Grid item xs={12}>
               <Tooltip placement={'bottom'} title={title}>
                 <div className={classes.name}>{title}</div>
               </Tooltip>
             </Grid>
-            <Grid item xs={2} className={classes.favouriteContainer}>
-              <IconButton
-                color={'primary'}
-                className={classes.favouriteBtn}
-                onClick={() => this._onFavouriteIconClick(song_id, url)}
-              >
-                {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />}
-              </IconButton>
-            </Grid>
+            {/* <Grid item xs={2} className={classes.favouriteContainer}> */}
+            {/* <IconButton */}
+            {/* color={'primary'} */}
+            {/* className={classes.favouriteBtn} */}
+            {/* onClick={() => this._onFavouriteIconClick(song_id, url)} */}
+            {/* > */}
+            {/* {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />} */}
+            {/* </IconButton> */}
+            {/* </Grid> */}
           </Grid>
           <div className={classes.creator}>
             Added by
