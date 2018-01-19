@@ -83,6 +83,7 @@ class Backdrop extends Component {
                 onChange={this._handleStationNameChanged}
                 value={this.state.stationName}
               />
+              {message && <FormHelperText error>{message}</FormHelperText>}
               {isAuthenticated ? (
                 <div className={classes.privateOption}>
                   <span>Private Station</span>
@@ -97,9 +98,6 @@ class Backdrop extends Component {
                   />
                 </div>
               ) : null}
-              <FormHelperText style={{ color: 'white' }}>
-                {message}
-              </FormHelperText>
             </FormControl>
             <Button
               raised
