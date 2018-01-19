@@ -17,7 +17,7 @@ const _upVoteSong = async (io, socket, userId, stationId, songId) => {
   const emitter = createEmitter(socket, io);
 
   // Check if anonymous user try to vote song
-  if (userId === '0') {
+  if (!_checkUserExist(userId)) {
     emitter.emit(EVENTS.SERVER_UPVOTE_SONG_FAILURE, {
       message: 'You need to login to use this feature!',
     });
@@ -25,9 +25,7 @@ const _upVoteSong = async (io, socket, userId, stationId, songId) => {
   }
 
   try {
-    // Check if userId is exist, allow vote song
-    // If not, throw an error and emit message to user
-    await userController.getUserById(userId);
+    // This statement will throw an Error if upVote not successful
     const playlist = await stationController.upVote(stationId, songId, userId);
 
     // Skip song decision when vote change
@@ -49,7 +47,7 @@ const _downVoteSong = async (io, socket, userId, stationId, songId) => {
   const emitter = createEmitter(socket, io);
 
   // Check if anonymous user try to vote song
-  if (userId === '0') {
+  if (!_checkUserExist(userId)) {
     emitter.emit(EVENTS.SERVER_DOWNVOTE_SONG_FAILURE, {
       message: 'You need to login to use this feature!',
     });
@@ -57,14 +55,9 @@ const _downVoteSong = async (io, socket, userId, stationId, songId) => {
   }
 
   try {
-    // Check if userId is exist, allow vote song
-    // If not, throw an error and emit message to user
-    await userController.getUserById(userId);
-    const playlist = await stationController.downVote(
-      stationId,
-      songId,
-      userId,
-    );
+    // eslint-disable-next-line
+    const playlist =
+      await stationController.downVote(stationId, songId, userId);
 
     // Skip song decision when vote change
     skipDecider(io, stationId);
@@ -79,4 +72,11 @@ const _downVoteSong = async (io, socket, userId, stationId, songId) => {
       message: err.message,
     });
   }
+};
+
+const _checkUserExist = async userId => {
+  // Check if anonymous user try to vote song
+  const user = await userController.getUserById(userId);
+  if (user) return true;
+  return false;
 };
