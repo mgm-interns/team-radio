@@ -16,7 +16,11 @@ import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
 import { Link } from 'react-router-dom';
 import { Images } from 'Theme';
-import { upVoteSong, downVoteSong } from 'Redux/api/currentStation/actions';
+import {
+  upVoteSong,
+  downVoteSong,
+  favouriteSongRequest,
+} from 'Redux/api/currentStation/actions';
 import { withNotification } from 'Component/Notification';
 import { transformNumber } from 'Transformer';
 import styles from './styles';
@@ -38,6 +42,7 @@ class PlaylistItem extends Component {
 
     this.upVoteSong = this.upVoteSong.bind(this);
     this.downVoteSong = this.downVoteSong.bind(this);
+    // this._onFavouriteIconClick = this._onFavouriteIconClick.bind(this);
   }
 
   componentDidMount() {
@@ -157,6 +162,12 @@ class PlaylistItem extends Component {
     });
   }
 
+  // _onFavouriteIconClick(songId, songUrl) {
+  //   const { userId, stationId, favouriteSongRequest } = this.props;
+  //   favouriteSongRequest({ songId, userId, stationId, songUrl });
+  //   this.setState({ isFavourite: !this.state.isFavourite });
+  // }
+
   render() {
     const {
       song_id,
@@ -166,6 +177,7 @@ class PlaylistItem extends Component {
       classes,
       creator,
       duration,
+      url,
       willBeSkipped,
     } = this.props;
 
@@ -192,25 +204,22 @@ class PlaylistItem extends Component {
           )}
         </Grid>
         <Grid item xs={9} className={classes.info}>
-          <Tooltip placement={'bottom'} title={title}>
-            <div className={classes.name}>{title}</div>
-          </Tooltip>
-          <Tooltip
-            placement={'bottom'}
-            title={
-              this.state.isFavourite
-                ? 'Remove from favourite'
-                : 'Add to favourite'
-            }
-          >
-            <div
-              className={classNames(classes.favouriteWrapper, 'hiddenAction')}
-            >
-              <IconButton color={'primary'} className={classes.favouriteBtn}>
-                {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />}
-              </IconButton>
-            </div>
-          </Tooltip>
+          <Grid container>
+            <Grid item xs={12}>
+              <Tooltip placement={'bottom'} title={title}>
+                <div className={classes.name}>{title}</div>
+              </Tooltip>
+            </Grid>
+            {/* <Grid item xs={2} className={classes.favouriteContainer}> */}
+            {/* <IconButton */}
+            {/* color={'primary'} */}
+            {/* className={classes.favouriteBtn} */}
+            {/* onClick={() => this._onFavouriteIconClick(song_id, url)} */}
+            {/* > */}
+            {/* {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />} */}
+            {/* </IconButton> */}
+            {/* </Grid> */}
+          </Grid>
           <div className={classes.creator}>
             Added by
             {creator === null ? (
@@ -281,6 +290,7 @@ PlaylistItem.propTypes = {
   score: PropTypes.number,
   thumbnail: PropTypes.string,
   title: PropTypes.any,
+  url: PropTypes.string,
   creator: PropTypes.object,
   name: PropTypes.string,
   theme: PropTypes.any,
@@ -294,16 +304,21 @@ PlaylistItem.propTypes = {
   isAuthenticated: PropTypes.bool,
   match: PropTypes.any,
   notification: PropTypes.object,
+  favouriteSongRequest: PropTypes.func,
+  stationId: PropTypes.string,
 };
 
 const mapStateToProps = ({ api }) => ({
   userId: api.user.data.userId,
   isAuthenticated: api.user.isAuthenticated,
+  stationId: api.currentStation.station.station_id,
 });
 
 const mapDispatchToProps = dispatch => ({
   upVoteSong: option => dispatch(upVoteSong(option)),
   downVoteSong: option => dispatch(downVoteSong(option)),
+  favouriteSongRequest: ({ songId, userId, stationId, songUrl }) =>
+    dispatch(favouriteSongRequest({ songId, userId, stationId, songUrl })),
 });
 
 export default compose(

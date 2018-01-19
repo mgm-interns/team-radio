@@ -50,19 +50,19 @@ class Body extends Component {
                 textColor="primary"
               >
                 <Tab
-                  label="My stations"
+                  label="Stations"
                   classes={{
                     label: classes.tabLabel,
                   }}
                 />
-                {isDisabled && (
-                  <Tab
-                    label="Favourite songs"
-                    classes={{
-                      label: classes.tabLabel,
-                    }}
-                  />
-                )}
+                {/* {isDisabled && ( */}
+                {/* <Tab */}
+                {/* label="Favourite songs" */}
+                {/* classes={{ */}
+                {/* label: classes.tabLabel, */}
+                {/* }} */}
+                {/* /> */}
+                {/* )} */}
               </Tabs>
             </Grid>
           </Grid>
@@ -72,7 +72,7 @@ class Body extends Component {
         </Grid>
         {this.state.value === 0 && (
           <TabContainer>
-            <FilterAll user={userProfile} />
+            <FilterAll user={userProfile} isDisabled={isDisabled} />
           </TabContainer>
         )}
         {this.state.value === 1 && (

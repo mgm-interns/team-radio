@@ -4,6 +4,12 @@ export default ({ palette, breakpoints, spacing }) => ({
     width: spacing.fullWidth,
     paddingBottom: 50,
   },
+  containerLight: {
+    marginTop: 50,
+    paddingTop: 80,
+    paddingBottom: 80,
+    background: '#f4f0ea',
+  },
   wrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -27,6 +33,7 @@ export default ({ palette, breakpoints, spacing }) => ({
   },
   button: {
     color: palette.primary['500'],
+    cursor: 'pointer',
   },
   textDescription: {
     marginBottom: '1em',

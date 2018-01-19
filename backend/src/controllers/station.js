@@ -11,6 +11,8 @@ import station from '../routes/station';
 import user from '../routes/user';
 
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
+const POINTS_FOR_FIRST_SONG = 2;
+const POINTS_FOR_NEXT_SONG = 1;
 /**
  *
  * @param {string} stationName
@@ -468,10 +470,31 @@ function _stringToId(str) {
     .replace(/[^a-z0-9-]/g, '');
 }
 
-export const countSongAddByUserId = async (userId, staion_id) => {
+export const addPointsByPlayedSong = async (stationId, songId) => {
+
+  try {
+    let song = await stationModels.getAsongInStation(stationId, songId);
+    song = song[0];
+    console.log('addPointsByPlayedSong = async (stationId, songId):', stationId, songId);
+    if (!song) {
+      throw new Error('Song id is not avalable: ', songId);
+    }
+    console.log('station:', song);
+    console.log('stationId, song.song_id, song.url:', stationId, song.song_id, song.url);
+    if (await stationModels.isFirstAddedSong(stationId, song.song_id, song.url)){
+      stationModels.increaseUserPoints(stationId, song.creator, POINTS_FOR_FIRST_SONG);
+    } else {
+      stationModels.increaseUserPoints(stationId, song.creator, POINTS_FOR_NEXT_SONG);
+    }
+  } catch (err) {
+    throw err
+  }
+}
+
+export const countSongAddByUserId = async (userId, station_id) => {
   try {
     let counter = 0;
-    const station = await stationmodels.getStationById(station_id)
+    const station = await stationModels.getStationById(station_id)
     if (station){
       forEach(song in station.playlist)
       if (song.creator === userId) counter++;

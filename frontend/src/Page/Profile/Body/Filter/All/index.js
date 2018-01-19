@@ -49,12 +49,16 @@ class FilterAll extends Component {
   }
 
   render() {
-    const { classes, all, recent } = this.props;
+    const { classes, all, recent, isDisabled, user } = this.props;
 
     return (
       <Grid container className={classes.containerWrapper}>
         <Grid item xs={12} className={classes.container}>
-          <Typography type="title">My stations</Typography>
+          <Typography type="title">
+            {isDisabled
+              ? 'My stations'
+              : `${user.name || user.username}'s stations`}
+          </Typography>
           <div className={classes.stationSection}>
             <StationList
               stations={all.data.stations}
@@ -96,7 +100,8 @@ FilterAll.propTypes = {
   notification: PropTypes.object,
   setPreviewVideo: PropTypes.func,
   joinStationRequest: PropTypes.func,
-  user: PropTypes.object,
+  user: PropTypes.any,
+  isDisabled: PropTypes.bool,
 };
 
 const mapStateToProps = ({ api }) => ({

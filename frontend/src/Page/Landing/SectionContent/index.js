@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import Hidden from 'material-ui/Hidden';
+import Button from 'material-ui/Button';
 
 import { withStyles } from 'material-ui/styles';
 import fixture from '../../../Fixture/landing';
@@ -11,7 +12,12 @@ class SectionContent extends Component {
   render() {
     const { classes } = this.props;
     return [
-      <Grid key={1} container justify="center" className={classes.container}>
+      <Grid
+        key={1}
+        container
+        justify="center"
+        className={[classes.container, classes.containerLight]}
+      >
         <Grid container className={classes.wrapper}>
           <Hidden mdDown>
             <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>
@@ -30,7 +36,16 @@ class SectionContent extends Component {
               <p className={classes.textDescription}>
                 {fixture.section.content1.description}
               </p>
-              <a className={classes.button}>
+              <a
+                className={classes.button}
+                onClick={() =>
+                  window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth',
+                  })
+                }
+              >
                 {fixture.section.content1.linkTitle}
               </a>
             </div>
@@ -56,7 +71,18 @@ class SectionContent extends Component {
               <p className={classes.textDescription}>
                 {fixture.section.content2.description}
               </p>
-              <a className={classes.button}>Explore music together</a>
+              <a
+                className={classes.button}
+                onClick={() =>
+                  window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth',
+                  })
+                }
+              >
+                {fixture.section.content2.linkTitle}
+              </a>
             </div>
           </Grid>
           <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>

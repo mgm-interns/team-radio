@@ -52,32 +52,25 @@ export default router => {
       if (!user) {
         res.status(401).json({
           success: false,
-          message: 'Incorrect email or password',
+          message: 'Incorrect email/username or password',
         });
-      } else if (user) {
-        if (!user.validPassword(req.body.password)) {
-          res.status(401).json({
-            success: false,
-            message: 'Incorrect username or password',
-          });
-        } else {
-          const payload = {
-            email: user.email,
-            name: user.name,
-            userId: user._id,
-          };
+      } else {
+        const payload = {
+          email: user.email,
+          name: user.name,
+          userId: user._id,
+        };
 
-          const token = jwt.sign(payload, req.app.get('superSecret'), {
-            expiresIn: 604800,
-          });
-          res.json({
-            success: true,
-            message: 'Enjoy your token!',
-            token: token,
-            ...user._doc,
-            userId: user._id,
-          });
-        }
+        const token = jwt.sign(payload, req.app.get('superSecret'), {
+          expiresIn: 604800,
+        });
+        res.json({
+          success: true,
+          message: 'Enjoy your token!',
+          token: token,
+          ...user._doc,
+          userId: user._id,
+        });
       }
     } catch (err) {
       throw err;

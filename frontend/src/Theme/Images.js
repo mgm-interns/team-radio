@@ -15,7 +15,8 @@ const images = {
   windows: {
     stations: require('../Images/windows/stations.png'),
     addSongs: require('../Images/windows/add-songs.png'),
-    link: require('../Images/windows/link.png'),
+    animatedAddSongs: require('../Images/windows/add-song.gif'),
+    shareStation: require('../Images/windows/share-station.png'),
   },
   avatar: {
     default: require('../Images/avatar/default.png'),

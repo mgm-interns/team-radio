@@ -17,6 +17,10 @@ import {
   SERVER_SKIP_SONG,
   SERVER_UPDATE_SKIPPED_SONGS,
   SERVER_NO_MULTI_STATIONS,
+  CLIENT_FAVOURITE_SONG,
+  SERVER_ADD_FAVOURITE_SONG_SUCCESS,
+  SERVER_REMOVE_FAVOURITE_SONG_SUCCESS,
+  SERVER_FAVOURITE_SONG_FAILURE,
 } from 'Redux/actions';
 
 const INITIAL_STATE = {
@@ -40,6 +44,7 @@ const INITIAL_STATE = {
     failed: false,
     loggedInStation: null,
   },
+  favouriteSongsResponse: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -205,6 +210,28 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         playlist: [...state.tempPlaylist],
         tempPlaylist: INITIAL_STATE.tempPlaylist,
+      };
+    /**
+     * Favourite song request (add & remove)
+     */
+    case CLIENT_FAVOURITE_SONG:
+      return {
+        ...state,
+      };
+    case SERVER_ADD_FAVOURITE_SONG_SUCCESS:
+      return {
+        ...state,
+        favouriteSongsResponse: action.payload,
+      };
+    case SERVER_REMOVE_FAVOURITE_SONG_SUCCESS:
+      return {
+        ...state,
+        favouriteSongsResponse: action.payload,
+      };
+    case SERVER_FAVOURITE_SONG_FAILURE:
+      return {
+        ...state,
+        favouriteSongsResponse: action.payload,
       };
     default:
       return state;

@@ -12,19 +12,19 @@ const PERMISSION_TYPE_GRANTED = 'granted';
 class BrowserNotification {
   constructor() {
     // Check if Browser is support notification or not
-    if (!Notification) {
+    if (!window.Notification) {
       this.permission = PERMISSION_TYPE_DENIED;
       return;
     }
 
     // If supported bind it
-    this.permission = Notification.permission;
+    this.permission = window.Notification.permission;
 
     switch (this.permission) {
       case PERMISSION_TYPE_DENIED:
         break;
       case PERMISSION_TYPE_DEFAULT:
-        Notification.requestPermission();
+        window.Notification.requestPermission();
         break;
       default:
         break;
@@ -49,7 +49,7 @@ class BrowserNotification {
       return undefined;
     }
 
-    const notification = new Notification(title, {
+    const notification = new window.Notification(title, {
       body: message,
       icon: Images.logo,
       ...others,

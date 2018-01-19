@@ -1,4 +1,5 @@
 /* eslint-disable */
+import _ from 'lodash';
 import mongoose from 'mongoose';
 import { type } from 'os';
 
@@ -323,7 +324,6 @@ module.exports.getStationHasSongUserAdded = async (userId) => {
 async function addUserPoints(stationId, userId) {
   const station = await module.exports.getStationById(stationId);
   const user_points = station.user_points;
-  console.log('user_points:', user_points);
   for(let i=0; i<user_points.length; i++){
     if (user_points[i].user_id.equals(userId)){
       return;
@@ -337,21 +337,38 @@ async function addUserPoints(stationId, userId) {
 }
 
 module.exports.increaseUserPoints = async (stationId, userId, increasingPoints) => {
-  const station = await module.exports.getStationById(stationId);
-  const user_points = station.user_points;
-  for(let i=0; i<user_points.length; i++){
-    if (user_points[i].user_id.equals(userId)){
-      user_points[i].points += increasingPoints;
+  if (!userId)
+    throw new Error(`Can't increase points for ${userId}`);
+  try {
+    const station = await module.exports.getStationById(stationId);
+    const user_points = station.user_points;
+    for (let i = 0; i < user_points.length; i++) {
+      if (user_points[i].user_id.equals(userId)) {
+        user_points[i].points += increasingPoints;
+      }
+    }
+    return Station.update({station_id: stationId}, {
+      $set: {
+        user_points: user_points,
+      }
+    });
+  } catch (err) {
+    throw err;
+  }
+}
+
+module.exports.isFirstAddedSong = async (stationId, songId, songUrl) => {
+  let playlist = await module.exports.getPlaylistOfStation(stationId);
+  playlist = _.orderBy(playlist, ['created_date']);
+  console.log('stationId, songId, songUrl:', stationId, songId, songUrl);
+
+  for(let i=0; i<playlist.length; i++) {
+    if (playlist[i].song_url == songUrl){
+      return songId.equals(playlist[i].song_id) ? true : false;
     }
   }
-
-  return Station.update({ station_id: stationId }, {
-    $set: {
-      user_points: user_points,
-    }
-  });
-
 }
+
 
 // module.exports.getListSongHistory = async stationId => {
 //   // TODO :

@@ -7,12 +7,12 @@ export default async (emitter, songId, userId, stationId, songUrl) => {
     try {
       _addFavouriteSong(emitter, songId, userId, stationId, songUrl);
     } catch (err) {
-      emitter.emit(EVENTS.SERVER_FAFOURITE_SONG_FAILURE, {
+      emitter.emit(EVENTS.SERVER_FAVOURITE_SONG_FAILURE, {
         message: err.message,
       });
     }
   } else {
-    emitter.emit(EVENTS.SERVER_FAFOURITE_SONG_FAILURE, {
+    emitter.emit(EVENTS.SERVER_FAVOURITE_SONG_FAILURE, {
       message: 'You need to login to use this feature.',
     });
   }
@@ -25,12 +25,16 @@ const _addFavouriteSong = async (emitter, songId, userId, stationId, songUrl) =>
     await userController.addFavouriteSong(songId, userId, stationId, songUrl);
 
   if (status === userController.ADD_FAVOURITE_SUCCESS) {
-    console.log('Emit add fav success');
-    emitter.emit(EVENTS.SERVER_ADD_FAFOURITE_SONG_SUCCESS, {});
+    emitter.emit(EVENTS.SERVER_ADD_FAFOURITE_SONG_SUCCESS, {
+      song_id: songId,
+      is_favorite: true,
+    });
     return;
   }
   if (status === userController.UN_FAVOURITE_SUCCESS) {
-    console.log('Emit remove fav success');
-    emitter.emit(EVENTS.SERVER_REMOVE_FAFOURITE_SONG_SUCCESS, {});
+    emitter.emit(EVENTS.SERVER_REMOVE_FAFOURITE_SONG_SUCCESS, {
+      song_id: songId,
+      is_favorite: false,
+    });
   }
 };

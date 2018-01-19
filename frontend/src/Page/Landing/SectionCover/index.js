@@ -20,7 +20,18 @@ class SectionCover extends Component {
               <p className={classes.textDescription}>
                 {fixture.section.cover.description}
               </p>
-              <a className={classes.button}>Try it now</a>
+              <a
+                className={classes.button}
+                onClick={() =>
+                  window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth',
+                  })
+                }
+              >
+                Try it now
+              </a>
             </div>
           </Grid>
           <Grid item xs={12} sm={12} lg={6} className={classes.imageBlock}>

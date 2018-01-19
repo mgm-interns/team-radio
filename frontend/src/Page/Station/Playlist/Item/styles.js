@@ -8,12 +8,6 @@ export default ({ spacing, palette, typography }) => ({
     '&.playing': {
       background: palette.lightGrey['300'],
     },
-    '& .hiddenAction': {
-      display: 'none',
-    },
-    '&:hover .hiddenAction': {
-      display: 'flex',
-    },
   },
   thumbnail: {
     position: 'relative',
@@ -121,15 +115,17 @@ export default ({ spacing, palette, typography }) => ({
     width: '100%',
   },
   favouriteWrapper: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
     cursor: 'pointer',
+  },
+  favouriteContainer: {
+    paddingTop: '0 !important',
+    display: 'flex',
+    justifyContent: 'space-around',
   },
   favouriteBtn: {
     fontSize: spacing.doubleBaseMargin * 1.5,
-    width: spacing.doubleBaseMargin * 2.5,
-    height: spacing.doubleBaseMargin * 2.5,
+    width: spacing.doubleBaseMargin * 2,
+    height: spacing.doubleBaseMargin * 2,
   },
   progressBar: {
     height: 1,

@@ -239,10 +239,12 @@ class Player {
 
   _nextSongByTimeout = (timeout, playingSongId) => {
     setTimeout(async () => {
+      // The song was not skipped
       if (playingSongId === this.nowPlaying.song_id) {
         await stationController.setPlayedSongs(this.stationId, [
           this.nowPlaying.song_id,
         ]);
+        stationController.addPointsByPlayedSong(this.stationId, this.nowPlaying.song_id);
         this.skippedSongs.delete(playingSongId);
         this._setPlayableSong();
       }
