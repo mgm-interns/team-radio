@@ -52,6 +52,7 @@ class Profile extends Component {
 
     // show notification when user upload avatar on the first time
     if (
+      currentUser.username === userProfile.username &&
       currentUser.avatar_url !== userProfile.avatar_url &&
       currentUser.avatar_url === null &&
       increaseNumber !== 0
@@ -112,12 +113,13 @@ class Profile extends Component {
 Profile.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.object,
-  userProfile: PropTypes.object,
+  userProfile: PropTypes.any,
   loading: PropTypes.bool,
   isOwner: PropTypes.bool,
   getUserByUsername: PropTypes.func,
   notification: PropTypes.object,
   match: PropTypes.any,
+  history: PropTypes.any,
 };
 
 const mapStateToProps = ({ api }) => ({
