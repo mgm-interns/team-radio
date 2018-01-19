@@ -1,36 +1,36 @@
 import sleep from 'Util/sleep';
 
 export const loadAuthenticationState = () => {
-  sleep();
   try {
     const serializedState = localStorage.getItem('token');
 
-    if (serializedState === null) {
+    if (!serializedState) {
       return undefined;
     }
     return serializedState;
   } catch (error) {
-    return undefined;
+    return error;
   }
 };
 
-export const saveAuthenticationState = state => {
-  sleep();
+export const saveAuthenticationState = async state => {
+  await sleep();
   try {
     // const serializedState = JSON.stringify(state);
-    localStorage.setItem('token', state.token);
-    localStorage.setItem('userId', state.userId);
+    console.log(state);
+    await localStorage.setItem('token', state.token);
+    await localStorage.setItem('userId', state.userId);
   } catch (error) {
-    // ignore them error
+    console.log(error);
   }
 };
 
-export const removeAuthenticationState = () => {
-  sleep();
+export const removeAuthenticationState = async () => {
+  await sleep();
   try {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
+    await localStorage.removeItem('token');
+    await localStorage.removeItem('userId');
   } catch (error) {
-    // ignore them error
+    console.log(error);
   }
 };

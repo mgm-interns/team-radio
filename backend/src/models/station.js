@@ -43,7 +43,7 @@ const stationSchema = mongoose.Schema({
   created_date: { type: Number, default: new Date().getTime(), },
 });
 
-var Station = (module.exports = mongoose.model('Stations', stationSchema));
+var Station = (module.exports = mongoose.model('stations', stationSchema));
 
 /******************** STATION **************************/
 
@@ -302,14 +302,22 @@ module.exports.getPlaylistOfStation = async (stationId, limit) => {
  * @param {string} stationId
  * @param {string} userId
  */
-module.exports.getStationHasSongUserAdded = (userId) => {
-  return Station.find({
+module.exports.getStationHasSongUserAdded = async (userId) => {
+  let stations = await Station.find({
     playlist: {
       $elemMatch: {
         creator: userId
       }
     }
-  }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 });
+  }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1, playlist: 1 });
+  const usreStations = [];
+  stations.forEach(station => {
+    station = station.toObject();
+    station.song_count = station.playlist.length;
+    delete station.playlist;
+    usreStations.push(station);
+  });
+  return usreStations;
 }
 
 async function addUserPoints(stationId, userId) {

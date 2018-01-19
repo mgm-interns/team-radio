@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema({
   level: { type: String, default: 'Newbie', enum: ['Newbie'] },
   facebook_id: { type: String },
   google_id: { type: String },
-  favourite_songs: {
+  favourited_songs: {
     type: [
       {
         song_id: { type: Number, require: true },
@@ -41,18 +41,31 @@ const userSchema = mongoose.Schema({
     ],
     default: [],
   },
+  my_station: {
+    type: [
+      {
+        station_id: String,
+      },
+    ],
+  },
+  history: {
+    type: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Stations', index: true },
+    ],
+  },
 });
 
 // generation a hash
-userSchema.methods.generateHash = function (pwd) {
+userSchema.methods.generateHash = function(pwd) {
   return bcrypt.hashSync(pwd, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
-userSchema.methods.validPassword = function (password) {
+userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
 
+userSchema.set('autoIndex', true);
 // create the model for users and expose it to our app
 
 var user = (module.exports = mongoose.model('users', userSchema));
@@ -63,8 +76,10 @@ module.exports.getUserByEmail = async email =>
 module.exports.getUserByUsername = async username =>
   user.findOne({ username: username }, { password: 0 });
 
-module.exports.getUserById = async userId =>
-  user.findOne({ _id: _safeObjectId(userId) }, { password: 0 });
+module.exports.getUserById = async (userId, option) => {
+  if (option) return user.findOne({ _id: _safeObjectId(userId) }, option);
+  return user.findOne({ _id: _safeObjectId(userId) }, { password: 0 });
+};
 
 module.exports.setFacebookId = async (email, facebookId) =>
   user.update({ email: email }, { facebook_id: facebookId }, { multi: true });
@@ -104,6 +119,16 @@ module.exports.setCover = async (userId, coverUrl) =>
     { multi: true },
   );
 
+module.exports.updateHistory = async (userId, history) =>
+  user.update(
+    { _id: _safeObjectId(userId) },
+    { history: history },
+    { multi: true },
+  );
+module.exports.getHistoryDetail = async userId =>
+  user
+    .find({ _id: _safeObjectId(userId) }, { history: 1, _id: 0 })
+    .populate('history', { station_name: 1 });
 /**
  * The function update a field favourited_songs in db
  *
@@ -114,13 +139,13 @@ module.exports.addFavouritedSongs = (userId, song) => {
   const query = { _id: _safeObjectId(userId) };
   return user.update(query, {
     $addToSet: {
-      favourite_songs: song,
+      favourited_songs: song,
     },
   });
 };
 
 /**
- * The function delete a song of field favourite_songs in db
+ * The function delete a song of field favourited_songs in db
  *
  * @param {string} userId
  * @param {string} songUrl
@@ -129,18 +154,19 @@ module.exports.deleteAsongInFavouritedSongs = (userId, songUrl) => {
   const query = { _id: _safeObjectId(userId) };
   return user.update(query, {
     $pull: {
-      favourite_songs: { url: songUrl },
+      favourited_songs: { url: songUrl },
     },
   });
 };
 /**
- * The function get favourite_songs in db
+ * The function get favourited_songs in db
  *
  * @param {string} userId
  */
 module.exports.getFavouritedSongs = async userId => {
   const query = { _id: _safeObjectId(userId) };
-  return (await user.findOne(query, { favourite_songs: true })).favourite_songs;
+  return (await user.findOne(query, { favourited_songs: true }))
+    .favourited_songs;
 };
 
 /**
@@ -152,10 +178,10 @@ module.exports.getSongInFavouriteds = async (userId, songUrl) =>
   (await user.findOne(
     { _id: _safeObjectId(userId) },
     {
-      favourite_songs: {
+      favourited_songs: {
         $elemMatch: {
           url: songUrl,
         },
       },
     },
-  )).favourite_songs;
+  )).favourited_songs;

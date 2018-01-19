@@ -1,115 +1,19 @@
-const INITIAL_STATE = {
-  data: {},
-  error: null,
-  loading: false,
-};
+import HttpRequest from 'Util/redux/HttpRequest';
+import { combineReducers } from 'redux';
 
-const userProfile = (state = INITIAL_STATE, action) => {
-  switch (action.type) {
-    case 'FETCH_USER_BY_USERNAME_REQUEST':
-      return {
-        data: {},
-        error: null,
-        loading: true,
-      };
-    case 'FETCH_USER_BY_USERNAME_SUCCESS':
-      return {
-        ...state,
-        data: action.payload,
-        loading: false,
-      };
+const ENDPOINT = process.env.REACT_APP_SERVER_END_POINT;
 
-    case 'FETCH_USER_BY_USERNAME_FAILURE':
-      return {
-        ...state,
-        loading: false,
-        error: { ...action.payload },
-      };
+const getUserByUsernameRequest = new HttpRequest({
+  method: 'GET',
+  type: 'FETCH_USER_BY_USERNAME',
+  endpoint: `${ENDPOINT}/profile`,
+  headers: {
+    'access-token': localStorage.getItem('token'),
+  },
+});
 
-    case 'SET_USERNAME_REQUEST':
-      return {
-        ...state,
-        error: null,
-        loading: true,
-      };
-    case 'SET_USERNAME_SUCCESS':
-      return {
-        ...state,
-        data: action.payload,
-        loading: false,
-      };
+export const getUserByUsername = getUserByUsernameRequest.getAction();
 
-    case 'SET_USERNAME_FAILURE':
-      return {
-        ...state,
-        loading: false,
-        error: { ...action.payload },
-      };
-
-    case 'SET_PASSWORD_REQUEST':
-      return {
-        ...state,
-        data: { ...state.data, message: '' },
-        error: null,
-        loading: true,
-      };
-    case 'SET_PASSWORD_SUCCESS':
-      return {
-        ...state,
-        data: action.payload,
-        loading: false,
-      };
-
-    case 'SET_PASSWORD_FAILURE':
-      return {
-        ...state,
-        loading: false,
-        error: { ...action.payload },
-      };
-
-    case 'SET_USER_INFORMATION_REQUEST':
-      return {
-        ...state,
-        error: null,
-        loading: true,
-      };
-    case 'SET_USER_INFORMATION_SUCCESS':
-      return {
-        ...state,
-        data: action.payload,
-        loading: false,
-      };
-
-    case 'SET_USER_INFORMATION_FAILURE':
-      return {
-        ...state,
-        loading: false,
-        error: { ...action.payload },
-      };
-
-    case 'SET_AVATAR_REQUEST':
-      return {
-        ...state,
-        error: null,
-        loading: true,
-      };
-    case 'SET_AVATAR_SUCCESS':
-      return {
-        ...state,
-        data: action.payload,
-        loading: false,
-      };
-
-    case 'SET_AVATAR_FAILURE':
-      return {
-        ...state,
-        loading: false,
-        error: { ...action.payload },
-      };
-
-    default:
-      return state;
-  }
-};
-
-export default userProfile;
+export default combineReducers({
+  user: getUserByUsernameRequest.getReducer(),
+});

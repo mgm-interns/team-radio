@@ -1,12 +1,13 @@
+import { combineReducers } from 'redux';
+
 const INITIAL_STATE = {
-  data: { userId: localStorage.getItem('userId') },
+  data: {},
   error: null,
   loading: false,
   isAuthenticated: !!localStorage.getItem('token'),
-  isOwner: false,
 };
 
-const user = (state = INITIAL_STATE, action) => {
+const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'FETCH_USER':
       return {
@@ -53,14 +54,14 @@ const user = (state = INITIAL_STATE, action) => {
         error: { ...action.payload },
         isAuthenticated: false,
       };
-    case 'ADD_USER_WITH_SOCIAL':
+    case 'ADD_USER_BY_SOCIAL':
       return {
         data: {},
         error: null,
         loading: true,
         isAuthenticated: false,
       };
-    case 'ADD_USER_WITH_SOCIAL_SUCCESS':
+    case 'ADD_USER_BY_SOCIAL_SUCCESS':
       return {
         ...state,
         data: action.payload,
@@ -68,7 +69,7 @@ const user = (state = INITIAL_STATE, action) => {
         isAuthenticated: true,
       };
 
-    case 'ADD_USER_WITH_SOCIAL_FAILURE':
+    case 'ADD_USER_BY_SOCIAL_FAILURE':
       return {
         ...state,
         loading: false,
@@ -77,6 +78,7 @@ const user = (state = INITIAL_STATE, action) => {
       };
     case 'VERIFY_TOKEN':
       return {
+        ...state,
         data: {},
         error: null,
         loading: true,
@@ -105,18 +107,81 @@ const user = (state = INITIAL_STATE, action) => {
         isAuthenticated: false,
       };
 
-    case 'UPDATE_AVATAR':
+    case 'SET_USERNAME_REQUEST':
       return {
         ...state,
+        error: null,
+        loading: true,
       };
-    case 'UPDATE_AVATAR_SUCCESS':
+    case 'SET_USERNAME_SUCCESS':
       return {
         ...state,
         data: action.payload,
         loading: false,
       };
 
-    case 'UPDATE_AVATAR_FAILURE':
+    case 'SET_USERNAME_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+      };
+
+    case 'SET_PASSWORD_REQUEST':
+      return {
+        ...state,
+        data: { ...state.data, message: '' },
+        error: null,
+        loading: true,
+      };
+    case 'SET_PASSWORD_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'SET_PASSWORD_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+      };
+
+    case 'SET_USER_INFORMATION_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'SET_USER_INFORMATION_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'SET_USER_INFORMATION_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+      };
+
+    case 'SET_AVATAR_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'SET_AVATAR_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'SET_AVATAR_FAILURE':
       return {
         ...state,
         loading: false,
@@ -128,4 +193,4 @@ const user = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default user;
+export default userReducer;

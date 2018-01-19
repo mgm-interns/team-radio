@@ -421,6 +421,26 @@ export default router => {
     }
   });
 
+  router.post('/getHistory', async (req, res) => {
+    const history = await userController.getHistory(
+      req.body.userId,
+      req.body.limit,
+    );
+    res.json({
+      history: history,
+    });
+  });
+
+  router.post('/test', async (req, res) => {
+    const A = await userController.updateHistory(
+      req.body.userId,
+      req.body.station_id,
+    );
+    res.json({
+      A: A,
+    });
+  });
+
   router.post('/addFavouriteSongs', async (req, res) => {
     const favourite = await userController.addFavouriteSong(
       req.body.song_id,
@@ -430,18 +450,12 @@ export default router => {
     );
     res.json(favourite);
   });
-  // TODO :
   router.get('/getFavouriteSongs/:user_id', async (req, res) => {
     const favourite = await userController.getFavouritedSongs(
       req.params.user_id,
     );
     res.json(favourite);
   });
-
-  router.use(authController);
-
-  // test function *************************************
-  router.get('/', (req, res) => {
-    res.json({ message: 'Welcome to the coolest API on earth!' });
-  });
 };
+
+// router.use(authController);

@@ -1,13 +1,13 @@
 /* eslint-disable */
-import * as userModels from '../models/user';
+import userModels from '../models/user';
 import * as stationModels from '../models/station';
 import jwt from 'jsonwebtoken';
 import deleteDiacriticMarks from "khong-dau";
+import { ObjectId } from 'mongodb';
+import * as stationController from './station';
 import user from '../routes/user';
 import { throws } from 'assert';
 import { Error } from 'mongoose';
-// import bhs from 'nodemailer-express-handlebars';
-// import nodemailer from 'nodemailer'
 // import * as stationModels from "../models/station";
 
 export const isExistUserHandler = async email => {
@@ -24,8 +24,12 @@ export const isExistUserHandler = async email => {
     throw err;
   }
 };
-
-export const getUserById = async userId => {
+/**
+ *
+ * @param userId
+ * @returns {Promise<*>}
+ */
+export const getUserById = async (userId) => {
   try {
     return await userModels.getUserById(userId);
   } catch (err) {
@@ -33,6 +37,15 @@ export const getUserById = async userId => {
   }
 };
 
+/**
+ *
+ * @param email
+ * @param googleId
+ * @param facebookId
+ * @param avatar_url
+ * @param name
+ * @returns {Promise<*>}
+ */
 export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null, name) => {
   try {
     let user = await userModels.getUserByEmail(email);
@@ -69,6 +82,14 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
   }
 };
 
+/**
+ *
+ * @param email
+ * @param password
+ * @param name
+ * @returns {Promise<*>}
+ */
+
 export const createUser = async (email, password, name) => {
   try {
     let user = await new userModels({
@@ -89,7 +110,11 @@ export const createUser = async (email, password, name) => {
     throw err;
   }
 };
-
+/**
+ *
+ * @param username
+ * @returns {Promise<*>}
+ */
 export const getUserProfile = async username => {
   try {
     return await userModels.getUserByUsername(username);
@@ -97,7 +122,12 @@ export const getUserProfile = async username => {
     throw err;
   }
 };
-
+/**
+ *
+ * @param userId
+ * @param avatar_url
+ * @returns {Promise<*>}
+ */
 export const setAvatar = async (userId, avatar_url) => {
   try {
     const user = await userModels.getUserById(userId);
@@ -109,7 +139,12 @@ export const setAvatar = async (userId, avatar_url) => {
     throw err;
   }
 };
-
+/**
+ *
+ * @param userId
+ * @param cover_url
+ * @returns {Promise<*>}
+ */
 export const setCover = async (userId, cover_url) => {
   try {
     await userModels.setCover(userId, cover_url);
@@ -118,7 +153,12 @@ export const setCover = async (userId, cover_url) => {
     throw err;
   }
 };
-
+/**
+ *
+ * @param email
+ * @param username
+ * @returns {Promise<*>}
+ */
 export const setUsername = async (email, username) => {
   try {
     const newUsername = await _createUsername(username);
@@ -128,7 +168,12 @@ export const setUsername = async (email, username) => {
     throw err;
   }
 };
-
+/**
+ *
+ * @param email
+ * @param password
+ * @returns {Promise<*>}
+ */
 export const setPassword = async (email, password) => {
   try {
     await userModels.setPassword(email, password);
@@ -137,7 +182,17 @@ export const setPassword = async (email, password) => {
     throw err;
   }
 };
-
+/**
+ *
+ * @param userId
+ * @param name
+ * @param firstname
+ * @param lastname
+ * @param bio
+ * @param city
+ * @param country
+ * @returns {Promise<*>}
+ */
 export const setUserInformation = async (userId, name, firstname, lastname, bio, city, country) => {
   try {
     let data = {}, point = 0;
@@ -149,20 +204,26 @@ export const setUserInformation = async (userId, name, firstname, lastname, bio,
     if (city) data.city = city;
     if (bio) data.bio = bio;
 
-    if (firstname && user.firstname === "") point += 5;
-    if (lastname && user.lastname === "") point += 5;
-    if (country && user.country === "") point += 5;
-    if (city && user.city === "") point += 5;
-    if (bio && user.bio === "") point += 5;
+    // if (firstname && user.firstname === "") point += 5;
+    // if (lastname && user.lastname === "") point += 5;
+    // if (country && user.country === "") point += 5;
+    // if (city && user.city === "") point += 5;
+    // if (bio && user.bio === "") point += 5;
 
     await userModels.setUserInformation(userId, data);
-    await _increaseReputation(user.email, point)
+    // await _increaseReputation(user.email, point)
     return await userModels.getUserById(userId);
   } catch (err) {
     throw err;
   }
 };
-
+/**
+ *
+ * @param userId
+ * @param token
+ * @param superSecret
+ * @returns {Promise<boolean>}
+ */
 export const isVerifidedToken = async (userId, token, superSecret) => {
   try {
     let result = false;
@@ -201,47 +262,95 @@ export const addFavouriteSong = async (songId, userId, stationId, songUrl) => {
         message: "Unfavourite successful"
       }
     }
-
   } catch (error) {
     console.log(error);
 
   }
 }
+export const updateHistory = async (userId, station_id) => {
+    try{
+        const option = { history : 1, _id: 0}
+        const user = await userModels.getUserById(userId, option)
+        let history = user.history
+        if (history.length && (history.indexOf(_safeObjectId(station_id)) !== -1))
+            history.remove(station_id)
+        history.push(station_id)
+        await userModels.updateHistory(userId, history)
+        history = await userModels.getUserById(userId, option)
+    } catch (err) {
+        throw err
+    }
+}
 
+export const getHistory = async (userId, limited) => {
+    try{
+        const option = { history : 1, _id: 0}
+        const user = await userModels.getUserById(userId, option)
+        let history = user.history
+        let historyDetail = [];
+
+        forEach(station_id in history)
+        historyDetail.push(stationController.countSongAddByUserId(userId, station_id))
+
+        return historyDetail
+    } catch (err) {
+        throw err
+    }
+}
 /**
  * The function get info favourited songs
  * @param {string} userId 
  */
-export const getFavouritedSongs =async (userId) =>{
-   try {
-     const favouritedSongs = await userModels.getFavouritedSongs(userId);
-     return favouritedSongs;
-   } catch (error) {
-     throw new Error("Can't get favourited songs");
-   }
+export const getFavouritedSongs = async (userId) => {
+  try {
+    const favouritedSongs = await userModels.getFavouritedSongs(userId);
+    return favouritedSongs;
+  } catch (error) {
+    throw new Error("Can't get favourited songs");
+  }
 }
 
+// This is private function
+/**
+ *
+ * @param email
+ * @param point
+ * @returns {Promise<void>}
+ * @private
+ */
 async function _increaseReputation(email, point) {
   const user = await userModels.getUserByEmail(email);
   await userModels.updateReputation(email, user.reputation + point)
 }
-
+/**
+ *
+ * @param str
+ * @returns {string}
+ * @private
+ */
 function _stringToId(str) {
   return str
     .toLowerCase()
     .replace(/ /g, '-')
     .replace(/[^a-z0-9-]/g, '');
 }
-
+/**
+ *
+ * @param username
+ * @returns {Promise<string>}
+ * @private
+ */
 async function _createUsername(username) {
-  const id = _stringToId(deleteDiacriticMarks(username));
-  let currentId = id;
-  let i = 1;
-  let user = await userModels.getUserByUsername(currentId);
-  while (user) {
-    i += 1;
-    currentId = id + i;
-    user = await userModels.getUserByUsername(currentId);
-  }
-  return currentId;
+    const id = _stringToId(deleteDiacriticMarks(username));
+    let currentId = id;
+    let i = 1;
+    let user = await userModels.getUserByUsername(currentId);
+    while (user) {
+        i += 1;
+        currentId = id + i;
+        user = await userModels.getUserByUsername(currentId);
+    }
+    return currentId;
 }
+const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
+

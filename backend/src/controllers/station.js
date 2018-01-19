@@ -468,6 +468,21 @@ function _stringToId(str) {
     .replace(/[^a-z0-9-]/g, '');
 }
 
+export const countSongAddByUserId = async (userId, staion_id) => {
+  try {
+    let counter = 0;
+    const station = await stationmodels.getStationById(station_id)
+    if (station){
+      forEach(song in station.playlist)
+      if (song.creator === userId) counter++;
+      return {station_name: station.station_name, }
+    }
+    return new Error ('Station is not exist.')
+  } catch (err) {
+    throw err
+  }
+}
+
 async function _createStationId(stationName) {
   let id = _stringToId(deleteDiacriticMarks(stationName));
   if (!id) {

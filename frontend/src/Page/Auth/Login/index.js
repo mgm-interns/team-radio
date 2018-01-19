@@ -12,7 +12,7 @@ import { FormHelperText } from 'material-ui/Form';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
-import { fetchUser, addUserWithSocialAccount } from 'Redux/api/user/actions';
+import { getUser, addUserBySocialAccount } from 'Redux/api/user/user';
 import { NavBar, GoogleLogin, FacebookLogin, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
 import {
@@ -41,24 +41,29 @@ class Login extends Component {
     this._renderBackground = this._renderBackground.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { fetchUserResponse: { error, data, isAuthenticated } } = nextProps;
-    const { fetchUserResponse: { data: { token } } } = this.props;
-    if (error !== null) {
+  async componentWillReceiveProps(nextProps) {
+    const { getUserResponse: { error, data, isAuthenticated } } = nextProps;
+    const { getUserResponse: { data: { token } } } = this.props;
+    console.log(data.token, isAuthenticated, error);
+
+    if (error) {
       this.setState({
         formErrors: {
           message: error.response.message,
         },
       });
-    } else if (isAuthenticated && token !== data.token) {
+    }
+
+    if (isAuthenticated && token !== data.token) {
       this._showNotification('Login successfully!');
-      saveAuthenticationState(data);
+      await saveAuthenticationState(data);
       if (window.history.length > 2) {
         this.props.history.go(-1);
       } else {
         this.props.history.replace('/');
       }
     }
+
     if (!loadAuthenticationState()) {
       this.setState({
         isLoggedIn: false,
@@ -88,11 +93,8 @@ class Login extends Component {
       this.setState({
         isLoggedIn: true,
       });
-      const { profileObj, authResponse } = response;
 
-      // handle data
-      saveAuthenticationState(authResponse);
-      this.props.addUserWithSocialAccount(profileObj);
+      this.props.addUserBySocialAccount(response.profileObj);
     }
   }
 
@@ -259,24 +261,24 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  fetchUserResponse: PropTypes.any,
+  getUserResponse: PropTypes.any,
   history: PropTypes.any,
   classes: PropTypes.any,
   loading: PropTypes.bool,
   handleSubmit: PropTypes.any,
   submitSucceeded: PropTypes.any,
   notification: PropTypes.object,
-  addUserWithSocialAccount: PropTypes.func,
+  addUserBySocialAccount: PropTypes.func,
   submitting: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
-  fetchUserResponse: state.api.user,
+  getUserResponse: state.api.user,
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: data => dispatch(fetchUser(data)),
-  addUserWithSocialAccount: data => dispatch(addUserWithSocialAccount(data)),
+  onSubmit: data => dispatch(getUser(data)),
+  addUserBySocialAccount: data => dispatch(addUserBySocialAccount(data)),
 });
 
 export default compose(
