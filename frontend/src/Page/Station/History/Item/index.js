@@ -77,22 +77,22 @@ class HistoryItem extends Component {
           <Tooltip placement={'bottom'} title={title}>
             <div className={classes.name}>{title}</div>
           </Tooltip>
-          <Tooltip
-            placement={'bottom'}
-            title={
-              this.state.isFavourite
-                ? 'Remove from favourite'
-                : 'Add to favourite'
-            }
-          >
-            <div
-              className={classNames(classes.favouriteWrapper, 'hiddenAction')}
-            >
-              <IconButton color={'primary'} className={classes.favouriteBtn}>
-                {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />}
-              </IconButton>
-            </div>
-          </Tooltip>
+          {/* <Tooltip */}
+          {/* placement={'bottom'} */}
+          {/* title={ */}
+          {/* this.state.isFavourite */}
+          {/* ? 'Remove from favourite' */}
+          {/* : 'Add to favourite' */}
+          {/* } */}
+          {/* > */}
+          {/* <div */}
+          {/* className={classNames(classes.favouriteWrapper, 'hiddenAction')} */}
+          {/* > */}
+          {/* <IconButton color={'primary'} className={classes.favouriteBtn}> */}
+          {/* {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />} */}
+          {/* </IconButton> */}
+          {/* </div> */}
+          {/* </Tooltip> */}
           <div className={classes.creator}>
             Added by
             {creator === null ? (

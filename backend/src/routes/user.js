@@ -356,6 +356,7 @@ export default router => {
   });
 
   router.get('/stations/getstationbyadded/:user_id', async (req, res) => {
+    console.log(req.params.user_id);
     const stations = await stationController.getListStationUserAddedSong(
       req.params.user_id,
     );

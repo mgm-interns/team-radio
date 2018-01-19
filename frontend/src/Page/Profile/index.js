@@ -91,7 +91,7 @@ class Profile extends Component {
     const { classes, userProfile, isOwner, loading } = this.props;
     let content = null;
 
-    if (loading) {
+    if (Array.isArray(userProfile)) {
       content = <CircularProgress />;
     } else {
       content = (
