@@ -25,10 +25,16 @@ const _addFavouriteSong = async (emitter, songId, userId, stationId, songUrl) =>
     await userController.addFavouriteSong(songId, userId, stationId, songUrl);
 
   if (status === userController.ADD_FAVOURITE_SUCCESS) {
-    emitter.emit(EVENTS.SERVER_ADD_FAVOURITE_SONG_SUCCESS, {});
+    emitter.emit(EVENTS.SERVER_ADD_FAFOURITE_SONG_SUCCESS, {
+      song_id: songId,
+      is_favorite: true,
+    });
     return;
   }
   if (status === userController.UN_FAVOURITE_SUCCESS) {
-    emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {});
+    emitter.emit(EVENTS.SERVER_REMOVE_FAFOURITE_SONG_SUCCESS, {
+      song_id: songId,
+      is_favorite: false,
+    });
   }
 };
