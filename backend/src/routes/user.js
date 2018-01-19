@@ -8,13 +8,21 @@ export default router => {
   router.post('/signup', async (req, res) => {
     try {
       const user = await User.findOne({ email: req.body.email });
-      if (user) {
+      const isExistUsername = await userController.isExistUsername(
+        req.body.username,
+      );
+      if (req.body.username && isExistUsername) {
+        res
+          .status(400)
+          .json({ message: 'This username has already been taken.' });
+      } else if (user) {
         res.status(400).json({ message: 'This email has already been taken.' });
       } else {
         const newUser = await userController.createUser(
           req.body.email,
           req.body.password,
           req.body.name,
+          req.body.username,
         );
 
         const payload = {

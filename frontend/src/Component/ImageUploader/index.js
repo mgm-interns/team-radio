@@ -74,7 +74,7 @@ class ImageUploader extends Component {
           open: false,
         });
         const { user: { userId } } = this.props;
-        console.log(userId);
+
         this.props.updateAvatar(userId, response.secure_url);
       }
     };
@@ -194,9 +194,9 @@ class ImageUploader extends Component {
 
 ImageUploader.propTypes = {
   classes: PropTypes.any,
-  avatar_url: PropTypes.any,
   updateAvatar: PropTypes.any,
   isDisabled: PropTypes.any,
+  user: PropTypes.any,
 };
 
 // const mapStateToProps = state => ({

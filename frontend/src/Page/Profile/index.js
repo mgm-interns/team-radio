@@ -30,30 +30,43 @@ class Profile extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
-    const { userProfile, match: { params } } = nextProps;
+    const { userProfile, match: { params }, user } = nextProps;
 
+    // fetch user profile from react router
     if (params.username !== this.props.match.params.username) {
       await this.props.getUserByUsername(params.username);
     }
 
-    const currentUser = this.props.userProfile;
-    const increaseNumber = Profile._calculateIncreaseReputation(
-      currentUser.reputation,
-      userProfile.reputation,
-    );
+    // get message for user activities
+    if (
+      this.props.user.message !== nextProps.user.message &&
+      nextProps.user.message
+    ) {
+      this._showNotification(user.message);
+      // fetch again when user change information
+      this.props.getUserByUsername(nextProps.user.username);
+    }
 
-    if (userProfile.message !== currentUser.message && userProfile.message) {
-      this._showNotification(userProfile.message);
-
+    // check user is available and redirect to homepage
+    if (
+      nextProps.userProfile.message !== this.props.userProfile.message &&
+      nextProps.userProfile.message
+    ) {
       if (userProfile.message === 'User not found!') {
         this.props.history.replace('/');
       }
     }
 
+    const increaseNumber = Profile._calculateIncreaseReputation(
+      nextProps.user.reputation,
+      this.props.user.reputation,
+    );
+
     // show notification when user upload avatar on the first time
     if (
-      currentUser.avatar_url !== userProfile.avatar_url &&
-      currentUser.avatar_url === null &&
+      nextProps.user.username === this.props.user.username &&
+      nextProps.user.avatar_url !== this.props.user.avatar_url &&
+      this.user.avatar_url === null &&
       increaseNumber !== 0
     ) {
       await sleep(1000);
@@ -94,7 +107,7 @@ class Profile extends Component {
           className={classes.containerWrapper}
         >
           <Header user={userProfile} isDisabled={isOwner} />
-          <Body user={userProfile} isDisabled={isOwner} />
+          <Body userProfile={userProfile} isDisabled={isOwner} />
         </Grid>
       );
     }
@@ -112,7 +125,7 @@ class Profile extends Component {
 Profile.propTypes = {
   classes: PropTypes.any,
   user: PropTypes.object,
-  userProfile: PropTypes.object,
+  userProfile: PropTypes.any,
   loading: PropTypes.bool,
   isOwner: PropTypes.bool,
   getUserByUsername: PropTypes.func,
