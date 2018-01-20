@@ -83,9 +83,6 @@ class Login extends Component {
     notification.app.success({
       message: content,
     });
-    // notification.browser.success({
-    //   message: content,
-    // });
   }
 
   _onLoginSocialClick(response) {
@@ -138,9 +135,9 @@ class Login extends Component {
         }}
       >
         <FacebookLogin
-          fields="name,email,picture"
+          fields="name,email,picture,cover,gender"
           autoLoad={false}
-          scope="email,public_profile,user_friends"
+          scope="email,public_profile"
           onSuccess={this._onLoginSocialClick}
           isDisabled={this.state.isLoggedIn}
           onFailure={this._onLoginSocialFailure}

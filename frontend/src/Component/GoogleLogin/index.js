@@ -37,7 +37,7 @@ class Login extends Component {
       discoveryDocs,
       onFailure,
       uxMode,
-      scope,
+      scopes,
       responseType,
     } = this.props;
     ((d, s, id, cb) => {
@@ -59,7 +59,7 @@ class Login extends Component {
         discoveryDocs,
         ux_mode: uxMode,
         redirect_uri: redirectUri,
-        scope,
+        scopes,
       };
 
       if (responseType === 'code') {
@@ -144,7 +144,6 @@ class Login extends Component {
       email: basicProfile.getEmail(),
       name: basicProfile.getName(),
     };
-    console.log(returnObject);
     this.props.onSuccess(returnObject);
   }
 
@@ -223,7 +222,7 @@ Login.propTypes = {
   onFailure: PropTypes.func, // required if we need
   onRequest: PropTypes.func,
   buttonText: PropTypes.string,
-  scope: PropTypes.string,
+  scopes: PropTypes.string,
   className: PropTypes.string,
   redirectUri: PropTypes.string,
   cookiePolicy: PropTypes.string,
@@ -248,7 +247,7 @@ Login.defaultProps = {
   type: 'button',
   tag: 'button',
   buttonText: 'Login with Google',
-  scope: 'profile email',
+  scopes: 'profile email openid',
   prompt: '',
   cookiePolicy: 'single_host_origin',
   fetchBasicProfile: true,

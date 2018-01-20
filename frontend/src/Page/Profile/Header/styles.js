@@ -3,6 +3,7 @@ export default ({ breakpoints, palette, spacing }) => ({
     margin: 'auto',
     padding: '0 !important',
     background: palette.darkGreen['500'],
+    height: '28vh',
   },
   coverWrapper: {
     margin: 'auto',
@@ -10,10 +11,21 @@ export default ({ breakpoints, palette, spacing }) => ({
       minWidth: 1024,
       maxWidth: 1280,
     },
+    zIndex: 2,
+  },
+  backgroundImg: {
+    position: 'absolute',
+    zIndex: 1,
+    filter: 'opacity(0.5)',
+    width: spacing.fullWidth,
+    height: '28vh',
+    top: 0,
+    left: 0,
+    margin: 'auto',
+    objectFit: 'cover',
   },
   coverBackground: {
     paddingTop: 56,
-    height: 250,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -21,6 +33,7 @@ export default ({ breakpoints, palette, spacing }) => ({
   userInformationContainer: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   userInformationContent: {
     paddingLeft: spacing.doubleBaseMargin,
@@ -34,15 +47,12 @@ export default ({ breakpoints, palette, spacing }) => ({
   number: {
     color: palette.primary['500'],
   },
-  buttonCover: {
-    color: palette.white,
-    backgroundColor: palette.primary['500'],
-  },
   icon: {
-    paddingRight: spacing.baseMargin,
+    // '& :hover': {
+    //   color: 'lightgray',
+    // },
   },
   summarize: {
-    paddingLeft: 150,
     display: 'flex',
     alignItems: 'center',
   },
@@ -51,5 +61,13 @@ export default ({ breakpoints, palette, spacing }) => ({
     flexDirection: 'column',
     alignItems: 'center',
     paddingRight: 50,
+  },
+  userInformation: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  changeCoverActionWrapper: {
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
 });

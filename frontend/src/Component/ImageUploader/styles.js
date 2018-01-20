@@ -63,4 +63,9 @@ export default ({ palette, spacing }) => ({
   cardHeader: {
     flexDirection: 'column',
   },
+  avatarWrapper: {
+    background: palette.white,
+    borderRadius: '50%',
+    border: '5px solid #ffffff',
+  },
 });

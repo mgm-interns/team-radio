@@ -58,7 +58,7 @@ class AuthLink extends Component {
     return (
       <List
         subheader={
-          <ListSubheader style={{ paddingLeft: 30 }}>
+          <ListSubheader>
             {`Signed in as:`}
             <Typography type="body1">
               {`${user.data.username || user.data.email}`}
@@ -72,21 +72,13 @@ class AuthLink extends Component {
           to={`/profile/${user.data.username}`}
         >
           <ListItem button>
-            <span>
-              <IconButton>
-                <PersonIcon />
-              </IconButton>
-            </span>
+            <PersonIcon />
             <ListItemText primary="My Profile" />
           </ListItem>
         </Link>
 
         <ListItem button onClick={this._logout}>
-          <span>
-            <IconButton>
-              <ExitIcon />
-            </IconButton>
-          </span>
+          <ExitIcon />
           <ListItemText primary="Logout" />
         </ListItem>
       </List>

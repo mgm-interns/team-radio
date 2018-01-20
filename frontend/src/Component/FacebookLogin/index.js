@@ -117,6 +117,8 @@ class FacebookLogin extends Component {
           avatar_url: me.picture.data.url,
           email: me.email,
           name: me.name,
+          cover_url: me.cover.source,
+          gender: me.gender,
         };
 
         this.props.onSuccess(res);
