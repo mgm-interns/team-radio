@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
+import HomeIcon from 'react-icons/lib/md/home';
 import fixture from 'Fixture/landing';
 import { compose } from 'redux';
 
@@ -72,7 +73,7 @@ class NavBar extends Component {
         >
           <Grid item xs={4}>
             <Grid container className={classes.logo}>
-              <Grid item xs>
+              <Grid item xs={2}>
                 <Link to="/" replace>
                   <img
                     src={fixture.logo}
@@ -81,11 +82,8 @@ class NavBar extends Component {
                   />
                 </Link>
               </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={8}>
-            <Grid container className={classes.navContainer}>
-              <Grid item className={classes.navWrapper}>
+
+              <Grid item xs={10} style={{ marginTop: 2.075 }}>
                 {Object.keys(MENUS).map((key, index) => {
                   const { title } = MENUS[key];
                   return (
@@ -99,7 +97,12 @@ class NavBar extends Component {
                     </Link>
                   );
                 })}
-
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={8}>
+            <Grid container className={classes.navContainer}>
+              <Grid item className={classes.navWrapper}>
                 <AuthLink dispatch={dispatch} />
               </Grid>
             </Grid>

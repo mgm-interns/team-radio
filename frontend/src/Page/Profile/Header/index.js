@@ -9,6 +9,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import IconButton from 'material-ui/IconButton';
 import CameraIcon from 'react-icons/lib/md/camera-alt';
 
+import { withNotification } from 'Component/Notification';
 import ImageUploader from 'Component/ImageUploader';
 import styles from './styles';
 
@@ -16,8 +17,15 @@ class Header extends Component {
   constructor(props) {
     super(props);
 
+    this._onChangeCoverClick = this._onChangeCoverClick.bind(this);
     this._renderHeader = this._renderHeader.bind(this);
     this._renderSummarizeItem = this._renderSummarizeItem.bind(this);
+  }
+
+  _onChangeCoverClick() {
+    this.props.notification.app.warning({
+      message: 'This feature is not ready yet.',
+    });
   }
 
   static _renderLoading() {
@@ -63,9 +71,15 @@ class Header extends Component {
 
         <Grid item xs={5} className={classes.changeCoverActionWrapper}>
           {isDisabled && (
-            <Button raised className={classes.icon}>
+            <Button
+              raised
+              className={classes.icon}
+              onClick={this._onChangeCoverClick}
+            >
               <CameraIcon />
-              <span style={{ paddingLeft: 8, textTransform: 'none' }}>{'Update cover photo'}</span>
+              <span style={{ paddingLeft: 8, textTransform: 'none' }}>
+                {'Update cover photo'}
+              </span>
             </Button>
           )}
         </Grid>
@@ -107,4 +121,4 @@ Header.defaultProps = {
   loading: false,
 };
 
-export default compose(withStyles(styles))(Header);
+export default compose(withStyles(styles), withNotification)(Header);
