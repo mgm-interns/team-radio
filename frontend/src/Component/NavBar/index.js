@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
+import Hidden from 'material-ui/Hidden';
 import { withStyles } from 'material-ui/styles';
 import HomeIcon from 'react-icons/lib/md/home';
 import fixture from 'Fixture/landing';
@@ -83,21 +84,23 @@ class NavBar extends Component {
                 </Link>
               </Grid>
 
-              <Grid item xs={10} style={{ marginTop: 2.075 }}>
-                {Object.keys(MENUS).map((key, index) => {
-                  const { title } = MENUS[key];
-                  return (
-                    <Link
-                      key={index}
-                      to={MENUS[key].url}
-                      className={classes.navItem}
-                      replace
-                    >
-                      {title}
-                    </Link>
-                  );
-                })}
-              </Grid>
+              <Hidden smDown>
+                <Grid item xs={10} style={{ marginTop: 2.075 }}>
+                  {Object.keys(MENUS).map((key, index) => {
+                    const { title } = MENUS[key];
+                    return (
+                      <Link
+                        key={index}
+                        to={MENUS[key].url}
+                        className={classes.navItem}
+                        replace
+                      >
+                        {title}
+                      </Link>
+                    );
+                  })}
+                </Grid>
+              </Hidden>
             </Grid>
           </Grid>
           <Grid item xs={8}>

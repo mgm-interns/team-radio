@@ -3,6 +3,9 @@ export default ({ palette, breakpoints, spacing }) => ({
     margin: 'auto',
     width: spacing.fullViewportWidth,
     background: palette.darkGreen['500'],
+    [breakpoints.down('sm')]: {
+      height: '105vh',
+    },
   },
   foreground: {
     height: spacing.fullViewportHeight,
@@ -29,6 +32,9 @@ export default ({ palette, breakpoints, spacing }) => ({
     filter: 'opacity(0.6)',
     zIndex: -1,
     objectFit: 'cover',
+    [breakpoints.down('sm')]: {
+      height: '105vh',
+    },
   },
   sloganText: {
     fontSize: '2.5rem',
@@ -120,9 +126,17 @@ export default ({ palette, breakpoints, spacing }) => ({
     '& a': {
       marginLeft: '5px',
     },
+    [breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
   },
   link: {
     color: palette.primary['500'],
+    [breakpoints.down('sm')]: {
+      paddingTop: spacing.baseMargin,
+      paddingBottom: spacing.baseMargin,
+    },
   },
   cardActionContainer: {
     display: 'flex',

@@ -5,6 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
+import Hidden from 'material-ui/Hidden';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import IconButton from 'material-ui/IconButton';
 import CameraIcon from 'react-icons/lib/md/camera-alt';
@@ -51,9 +52,10 @@ class Header extends Component {
 
     return (
       <Grid container className={classes.coverBackground}>
-        <Grid item xs={7} className={classes.userInformationContainer}>
+        <Grid item xs={12} sm={6} className={classes.userInformationContainer}>
           <div className={classes.userInformation}>
             <ImageUploader user={user} isDisabled={isDisabled} />
+
             <div className={classes.userInformationContent}>
               <Typography type="headline" className={classes.text}>
                 {user.name}
@@ -69,7 +71,7 @@ class Header extends Component {
           </div>
         </Grid>
 
-        <Grid item xs={5} className={classes.changeCoverActionWrapper}>
+        <Grid item xs={12} sm={6} className={classes.changeCoverActionWrapper}>
           {isDisabled && (
             <Button
               raised

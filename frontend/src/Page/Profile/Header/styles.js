@@ -3,7 +3,15 @@ export default ({ breakpoints, palette, spacing }) => ({
     margin: 'auto',
     padding: '0 !important',
     background: palette.darkGreen['500'],
-    height: '28vh',
+    height: '36vh',
+    width: spacing.fullViewportWidth,
+    overflowX: 'hidden',
+    [breakpoints.down('sm')]: {
+      height: '80vh',
+    },
+    [breakpoints.up('sm')]: {
+      height: '40vh',
+    },
   },
   coverWrapper: {
     margin: 'auto',
@@ -14,15 +22,23 @@ export default ({ breakpoints, palette, spacing }) => ({
     zIndex: 2,
   },
   backgroundImg: {
+    margin: 'auto',
     position: 'absolute',
     zIndex: 1,
     filter: 'opacity(0.5)',
-    width: spacing.fullWidth,
-    height: '28vh',
+    height: '36vh',
     top: 0,
     left: 0,
-    margin: 'auto',
+    width: spacing.fullWidth,
     objectFit: 'cover',
+    [breakpoints.down('sm')]: {
+      height: '80vh',
+      width: spacing.fullViewportWidth,
+
+    },
+    [breakpoints.up('sm')]: {
+      height: '40vh',
+    },
   },
   coverBackground: {
     paddingTop: 56,
@@ -34,6 +50,9 @@ export default ({ breakpoints, palette, spacing }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    [breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
   userInformationContent: {
     paddingLeft: spacing.doubleBaseMargin,
@@ -42,7 +61,11 @@ export default ({ breakpoints, palette, spacing }) => ({
     margin: spacing.doubleBaseMargin,
   },
   text: {
+    display: 'block',
     color: palette.white,
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    cursor: 'default',
   },
   number: {
     color: palette.primary['500'],
@@ -60,7 +83,10 @@ export default ({ breakpoints, palette, spacing }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingRight: 50,
+    paddingLeft: 50,
+    [breakpoints.down('sm')]: {
+      padding: 20,
+    },
   },
   userInformation: {
     display: 'flex',
@@ -69,5 +95,8 @@ export default ({ breakpoints, palette, spacing }) => ({
   changeCoverActionWrapper: {
     display: 'flex',
     justifyContent: 'flex-end',
+    [breakpoints.down('sm')]: {
+      justifyContent: 'center',
+    },
   },
 });

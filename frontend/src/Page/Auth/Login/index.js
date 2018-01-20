@@ -239,7 +239,7 @@ class Login extends Component {
       <NavBar key={1} />,
       <Grid key={2} container direction="column" className={classes.container}>
         <Grid container className={classes.foreground}>
-          <Grid item xs={11} sm={5} className={classes.cardWrapper}>
+          <Grid item xs={11} sm={8} lg={5} className={classes.cardWrapper}>
             <Card raised className={classes.cardForm}>
               <form onSubmit={handleSubmit}>
                 <CardContent>
