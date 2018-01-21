@@ -1,4 +1,4 @@
 module.exports = {
-  secret: 'ilovesteamradio',
-  url: 'mongodb://mgm:mgm123@ds013564.mlab.com:13564/mgm-radio',
+  secret: process.env.REACT_APP_DATABASE_SECRET,
+  url: process.env.REACT_APP_DATABASE_URL,
 };
