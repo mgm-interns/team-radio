@@ -60,15 +60,8 @@ class OnlineUsers extends Component {
   }
 
   _onItemClick({ username }) {
-    const { currentUser, history } = this.props;
-    if (currentUser.username === username) {
-      history.push(`/profile/${username}`);
-      return;
-    }
-
-    this.props.notification.app.warning({
-      message: 'This feature is not ready yet.',
-    });
+    const { history } = this.props;
+    history.push(`/profile/${username}`);
   }
 
   renderPopoverContent() {
