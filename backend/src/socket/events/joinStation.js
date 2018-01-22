@@ -81,7 +81,7 @@ const _joinStationProcess = async (socket, io, userId, station) => {
 const _join = async (emitter, socket, userId, station, io) => {
   const stId = station.station_id;
   const stName = station.station_name;
-  socket.join(station.station_id);
+  socket.join(stId);
 
   delete station.playlist;
   emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
@@ -108,13 +108,14 @@ const _join = async (emitter, socket, userId, station, io) => {
 
   // Get nowplaying and emit to user
   try {
-    const player = await players.getPlayer(station.station_id);
+    const player = await players.getPlayer(stId);
     const nowPlaying = await player.getNowPlaying();
     emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, nowPlaying);
   } catch (err) {
     console.log('Players error: ' + err.message);
   }
 
+  // Update users online in station
   const count = await onlineManager.countOnlineOfStation(stId, io);
   const users = await onlineManager.getListUserOnline(stId, io);
   emitter.emit(EVENTS.SERVER_UPDATE_ONLINE_USERS, {
@@ -123,8 +124,5 @@ const _join = async (emitter, socket, userId, station, io) => {
   });
 
   // Let switcher sort station list again when online user change
-  switcher.updateNumberOfOnlineUsersInStation(
-    station.station_id,
-    await onlineManager.countOnlineOfStation(station.station_id, io),
-  );
+  switcher.updateNumberOfOnlineUsersInStation(stId, count);
 };
