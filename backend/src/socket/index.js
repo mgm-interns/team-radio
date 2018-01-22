@@ -93,7 +93,14 @@ io.on('connection', socket => {
           action.payload.songUrl,
         );
         break;
-
+      case EVENTS.CLIENT_GET_FAVOURITE_SONG:
+        console.log('Action received: ' + EVENTS.CLIENT_GET_FAVOURITE_SONG);
+        eventHandlers.getFavouriteSongs(
+          createEmitter(socket, io),
+          action.payload.userId,
+        );
+        console.log(action.payload.userId);
+        break;
       default:
         eventManager.chatEvents(io, socket, action);
         break;
