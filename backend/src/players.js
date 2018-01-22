@@ -33,19 +33,7 @@ class Player {
     );
     // Check songs will be skipped
     playlist.forEach(song => {
-      // Dem so vote co user
-      // Dem so down votes co user
       let points = 0;
-      /*
-      // Skip song base on upvotes and down votes.
-      song.up_vote.forEach(user => {
-        userIds.forEach(childUser => {
-          if (user.toString() === childUser.toString()) {
-            points += 1;
-          }
-        });
-      });
-      */
       song.down_vote.forEach(user => {
         userIds.forEach(childUser => {
           if (user.toString() === childUser.toString()) {
@@ -80,30 +68,22 @@ class Player {
     }
     this.skippedSongs.add(songId);
     if (songId === this.nowPlaying.song_id) {
-      this.skipNowPlayingSong();
+      let skipTime = Date.now() - this.nowPlaying.starting_time;
+      console.log('#1:', skipTime);
+      console.log('#2:', TIME_BUFFER);
+      skipTime = skipTime < TIME_BUFFER ? skipTime + TIME_BUFFER : 2 * TIME_BUFFER;
+      this._skipNowPlayingSong(skipTime);
+      this._nextSongByTimeout(skipTime, this.nowPlaying.song_id);
     }
     // TODO: check this.nowPlaying.song_id
   };
+
   removeSkippedSong = songId => {
     this.skippedSongs.delete(songId);
   };
 
   setPopular = status => {
     this.isPopular = status;
-  };
-
-  skipNowPlayingSong = async () => {
-    let skipTime = Date.now() - this.nowPlaying.starting_time + TIME_BUFFER;
-    if (2 * TIME_BUFFER < skipTime) skipTime = 2 * TIME_BUFFER;
-    this._emitSkippedSong(skipTime);
-    // TODO: setSkippedSong not working well now
-    await stationController.setSkippedSong(
-      this.stationId,
-      this.nowPlaying.song_id,
-    );
-    // when the rest time of the now playing song is less than 2 * TIME_BUFFER
-    // Them timeout for next song will is the less time
-    this._nextSongByTimeout(2 * TIME_BUFFER, this.nowPlaying.song_id);
   };
 
   getNowPlaying = () => ({
@@ -176,7 +156,6 @@ class Player {
   };
   _emitSkippedSong = delay => {
     // Take here to current station working
-    this._emitNowPlaying();
     this._emit(EVENTS.SERVER_SKIP_SONG, {
       message: `The song will be skipped after ${Math.floor(
         delay / 1000,
@@ -184,12 +163,8 @@ class Player {
       delay: delay,
       now_playing: this.getNowPlaying(),
     });
-    this._emitPlaylist();
-    this._emitHistory();
-    if (this.isPopular) {
-      this._emitThumbnail();
-    }
   };
+
   _resetNowPlaying = () => {
     this.nowPlaying = {
       song_id: 0,
@@ -213,18 +188,17 @@ class Player {
         this._emitStationState();
       } else {
         this._setNowPlaying(song, starting_time);
+        stationController.updateStartingTime(
+          this.stationId,
+          this.nowPlaying.starting_time,
+        );
+        this._emitStationState();
         if (this.skippedSongs.has(song.song_id)) {
           this.skippedSongs.delete(song.song_id);
           // TODO: setSkippedSong not working well now
-          await stationController.setSkippedSong(this.stationId, song.song_id);
-          this._emitSkippedSong(TIME_BUFFER);
+          this._skipNowPlayingSong(TIME_BUFFER);
           this._nextSongByTimeout(TIME_BUFFER, this.nowPlaying.song_id);
         } else {
-          this._emitStationState();
-          stationController.updateStartingTime(
-            this.stationId,
-            this.nowPlaying.starting_time,
-          );
           this._nextSongByTimeout(
             song.duration + TIME_BUFFER,
             this.nowPlaying.song_id,
@@ -245,6 +219,7 @@ class Player {
     setTimeout(async () => {
       // The song was not skipped
       if (playingSongId === this.nowPlaying.song_id) {
+        console.log('_nextSongByTimeout: ', Date.now() - this.nowPlaying.starting_time);
         await stationController.setPlayedSongs(this.stationId, [
           this.nowPlaying.song_id,
         ]);
@@ -257,6 +232,11 @@ class Player {
       }
     }, timeout);
   };
+  _skipNowPlayingSong = delay => {
+    this._emitSkippedSong(delay);
+    stationController.setPlayedSongs(this.stationId, [this.nowPlaying.song_id]);
+    stationController.setSkippedSong(this.stationId, this.nowPlaying.song_id);
+  }
   // TODO: [start server, add new song to empty station, next song nomarly]
   _setPlayableSong = async (station = null) => {
     if (!station) {
