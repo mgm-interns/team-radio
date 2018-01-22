@@ -167,9 +167,9 @@ export const addSong = async (stationId, songUrl, userId) => {
       created_date: new Date().getTime(),
     };
     await stationModels.addSong(stationId, song);
-    station = await stationModels.getStationById(stationId);
+    playlist = await getAvailableListSong(stationId);
     players.updatePlaylist(stationId);
-    return station.playlist;
+    return playlist;
   } catch (err) {
     console.log('Error add song : ' + err);
     throw err;
@@ -368,7 +368,7 @@ export const upVote = async (stationId, songId, userId) => {
     );
     // TODO: update votes of users in the station
     stationModels.increaseUserPoints(stationId, currentSong.creator, userAddedPoints);
-    const playList = await stationModels.getPlaylistOfStation(stationId);
+    const playList = await getAvailableListSong(stationId);
     return playList;
 
   } catch (err) {
@@ -429,7 +429,7 @@ export const downVote = async (stationId, songId, userId) => {
     );
     // TODO: update votes of users in the station
     stationModels.increaseUserPoints(stationId, currentSong.creator, userAddedPoints);
-    const playList = await stationModels.getPlaylistOfStation(stationId);
+    const playList = await getAvailableListSong(stationId);
     return playList;
   } catch (err) {
     console.log(err);
