@@ -15,6 +15,7 @@ import fixture from 'Fixture/landing';
 import { transformNumber } from 'Transformer';
 import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
+import { getFavouriteSongs } from 'Redux/api/favouriteSongs/actions';
 import {
   muteVideoRequest,
   passiveUserRequest,
@@ -68,12 +69,32 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { muteNowPlaying, currentStation: { nowPlaying } } = nextProps;
+    const {
+      muteNowPlaying,
+      favourite,
+      currentStation: { nowPlaying },
+    } = nextProps;
+    const { getFavouriteSongs, userId } = this.props;
+
     this._checkValidStation(nextProps);
 
     if (!nowPlaying.url) {
       this.props.passiveUserRequest();
     }
+
+    // Refresh list of favourited songs after user add or remove a song from favourite list
+    if (favourite.trigger) {
+      getFavouriteSongs(userId);
+    }
+    // if(favourite.data.length!==this.props.favourite.data.length){
+    //   playlist.forEach(playlistItem=>{
+    //     favourite.data.forEach(favouriteItem=>{
+    //       if(playlistItem.song_id===favouriteItem.song_id){
+    //         playlistItem
+    //       }
+    //     })
+    //   })
+    // }
 
     this.setState({
       muted: muteNowPlaying,
@@ -91,6 +112,7 @@ class StationPage extends Component {
     // Station must be a valid string
     if (!joined.loading && !joined.success && !joined.loggedInStation) {
       this.props.joinStation({ stationId, userId });
+      this.props.getFavouriteSongs(userId);
     }
     // Check if user is already joined in other station
     if (!joined.loading && joined.failed && !!joined.loggedInStation) {
@@ -98,6 +120,7 @@ class StationPage extends Component {
         const { stationId } = joined.loggedInStation;
         history.replace(`/station/${stationId}`);
         this.props.joinStation({ stationId, userId });
+        this.props.getFavouriteSongs(userId);
       }, 5000);
       return;
     }
@@ -141,7 +164,11 @@ class StationPage extends Component {
   }
 
   _renderTabs() {
-    const { classes, currentStation: { playlist, history } } = this.props;
+    const {
+      classes,
+      favourite,
+      currentStation: { playlist, history },
+    } = this.props;
     const { tabValue } = this.state;
 
     return [
@@ -194,7 +221,7 @@ class StationPage extends Component {
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !history,
             })}
-            data={history}
+            data={favourite.data}
           />
         </TabContainer>
       ),
@@ -332,6 +359,8 @@ StationPage.propTypes = {
   passiveUserRequest: PropTypes.func,
   passive: PropTypes.bool,
   nowPlayingFromPlaylist: PropTypes.object,
+  getFavouriteSongs: PropTypes.func,
+  favourite: PropTypes.object,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -342,6 +371,7 @@ const mapStateToProps = ({ api, page }) => ({
   userId: api.user.data.userId,
   passive: page.station.passive,
   nowPlayingFromPlaylist: page.station.nowPlaying,
+  favourite: api.favouriteSongs.favourite,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -350,6 +380,7 @@ const mapDispatchToProps = dispatch => ({
   muteVideoRequest: ({ muteNowPlaying, mutePreview, userDid }) =>
     dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
   passiveUserRequest: isPassive => dispatch(passiveUserRequest(isPassive)),
+  getFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
 });
 
 export default compose(

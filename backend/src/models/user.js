@@ -72,7 +72,8 @@ userSchema.methods.validPassword = function(password) {
 userSchema.set('autoIndex', true);
 // create the model for users and expose it to our app
 
-var user = (module.exports = mongoose.model('users', userSchema));
+/* eslint-disable no-multi-assign */
+const user = (module.exports = mongoose.model('users', userSchema));
 
 module.exports.getUserByEmail = async email =>
   user.findOne({ email: email }, { password: 0 });
@@ -169,7 +170,9 @@ module.exports.deleteAsongInFavouritedSongs = (userId, songUrl) => {
  */
 module.exports.getFavouritedSongs = async userId => {
   const query = { _id: _safeObjectId(userId) };
-  return (await user.findOne(query, { favourited_songs: true }))
+  return (await user
+    .findOne(query, { favourited_songs: true })
+    .populate('favourited_songs.creator', { _id: 1, name: 1, avatar_url: 1 }))
     .favourited_songs;
 };
 

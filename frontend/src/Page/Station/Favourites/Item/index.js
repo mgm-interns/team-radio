@@ -92,7 +92,7 @@ class FavouriteVideo extends Component {
           {/* </Tooltip> */}
           <div className={classes.creator}>
             Added by
-            {creator === null ? (
+            {creator === null || creator === undefined ? (
               ' Unregistered User'
             ) : (
               <Tooltip placement={'bottom'} title={creator.name}>

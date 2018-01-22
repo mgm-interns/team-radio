@@ -16,11 +16,11 @@ import { connect } from 'react-redux';
 import withRouter from 'react-router-dom/withRouter';
 import { Link } from 'react-router-dom';
 import { Images } from 'Theme';
+import { upVoteSong, downVoteSong } from 'Redux/api/currentStation/actions';
 import {
-  upVoteSong,
-  downVoteSong,
   favouriteSongRequest,
-} from 'Redux/api/currentStation/actions';
+  getFavouriteSongs,
+} from 'Redux/api/favouriteSongs/actions';
 import { withNotification } from 'Component/Notification';
 import { transformNumber } from 'Transformer';
 import styles from './styles';
@@ -42,7 +42,7 @@ class PlaylistItem extends Component {
 
     this.upVoteSong = this.upVoteSong.bind(this);
     this.downVoteSong = this.downVoteSong.bind(this);
-    // this._onFavouriteIconClick = this._onFavouriteIconClick.bind(this);
+    this._onFavouriteIconClick = this._onFavouriteIconClick.bind(this);
   }
 
   componentDidMount() {
@@ -58,13 +58,16 @@ class PlaylistItem extends Component {
 
   // Always re-render upVote & downVote when props has changed
   componentWillReceiveProps(nextProps) {
-    const { up_vote, down_vote } = nextProps;
+    const { up_vote, down_vote, favourite } = nextProps;
     this.setState({
       isUpVote: PlaylistItem.isUpVote(nextProps),
       isDownVote: PlaylistItem.isDownVote(nextProps),
       upVotes: up_vote.length,
       downVotes: down_vote.length,
     });
+
+    console.log('next props: ', favourite.data.length);
+    console.log('props: ', this.props.favourite.data.length);
   }
 
   upVoteSong() {
@@ -162,11 +165,11 @@ class PlaylistItem extends Component {
     });
   }
 
-  // _onFavouriteIconClick(songId, songUrl) {
-  //   const { userId, stationId, favouriteSongRequest } = this.props;
-  //   favouriteSongRequest({ songId, userId, stationId, songUrl });
-  //   this.setState({ isFavourite: !this.state.isFavourite });
-  // }
+  _onFavouriteIconClick(songId, songUrl) {
+    const { userId, stationId, favouriteSongRequest } = this.props;
+    favouriteSongRequest({ songId, userId, stationId, songUrl });
+    this.setState({ isFavourite: !this.state.isFavourite });
+  }
 
   render() {
     const {
@@ -180,6 +183,7 @@ class PlaylistItem extends Component {
       url,
       willBeSkipped,
     } = this.props;
+    const { isFavourite } = this.state;
 
     return (
       <Grid container className={classNames(classes.container, { playing })}>
@@ -205,20 +209,20 @@ class PlaylistItem extends Component {
         </Grid>
         <Grid item xs={9} className={classes.info}>
           <Grid container>
-            <Grid item xs={12}>
+            <Grid item xs={10}>
               <Tooltip placement={'bottom'} title={title}>
                 <div className={classes.name}>{title}</div>
               </Tooltip>
             </Grid>
-            {/* <Grid item xs={2} className={classes.favouriteContainer}> */}
-            {/* <IconButton */}
-            {/* color={'primary'} */}
-            {/* className={classes.favouriteBtn} */}
-            {/* onClick={() => this._onFavouriteIconClick(song_id, url)} */}
-            {/* > */}
-            {/* {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />} */}
-            {/* </IconButton> */}
-            {/* </Grid> */}
+            <Grid item xs={2} className={classes.favouriteContainer}>
+              <IconButton
+                color={'primary'}
+                className={classes.favouriteBtn}
+                onClick={() => this._onFavouriteIconClick(song_id, url)}
+              >
+                {isFavourite ? <StarIcon /> : <OutlineStarIcon />}
+              </IconButton>
+            </Grid>
           </Grid>
           <div className={classes.creator}>
             Added by
@@ -306,12 +310,15 @@ PlaylistItem.propTypes = {
   notification: PropTypes.object,
   favouriteSongRequest: PropTypes.func,
   stationId: PropTypes.string,
+  getFavouriteSongs: PropTypes.func,
+  favourite: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({
   userId: api.user.data.userId,
   isAuthenticated: api.user.isAuthenticated,
   stationId: api.currentStation.station.station_id,
+  favourite: api.favouriteSongs.favourite,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -319,6 +326,7 @@ const mapDispatchToProps = dispatch => ({
   downVoteSong: option => dispatch(downVoteSong(option)),
   favouriteSongRequest: ({ songId, userId, stationId, songUrl }) =>
     dispatch(favouriteSongRequest({ songId, userId, stationId, songUrl })),
+  getFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
 });
 
 export default compose(

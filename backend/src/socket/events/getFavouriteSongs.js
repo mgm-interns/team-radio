@@ -24,7 +24,6 @@ const _getFavouriteSongs = async (emitter, userId) => {
   // eslint-disable-next-line
   const favouriteSongs =
     await userController.getFavouritedSongs(userId);
-  console.log('favouriteSongs : ' + favouriteSongs);
   if (favouriteSongs) {
     emitter.emit(EVENTS.SERVER_GET_FAVOURITE_SONG_SUCCESS, {
       songs: favouriteSongs,

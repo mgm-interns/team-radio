@@ -260,7 +260,7 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
 };
 /**
  * The function set favourite song
- * @param {string} songId 
+ * @param {string} songId
  * @param {string} userId   -- > user id  : who is favourite song
  * @param {string} stationId  -- > station id of station has song
  * @param {string} songUrl  --> url of song which is favourite
@@ -333,7 +333,7 @@ export const getHistory = async (userId, limited) => {
 }
 /**
  * The function get info favourited songs
- * @param {string} userId 
+ * @param {string} userId
  */
 export const getFavouritedSongs = async (userId) => {
   try {

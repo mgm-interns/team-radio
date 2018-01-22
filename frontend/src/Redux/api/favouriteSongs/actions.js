@@ -1,11 +1,21 @@
-import HttpRequest from 'Util/redux/HttpRequest';
+import {
+  CLIENT_FAVOURITE_SONG,
+  CLIENT_GET_FAVOURITE_SONG,
+} from 'Redux/actions';
 
-const ENDPOINT = process.env.REACT_APP_SERVER_END_POINT;
+const DEFAULT_USER_ID = '0';
 
-const getFavouriteSongsRequest = new HttpRequest({
-  method: 'GET',
-  type: 'FETCH_FAVOURITE_SONGS_BY_USER_ID',
-  endpoint: `${ENDPOINT}/getFavouriteSongs`,
+export const favouriteSongRequest = ({
+  songId,
+  userId = DEFAULT_USER_ID,
+  stationId,
+  songUrl,
+}) => ({
+  type: CLIENT_FAVOURITE_SONG,
+  payload: { songId, userId, stationId, songUrl },
 });
 
-export const getFavouriteSongs = getFavouriteSongsRequest.getAction();
+export const getFavouriteSongs = ({ userId }) => ({
+  type: CLIENT_GET_FAVOURITE_SONG,
+  payload: { userId },
+});
