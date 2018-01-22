@@ -42,7 +42,7 @@ export const forgotPassword = async (emailAdd, superSecret) => {
       email: emailAdd,
     };
 
-    const token = jwt.sign(payload, superSecret, { expiresIn: 604800 });
+    const token = jwt.sign(payload, superSecret, { expiresIn: 86400 });
     await User.setTokenResetPassword(user._id.toString(), token);
 
     const data = {
@@ -51,7 +51,7 @@ export const forgotPassword = async (emailAdd, superSecret) => {
       template: 'forgot-password-email',
       subject: 'Reset TeamRadio password',
       context: {
-        url: resetPasswordUrl + token,
+        reset_password_url: resetPasswordUrl + token,
         name: user.name,
       },
     };
