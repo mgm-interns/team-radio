@@ -13,6 +13,10 @@ const userSchema = mongoose.Schema({
     unique: true,
   },
   password: { type: String },
+  token_reset_password: {
+    type: String,
+    default: '',
+  },
   is_password: { type: Boolean },
   name: { type: String, default: '' },
   firstname: { type: String, default: '' },
@@ -102,7 +106,7 @@ module.exports.updateReputation = async (email, point) =>
 module.exports.setPassword = async (email, password) =>
   user.update(
     { email: email },
-    { password: password, is_password: true },
+    { password: password, is_password: true, token_reset_password: '' },
     { multi: true },
   );
 
@@ -185,3 +189,10 @@ module.exports.getSongInFavouriteds = async (userId, songUrl) =>
       },
     },
   )).favourited_songs;
+
+module.exports.setTokenResetPassword = async (userId, token) =>
+  user.update(
+    { _id: _safeObjectId(userId) },
+    { token_reset_password: token },
+    { multi: true },
+  );

@@ -3,6 +3,7 @@ import User from '../models/user';
 import authController from '../controllers/auth';
 import * as userController from '../controllers/user';
 import * as stationController from '../controllers/station';
+import * as manageUserAccountController from '../controllers/manageUserAccount';
 
 export default router => {
   router.post('/signup', async (req, res) => {
@@ -76,6 +77,7 @@ export default router => {
       throw err;
     }
   });
+
   router.post('/signupWithSocialAccount', async (req, res) => {
     try {
       const user = await userController.createUserWithSocialAccount(
@@ -421,6 +423,38 @@ export default router => {
     } catch (err) {
       throw err;
     }
+  });
+
+  router.post('/forgotPassword', async (req, res) => {
+    try {
+      const msg = await manageUserAccountController.forgotPassword(
+        req.body.email,
+        req.app.get('superSecret'),
+      );
+      console.log(msg);
+      res.json(msg);
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  router.get('/resetPassword/:token', async (req, res) => {
+    res.json(
+      await manageUserAccountController.verifyResetPasswordToken(
+        req.params.token,
+        req.app.get('superSecret'),
+      ),
+    );
+  });
+
+  router.post('/resetPassword', async (req, res) => {
+    res.json(
+      await manageUserAccountController.resetPassword(
+        req.body.token,
+        req.app.get('superSecret'),
+        req.body.newPassword,
+      ),
+    );
   });
 
   router.post('/getHistory', async (req, res) => {
