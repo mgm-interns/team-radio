@@ -88,6 +88,7 @@ export const leaveStationAlreadyIn = async (userId, stId, stName, io) => {
 /**
  * This function allows socket to leave all the stations it is in
  * With each station, it will send leave notification
+ * @param {string} userId
  */
 export const leaveAllStation = async (io, socket, userId) => {
   // Get all stations that socket is in
