@@ -28,7 +28,9 @@ class Player {
     const preSkippedSongs = new Set(this.skippedSongs);
     // Save the user ids
     this.userIds = userIds;
-    const playlist = await stationController.getAvailableListSong(this.stationId);
+    const playlist = await stationController.getAvailableListSong(
+      this.stationId,
+    );
     // Check songs will be skipped
     playlist.forEach(song => {
       // Dem so vote co user
@@ -131,7 +133,9 @@ class Player {
   };
 
   _emitPlaylist = async () => {
-    const playlist = await stationController.getListSong(this.stationId);
+    const playlist = await stationController.getAvailableListSong(
+      this.stationId,
+    );
     this._emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
       playlist: playlist,
     });
@@ -199,7 +203,7 @@ class Player {
     this.nowPlaying.url = song.url;
     this.nowPlaying.thumbnail = song.thumbnail;
     this.nowPlaying.starting_time = starting_time;
-  }
+  };
   // TODO: check change state of the station to update available stations
   _startSong = async (song, starting_time) => {
     try {
@@ -244,7 +248,10 @@ class Player {
         await stationController.setPlayedSongs(this.stationId, [
           this.nowPlaying.song_id,
         ]);
-        stationController.addPointsByPlayedSong(this.stationId, this.nowPlaying.song_id);
+        stationController.addPointsByPlayedSong(
+          this.stationId,
+          this.nowPlaying.song_id,
+        );
         this.skippedSongs.delete(playingSongId);
         this._setPlayableSong();
       }
@@ -319,7 +326,7 @@ class Player {
 export const init = async () => {
   try {
     const stations = await stationController.getAllStationDetails();
-    stations.forEach((station) => {
+    stations.forEach(station => {
       station = station.toObject();
       _players[station.station_id] = new Player(station);
     });
@@ -369,8 +376,7 @@ export const getNowPlaying = async stationId => {
 export const getPlayingStationIds = () => {
   const playingStationIds = [];
   _players.forEach((player, stationId) => {
-    if (player.getNowPlaying().song_id)
-      playingStationIds.push(stationId);
+    if (player.getNowPlaying().song_id) playingStationIds.push(stationId);
   });
   return playingStationIds;
-}
+};
