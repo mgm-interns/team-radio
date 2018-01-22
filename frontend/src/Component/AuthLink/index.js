@@ -119,12 +119,10 @@ class AuthLink extends Component {
           </Fragment>
         )}
         {user.isAuthenticated && (
-          <div>
-            <div
+          <div className={classes.menuItem}>
+            <Link
+              to={`/profile/${user.data.username}`}
               className={classes.menuItem}
-              aria-owns={anchorEl ? 'simple-menu' : null}
-              aria-haspopup="true"
-              onClick={this._openMenu}
             >
               <img
                 className={classes.avatar}
@@ -135,7 +133,15 @@ class AuthLink extends Component {
                 }
                 alt="avatar"
               />
-              <span className={classes.displayName}>{user.data.name}</span>
+              <div>
+                <span className={classes.displayName}>{user.data.name}</span>
+              </div>
+            </Link>
+            <div
+              aria-owns={anchorEl ? 'simple-menu' : null}
+              aria-haspopup="true"
+              onClick={this._openMenu}
+            >
               <span>
                 <IconButton className={classes.dropdownIcon}>
                   <ArrowDropDownIcon />
