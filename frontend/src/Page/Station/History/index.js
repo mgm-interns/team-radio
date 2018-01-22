@@ -19,7 +19,7 @@ class History extends Component {
       >
         <List style={{ paddingTop: 0, paddingBottom: 0 }}>
           {data.map((video, index) => (
-            <Item key={index} {...video} playing={index === 0} />
+            <Item key={video.song_id || index} {...video} />
           ))}
         </List>
       </Grid>
