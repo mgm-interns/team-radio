@@ -3,13 +3,12 @@ import eventHandlers from './events';
 import eventManager from './managers';
 import * as players from '../players';
 import * as EVENTS from '../const/actions';
+import * as CONSTANTS from '../const/constants';
 import createEmitter from './managers/createEmitter';
 
 const io = SocketIO();
-export const UPVOTE_ACTION = 1;
-export const DOWNVOTE_ACTION = -1;
 
-io.on('connection', async function (socket) {
+io.on('connection', socket => {
   console.log('Connected with ' + socket.id);
   eventHandlers.socketConnect(io, socket);
 
@@ -63,7 +62,7 @@ io.on('connection', async function (socket) {
       case EVENTS.CLIENT_UPVOTE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_UPVOTE_SONG);
         eventHandlers.voteSong(
-          UPVOTE_ACTION,
+          CONSTANTS.UPVOTE_ACTION,
           io,
           socket,
           action.payload.userId,
@@ -75,7 +74,7 @@ io.on('connection', async function (socket) {
       case EVENTS.CLIENT_DOWNVOTE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_DOWNVOTE_SONG);
         eventHandlers.voteSong(
-          DOWNVOTE_ACTION,
+          CONSTANTS.DOWNVOTE_ACTION,
           io,
           socket,
           action.payload.userId,
@@ -83,6 +82,7 @@ io.on('connection', async function (socket) {
           action.payload.songId,
         );
         break;
+
       case EVENTS.CLIENT_FAVOURITE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_FAVOURITE_SONG);
         eventHandlers.addFavourite(
@@ -93,6 +93,7 @@ io.on('connection', async function (socket) {
           action.payload.songUrl,
         );
         break;
+
       default:
         eventManager.chatEvents(io, socket, action);
         break;

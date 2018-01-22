@@ -1,7 +1,21 @@
+/** *******************************************************
+ *                                                        *
+ *                                                        *
+ *                   ADD FAVOURITE SONG                   *
+ *                        By Ryker                        *
+ *                                                        *
+ *                                                        *
+ ******************************************************** */
+
 import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
+import * as CONSTANTS from '../../const/constants';
 
 export default async (emitter, songId, userId, stationId, songUrl) => {
+  /**
+   * Decline request if the user does not exist
+   * Otherwise, allow to add favourite song
+   */
   const user = await userController.getUserById(userId);
   if (user) {
     try {
@@ -13,11 +27,20 @@ export default async (emitter, songId, userId, stationId, songUrl) => {
     }
   } else {
     emitter.emit(EVENTS.SERVER_FAVOURITE_SONG_FAILURE, {
-      message: 'You need to login to use this feature.',
+      message: CONSTANTS.MESSAGE_LOGIN_REQUIRED,
     });
   }
 };
 
+/**
+ * Mark a song as favourite
+ * Remove from favourite if the song is already in favourite list
+ * @param {Object} emitter Use for dispatch events
+ * @param {String} songId ID of the song you want to mark as favourite
+ * @param {String} userId ID of the user who request to mark favourite song
+ * @param {String} stationId ID of the station which song is in
+ * @param {String} songUrl Url of the song you want to mark as favourite
+ */
 // eslint-disable-next-line
 const _addFavouriteSong = async (emitter, songId, userId, stationId, songUrl) => {
   // eslint-disable-next-line

@@ -1,4 +1,5 @@
 import * as EVENTS from '../../const/actions';
+import * as CONSTANTS from '../../const/constants';
 import * as userController from '../../controllers/user';
 import * as switcher from '../../switcher';
 import createEmitter from './createEmitter';
@@ -33,7 +34,10 @@ export const getListSocketIdInStation = async (stationId, io) =>
 
 // Return number of online users in station
 export const countOnlineOfStation = async (stationId, io) => {
+  // Get number of user logged in
   const users = (await getListUserIdOnline(stationId, io)).size;
+
+  // Get number of anonymous
   let anonymous = 0;
   const listSocket = await getListSocketIdInStation(stationId, io);
   listSocket.forEach(socketId => {
@@ -42,14 +46,13 @@ export const countOnlineOfStation = async (stationId, io) => {
       anonymous += 1;
     }
   });
+
   return users + anonymous;
 };
 
 /**
  * Count number of online users for the stations
  * with each station, return an object include: station_id, online_count
- * @param {array} stations: list of station want to count number of online users
- * @param {*} io
  */
 export const countOnlineOfAllStations = async (stations, io) =>
   Promise.all(
@@ -62,8 +65,13 @@ export const countOnlineOfAllStations = async (stations, io) =>
     }),
   );
 
+/**
+ * An user cannot listening on multi station at a time
+ * => Force any other tabs or browser redirect to most recent station
+ */
 export const leaveStationAlreadyIn = async (userId, stId, stName, io) => {
   const listSocket = await getAllSocketConnected(io);
+
   listSocket.forEach(socketId => {
     const socket = getSocketById(socketId, io);
     const oldStation = getAllStationsSocketIn(socket)[0];
@@ -79,7 +87,7 @@ export const leaveStationAlreadyIn = async (userId, stId, stName, io) => {
 
 /**
  * This function allows socket to leave all the stations it is in
- * With each station, it will send a leave notification
+ * With each station, it will send leave notification
  */
 export const leaveAllStation = async (io, socket, userId) => {
   // Get all stations that socket is in
@@ -88,7 +96,7 @@ export const leaveAllStation = async (io, socket, userId) => {
 
   try {
     const user = await userController.getUserById(userId);
-    if (!user) throw new Error('UserId is not exist!');
+    if (!user) throw new Error();
     allStations.forEach(stationId => {
       leaveStationPromises.push(
         _leaveStation(
@@ -96,21 +104,27 @@ export const leaveAllStation = async (io, socket, userId) => {
           socket,
           stationId,
           userId,
-          user.name || user.username || 'Someone',
+          user.name || user.username || CONSTANTS.ANONYMOUS_NAME,
         ),
       );
     });
   } catch (err) {
     allStations.forEach(stationId => {
       leaveStationPromises.push(
-        _leaveStation(io, socket, stationId, '0', 'Someone'),
+        _leaveStation(
+          io,
+          socket,
+          stationId,
+          CONSTANTS.ANONYMOUS_ID,
+          CONSTANTS.ANONYMOUS_NAME,
+        ),
       );
     });
   }
   Promise.all(leaveStationPromises);
 };
 
-// Get list userId are in station
+// Get list userIds are online in station
 export const getListUserIdOnline = async (stationId, io) => {
   const userList = new Set(); // Use set to make userList unique
   const socketList = await getListSocketIdInStation(stationId, io);
@@ -126,9 +140,10 @@ export const getListUserIdOnline = async (stationId, io) => {
   return userList;
 };
 
+// Get list users online, include: name, username, avatar_url
 export const getListUserOnline = async (stationId, io) => {
   const setOfUserId = await getListUserIdOnline(stationId, io);
-  const list = [...setOfUserId];
+  const list = [...setOfUserId]; // Convert set to array
 
   return Promise.all(
     list.map(async userId => {
@@ -142,12 +157,14 @@ export const getListUserOnline = async (stationId, io) => {
   );
 };
 
+// Check if user already in station
 export const userAlreadyInRoom = async (stationId, userId, io) => {
   // Get list of online user in station
   const list = await getListUserIdOnline(stationId, io);
   return list.has(userId);
 };
 
+// Get station user is in
 export const getStationUserAlreadyIn = async (userId, socket, io) => {
   // Get all sockets have connected with Server
   const socketList = await getAllSocketConnected(io);
@@ -160,7 +177,7 @@ export const getStationUserAlreadyIn = async (userId, socket, io) => {
         const stationSocketIn = getAllStationsSocketIn(tmpSocket)[0];
         if (stationSocketIn) {
           stationUserIn = stationSocketIn;
-          return false;
+          return false; // break forEach loop
         }
       }
     }
@@ -169,6 +186,13 @@ export const getStationUserAlreadyIn = async (userId, socket, io) => {
   return stationUserIn;
 };
 
+/**
+ * This function will notify all peoples in station that an user has left
+ * @param stationId ID of station you want to notify
+ * @param name Name of user just joined
+ * @param emitter Use for Emit notify
+ * @param io
+ */
 export const leaveNotification = async (stationId, name, emitter, io) => {
   const count = await countOnlineOfStation(stationId, io);
   const users = await getListUserOnline(stationId, io);
@@ -183,6 +207,13 @@ export const leaveNotification = async (stationId, name, emitter, io) => {
   });
 };
 
+/**
+ * This function will notify all peoples in station that an user has joined
+ * @param {String} stationId ID of station you want to notify
+ * @param {String} name Name of user just joined
+ * @param {Any} emitter Use for Emit notify
+ * @param {Any} io
+ */
 export const joinNotification = async (stationId, name, emitter, io) => {
   const count = await countOnlineOfStation(stationId, io);
   const users = await getListUserOnline(stationId, io);
@@ -201,6 +232,7 @@ const _leaveStation = (io, socket, stationId, userId, name) => {
   const emitter = createEmitter(socket, io);
   return new Promise(async resolve => {
     socket.leave(stationId, resolve);
+    socket.userId = undefined;
     switcher.updateNumberOfOnlineUsersInStation(
       stationId,
       await countOnlineOfStation(stationId, io),

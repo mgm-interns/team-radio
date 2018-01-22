@@ -1,4 +1,14 @@
+/** *******************************************************
+ *                                                        *
+ *                                                        *
+ *                      JOIN STATION                      *
+ *                        By Ryker                        *
+ *                                                        *
+ *                                                        *
+ ******************************************************** */
+
 import * as EVENTS from '../../const/actions';
+import * as CONSTANTS from '../../const/constants';
 import * as stationController from '../../controllers/station';
 import * as userController from '../../controllers/user';
 import * as players from '../../players';
@@ -12,7 +22,10 @@ export default async (io, socket, userId, stationId) => {
   try {
     // Check if stationId is not exist, decline join request
     const station = await stationController.getStation(stationId);
+
+    // Leave all staion has joined before
     await onlineManager.leaveAllStation(io, socket, userId);
+
     _joinStationProcess(socket, io, userId, station);
   } catch (err) {
     socket.leaveAll();
@@ -33,20 +46,29 @@ const _joinStationProcess = async (socket, io, userId, station) => {
   const alreadyInRoom =
     await onlineManager.userAlreadyInRoom(stationId, userId, io);
 
+  /**
+   * This conditional check if user already in station:
+   * - If user not in station yet, allow join request and send notification
+   * - If user already in station, allow join request and not send any notification
+   */
   if (!alreadyInRoom) {
     _join(emitter, socket, userId, station, io);
+
+    // Skip song decision when online user change
     skipDecider(io, station.station_id);
+
+    // Send join notification
     if (user) {
       onlineManager.joinNotification(
         station.station_id,
-        user.name || user.username || 'Someone',
+        user.name || user.username || CONSTANTS.ANONYMOUS_NAME,
         emitter,
         io,
       );
     } else {
       onlineManager.joinNotification(
         station.station_id,
-        'Someone',
+        CONSTANTS.ANONYMOUS_NAME,
         emitter,
         io,
       );
@@ -67,6 +89,10 @@ const _join = async (emitter, socket, userId, station, io) => {
     station: station,
   });
 
+  /**
+   * An user cannot listening on multi station at a time
+   * => Force any other tabs or browser redirect to most recent station
+   */
   onlineManager.leaveStationAlreadyIn(userId, stId, stName, io);
 
   // Get nowplaying and emit to user
@@ -83,6 +109,7 @@ const _join = async (emitter, socket, userId, station, io) => {
     users: users,
   });
 
+  // Let switcher sort station list again when online user change
   switcher.updateNumberOfOnlineUsersInStation(
     station.station_id,
     await onlineManager.countOnlineOfStation(station.station_id, io),
