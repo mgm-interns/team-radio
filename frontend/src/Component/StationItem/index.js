@@ -8,6 +8,7 @@ import CircleIcon from 'react-icons/lib/fa/circle';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withNotification } from 'Component/Notification';
+import { WavingAnimation } from 'Component';
 import { withRouter } from 'react-router-dom';
 import withStyles from 'material-ui/styles/withStyles';
 import { Images } from 'Theme';
@@ -23,6 +24,7 @@ class SwitcherItem extends Component {
       station_id,
       currentStation: { station, nowPlaying },
       disableOnlineCount,
+      enableWavingIcon,
     } = this.props;
     let { thumbnail = Images.fixture.avatar1, online_count } = this.props;
     if ((station && station.station_id) === station_id) {
@@ -59,6 +61,11 @@ class SwitcherItem extends Component {
               </Typography>
             </div>
           )}
+          {enableWavingIcon && (
+            <div className={classes.playingStationWrapper}>
+              <WavingAnimation />
+            </div>
+          )}
         </div>
         <div className={classes.stationInfo}>
           <Tooltip id={station_id} title={station_name} placement={'right'}>
@@ -80,6 +87,7 @@ SwitcherItem.propTypes = {
   currentStation: PropTypes.object,
   station_id: PropTypes.any,
   online_count: PropTypes.any,
+  enableWavingIcon: PropTypes.bool,
 };
 
 SwitcherItem.defaultProps = {
