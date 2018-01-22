@@ -8,6 +8,7 @@ import Notification from 'Page/Demo/Notification';
 import Auth from 'Page/Auth';
 import Login from 'Page/Auth/Login';
 import Register from 'Page/Auth/Register';
+import ForgotPassword from 'Page/Auth/ForgotPassword';
 
 export default [
   {
@@ -32,18 +33,12 @@ export default [
     component: Register,
   },
   {
+    path: '/auth/forgotpassword',
+    component: ForgotPassword,
+  },
+  {
     path: '/auth',
     component: Auth,
-    // routes: [
-    //   {
-    //     path: '/auth/login',
-    //     component: Login,
-    //   },
-    //   {
-    //     path: '/auth/register',
-    //     component: Register,
-    //   },
-    // ],
   },
   {
     path: '/demo/image-cropper',

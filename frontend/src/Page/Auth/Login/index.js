@@ -209,7 +209,9 @@ class Login extends Component {
             </Button>
           )}
           <FormHelperText className={classes.callout}>
-            <span> Not a member? </span>
+            <Link to="/auth/forgotpassword" className={classes.link}>
+              Forgot your password?
+            </Link>
             <Link to="/auth/register" className={classes.link}>
               Create an account
             </Link>

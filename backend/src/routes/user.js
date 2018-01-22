@@ -431,7 +431,7 @@ export default router => {
         req.body.email,
         req.app.get('superSecret'),
       );
-      console.log(msg);
+      // console.log(msg);
       res.json(msg);
     } catch (err) {
       throw err;

@@ -120,9 +120,11 @@ export default ({ palette, breakpoints, spacing }) => ({
   },
   callout: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     fontSize: '14px',
     margin: '20px',
+    marginLeft: 0,
+    marginRight: 0,
     '& a': {
       marginLeft: '5px',
     },
@@ -133,6 +135,7 @@ export default ({ palette, breakpoints, spacing }) => ({
   },
   link: {
     color: palette.primary['500'],
+
     [breakpoints.down('sm')]: {
       paddingTop: spacing.baseMargin,
       paddingBottom: spacing.baseMargin,
@@ -141,6 +144,6 @@ export default ({ palette, breakpoints, spacing }) => ({
   cardActionContainer: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
 });

@@ -53,20 +53,7 @@ export const forgotPassword = async (emailAdd, superSecret) => {
       },
     };
     console.log('prepare for send email');
-    await smtpTransport.sendMail(data, err => {
-      if (!err) {
-        console.log('send email successfully');
-        return {
-          message:
-            'A link was sent to your email to reset your password. Please check your email include spam',
-        };
-      }
-      console.log(err)
-      return {
-        message:
-          'An unexpected error happened. Please contact with team radio for helps.',
-      };
-    });
+    await smtpTransport.sendMail(data);
   } catch (err) {
     throw err;
   }
