@@ -7,8 +7,8 @@ import path from 'path';
 // import models
 import userModels from '../models/user';
 
-const email = process.env.MAILER_EMAIL || 'bao.mmo1@gmail.com';
-const pass = process.env.MAILER_PASS || '05113798200';
+const email = process.env.MAILER_EMAIL;
+const pass = process.env.MAILER_PASS;
 const resetPasswordUrl =
   process.env.RESET_PASSWORD_URL || 'https://localhost:8080/api/resetPassword/';
 const smtpTransport = nodeMailer.createTransport({
