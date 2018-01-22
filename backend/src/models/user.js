@@ -196,3 +196,6 @@ module.exports.setTokenResetPassword = async (userId, token) =>
     { token_reset_password: token },
     { multi: true },
   );
+
+module.exports.getUserByResetToken = async token =>
+  user.findOne({ token_reset_password: token }, { password: 0 });

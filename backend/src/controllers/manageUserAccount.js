@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import path from 'path';
 
 // import models
-import userModels from '../models/user';
+import User from '../models/user';
 
 const email = process.env.MAILER_EMAIL;
 const pass = process.env.MAILER_PASS;
@@ -32,15 +32,20 @@ smtpTransport.use('compile', hbs(handlebarsOptions));
  */
 export const forgotPassword = async (emailAdd, superSecret) => {
   try {
-    const user = await userModels.getUserByEmail(emailAdd);
-    if (!user) return { message: 'Email unregister' };
+    console.log(email + pass);
+    const user = await User.getUserByEmail(emailAdd);
+    if (!user)
+      return {
+        Error: true,
+        message: 'Email not found!',
+      };
 
     const payload = {
       email: emailAdd,
     };
 
-    const token = jwt.sign(payload, superSecret, { expiresIn: 300 });
-    await userModels.setTokenResetPassword(user._id.toString(), token);
+    const token = jwt.sign(payload, superSecret, { expiresIn: 604800 });
+    await User.setTokenResetPassword(user._id.toString(), token);
 
     const data = {
       to: user.email,
@@ -52,33 +57,46 @@ export const forgotPassword = async (emailAdd, superSecret) => {
         name: user.name,
       },
     };
-    console.log('prepare for send email');
-    await smtpTransport.sendMail(data, err => {
-      if (!err) {
-        console.log('send email successfully');
-        return {
-          message:
-            'A link was sent to your email to reset your password. Please check your email include spam',
-        };
-      }
-      console.log(err)
-      return {
-        message:
-          'An unexpected error happened. Please contact with team radio for helps.',
-      };
-    });
+    await smtpTransport.sendMail(data);
+
+    return {
+      Error: false,
+      message:
+        'A link was sent to your email to reset your password. Please check your email include spam' +
+        token,
+    };
   } catch (err) {
     throw err;
   }
 };
 
 export const verifyResetPasswordToken = async (token, superSecret) => {
-  const user = await userModels.getUserByResetToken(token);
-  if (!user) return false;
-  jwt.verify(token, superSecret, (err, decoded) => {
-    if (err) return false;
-    return true;
-  });
+  try {
+    const user = await User.getUserByResetToken(token);
+    if (!user) {
+      return {
+        Error: true,
+        message: 'Your reset password link is wrong!',
+      };
+    }
+    if (token === user.token_reset_password) {
+      const decoded = jwt.verify(token, superSecret);
+      if (decoded)
+        return {
+          Error: false,
+          message: 'Enter new password!',
+        };
+    }
+    return {
+      Error: true,
+      message: 'Your reset password link is wrong!',
+    };
+  } catch (err) {
+    return {
+      Error: true,
+      message: 'Your reset password link is wrong!',
+    };
+  }
 };
 /**
  * @param token
@@ -90,23 +108,40 @@ export const verifyResetPasswordToken = async (token, superSecret) => {
  */
 export const resetPassword = async (token, superSecret, newPassword) => {
   try {
-    const user = await userModels.getUserByResetToken(token);
-    if (user) return new Error('Token is not found');
+    const user = await User.getUserByResetToken(token);
+    if (!user)
+      return {
+        Error: true,
+        message: 'Your reset password link is wrong!',
+      };
+    if (token === user.token_reset_password) {
+      const decoded = jwt.verify(token, superSecret);
+      if (decoded) {
+        console.log(newPassword);
+        const password = user.generateHash(newPassword);
+        await User.setPassword(user.email, password);
 
-    // check here
-    const decoded = jwt.verify(token, superSecret);
-
-    //
-    if (
-      decoded &&
-      decoded.email === user.email &&
-      user.token_reset_password === token
-    ) {
-      const password = userModels.generateHash(newPassword);
-      await userModels.setPassword(user.email, password);
-      return { message: 'Reset password successfully' };
+        // send email
+        const data = {
+          to: user.email,
+          from: email,
+          template: 'reset-password-email',
+          subject: 'Reset password team radio successfully',
+          context: {
+            name: user.name,
+          },
+        };
+        await smtpTransport.sendMail(data);
+        return {
+          Error: false,
+          message: 'Your password already changed successfully!',
+        };
+      }
     }
-    return new Error('Token is not found or invalid');
+    return {
+      Error: true,
+      message: 'Your reset password link is out of date!',
+    };
   } catch (err) {
     throw err;
   }

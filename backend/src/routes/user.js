@@ -55,6 +55,12 @@ export default router => {
           success: false,
           message: 'Incorrect email/username or password',
         });
+      }
+      if (user && !user.validPassword(req.body.password)) {
+        res.status(401).json({
+            success: false,
+            message: 'Incorrect email/username or password',
+        });
       } else {
         const payload = {
           email: user.email,
@@ -137,8 +143,13 @@ export default router => {
           }
           const user = await userController.getUserById(decoded.userId);
 
-          const userRes = { ...user._doc, userId: user._id };
-          return res.json(userRes);
+          if (user) {
+            const userRes = { ...user._doc, userId: user._id };
+            return res.json(userRes);
+          }
+
+          return res.status(400).json({ tokenError: 'Verify token failed.' });
+
         });
       } else {
         return res.status(400).json({ tokenError: 'No token provided.' });
@@ -325,20 +336,24 @@ export default router => {
     try {
       let user = await User.findOne({ _id: req.body.userId });
       const token = req.headers['access-token'];
-
+      console.log('1')
       if (user) {
+          console.log('2')
         const isOwner = await userController.isVerifidedToken(
           user._id.toString(),
           token,
           req.app.get('superSecret'),
         );
         if (isOwner) {
+            console.log(user.validPassword(req.body.currentPassword))
           if (user.password && !user.validPassword(req.body.currentPassword)) {
             return res.status(400).json({
               message: 'Current password is incorrect!',
             });
           }
+            console.log('4')
           const newPassword = user.generateHash(req.body.newPassword);
+            console.log('5')
           await userController.setPassword(user.email, newPassword);
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
@@ -427,34 +442,52 @@ export default router => {
 
   router.post('/forgotPassword', async (req, res) => {
     try {
-      const msg = await manageUserAccountController.forgotPassword(
+      const response = await manageUserAccountController.forgotPassword(
         req.body.email,
         req.app.get('superSecret'),
       );
-      console.log(msg);
-      res.json(msg);
+      if (response.Error){
+        return res.status(400).json({message: response.message});
+      } else {
+        return res.json({message: response.message});
+      }
     } catch (err) {
       throw err;
     }
   });
 
   router.get('/resetPassword/:token', async (req, res) => {
-    res.json(
-      await manageUserAccountController.verifyResetPasswordToken(
+    try {
+      const response = await manageUserAccountController.verifyResetPasswordToken(
         req.params.token,
         req.app.get('superSecret'),
-      ),
-    );
+      );
+      console.log(response)
+      if (response.Error){
+        return res.status(400).json({message: response.message});
+      } else {
+        return res.json({message: response.message});
+      }
+    } catch (err) {
+      throw err
+    }
   });
 
   router.post('/resetPassword', async (req, res) => {
-    res.json(
-      await manageUserAccountController.resetPassword(
+    try {
+      const response = await manageUserAccountController.resetPassword(
         req.body.token,
         req.app.get('superSecret'),
         req.body.newPassword,
-      ),
-    );
+      );
+      if (response.Error){
+        return res.status(400).json({message: response.message});
+      } else {
+        return res.json({message: response.message});
+      }
+    } catch (err) {
+        throw err
+    }
   });
 
   router.post('/getHistory', async (req, res) => {
