@@ -140,19 +140,11 @@ class Settings extends Component {
     return (
       <List>
         <ListItem button onClick={this._onOpenEditInformation}>
-          <span>
-            <IconButton>
-              <PersonIcon />
-            </IconButton>
-          </span>
+          <PersonIcon />
           <ListItemText primary="Information" />
         </ListItem>
         <ListItem button onClick={this._onOpenEditPassword}>
-          <span>
-            <IconButton>
-              <KeyIcon />
-            </IconButton>
-          </span>
+          <KeyIcon />
           <ListItemText primary="Password" />
         </ListItem>
       </List>
@@ -173,7 +165,7 @@ class Settings extends Component {
         >
           <Tooltip placement={'bottom'} title={'Edit your account'}>
             <span>
-              <IconButton key={1}>
+              <IconButton>
                 <EditIcon />
               </IconButton>
             </span>

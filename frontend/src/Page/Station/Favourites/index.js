@@ -7,7 +7,7 @@ import { withStyles } from 'material-ui/styles';
 import Item from './Item';
 import styles from './styles';
 
-class History extends Component {
+class FavouriteVideos extends Component {
   render() {
     const { className, style, data } = this.props;
     return (
@@ -27,11 +27,11 @@ class History extends Component {
   }
 }
 
-History.propTypes = {
+FavouriteVideos.propTypes = {
   className: PropTypes.any,
   classes: PropTypes.object,
   style: PropTypes.any,
   data: PropTypes.array,
 };
 
-export default compose(withStyles(styles))(History);
+export default compose(withStyles(styles))(FavouriteVideos);

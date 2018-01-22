@@ -49,4 +49,8 @@ export default ({ palette, spacing }) => ({
     textDecoration: 'none',
     color: '#000000de',
   },
+  displayName: {
+    color: palette.white,
+    paddingLeft: spacing.doubleBaseMargin,
+  }
 });

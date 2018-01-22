@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node ./bin/start",
     "dev": "nodemon ./bin/start",
-    "test": "mocha --recursive './test/*Test.js' --compilers js:babel-core/register"
+    "test": "mocha --recursive './test/*Test.js' --compilers js:babel-core/register",
+    "copy-env:dev": "cp .env.development .env",
+    "copy-env:production": "cp .env.production .env"
   },
   "lock": false,
   "dependencies": {
@@ -30,8 +32,8 @@
     "mongodb": "^3.0.1",
     "mongoose": "^4.13.7",
     "morgan": "^1.8.2",
-    "nodemailer": "^4.4.1",
     "nodemailer-express-handlebars": "^2.0.0",
+    "nodemailer": "^4.4.2",
     "promise": "^8.0.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
@@ -39,6 +41,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
+    "babel-plugin-inline-dotenv": "^1.1.2",
     "chai": "^4.1.1",
     "chai-http": "^3.0.0",
     "eslint": "^4.5.0",

@@ -22,12 +22,11 @@ import {
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
+import Favourites from './Favourites';
 import NowPlaying from './NowPlaying';
 import OnlineUsers from './OnlineUsers';
 import styles from './styles';
 import StationSharing from './Sharing';
-
-const STATION_NAME_DEFAULT = 'Station Name';
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -154,43 +153,55 @@ class StationPage extends Component {
 
     return [
       <Tabs
-        key={1}
+        key={0}
         fullWidth
         value={tabValue}
         onChange={this._handleTabChange}
         indicatorColor="primary"
         className={classes.tabs}
       >
-        <Tab
-          classes={{
-            label: classes.tabLabel,
-          }}
-          label={`Playlist (${playlist.length})`}
-        />
-        <Tab
-          classes={{
-            label: classes.tabLabel,
-          }}
-          label={`History`}
-        />
+        {[
+          { label: `Playlist (${playlist.length})` },
+          { label: `History` },
+          { label: `Favourites` },
+        ].map(({ label }, index) => (
+          <Tab
+            key={index}
+            classes={{
+              label: classes.tabLabel,
+              fullWidth: classes.fullWidthTab,
+            }}
+            label={label}
+          />
+        ))}
       </Tabs>,
       tabValue === 0 && (
-        <TabContainer key={2}>
+        <TabContainer key={1}>
           <Playlist
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !playlist,
             })}
-            playlist={playlist}
+            data={playlist}
           />
         </TabContainer>
       ),
       tabValue === 1 && (
-        <TabContainer key={3}>
+        <TabContainer key={2}>
           <History
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !history,
             })}
-            history={history.reverse()}
+            data={history.reverse()}
+          />
+        </TabContainer>
+      ),
+      tabValue === 2 && (
+        <TabContainer key={3}>
+          <Favourites
+            className={classNames(classes.content, {
+              [classes.emptyPlaylist]: !history,
+            })}
+            data={history}
           />
         </TabContainer>
       ),

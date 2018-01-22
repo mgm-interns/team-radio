@@ -1,3 +1,12 @@
+/** *******************************************************
+ *                                                        *
+ *                                                        *
+ *                     LEAVE STATION                      *
+ *                        By Ryker                        *
+ *                                                        *
+ *                                                        *
+ ******************************************************** */
+
 import * as onlineManager from '../managers/onlineUserManager';
 
 export default async (io, socket, userId) => {

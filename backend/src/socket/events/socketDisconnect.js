@@ -1,3 +1,12 @@
+/** *******************************************************
+ *                                                        *
+ *                                                        *
+ *                    SOCKET DISCONNECT                   *
+ *                        By Ryker                        *
+ *                                                        *
+ *                                                        *
+ ******************************************************** */
+
 import * as onlineManager from '../managers/onlineUserManager';
 
 export default (io, socket) => {

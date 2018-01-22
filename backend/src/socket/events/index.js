@@ -7,6 +7,7 @@ import voteSong from './voteSong';
 import socketDisconnect from './socketDisconnect';
 import socketConnect from './socketConnect';
 import addFavourite from './addFavouriteSong';
+import getFavouriteSongs from './getFavouriteSongs';
 
 export default {
   socketConnect,
@@ -17,5 +18,6 @@ export default {
   addMultiSong,
   voteSong,
   socketDisconnect,
+  getFavouriteSongs,
   addFavourite,
 };

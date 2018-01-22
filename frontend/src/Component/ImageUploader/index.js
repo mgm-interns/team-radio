@@ -27,8 +27,6 @@ class ImageUploader extends Component {
       open: false,
       uploading: false,
       uploadedFile: null,
-      // avatar_url:
-      //   'https://res.cloudinary.com/cocacode2/image/upload/v1515550702/wwsqbsi7kxcz0zgj70j6.png',
       avatar_url: null,
     };
 
@@ -128,7 +126,7 @@ class ImageUploader extends Component {
               </Fragment>
             )}
           </div>
-          <div>
+          <div className={classes.avatarWrapper}>
             <Avatar
               className={classes.avatar}
               src={!avatar_url ? Images.avatar.male01 : avatar_url}
@@ -199,15 +197,12 @@ ImageUploader.propTypes = {
   user: PropTypes.any,
 };
 
-// const mapStateToProps = state => ({
-//   userData: state.api.user.data,
-// });
-
 const mapDispatchToProps = dispatch => ({
   updateAvatar: (userId, avatar_url) =>
     dispatch(setAvatar({ userId, avatar_url })),
 });
 
-export default compose(withNotification, connect(null, mapDispatchToProps))(
-  withStyles(styles)(ImageUploader),
-);
+export default compose(
+  withNotification,
+  connect(undefined, mapDispatchToProps),
+)(withStyles(styles)(ImageUploader));

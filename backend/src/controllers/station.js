@@ -56,7 +56,6 @@ export const addStation = async (stationName, userId, isPrivate) => {
  * @param {boolean} value -  If false then station is public, if true then station is private
  */
 export const setIsPrivateOfStation = async (stationId, userId, value) => {
-  // TODO :
   try {
     const stationsOfUser = await stationModels.getStationsByUserId(
       _safeObjectId(userId),
@@ -100,6 +99,9 @@ export const deleteStation = async (stationId, userId) => {
  * @param {string} stationId
  */
 export const getStation = async stationId => {
+  if(!stationId){
+    throw new Error(`Station id ${stationId} is not undefined!`)
+  }
   const stationOfId = await stationModels.getStationById(stationId);
   if (!stationOfId) {
     throw new Error(`Station id ${stationId} is not exist!`);
@@ -261,7 +263,7 @@ export const getListSongHistory = async (stationId, limit) => {
     const listSong = await stationModels.getPlaylistOfStation(stationId);
     const historySongs = [];
     for (let i = 0; i < listSong.length; i++) {
-      if (listSong[i].is_played === true) {
+      if (listSong[i].is_played === true) { 
         if (historySongs.length === limit) break;
 
         historySongs.push(listSong[i]);

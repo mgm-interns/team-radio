@@ -1,3 +1,12 @@
+/** *******************************************************
+ *                                                        *
+ *                                                        *
+ *                     SOCKET CONNECT                     *
+ *                        By Ryker                        *
+ *                                                        *
+ *                                                        *
+ ******************************************************** */
+
 import createEmitter from '../managers/createEmitter';
 import * as EVENTS from '../../const/actions';
 import * as switcher from '../../switcher';

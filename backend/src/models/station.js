@@ -27,6 +27,9 @@ const stationSchema = mongoose.Schema({
           down_vote: [
             { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
           ],
+          // comment :{
+          //   type : String
+          // }
         },
       ],
       default: []
@@ -295,6 +298,7 @@ module.exports.getPlaylistOfStation = async (stationId, limit) => {
   const station = await Station.findOne(query, { playlist: true, _id: false })
     .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
     .limit(limit);
+    
   return station.playlist;
 };
 
