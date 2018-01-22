@@ -8,7 +8,8 @@
     "dev": "nodemon ./bin/start",
     "test": "mocha --recursive './test/*Test.js' --compilers js:babel-core/register",
     "copy-env:dev": "cp .env.development .env",
-    "copy-env:production": "cp .env.production .env"
+    "copy-env:production": "cp .env.production .env",
+    "postinstall": "run-s copy-env:production"
   },
   "lock": false,
   "dependencies": {
@@ -50,6 +51,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-react": "^7.2.1",
-    "nodemon": "^1.13.3"
+    "nodemon": "^1.13.3",
+    "npm-run-all": "^4.1.2"
   }
 }
