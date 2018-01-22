@@ -21,12 +21,14 @@ import {
   SERVER_ADD_FAVOURITE_SONG_SUCCESS,
   SERVER_REMOVE_FAVOURITE_SONG_SUCCESS,
   SERVER_FAVOURITE_SONG_FAILURE,
+  SERVER_UPDATE_HISTORY,
 } from 'Redux/actions';
 
 const INITIAL_STATE = {
   station: null,
   playlist: [],
   tempPlaylist: [],
+  history: [],
   skipList: [],
   nowPlaying: {
     url: '',
@@ -69,7 +71,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         station: action.payload.station,
-        playlist: action.payload.station.playlist,
         joined: {
           loading: false,
           success: true,
@@ -134,6 +135,14 @@ export default (state = INITIAL_STATE, action) => {
             willBeSkipped,
           };
         }),
+      };
+    /**
+     * Update history
+     */
+    case SERVER_UPDATE_HISTORY:
+      return {
+        ...state,
+        history: action.payload.history,
       };
 
     /**

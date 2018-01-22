@@ -4,9 +4,12 @@ import deleteDiacriticMarks from 'khong-dau';
 import getSongDetails from './song';
 import * as players from '../players';
 import * as stationModels from '../models/station';
-import * as userControllers from '../controllers/user'
-import * as userModels from '../models/user'
+import * as userControllers from '../controllers/user';
+import * as userModels from '../models/user';
 import { Error } from 'mongoose';
+import uniqBy from 'lodash/uniqBy';
+import orderBy from 'lodash/orderBy';
+import filter from 'lodash/filter';
 import station from '../routes/station';
 import user from '../routes/user';
 
@@ -167,7 +170,7 @@ export const addSong = async (stationId, songUrl, userId) => {
       created_date: new Date().getTime(),
     };
     await stationModels.addSong(stationId, song);
-    playlist = await getAvailableListSong(stationId);
+    const playlist = await getAvailableListSong(stationId);
     players.updatePlaylist(stationId);
     return playlist;
   } catch (err) {
@@ -256,20 +259,21 @@ export const getAllStationDetails = async () => {
 /**
  * The function get all info of history playlist
  *
+ * Rules:
+ * - Order by created_date
+ * - Only return unique url with the info of first creator
+ * - Return top {limit} songs
+ *
  * @param {string} stationId
+ * @param {limit} limit
  */
 export const getListSongHistory = async (stationId, limit) => {
   try {
-    const listSong = await stationModels.getPlaylistOfStation(stationId);
-    const historySongs = [];
-    for (let i = 0; i < listSong.length; i++) {
-      if (listSong[i].is_played === true) { 
-        if (historySongs.length === limit) break;
-
-        historySongs.push(listSong[i]);
-      }
-    }
-    return historySongs;
+    const listSong = await stationModels.getPlaylistOfStation(stationId, limit);
+    const history = filter(listSong, ['is_played', true]);
+    const orderedSongs = orderBy(history, ['created_date'], ['desc']);
+    const uniqueHistory = uniqBy(orderedSongs, 'url');
+    return uniqueHistory;
   } catch (error) {
     throw error;
   }
@@ -283,13 +287,8 @@ export const getListSongHistory = async (stationId, limit) => {
 export const getAvailableListSong = async stationId => {
   try {
     const listSong = await stationModels.getPlaylistOfStation(stationId);
-    for (let i = 0; i < listSong.length; i++) {
-      if (listSong[i].is_played === true) {
-        listSong.remove(listSong[i]);
-        i--;
-      }
-    }
-    return listSong;
+    const playlist = filter(listSong, ['is_played', false]);
+    return playlist;
   } catch (error) {
     throw error;
   }
@@ -326,7 +325,7 @@ export const upVote = async (stationId, songId, userId) => {
     if (userId === null) {
       throw new Error({
         song: currentSong,
-        message: "User need login.",
+        message: 'User need login.',
       });
     }
     const currentSong = (await stationModels.getAsongInStation(
@@ -344,13 +343,13 @@ export const upVote = async (stationId, songId, userId) => {
     let userAddedPoints = 0;
 
     upVoteArray.forEach(votedUserId => {
-      if (votedUserId.equals(userId)){
+      if (votedUserId.equals(userId)) {
         userAddedPoints = -1;
         upVoteArray.remove(userId);
       }
     });
     downVoteArray.forEach(votedUserId => {
-      if (votedUserId.equals(userId)){
+      if (votedUserId.equals(userId)) {
         userAddedPoints = 2;
         downVoteArray.remove(userId);
         upVoteArray.push(userId);
@@ -367,10 +366,13 @@ export const upVote = async (stationId, songId, userId) => {
       downVoteArray,
     );
     // TODO: update votes of users in the station
-    stationModels.increaseUserPoints(stationId, currentSong.creator, userAddedPoints);
+    stationModels.increaseUserPoints(
+      stationId,
+      currentSong.creator,
+      userAddedPoints,
+    );
     const playList = await getAvailableListSong(stationId);
     return playList;
-
   } catch (err) {
     console.log(err);
     throw new Error({ song: null, message: "Can't upvote song." });
@@ -393,7 +395,7 @@ export const downVote = async (stationId, songId, userId) => {
     if (userId === null) {
       throw new Error({
         song: currentSong,
-        message: "User need login.",
+        message: 'User need login.',
       });
     }
     const currentSong = (await stationModels.getAsongInStation(
@@ -405,13 +407,13 @@ export const downVote = async (stationId, songId, userId) => {
     let userAddedPoints = 0;
 
     downVoteArray.forEach(votedUserId => {
-      if (votedUserId.equals(userId)){
+      if (votedUserId.equals(userId)) {
         userAddedPoints = 1;
         downVoteArray.remove(userId);
       }
     });
     upVoteArray.forEach(votedUserId => {
-      if (votedUserId.equals(userId)){
+      if (votedUserId.equals(userId)) {
         userAddedPoints = -2;
         upVoteArray.remove(userId);
         downVoteArray.push(userId);
@@ -428,7 +430,11 @@ export const downVote = async (stationId, songId, userId) => {
       downVoteArray,
     );
     // TODO: update votes of users in the station
-    stationModels.increaseUserPoints(stationId, currentSong.creator, userAddedPoints);
+    stationModels.increaseUserPoints(
+      stationId,
+      currentSong.creator,
+      userAddedPoints,
+    );
     const playList = await getAvailableListSong(stationId);
     return playList;
   } catch (err) {
@@ -449,9 +455,7 @@ export const downVote = async (stationId, songId, userId) => {
  */
 export const getListStationUserAddedSong = async userId => {
   try {
-    const playList = await stationModels.getStationHasSongUserAdded(
-      userId
-    );
+    const playList = await stationModels.getStationHasSongUserAdded(userId);
     return playList;
   } catch (error) {
     throw error;
@@ -473,37 +477,46 @@ function _stringToId(str) {
 }
 
 export const addPointsByPlayedSong = async (stationId, songId) => {
-
   try {
     let song = await stationModels.getAsongInStation(stationId, songId);
     song = song[0];
     if (!song) {
       throw new Error('Song id is not avalable: ', songId);
     }
-    if (await stationModels.isFirstAddedSong(stationId, song.song_id, song.url)){
-      stationModels.increaseUserPoints(stationId, song.creator, POINTS_FOR_FIRST_SONG);
+    if (
+      await stationModels.isFirstAddedSong(stationId, song.song_id, song.url)
+    ) {
+      stationModels.increaseUserPoints(
+        stationId,
+        song.creator,
+        POINTS_FOR_FIRST_SONG,
+      );
     } else {
-      stationModels.increaseUserPoints(stationId, song.creator, POINTS_FOR_NEXT_SONG);
+      stationModels.increaseUserPoints(
+        stationId,
+        song.creator,
+        POINTS_FOR_NEXT_SONG,
+      );
     }
   } catch (err) {
-    throw err
+    throw err;
   }
-}
+};
 
 export const countSongAddByUserId = async (userId, station_id) => {
   try {
     let counter = 0;
-    const station = await stationModels.getStationById(station_id)
-    if (station){
-      forEach(song in station.playlist)
+    const station = await stationModels.getStationById(station_id);
+    if (station) {
+      forEach(song in station.playlist);
       if (song.creator === userId) counter++;
-      return {station_name: station.station_name, }
+      return { station_name: station.station_name };
     }
-    return new Error ('Station is not exist.')
+    return new Error('Station is not exist.');
   } catch (err) {
-    throw err
+    throw err;
   }
-}
+};
 
 async function _createStationId(stationName) {
   let id = _stringToId(deleteDiacriticMarks(stationName));
@@ -529,4 +542,3 @@ function _isStringOfArray(str, array) {
   }
   return false;
 }
-
