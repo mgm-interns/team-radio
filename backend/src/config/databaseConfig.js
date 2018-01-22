@@ -1,4 +1,4 @@
 module.exports = {
-  secret: process.env.REACT_APP_DATABASE_SECRET,
-  url: process.env.REACT_APP_DATABASE_URL,
+  secret: process.env.DATABASE_SECRET,
+  url: process.env.DATABASE_URL,
 };
