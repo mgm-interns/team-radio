@@ -51,10 +51,6 @@ const _addSongProcess = async (emitter, userId, stationId, songUrl) => {
   try {
     const player = await players.getPlayer(stationId);
     const nowPlaying = await player.getNowPlaying();
-    const history = stationController.getListSongHistory(
-      stationId,
-      CONSTANTS.HISTORY_LIMIT,
-    );
 
     /**
      * If `nowPlaying.url` is `null`, player will update playlist and history
@@ -63,9 +59,6 @@ const _addSongProcess = async (emitter, userId, stationId, songUrl) => {
     if (nowPlaying.url) {
       emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_PLAYLIST, {
         playlist: playlist,
-      });
-      emitter.emitToStation(stationId, EVENTS.SERVER_UPDATE_HISTORY, {
-        history: history,
       });
     }
   } catch (err) {

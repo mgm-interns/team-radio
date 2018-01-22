@@ -89,9 +89,10 @@ io.on('connection', socket => {
           createEmitter(socket, io),
           action.payload.songId,
           action.payload.userId,
-          action.payload.stationId,
           action.payload.songUrl,
+          action.payload.stationId,
         );
+        console.log('Action received: ' + action.payload.stationId);
         break;
       case EVENTS.CLIENT_GET_FAVOURITE_SONG:
         console.log('Action received: ' + EVENTS.CLIENT_GET_FAVOURITE_SONG);

@@ -11,7 +11,7 @@ import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
 import * as CONSTANTS from '../../const/constants';
 
-export default async (emitter, songId, userId, stationId, songUrl) => {
+export default async (emitter, songId, userId, songUrl, stationId) => {
   /**
    * Decline request if the user does not exist
    * Otherwise, allow to add favourite song
@@ -19,7 +19,7 @@ export default async (emitter, songId, userId, stationId, songUrl) => {
   const user = await userController.getUserById(userId);
   if (user) {
     try {
-      _addFavouriteSong(emitter, songId, userId, stationId, songUrl);
+      _addFavouriteSong(emitter, songId, userId, songUrl, stationId);
     } catch (err) {
       emitter.emit(EVENTS.SERVER_FAVOURITE_SONG_FAILURE, {
         message: err.message,
@@ -42,22 +42,27 @@ export default async (emitter, songId, userId, stationId, songUrl) => {
  * @param {String} songUrl Url of the song you want to mark as favourite
  */
 // eslint-disable-next-line
-const _addFavouriteSong = async (emitter, songId, userId, stationId, songUrl) => {
+const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) => {
   // eslint-disable-next-line
   const status =
-    await userController.addFavouriteSong(songId, userId, stationId, songUrl);
-
+    await userController.addFavouriteSong(songId, userId, songUrl, stationId);
+  console.log(EVENTS.SERVER_ADD_FAVOURITE_SONG_SUCCESS);
   if (status === userController.ADD_FAVOURITE_SUCCESS) {
-    emitter.emit(EVENTS.SERVER_ADD_FAFOURITE_SONG_SUCCESS, {
+    emitter.emit(EVENTS.SERVER_ADD_FAVOURITE_SONG_SUCCESS, {
       song_id: songId,
       is_favorite: true,
     });
     return;
   }
   if (status === userController.UN_FAVOURITE_SUCCESS) {
-    emitter.emit(EVENTS.SERVER_REMOVE_FAFOURITE_SONG_SUCCESS, {
+    emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {
       song_id: songId,
       is_favorite: false,
     });
+    return;
   }
+  emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {
+    song_id: status,
+    is_favorite: false,
+  });
 };

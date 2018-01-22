@@ -82,11 +82,22 @@ const _join = async (emitter, socket, userId, station, io) => {
   const stId = station.station_id;
   const stName = station.station_name;
   socket.join(station.station_id);
-  const count = await onlineManager.countOnlineOfStation(stId, io);
-  const users = await onlineManager.getListUserOnline(stId, io);
 
+  delete station.playlist;
   emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
     station: station,
+  });
+
+  const playlist = await stationController.getAvailableListSong(stId);
+  emitter.emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
+    playlist: playlist,
+  });
+
+  // eslint-disable-next-line
+  const history =
+    await stationController.getListSongHistory(stId, CONSTANTS.HISTORY_LIMIT);
+  emitter.emit(EVENTS.SERVER_UPDATE_HISTORY, {
+    history: history,
   });
 
   /**
@@ -104,6 +115,8 @@ const _join = async (emitter, socket, userId, station, io) => {
     console.log('Players error: ' + err.message);
   }
 
+  const count = await onlineManager.countOnlineOfStation(stId, io);
+  const users = await onlineManager.getListUserOnline(stId, io);
   emitter.emit(EVENTS.SERVER_UPDATE_ONLINE_USERS, {
     online_count: count,
     users: users,

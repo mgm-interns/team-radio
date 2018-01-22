@@ -8,7 +8,6 @@ import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
 import { setPreviewVideo } from 'Redux/page/station/actions';
 import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
-import orderBy from 'lodash/orderBy';
 import { StationList } from 'Component';
 import styles from './styles';
 
@@ -50,11 +49,7 @@ class StationSwitcher extends Component {
   }
 
   _filterStations() {
-    const {
-      stations = [],
-      currentStation,
-      match: { params: { stationId } },
-    } = this.props;
+    const { stations = [], currentStation } = this.props;
 
     /**
      * Set sleepy thumbnail if there is no thumbnail in station
@@ -64,6 +59,7 @@ class StationSwitcher extends Component {
       .map(station => ({
         ...station,
         thumbnail: station.thumbnail || Images.stationDefault,
+        playing: station.thumbnail,
       }))
       .filter(
         station =>
@@ -78,20 +74,6 @@ class StationSwitcher extends Component {
      * - Active station
      */
     return filteredStations;
-    /*
-    return orderBy(
-      filteredStations,
-      [
-        // Current station always be on top
-        ({ station_id }) => (station_id === stationId ? -1 : 1),
-        // Sort by number of online users
-        'online_count',
-        // Sort by is active station
-        'thumbnail',
-      ],
-      ['asc', 'desc', 'desc'],
-    );
-    */
   }
 
   render() {
@@ -100,6 +82,7 @@ class StationSwitcher extends Component {
     return (
       <StationList
         stations={this._filterStations()}
+        enableWavingIcon
         loading={!stations}
         onItemClick={this._goToStationPage}
         scrollbarRef={ref => {

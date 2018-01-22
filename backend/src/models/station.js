@@ -292,6 +292,7 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
  * Get playlist of station
  *
  * @param {string} stationId
+ * @param {limit} limit
  */
 module.exports.getPlaylistOfStation = async (stationId, limit) => {
   let query = { station_id: stationId };
@@ -304,7 +305,6 @@ module.exports.getPlaylistOfStation = async (stationId, limit) => {
 
 /**
  *
- * @param {string} stationId
  * @param {string} userId
  */
 module.exports.getStationHasSongUserAdded = async (userId) => {

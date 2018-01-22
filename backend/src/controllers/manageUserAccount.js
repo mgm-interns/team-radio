@@ -10,7 +10,7 @@ import User from '../models/user';
 const email = process.env.MAILER_EMAIL;
 const pass = process.env.MAILER_PASS;
 const resetPasswordUrl =
-  process.env.RESET_PASSWORD_URL || 'https://localhost:8080/api/resetPassword/';
+  process.env.RESET_PASSWORD_URL || 'https://localhost:3000/resetpassword/';
 const smtpTransport = nodeMailer.createTransport({
   service: process.env.MAILER_SERVICE_PROVIDER || 'Gmail',
   auth: {
@@ -32,14 +32,12 @@ smtpTransport.use('compile', hbs(handlebarsOptions));
  */
 export const forgotPassword = async (emailAdd, superSecret) => {
   try {
-    console.log(email + pass);
     const user = await User.getUserByEmail(emailAdd);
     if (!user)
       return {
         Error: true,
         message: 'Email not found!',
       };
-
     const payload = {
       email: emailAdd,
     };
@@ -51,7 +49,7 @@ export const forgotPassword = async (emailAdd, superSecret) => {
       to: user.email,
       from: email,
       template: 'forgot-password-email',
-      subject: 'Reset password team radio',
+      subject: 'Reset TeamRadio password',
       context: {
         url: resetPasswordUrl + token,
         name: user.name,
@@ -60,10 +58,8 @@ export const forgotPassword = async (emailAdd, superSecret) => {
     await smtpTransport.sendMail(data);
 
     return {
-      Error: false,
-      message:
-        'A link was sent to your email to reset your password. Please check your email include spam' +
-        token,
+      error: false,
+      message: 'Success! Check your email to reset your password',
     };
   } catch (err) {
     throw err;

@@ -35,6 +35,7 @@ export default ({ palette, spacing }) => ({
   menuItem: {
     display: 'flex',
     alignItems: 'center',
+    textDecoration: 'none',
   },
   dropdownIcon: {
     color: palette.white,
@@ -52,5 +53,5 @@ export default ({ palette, spacing }) => ({
   displayName: {
     color: palette.white,
     paddingLeft: spacing.doubleBaseMargin,
-  }
+  },
 });

@@ -127,7 +127,7 @@ export const isExistUsername = async (username) => {
     const user = await userModels.getUserByUsername(username);
     if (user) return true;
     return false
-  } catch (err){
+  } catch (err) {
     throw err
   }
 }
@@ -265,7 +265,7 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
  * @param {string} stationId  -- > station id of station has song
  * @param {string} songUrl  --> url of song which is favourite
  */
-export const addFavouriteSong = async (songId, userId, stationId, songUrl) => {
+export const addFavouriteSong = async (songId, userId, songUrl, stationId = null) => {
   try {
     const songFavourited = await userModels.getSongInFavouriteds(userId, songUrl);
     if (songFavourited.length === 0) {
@@ -277,7 +277,13 @@ export const addFavouriteSong = async (songId, userId, stationId, songUrl) => {
       return ADD_FAVOURITE_SUCCESS;
     } else {
       await userModels.deleteAsongInFavouritedSongs(userId, songUrl);
-      return UN_FAVOURITE_SUCCESS;
+      if (stationId) {
+        return UN_FAVOURITE_SUCCESS;
+      } else {
+        console.log('abc');
+        return await userModels.getFavouritedSongs(userId);
+      }
+
     }
   } catch (error) {
     console.log(error);
@@ -291,18 +297,18 @@ export const addFavouriteSong = async (songId, userId, stationId, songUrl) => {
  * @returns {Promise<void>}
  */
 export const updateHistory = async (userId, station_id) => {
-    try{
-        const option = { history : 1, _id: 0}
-        const user = await userModels.getUserById(userId, option)
-        let history = user.history
-        if (history.length && (history.indexOf(_safeObjectId(station_id)) !== -1))
-            history.remove(station_id)
-        history.push(station_id)
-        await userModels.updateHistory(userId, history)
-        history = await userModels.getUserById(userId, option)
-    } catch (err) {
-        throw err
-    }
+  try {
+    const option = { history: 1, _id: 0 }
+    const user = await userModels.getUserById(userId, option)
+    let history = user.history
+    if (history.length && (history.indexOf(_safeObjectId(station_id)) !== -1))
+      history.remove(station_id)
+    history.push(station_id)
+    await userModels.updateHistory(userId, history)
+    history = await userModels.getUserById(userId, option)
+  } catch (err) {
+    throw err
+  }
 }
 /**
  *
@@ -311,19 +317,19 @@ export const updateHistory = async (userId, station_id) => {
  * @returns {Promise<Array>}
  */
 export const getHistory = async (userId, limited) => {
-    try{
-        const option = { history : 1, _id: 0};
-        const user = await userModels.getUserById(userId, option);
-        let history = user.history;
-        let historyDetail = [];
+  try {
+    const option = { history: 1, _id: 0 };
+    const user = await userModels.getUserById(userId, option);
+    let history = user.history;
+    let historyDetail = [];
 
-        forEach(station_id in history);
-        historyDetail.push(stationController.countSongAddByUserId(userId, station_id));
+    forEach(station_id in history);
+    historyDetail.push(stationController.countSongAddByUserId(userId, station_id));
 
-        return historyDetail
-    } catch (err) {
-        throw err
-    }
+    return historyDetail
+  } catch (err) {
+    throw err
+  }
 }
 /**
  * The function get info favourited songs
@@ -369,16 +375,16 @@ function _stringToId(str) {
  * @private
  */
 async function _createUsername(username) {
-    const id = _stringToId(deleteDiacriticMarks(username));
-    let currentId = id;
-    let i = 1;
-    let user = await userModels.getUserByUsername(currentId);
-    while (user) {
-        i += 1;
-        currentId = id + i;
-        user = await userModels.getUserByUsername(currentId);
-    }
-    return currentId;
+  const id = _stringToId(deleteDiacriticMarks(username));
+  let currentId = id;
+  let i = 1;
+  let user = await userModels.getUserByUsername(currentId);
+  while (user) {
+    i += 1;
+    currentId = id + i;
+    user = await userModels.getUserByUsername(currentId);
+  }
+  return currentId;
 }
 const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
 
