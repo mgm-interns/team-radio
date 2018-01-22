@@ -46,7 +46,7 @@ export const forgotPassword = async (emailAdd, superSecret) => {
       to: user.email,
       from: email,
       template: 'forgot-password-email',
-      subject: 'Reset password team radio',
+      subject: 'Reset TeamRadio password',
       context: {
         url: resetPasswordUrl + token,
         name: user.name,

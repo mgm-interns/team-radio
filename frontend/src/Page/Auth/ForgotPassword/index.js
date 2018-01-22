@@ -65,7 +65,6 @@ class ForgotPassword extends Component {
   render() {
     const { classes, handleSubmit, submitting, submitSucceeded } = this.props;
     const { successMessage } = this.state;
-    console.log(successMessage);
 
     return [
       <NavBar key={1} />,

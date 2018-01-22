@@ -64,6 +64,7 @@ export default ({ palette, breakpoints, spacing }) => ({
   cardActionContainer: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
   },
   text: {
     marginTop: 20,
