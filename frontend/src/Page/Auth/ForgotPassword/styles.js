@@ -55,7 +55,8 @@ export default ({ palette, breakpoints, spacing }) => ({
   error: {
     color: '#ff1744',
     fontWeight: 'bold',
-    marginBottom: '10px',
+    marginTop: 0,
+    minHeight: 0,
   },
   buttonSend: {
     width: spacing.fullWidth,
@@ -63,5 +64,9 @@ export default ({ palette, breakpoints, spacing }) => ({
   cardActionContainer: {
     display: 'flex',
     flexDirection: 'column',
+  },
+  text: {
+    marginTop: 20,
+    fontSize: 16,
   },
 });

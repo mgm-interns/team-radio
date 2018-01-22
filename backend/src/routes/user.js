@@ -427,12 +427,17 @@ export default router => {
 
   router.post('/forgotPassword', async (req, res) => {
     try {
-      const msg = await manageUserAccountController.forgotPassword(
+      const response = await manageUserAccountController.forgotPassword(
         req.body.email,
         req.app.get('superSecret'),
       );
+      console.log(response);
+      if (response.error) {
+        return res.status(400).json(response.message);
+      }
+
+      return res.json({ message: response.message });
       // console.log(msg);
-      res.json(msg);
     } catch (err) {
       throw err;
     }

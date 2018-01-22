@@ -33,7 +33,7 @@ smtpTransport.use('compile', hbs(handlebarsOptions));
 export const forgotPassword = async (emailAdd, superSecret) => {
   try {
     const user = await userModels.getUserByEmail(emailAdd);
-    if (!user) return { message: 'Email unregister' };
+    if (!user) return { error: true, message: 'Email not found!' };
 
     const payload = {
       email: emailAdd,
@@ -52,8 +52,13 @@ export const forgotPassword = async (emailAdd, superSecret) => {
         name: user.name,
       },
     };
-    console.log('prepare for send email');
+
     await smtpTransport.sendMail(data);
+
+    return {
+      error: false,
+      message: 'Success! Check your email to reset your password',
+    };
   } catch (err) {
     throw err;
   }

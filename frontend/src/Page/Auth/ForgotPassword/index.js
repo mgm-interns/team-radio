@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -12,9 +11,10 @@ import { FormHelperText } from 'material-ui/Form';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { withStyles } from 'material-ui/styles';
 import { Field, reduxForm } from 'redux-form';
-import { NavBar, GoogleLogin, FacebookLogin, TextView } from 'Component';
+import { NavBar, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
 import { email, required } from 'Util/validate';
+import { forgotPassword } from 'Redux/api/user/user';
 import styles from './styles';
 
 class ForgotPassword extends Component {
@@ -22,10 +22,31 @@ class ForgotPassword extends Component {
     super(props);
 
     this.state = {
-      formErrors: {},
+      formError: null,
+      successMessage: null,
     };
 
     this._renderBackground = this._renderBackground.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { user: { error, data } } = nextProps;
+
+    if (error) {
+      this.setState({
+        formError: error.response,
+      });
+    } else {
+      this.setState({
+        formError: null,
+      });
+
+      if (data !== this.props.user.data && data) {
+        this.setState({
+          successMessage: data.message,
+        });
+      }
+    }
   }
 
   _renderBackground() {
@@ -42,7 +63,9 @@ class ForgotPassword extends Component {
   }
 
   render() {
-    const { classes, handleSubmit, submitting } = this.props;
+    const { classes, handleSubmit, submitting, submitSucceeded } = this.props;
+    const { successMessage } = this.state;
+    console.log(successMessage);
 
     return [
       <NavBar key={1} />,
@@ -50,50 +73,74 @@ class ForgotPassword extends Component {
         <Grid container className={classes.foreground}>
           <Grid item xs={11} sm={8} lg={5} className={classes.cardWrapper}>
             <Card raised className={classes.cardForm}>
-              <form onSubmit={handleSubmit}>
-                <CardContent>
-                  <Grid
-                    style={{
-                      paddingBottom: '1em',
-                    }}
-                  >
-                    <Typography type="headline" component="h2">
-                      Forgot your password?
-                    </Typography>
-                    <Typography component="p">
-                      Please enter the email address registered on your account.
-                    </Typography>
-                  </Grid>
-                  <Grid>
-                    <Field
-                      name="email"
-                      placeholder="Email"
-                      type="text"
-                      component={TextView}
-                      label="Email"
-                      validate={[required, email]}
-                    />
-                  </Grid>
-                </CardContent>
-                <CardActions>
-                  <Grid container>
-                    <Grid item xs={12} className={classes.cardActionContainer}>
-                      {submitting ? (
-                        <CircularProgress />
-                      ) : (
-                        <Button
-                          raised
-                          color="primary"
-                          type="submit"
-                          className={classes.buttonSend}
-                        >
-                          Reset password
-                        </Button>
-                      )}
+              {successMessage ? (
+                <div>
+                  <Typography type="headline" component="h2">
+                    Check your email
+                  </Typography>
+                  <Typography component="p" className={classes.text}>
+                    We have sent you an email. Click the link in the email to
+                    reset your password.
+                  </Typography>
+                  <Typography component="p" className={classes.text}>
+                    If you do not see the email, check other places it might be,
+                    like your junk, spam, social, or other folders.
+                  </Typography>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <CardContent>
+                    <Grid
+                      style={{
+                        paddingBottom: '1em',
+                      }}
+                    >
+                      <Typography type="headline" component="h2">
+                        Forgot your password?
+                      </Typography>
+                      <Typography component="p">
+                        Please enter the email address registered on your
+                        account.
+                      </Typography>
                     </Grid>
-                  </Grid>{' '}
-                </CardActions>
-              </form>
+                    <Grid>
+                      <Field
+                        name="email"
+                        placeholder="Email"
+                        type="text"
+                        component={TextView}
+                        label="Email"
+                        validate={[required, email]}
+                      />
+                      <FormHelperText className={classes.error}>
+                        {submitSucceeded && this.state.formError}
+                      </FormHelperText>
+                    </Grid>
+                  </CardContent>
+                  <CardActions>
+                    <Grid container>
+                      <Grid
+                        item
+                        xs={12}
+                        className={classes.cardActionContainer}
+                      >
+                        {submitting ? (
+                          <CircularProgress />
+                        ) : (
+                          <Button
+                            raised
+                            color="primary"
+                            type="submit"
+                            className={classes.buttonSend}
+                          >
+                            Reset password
+                          </Button>
+                        )}
+                      </Grid>
+                    </Grid>{' '}
+                  </CardActions>
+                </form>
+              )}
             </Card>
           </Grid>
           {this._renderBackground()}
@@ -103,11 +150,20 @@ class ForgotPassword extends Component {
   }
 }
 
-ForgotPassword.propTypes = {};
+ForgotPassword.propTypes = {
+  classes: PropTypes.any,
+  submitting: PropTypes.bool,
+  handleSubmit: PropTypes.any,
+  user: PropTypes.any,
+};
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  user: state.api.user,
+});
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  onSubmit: values => dispatch(forgotPassword(values)),
+});
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),

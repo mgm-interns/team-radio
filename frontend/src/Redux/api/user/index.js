@@ -187,6 +187,27 @@ const userReducer = (state = INITIAL_STATE, action) => {
         loading: false,
         error: { ...action.payload },
       };
+
+    case 'FORGOT_PASSWORD_REQUEST':
+      return {
+        data: null,
+        error: null,
+        loading: true,
+      };
+    case 'FORGOT_PASSWORD_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'FORGOT_PASSWORD_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+      };
+
     default:
       return state;
   }
