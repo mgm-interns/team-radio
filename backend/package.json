@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node ./bin/start",
     "dev": "nodemon ./bin/start",
-    "test": "mocha --recursive './test/*Test.js' --compilers js:babel-core/register"
+    "test": "mocha --recursive './test/*Test.js' --compilers js:babel-core/register",
+    "copy-env:dev": "cp .env.development .env",
+    "copy-env:production": "cp .env.production .env"
   },
   "lock": false,
   "dependencies": {
