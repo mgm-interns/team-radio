@@ -34,9 +34,9 @@ class Playlist extends Component {
    * @returns {Array}
    */
   getFilteredPlaylist() {
-    const { playlist, nowPlaying, getNowPlaying } = this.props;
+    const { data, nowPlaying, getNowPlaying } = this.props;
     /* eslint-disable consistent-return */
-    playlist.forEach((item, index) => {
+    data.forEach((item, index) => {
       if (index === 0) {
         getNowPlaying(item);
         return false;
@@ -44,7 +44,7 @@ class Playlist extends Component {
     });
 
     return orderBy(
-      playlist,
+      data,
       [
         ({ song_id }) => (song_id === nowPlaying.song_id ? -1 : 1),
         Playlist.getSongScore,
@@ -114,7 +114,7 @@ Playlist.propTypes = {
   className: PropTypes.any,
   classes: PropTypes.any,
   style: PropTypes.any,
-  playlist: PropTypes.array,
+  data: PropTypes.array,
   nowPlaying: PropTypes.object,
   getNowPlaying: PropTypes.func,
   passiveUserRequest: PropTypes.func,
