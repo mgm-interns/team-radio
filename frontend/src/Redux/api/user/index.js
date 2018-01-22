@@ -207,6 +207,25 @@ const userReducer = (state = INITIAL_STATE, action) => {
         loading: false,
         error: { ...action.payload },
       };
+    case 'RESET_PASSWORD_REQUEST':
+      return {
+        data: null,
+        error: null,
+        loading: true,
+      };
+    case 'RESET_PASSWORD_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'RESET_PASSWORD_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: { ...action.payload },
+      };
 
     default:
       return state;

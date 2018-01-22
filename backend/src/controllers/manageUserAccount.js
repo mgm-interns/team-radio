@@ -10,7 +10,7 @@ import userModels from '../models/user';
 const email = process.env.MAILER_EMAIL;
 const pass = process.env.MAILER_PASS;
 const resetPasswordUrl =
-  process.env.RESET_PASSWORD_URL || 'https://localhost:8080/api/resetPassword/';
+  process.env.RESET_PASSWORD_URL || 'https://localhost:3000/resetpassword/';
 const smtpTransport = nodeMailer.createTransport({
   service: process.env.MAILER_SERVICE_PROVIDER || 'Gmail',
   auth: {

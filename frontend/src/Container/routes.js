@@ -9,6 +9,7 @@ import Auth from 'Page/Auth';
 import Login from 'Page/Auth/Login';
 import Register from 'Page/Auth/Register';
 import ForgotPassword from 'Page/Auth/ForgotPassword';
+import ResetPassword from 'Page/Auth/ResetPassword';
 
 export default [
   {
@@ -35,6 +36,10 @@ export default [
   {
     path: '/auth/forgotpassword',
     component: ForgotPassword,
+  },
+  {
+    path: '/auth/resetpassword/:token?',
+    component: ResetPassword,
   },
   {
     path: '/auth',
