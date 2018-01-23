@@ -10,7 +10,7 @@ import User from '../models/user';
 const email = process.env.MAILER_EMAIL;
 const pass = process.env.MAILER_PASS;
 const resetPasswordUrl =
-  process.env.RESET_PASSWORD_URL || 'https://localhost:3000/resetpassword/';
+  process.env.RESET_PASSWORD_URL || 'http://localhost:3000/auth/resetpassword/';
 const smtpTransport = nodeMailer.createTransport({
   service: process.env.MAILER_SERVICE_PROVIDER || 'Gmail',
   auth: {
@@ -122,7 +122,7 @@ export const resetPassword = async (token, superSecret, newPassword) => {
           to: user.email,
           from: email,
           template: 'reset-password-email',
-          subject: 'Reset password team radio successfully',
+          subject: 'Reset TeamRadio password successfully',
           context: {
             name: user.name,
           },
@@ -130,7 +130,7 @@ export const resetPassword = async (token, superSecret, newPassword) => {
         await smtpTransport.sendMail(data);
         return {
           Error: false,
-          message: 'Your password already changed successfully!',
+          message: 'Your password has been changed successfully!',
         };
       }
     }

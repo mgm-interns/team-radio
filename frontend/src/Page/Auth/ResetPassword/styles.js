@@ -70,4 +70,7 @@ export default ({ palette, breakpoints, spacing }) => ({
     marginTop: 20,
     fontSize: 16,
   },
+  link: {
+    color: palette.primary['500'],
+  },
 });

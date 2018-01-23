@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-
+import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
@@ -33,6 +33,7 @@ class ResetPassword extends Component {
     const { user: { error, data } } = nextProps;
 
     if (error) {
+      console.log(error);
       this.setState({
         formError: error.response,
       });
@@ -54,7 +55,7 @@ class ResetPassword extends Component {
     return (
       <Grid item xs className={classes.backgroundImg}>
         <img
-          src="https://images.unsplash.com/photo-1495733715281-6201a6b6cc02?auto=format&fit=crop&w=1950&q=80"
+          src="https://images.unsplash.com/photo-1453575969485-2644bab303a9?auto=format&fit=crop&w=2100&q=80"
           alt="Team Radio - Cover"
           className={classes.backgroundImg}
         />
@@ -75,15 +76,13 @@ class ResetPassword extends Component {
               {successMessage ? (
                 <div>
                   <Typography type="headline" component="h2">
-                    Check your email
+                    Password Reset Succeeded!
                   </Typography>
                   <Typography component="p" className={classes.text}>
-                    We have sent you an email. Click the link in the email to
-                    reset your password.
-                  </Typography>
-                  <Typography component="p" className={classes.text}>
-                    If you do not see the email, check other places it might be,
-                    like your junk, spam, social, or other folders.
+                    Back to{' '}
+                    <Link to="/auth/login" className={classes.link}>
+                      Login
+                    </Link>
                   </Typography>
                 </div>
               ) : (
@@ -122,7 +121,9 @@ class ResetPassword extends Component {
                         validate={[required]}
                       />
                       <FormHelperText className={classes.error}>
-                        {submitSucceeded && this.state.formError}
+                        {submitSucceeded &&
+                          this.state.formError &&
+                          this.state.formError.message}
                       </FormHelperText>
                     </Grid>
                   </CardContent>
@@ -170,8 +171,12 @@ const mapStateToProps = state => ({
   user: state.api.user,
 });
 
-const mapDispatchToProps = dispatch => ({
-  onSubmit: values => dispatch(resetPassword(values)),
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  onSubmit: values => {
+    const { password } = values;
+    const { token } = ownProps.match.params;
+    return dispatch(resetPassword({ password, token }));
+  },
 });
 
 export default compose(
