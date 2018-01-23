@@ -38,15 +38,13 @@ class FavoriteItem extends Component {
     return [
       <GridListTile key={thumbnail} className={classes.container}>
         <img className={classes.thumbnail} src={thumbnail} alt="" />
-        <div key={2} className={classes.info}>
-          <div style={{ flex: 1 }}>
-            <div className={classes.name}>{title || 'undefined'}</div>
-            <div className={classes.singer}>
-              <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
-              <span className={classes.durationText}>
-                {transformNumber.millisecondsToTime(duration)}
-              </span>
-            </div>
+        <div className={classes.info}>
+          <div className={classes.name}>{title || 'undefined'}</div>
+          <div className={classes.singer}>
+            <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
+            <span className={classes.durationText}>
+              {transformNumber.millisecondsToTime(duration)}
+            </span>
           </div>
           <div className={classes.actions}>
             <span>

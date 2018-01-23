@@ -1,6 +1,7 @@
 export default ({ spacing, palette, typography }) => ({
   container: {
     padding: '0 15px 15px',
+    maxWidth: 200,
   },
   thumbnail: {
     width: 210,
@@ -14,15 +15,20 @@ export default ({ spacing, palette, typography }) => ({
     background: '#FFFFFF',
   },
   info: {
-    display: 'flex',
+    // display: 'flex',
+    display: 'inline',
+    flexDirection: 'inherit',
   },
   name: {
     ...typography.body2,
-    fontSize: '0.825em',
+    fontSize: '0.9em',
     fontWeight: 'bold',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
+    cursor: 'default',
+    marginTop: -4,
+    color: 'rgba(0, 0, 0, 0.54)',
   },
   singer: {
     ...typography.body2,
@@ -33,9 +39,8 @@ export default ({ spacing, palette, typography }) => ({
     marginLeft: spacing.smallMargin,
   },
   actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    right: 'auto',
-    width: 0,
+    position: 'absolute',
+    right: 0,
+    bottom: -15,
   },
 });
