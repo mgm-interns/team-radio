@@ -54,7 +54,7 @@ class ResetPassword extends Component {
     return (
       <Grid item xs className={classes.backgroundImg}>
         <img
-          src="https://images.unsplash.com/photo-1495733715281-6201a6b6cc02?auto=format&fit=crop&w=1950&q=80"
+          src="https://images.unsplash.com/photo-1453575969485-2644bab303a9?auto=format&fit=crop&w=2100&q=80"
           alt="Team Radio - Cover"
           className={classes.backgroundImg}
         />

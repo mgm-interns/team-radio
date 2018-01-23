@@ -58,8 +58,8 @@ export default router => {
       }
       if (user && !user.validPassword(req.body.password)) {
         res.status(401).json({
-            success: false,
-            message: 'Incorrect email/username or password',
+          success: false,
+          message: 'Incorrect email/username or password',
         });
       } else {
         const payload = {
@@ -149,7 +149,6 @@ export default router => {
           }
 
           return res.status(400).json({ tokenError: 'Verify token failed.' });
-
         });
       } else {
         return res.status(400).json({ tokenError: 'No token provided.' });
@@ -336,24 +335,24 @@ export default router => {
     try {
       let user = await User.findOne({ _id: req.body.userId });
       const token = req.headers['access-token'];
-      console.log('1')
+      console.log('1');
       if (user) {
-          console.log('2')
+        console.log('2');
         const isOwner = await userController.isVerifidedToken(
           user._id.toString(),
           token,
           req.app.get('superSecret'),
         );
         if (isOwner) {
-            console.log(user.validPassword(req.body.currentPassword))
+          console.log(user.validPassword(req.body.currentPassword));
           if (user.password && !user.validPassword(req.body.currentPassword)) {
             return res.status(400).json({
               message: 'Current password is incorrect!',
             });
           }
-            console.log('4')
+          console.log('4');
           const newPassword = user.generateHash(req.body.newPassword);
-            console.log('5')
+          console.log('5');
           await userController.setPassword(user.email, newPassword);
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
@@ -446,11 +445,10 @@ export default router => {
         req.body.email,
         req.app.get('superSecret'),
       );
-      if (response.Error){
-        return res.status(400).json({message: response.message});
-      } else {
-        return res.json({message: response.message});
+      if (response.Error) {
+        return res.status(400).json({ message: response.message });
       }
+      return res.json({ message: response.message });
     } catch (err) {
       throw err;
     }
@@ -462,14 +460,13 @@ export default router => {
         req.params.token,
         req.app.get('superSecret'),
       );
-      console.log(response)
-      if (response.Error){
-        return res.status(400).json({message: response.message});
-      } else {
-        return res.json({message: response.message});
+      console.log(response);
+      if (response.Error) {
+        return res.status(400).json({ message: response.message });
       }
+      return res.json({ message: response.message });
     } catch (err) {
-      throw err
+      throw err;
     }
   });
 
@@ -480,13 +477,12 @@ export default router => {
         req.app.get('superSecret'),
         req.body.newPassword,
       );
-      if (response.Error){
-        return res.status(400).json({message: response.message});
-      } else {
-        return res.json({message: response.message});
+      if (response.Error) {
+        return res.status(400).json({ message: response.message });
       }
+      return res.json({ message: response.message });
     } catch (err) {
-        throw err
+      throw err;
     }
   });
 
