@@ -113,7 +113,9 @@ class ForgotPassword extends Component {
                       />
 
                       <FormHelperText className={classes.error}>
-                        {submitSucceeded && this.state.formError.message}
+                        {submitSucceeded &&
+                          this.state.formError &&
+                          this.state.formError.message}
                       </FormHelperText>
                     </Grid>
                   </CardContent>
