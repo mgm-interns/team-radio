@@ -472,10 +472,11 @@ export default router => {
 
   router.post('/resetPassword', async (req, res) => {
     try {
+      console.log(req.body);
       const response = await manageUserAccountController.resetPassword(
         req.body.token,
         req.app.get('superSecret'),
-        req.body.newPassword,
+        req.body.password,
       );
       if (response.Error) {
         return res.status(400).json({ message: response.message });

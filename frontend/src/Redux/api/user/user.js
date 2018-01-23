@@ -45,7 +45,7 @@ const forgotPasswordRequest = new HttpRequest({
 const resetPasswordRequest = new HttpRequest({
   method: 'POST',
   type: 'RESET_PASSWORD',
-  endpoint: `${ENDPOINT}/forgotpassword`,
+  endpoint: `${ENDPOINT}/resetpassword`,
   headers: {
     'access-token': localStorage.getItem('token'),
   },
