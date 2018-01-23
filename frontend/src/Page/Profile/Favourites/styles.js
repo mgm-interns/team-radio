@@ -16,6 +16,7 @@ export default ({ spacing }) => ({
     transform: 'translateZ(0)',
     overflowY: 'auto',
     overflowX: 'hidden',
+    minWidth: 200,
   },
   container: {
     paddingTop: 50,

@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles/index';
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import Favourites from 'Page/Profile/Favourites';
 import { getFavouriteSongs } from 'Redux/api/favouriteSongs/actions';
@@ -16,17 +17,26 @@ import pins from './fixtures';
 /* eslint-disable no-shadow */
 class FilterFavourites extends Component {
   componentDidMount() {
-    this.props.requestFavouriteSongs('5a5f285889e2421cf07ed0f8');
+    const { userId, requestFavouriteSongs } = this.props;
+    requestFavouriteSongs(userId);
+  }
+
+  static _renderLoading() {
+    return <CircularProgress />;
   }
 
   render() {
-    const { classes, favouriteSongs } = this.props;
+    const { classes, favouriteSongs, userId } = this.props;
 
     return (
       <Grid container className={classes.containerWrapper}>
         <Typography type="title">{`Hear the tracks you've saved`}</Typography>
         <Grid item xs={12} className={classes.favouritesContainer}>
-          <Favourites favouriteSongs={favouriteSongs.data} />
+          {!userId ? (
+            FilterFavourites._renderLoading()
+          ) : (
+            <Favourites favouriteSongs={favouriteSongs.data} />
+          )}
         </Grid>
       </Grid>
     );
@@ -41,15 +51,15 @@ FilterFavourites.propTypes = {
   history: PropTypes.object,
   favouriteSongs: PropTypes.object,
   requestFavouriteSongs: PropTypes.func,
+  userId: PropTypes.string,
 };
 
 const mapStateToProps = ({ api }) => ({
-  user: api.user,
-  favouriteSongs: api.favouriteSongs,
+  favouriteSongs: api.favouriteSongs.favourite,
 });
 
 const mapDispatchToProps = dispatch => ({
-  requestFavouriteSongs: userId => dispatch(getFavouriteSongs(userId)),
+  requestFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
 });
 
 export default compose(

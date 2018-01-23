@@ -1,7 +1,10 @@
 export default ({ spacing, palette, typography }) => ({
+  container: {
+    padding: '0 15px 15px',
+  },
   thumbnail: {
     width: 210,
-    height: 118,
+    height: 120,
   },
   img: {
     width: spacing.fullWidth,
@@ -11,10 +14,7 @@ export default ({ spacing, palette, typography }) => ({
     background: '#FFFFFF',
   },
   info: {
-    paddingLeft: spacing.doubleBaseMargin,
-    paddingRight: spacing.doubleBaseMargin * 2,
-    paddingBottom: spacing.doubleBaseMargin,
-    position: 'relative',
+    display: 'flex',
   },
   name: {
     ...typography.body2,
@@ -35,6 +35,7 @@ export default ({ spacing, palette, typography }) => ({
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
-    paddingTop: spacing.doubleBaseMargin * 3,
+    right: 'auto',
+    width: 0,
   },
 });

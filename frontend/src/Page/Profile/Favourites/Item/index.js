@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AccessTimeIcon from 'react-icons/lib/md/access-time';
-import StarIcon from 'react-icons/lib/md/star';
-import StarOutlineIcon from 'react-icons/lib/md/star-outline';
+import DeleteIcon from 'react-icons/lib/md/delete';
 import withStyles from 'material-ui/styles/withStyles';
 import { GridListTile } from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
@@ -37,38 +36,27 @@ class FavoriteItem extends Component {
     const { thumbnail, title, singer, classes, duration } = this.props;
 
     return [
-      <GridListTile key={thumbnail} style={{ paddingBottom: 10 }}>
+      <GridListTile key={thumbnail} className={classes.container}>
         <img className={classes.thumbnail} src={thumbnail} alt="" />
-      </GridListTile>,
-      <div key={2} className={classes.info}>
-        <div className={classes.name}>{title}</div>
-        <div className={classes.singer}>{singer}</div>
-        <div className={classes.singer}>
-          <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
-          <span className={classes.durationText}>
-            {transformNumber.millisecondsToTime(duration)}
-          </span>
-        </div>
-        <div className={classes.actions}>
-          <Tooltip
-            placement={'bottom'}
-            title={
-              this.state.isFavourite
-                ? 'Remove this from favourite songs'
-                : 'Favourite this song'
-            }
-          >
+        <div key={2} className={classes.info}>
+          <div style={{ flex: 1 }}>
+            <div className={classes.name}>{title || 'undefined'}</div>
+            <div className={classes.singer}>
+              <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
+              <span className={classes.durationText}>
+                {transformNumber.millisecondsToTime(duration)}
+              </span>
+            </div>
+          </div>
+          <div className={classes.actions}>
             <span>
-              <IconButton
-                onClick={this.deleteSong}
-                color={this.state.isFavourite ? 'primary' : 'default'}
-              >
-                {this.state.isFavourite ? <StarIcon /> : <StarOutlineIcon />}
+              <IconButton onClick={this.deleteSong}>
+                {this.state.isFavourite && <DeleteIcon />}
               </IconButton>
             </span>
-          </Tooltip>
+          </div>
         </div>
-      </div>,
+      </GridListTile>,
     ];
   }
 }
