@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import isEqualWith from 'lodash/isEqualWith';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import LightBuldIcon from 'react-icons/lib/fa/lightbulb-o';
@@ -38,6 +39,7 @@ class StationPage extends Component {
       muted: false,
       tabValue: 0,
       isPassive: false,
+      playlist: [],
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
@@ -71,8 +73,7 @@ class StationPage extends Component {
   componentWillReceiveProps(nextProps) {
     const {
       muteNowPlaying,
-      favourite,
-      currentStation: { nowPlaying },
+      currentStation: { nowPlaying, playlist },
     } = nextProps;
     const { getFavouriteSongs, userId } = this.props;
 
@@ -81,20 +82,6 @@ class StationPage extends Component {
     if (!nowPlaying.url) {
       this.props.passiveUserRequest();
     }
-
-    // Refresh list of favourited songs after user add or remove a song from favourite list
-    if (favourite.trigger) {
-      getFavouriteSongs(userId);
-    }
-    // if(favourite.data.length!==this.props.favourite.data.length){
-    //   playlist.forEach(playlistItem=>{
-    //     favourite.data.forEach(favouriteItem=>{
-    //       if(playlistItem.song_id===favouriteItem.song_id){
-    //         playlistItem
-    //       }
-    //     })
-    //   })
-    // }
 
     this.setState({
       muted: muteNowPlaying,

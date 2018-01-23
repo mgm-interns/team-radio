@@ -1,3 +1,4 @@
+import remove from 'lodash/remove';
 import {
   CLIENT_FAVOURITE_SONG,
   SERVER_ADD_FAVOURITE_SONG_SUCCESS,
@@ -9,10 +10,6 @@ import {
 
 const INITIAL_STATE = {
   favourite: {
-    trigger: false,
-    favouriteSuccess: false,
-    unFavouriteSuccess: false,
-    actionResult: null,
     data: [],
     message: null,
   },
@@ -28,7 +25,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         favourite: {
           ...state.favourite,
-          trigger: true,
         },
       };
     case SERVER_ADD_FAVOURITE_SONG_SUCCESS: {
@@ -36,10 +32,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         favourite: {
           ...state.favourite,
-          trigger: false,
-          favouriteSuccess: true,
-          unFavouriteSuccess: false,
-          actionResult: { ...action.payload.song },
+          data: [...state.favourite.data, action.payload.song],
           message: null,
         },
       };
@@ -49,10 +42,10 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         favourite: {
           ...state.favourite,
-          trigger: false,
-          favouriteSuccess: false,
-          unFavouriteSuccess: true,
-          actionResult: { ...action.payload },
+          data: remove(
+            state.favourite.data,
+            item => item.song_id !== action.payload.song_id,
+          ),
           message: null,
         },
       };
@@ -62,10 +55,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         favourite: {
           ...state.favourite,
-          trigger: false,
-          favouriteSuccess: INITIAL_STATE.favourite.favouriteSuccess,
-          unFavouriteSuccess: INITIAL_STATE.favourite.unFavouriteSuccess,
-          actionResult: INITIAL_STATE.favourite.actionResult,
           message: action.payload.message,
         },
       };

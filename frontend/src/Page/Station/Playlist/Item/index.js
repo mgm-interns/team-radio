@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import isEqualWith from 'lodash/isEqualWith';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
@@ -46,19 +47,27 @@ class PlaylistItem extends Component {
   }
 
   componentDidMount() {
-    const { up_vote, down_vote } = this.props;
-
+    const { up_vote, down_vote, favourite, song_id } = this.props;
     this.setState({
       isUpVote: PlaylistItem.isUpVote(this.props),
       isDownVote: PlaylistItem.isDownVote(this.props),
       upVotes: up_vote.length,
       downVotes: down_vote.length,
     });
+
+    favourite.data.forEach(item => {
+      if (song_id === item.song_id) {
+        this.setState({ isFavourite: true });
+        return false;
+      }
+      return true;
+    });
   }
 
   // Always re-render upVote & downVote when props has changed
   componentWillReceiveProps(nextProps) {
-    const { up_vote, down_vote, favourite } = nextProps;
+    const { up_vote, down_vote } = nextProps;
+    const { song_id } = this.props;
     this.setState({
       isUpVote: PlaylistItem.isUpVote(nextProps),
       isDownVote: PlaylistItem.isDownVote(nextProps),
@@ -66,8 +75,21 @@ class PlaylistItem extends Component {
       downVotes: down_vote.length,
     });
 
-    console.log('next props: ', favourite.data.length);
-    console.log('props: ', this.props.favourite.data.length);
+    if (
+      !isEqualWith(
+        this.props.favourite.data,
+        nextProps.favourite.data,
+        (objVal, othVal) => objVal === othVal,
+      )
+    ) {
+      nextProps.favourite.data.forEach(item => {
+        if (song_id === item.song_id) {
+          this.setState({ isFavourite: true });
+          return false;
+        }
+        return true;
+      });
+    }
   }
 
   upVoteSong() {
@@ -312,6 +334,7 @@ PlaylistItem.propTypes = {
   stationId: PropTypes.string,
   getFavouriteSongs: PropTypes.func,
   favourite: PropTypes.object,
+  isFavourite: PropTypes.bool,
 };
 
 const mapStateToProps = ({ api }) => ({
