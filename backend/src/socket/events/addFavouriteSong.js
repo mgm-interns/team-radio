@@ -43,13 +43,13 @@ export default async (emitter, songId, userId, songUrl, stationId) => {
  * @param {String} songUrl Url of the song you want to mark as favourite
  */
 // eslint-disable-next-line
-const _addFavouriteSong = async (emitter, songId, userId, songUrl,stationId) => {
+const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) => {
   let song = {};
   let removedSongId;
 
   // eslint-disable-next-line
   const status =
-    await userController.addFavouriteSong(songId, userId, songUrl,stationId);
+    await userController.addFavouriteSong(songId, userId, songUrl, stationId);
 
   const list = await getAvailableListSong(stationId);
 
@@ -73,7 +73,7 @@ const _addFavouriteSong = async (emitter, songId, userId, songUrl,stationId) => 
     emitter.emit(EVENTS.SERVER_ADD_FAVOURITE_SONG_SUCCESS, {
       song,
     });
-    return;
+    // return;
   }
   if (status === userController.UN_FAVOURITE_SUCCESS) {
     list.forEach(item => {
@@ -85,10 +85,10 @@ const _addFavouriteSong = async (emitter, songId, userId, songUrl,stationId) => 
     emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {
       song_id: removedSongId,
     });
-    return;
+    // return;
   }
-  emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {
-    song_id: status,
-    is_favorite: false,
-  });
+  // emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {
+  //   song_id: status,
+  //   is_favorite: false,
+  // });
 };

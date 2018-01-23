@@ -1,5 +1,3 @@
-import includes from 'lodash/includes';
-import { appNotificationInstance } from 'Component/Notification/AppNotification';
 import {
   CLIENT_FAVOURITE_SONG,
   SERVER_ADD_FAVOURITE_SONG_SUCCESS,
@@ -42,6 +40,7 @@ export default (state = INITIAL_STATE, action) => {
           favouriteSuccess: true,
           unFavouriteSuccess: false,
           actionResult: { ...action.payload.song },
+          message: null,
         },
       };
     }
@@ -54,6 +53,7 @@ export default (state = INITIAL_STATE, action) => {
           favouriteSuccess: false,
           unFavouriteSuccess: true,
           actionResult: { ...action.payload },
+          message: null,
         },
       };
     }
@@ -74,7 +74,8 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         favourite: {
           ...state.favourite,
-          data: [...state.favourite.data, ...action.payload.songs],
+          data: [...action.payload.songs],
+          message: null,
         },
       };
     case SERVER_GET_FAVOURITE_SONG_FAILURE:

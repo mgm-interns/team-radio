@@ -280,7 +280,6 @@ export const addFavouriteSong = async (songId, userId, songUrl, stationId = null
       if (stationId) {
         return UN_FAVOURITE_SUCCESS;
       } else {
-        console.log('abc');
         return await userModels.getFavouritedSongs(userId);
       }
 
