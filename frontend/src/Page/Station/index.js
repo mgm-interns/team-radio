@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import isEqualWith from 'lodash/isEqualWith';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import LightBuldIcon from 'react-icons/lib/fa/lightbulb-o';
@@ -15,6 +16,7 @@ import fixture from 'Fixture/landing';
 import { transformNumber } from 'Transformer';
 import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
+import { getFavouriteSongs } from 'Redux/api/favouriteSongs/actions';
 import {
   muteVideoRequest,
   passiveUserRequest,
@@ -22,12 +24,11 @@ import {
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
+import Favourites from './Favourites';
 import NowPlaying from './NowPlaying';
 import OnlineUsers from './OnlineUsers';
 import styles from './styles';
 import StationSharing from './Sharing';
-
-const STATION_NAME_DEFAULT = 'Station Name';
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -37,9 +38,8 @@ class StationPage extends Component {
     this.state = {
       muted: false,
       tabValue: 0,
-      playlist: [],
-      history: [],
       isPassive: false,
+      playlist: [],
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
@@ -73,8 +73,10 @@ class StationPage extends Component {
   componentWillReceiveProps(nextProps) {
     const {
       muteNowPlaying,
-      currentStation: { playlist, nowPlaying },
+      currentStation: { nowPlaying, playlist },
     } = nextProps;
+    const { getFavouriteSongs, userId } = this.props;
+
     this._checkValidStation(nextProps);
 
     if (!nowPlaying.url) {
@@ -83,8 +85,6 @@ class StationPage extends Component {
 
     this.setState({
       muted: muteNowPlaying,
-      playlist: playlist.filter(item => item.is_played === false),
-      history: playlist.filter(item => item.is_played === true),
     });
   }
 
@@ -99,6 +99,7 @@ class StationPage extends Component {
     // Station must be a valid string
     if (!joined.loading && !joined.success && !joined.loggedInStation) {
       this.props.joinStation({ stationId, userId });
+      this.props.getFavouriteSongs(userId);
     }
     // Check if user is already joined in other station
     if (!joined.loading && joined.failed && !!joined.loggedInStation) {
@@ -106,6 +107,7 @@ class StationPage extends Component {
         const { stationId } = joined.loggedInStation;
         history.replace(`/station/${stationId}`);
         this.props.joinStation({ stationId, userId });
+        this.props.getFavouriteSongs(userId);
       }, 5000);
       return;
     }
@@ -149,48 +151,64 @@ class StationPage extends Component {
   }
 
   _renderTabs() {
-    const { classes } = this.props;
-    const { tabValue, playlist, history } = this.state;
+    const {
+      classes,
+      favourite,
+      currentStation: { playlist, history },
+    } = this.props;
+    const { tabValue } = this.state;
 
     return [
       <Tabs
-        key={1}
+        key={0}
         fullWidth
         value={tabValue}
         onChange={this._handleTabChange}
         indicatorColor="primary"
         className={classes.tabs}
       >
-        <Tab
-          classes={{
-            label: classes.tabLabel,
-          }}
-          label={`Playlist (${playlist.length})`}
-        />
-        <Tab
-          classes={{
-            label: classes.tabLabel,
-          }}
-          label={`History`}
-        />
+        {[
+          { label: `Playlist (${playlist.length})` },
+          { label: `History` },
+          { label: `Favourites` },
+        ].map(({ label }, index) => (
+          <Tab
+            key={index}
+            classes={{
+              label: classes.tabLabel,
+              fullWidth: classes.fullWidthTab,
+            }}
+            label={label}
+          />
+        ))}
       </Tabs>,
       tabValue === 0 && (
-        <TabContainer key={2}>
+        <TabContainer key={1}>
           <Playlist
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !playlist,
             })}
-            playlist={playlist}
+            data={playlist}
           />
         </TabContainer>
       ),
       tabValue === 1 && (
-        <TabContainer key={3}>
+        <TabContainer key={2}>
           <History
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !history,
             })}
-            history={history.reverse()}
+            data={history}
+          />
+        </TabContainer>
+      ),
+      tabValue === 2 && (
+        <TabContainer key={3}>
+          <Favourites
+            className={classNames(classes.content, {
+              [classes.emptyPlaylist]: !history,
+            })}
+            data={favourite.data}
           />
         </TabContainer>
       ),
@@ -328,6 +346,8 @@ StationPage.propTypes = {
   passiveUserRequest: PropTypes.func,
   passive: PropTypes.bool,
   nowPlayingFromPlaylist: PropTypes.object,
+  getFavouriteSongs: PropTypes.func,
+  favourite: PropTypes.object,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -338,6 +358,7 @@ const mapStateToProps = ({ api, page }) => ({
   userId: api.user.data.userId,
   passive: page.station.passive,
   nowPlayingFromPlaylist: page.station.nowPlaying,
+  favourite: api.favouriteSongs.favourite,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -346,6 +367,7 @@ const mapDispatchToProps = dispatch => ({
   muteVideoRequest: ({ muteNowPlaying, mutePreview, userDid }) =>
     dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
   passiveUserRequest: isPassive => dispatch(passiveUserRequest(isPassive)),
+  getFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
 });
 
 export default compose(

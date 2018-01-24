@@ -1,4 +1,4 @@
 module.exports = {
-  secret: 'ilovesteamradio',
-  url: 'mongodb://mgm:mgm123@ds013564.mlab.com:13564/mgm-radio',
+  secret: process.env.DATABASE_SECRET,
+  url: process.env.DATABASE_URL,
 };

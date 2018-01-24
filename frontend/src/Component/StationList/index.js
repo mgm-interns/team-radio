@@ -85,6 +85,7 @@ class StationList extends Component {
           <StationItem
             key={index}
             {...station}
+            enableWavingIcon={!!station.playing}
             disableOnlineCount={disableOnlineCount}
             onClick={onItemClick}
           />

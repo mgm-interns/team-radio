@@ -12,6 +12,7 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 import PersonIcon from 'react-icons/lib/md/person';
 import ExitIcon from 'react-icons/lib/md/exit-to-app';
 import ArrowDropDownIcon from 'react-icons/lib/md/arrow-drop-down';
+import HelpIcon from 'react-icons/lib/md/help';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -32,6 +33,7 @@ class AuthLink extends Component {
       anchorEl: null,
     };
     this._logout = this._logout.bind(this);
+    this._help = this._help.bind(this);
     this._renderPopoverContent = this._renderPopoverContent.bind(this);
   }
 
@@ -43,6 +45,12 @@ class AuthLink extends Component {
     removeAuthenticationState();
     this.props.logout();
     this.props.history.replace('/');
+  }
+
+  _help() {
+    this.props.notification.app.warning({
+      message: 'This feature is not ready yet.',
+    });
   }
 
   _openMenu = event => {
@@ -58,7 +66,7 @@ class AuthLink extends Component {
     return (
       <List
         subheader={
-          <ListSubheader style={{ paddingLeft: 30 }}>
+          <ListSubheader>
             {`Signed in as:`}
             <Typography type="body1">
               {`${user.data.username || user.data.email}`}
@@ -72,22 +80,19 @@ class AuthLink extends Component {
           to={`/profile/${user.data.username}`}
         >
           <ListItem button>
-            <span>
-              <IconButton>
-                <PersonIcon />
-              </IconButton>
-            </span>
-            <ListItemText primary="My Profile" />
+            <PersonIcon />
+            <ListItemText primary="Your profile" />
           </ListItem>
         </Link>
 
+        <ListItem button onClick={this._help}>
+          <HelpIcon />
+          <ListItemText primary="Help" />
+        </ListItem>
+
         <ListItem button onClick={this._logout}>
-          <span>
-            <IconButton>
-              <ExitIcon />
-            </IconButton>
-          </span>
-          <ListItemText primary="Logout" />
+          <ExitIcon />
+          <ListItemText primary="Sign out" />
         </ListItem>
       </List>
     );
@@ -114,12 +119,10 @@ class AuthLink extends Component {
           </Fragment>
         )}
         {user.isAuthenticated && (
-          <div>
-            <div
+          <div className={classes.menuItem}>
+            <Link
+              to={`/profile/${user.data.username}`}
               className={classes.menuItem}
-              aria-owns={anchorEl ? 'simple-menu' : null}
-              aria-haspopup="true"
-              onClick={this._openMenu}
             >
               <img
                 className={classes.avatar}
@@ -130,6 +133,15 @@ class AuthLink extends Component {
                 }
                 alt="avatar"
               />
+              <div>
+                <span className={classes.displayName}>{user.data.name}</span>
+              </div>
+            </Link>
+            <div
+              aria-owns={anchorEl ? 'simple-menu' : null}
+              aria-haspopup="true"
+              onClick={this._openMenu}
+            >
               <span>
                 <IconButton className={classes.dropdownIcon}>
                   <ArrowDropDownIcon />

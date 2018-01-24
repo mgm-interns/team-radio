@@ -25,7 +25,9 @@ class FilterAll extends Component {
     super(props);
 
     this._goToStationPage = this._goToStationPage.bind(this);
+    this._renderStationList = this._renderStationList.bind(this);
   }
+
   componentDidMount() {
     const { user: { userId } } = this.props;
     this.props.requestStationsByUserId(userId);
@@ -42,48 +44,53 @@ class FilterAll extends Component {
 
     // redirect to station page
     history.push(`/station/${station.station_id}`);
+
     joinStationRequest({ userId, stationId: station.station_id });
-    setPreviewVideo();
-    // Scroll to left after switch successful
-    // this.scrollbarRef.scrollLeft();
-    // }
     notification.app.success({
       message: `Switched to station ${station.station_name}`,
     });
   }
 
+  _renderStationList(title, data, loading, emptyMessage) {
+    const { classes } = this.props;
+    return [
+      <Typography key={1} type="title">
+        {title}
+      </Typography>,
+      <div key={2} className={classes.stationSection}>
+        <StationList
+          key={2}
+          stations={data}
+          loading={loading}
+          emptyMessage={emptyMessage}
+          onItemClick={this._goToStationPage}
+          disableOnlineCount
+        />
+      </div>,
+    ];
+  }
+
   render() {
     const { classes, all, recent, isDisabled, user } = this.props;
+    const stationsTitle = isDisabled
+      ? 'My stations'
+      : `${user.name || user.username}'s stations`;
 
     return (
       <Grid container className={classes.containerWrapper}>
         <Grid item xs={12} className={classes.container}>
-          <Typography type="title">
-            {isDisabled
-              ? 'My stations'
-              : `${user.name || user.username}'s stations`}
-          </Typography>
-          <div className={classes.stationSection}>
-            <StationList
-              stations={all.data.stations}
-              loading={all.loading}
-              emptyMessage={'You have no station.'}
-              onItemClick={this._goToStationPage}
-              disableOnlineCount
-            />
-          </div>
-          <Typography type="title" className={classes.titleLabel}>
-            Recent
-          </Typography>
-          <div className={classes.stationsSection}>
-            <StationList
-              stations={recent.data.stations}
-              loading={recent.loading}
-              emptyMessage={"You haven't interact with any station yet."}
-              onItemClick={this._goToStationPage}
-              disableOnlineCount
-            />
-          </div>
+          {this._renderStationList(
+            stationsTitle,
+            all.data.stations,
+            all.loading,
+            'You have no station.',
+          )}
+          {this._renderStationList(
+            'Recent',
+            recent.data.stations,
+            recent.loading,
+            "You haven't interact with any station yet.",
+          )}
         </Grid>
       </Grid>
     );

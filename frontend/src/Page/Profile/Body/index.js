@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
@@ -20,7 +19,7 @@ class Body extends Component {
     super(props);
 
     this.state = {
-      value: 0,
+      value: 1,
       open: false,
     };
 
@@ -77,7 +76,7 @@ class Body extends Component {
         )}
         {this.state.value === 1 && (
           <TabContainer>
-            <FilterFavourites />
+            <FilterFavourites userId={user.userId} />
           </TabContainer>
         )}
       </Grid>

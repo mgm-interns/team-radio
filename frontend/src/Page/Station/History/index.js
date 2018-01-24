@@ -9,7 +9,7 @@ import styles from './styles';
 
 class History extends Component {
   render() {
-    const { className, style, history } = this.props;
+    const { className, style, data } = this.props;
     return (
       <Grid
         item
@@ -18,8 +18,8 @@ class History extends Component {
         style={{ ...style, overflowY: 'auto', overflowX: 'hidden' }}
       >
         <List style={{ paddingTop: 0, paddingBottom: 0 }}>
-          {history.map((video, index) => (
-            <Item key={index} {...video} playing={index === 0} />
+          {data.map((video, index) => (
+            <Item key={video.song_id || index} {...video} />
           ))}
         </List>
       </Grid>
@@ -31,7 +31,7 @@ History.propTypes = {
   className: PropTypes.any,
   classes: PropTypes.object,
   style: PropTypes.any,
-  history: PropTypes.array,
+  data: PropTypes.array,
 };
 
 export default compose(withStyles(styles))(History);

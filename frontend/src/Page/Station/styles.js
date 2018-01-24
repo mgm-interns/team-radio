@@ -93,12 +93,6 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
   switchedTitle: {
     color: palette.primary['500'],
   },
-  tabLabel: {
-    fontSize: '1.425rem',
-    fontFamily: 'Lato',
-    color: 'rgba(0,0,0,0.54)',
-    textTransform: 'none',
-  },
   titleContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -119,5 +113,14 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
   },
   tabs: {
     borderBottom: '1px solid #f2f2f2',
+  },
+  fullWidthTab: {
+    minWidth: '33.3333%',
+  },
+  tabLabel: {
+    fontSize: '1.225rem',
+    fontFamily: 'Lato',
+    color: 'rgba(0,0,0,0.54)',
+    textTransform: 'none',
   },
 });

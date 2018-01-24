@@ -1,34 +1,81 @@
+import remove from 'lodash/remove';
+import {
+  CLIENT_FAVOURITE_SONG,
+  SERVER_ADD_FAVOURITE_SONG_SUCCESS,
+  SERVER_REMOVE_FAVOURITE_SONG_SUCCESS,
+  SERVER_FAVOURITE_SONG_FAILURE,
+  SERVER_GET_FAVOURITE_SONG_SUCCESS,
+  SERVER_GET_FAVOURITE_SONG_FAILURE,
+} from 'Redux/actions';
+
 const INITIAL_STATE = {
-  data: [],
-  error: null,
-  loading: false,
+  favourite: {
+    data: [],
+    message: null,
+  },
 };
 
-const favoriteSongsReducer = (state = INITIAL_STATE, action) => {
+export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'FETCH_FAVOURITE_SONGS_BY_USER_ID_REQUEST':
+    /**
+     * Favourite song request (add & remove)
+     */
+    case CLIENT_FAVOURITE_SONG:
       return {
         ...state,
-        error: null,
-        loading: true,
+        favourite: {
+          ...state.favourite,
+        },
       };
-
-    case 'FETCH_FAVOURITE_SONGS_BY_USER_ID_SUCCESS':
+    case SERVER_ADD_FAVOURITE_SONG_SUCCESS: {
       return {
         ...state,
-        data: [...action.payload],
-        loading: false,
+        favourite: {
+          ...state.favourite,
+          data: [...state.favourite.data, action.payload.song],
+          message: null,
+        },
       };
-
-    case 'FETCH_FAVOURITE_SONGS_BY_USER_ID_FAILURE':
+    }
+    case SERVER_REMOVE_FAVOURITE_SONG_SUCCESS: {
       return {
         ...state,
-        loading: false,
-        error: { ...action.payload },
+        favourite: {
+          ...state.favourite,
+          data: remove(
+            state.favourite.data,
+            item => item.song_id !== action.payload.song_id,
+          ),
+          message: null,
+        },
+      };
+    }
+    case SERVER_FAVOURITE_SONG_FAILURE:
+      return {
+        ...state,
+        favourite: {
+          ...state.favourite,
+          message: action.payload.message,
+        },
+      };
+    case SERVER_GET_FAVOURITE_SONG_SUCCESS:
+      return {
+        ...state,
+        favourite: {
+          ...state.favourite,
+          data: [...action.payload.songs],
+          message: null,
+        },
+      };
+    case SERVER_GET_FAVOURITE_SONG_FAILURE:
+      return {
+        ...state,
+        favourite: {
+          ...state.favourite,
+          message: action.payload.message,
+        },
       };
     default:
       return state;
   }
 };
-
-export default favoriteSongsReducer;

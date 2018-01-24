@@ -33,7 +33,27 @@ export const logout = () => ({
   type: 'LOGOUT_REQUEST',
 });
 
+const forgotPasswordRequest = new HttpRequest({
+  method: 'POST',
+  type: 'FORGOT_PASSWORD',
+  endpoint: `${ENDPOINT}/forgotpassword`,
+  headers: {
+    'access-token': localStorage.getItem('token'),
+  },
+});
+
+const resetPasswordRequest = new HttpRequest({
+  method: 'POST',
+  type: 'RESET_PASSWORD',
+  endpoint: `${ENDPOINT}/resetpassword`,
+  headers: {
+    'access-token': localStorage.getItem('token'),
+  },
+});
+
 export const getUser = getUserRequest.getAction();
 export const addUser = addUserRequest.getAction();
 export const addUserBySocialAccount = addUserBySocialAccountRequest.getAction();
 export const verifyToken = verifyTokenRequest.getAction();
+export const forgotPassword = forgotPasswordRequest.getAction();
+export const resetPassword = resetPasswordRequest.getAction();

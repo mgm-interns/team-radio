@@ -11,7 +11,7 @@ import KeyIcon from 'react-icons/lib/md/vpn-key';
 import Modal from 'material-ui/Modal';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import Popover from 'material-ui/Popover';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 import Tooltip from 'material-ui/Tooltip';
 
 import styles from './styles';
@@ -46,15 +46,14 @@ class Settings extends Component {
       anchorEl: null,
     };
 
-    // this._renderEditInformation = this._renderEditInformation.bind(this);
     this._onOpenEditInformation = this._onOpenEditInformation.bind(this);
     this._onOpenEditPassword = this._onOpenEditPassword.bind(this);
     this._onCloseModal = this._onCloseModal.bind(this);
     this.onCancelButtonClick = this.onCancelButtonClick.bind(this);
     this._openMenu = this._openMenu.bind(this);
     this._closeMenu = this._closeMenu.bind(this);
-    // this._submitModal = this._submitModal.bind(this);
     this._renderPopoverContent = this._renderPopoverContent.bind(this);
+    this._renderModal = this._renderModal.bind(this);
   }
 
   onCancelButtonClick() {
@@ -95,27 +94,22 @@ class Settings extends Component {
     return <CircularProgress />;
   }
 
-  _renderEditInformation() {
-    const { classes, user, loading } = this.props;
-
+  _renderModal(openState, modalHeadline, component) {
+    const { classes } = this.props;
     return (
       <Modal
         aria-labelledby="information-modal-title"
         aria-describedby="information-modal-description"
-        open={this.state.openEditInformation}
+        open={openState}
       >
         <div style={getModalStyle()}>
           <Grid container>
             <Grid item xs={12} className={classes.modalHeadline}>
-              Edit your Information
+              {modalHeadline}
             </Grid>
             <div className="line" />
             <Grid item xs={12} className={classes.settingTabs}>
-              <Information
-                // user={user}
-                loading={loading}
-                onCancel={this.onCancelButtonClick}
-              />
+              {component}
             </Grid>
           </Grid>
         </div>
@@ -123,32 +117,22 @@ class Settings extends Component {
     );
   }
 
+  _renderEditInformation() {
+    return this._renderModal(
+      this.state.openEditInformation,
+      'Edit your information',
+      <Information onCancel={this.onCancelButtonClick} />,
+    );
+  }
+
   _renderEditPassword() {
-    const { classes, user, loading } = this.props;
-    return (
-      <Modal
-        aria-labelledby="password-modal-title"
-        aria-describedby="password-modal-description"
-        open={this.state.openEditPassword}
-        onClose={this._onCloseModal}
-      >
-        <div style={getModalStyle()}>
-          <Grid container>
-            <Grid item xs={12} className={classes.modalHeadline}>
-              Edit your Password
-            </Grid>
-            <div className="line" />
-            <Grid item xs={12} className={classes.settingTabs}>
-              <Password
-                // user={user}
-                loading={loading}
-                onCancel={this.onCancelButtonClick}
-                onDone={this._onCloseModal}
-              />
-            </Grid>
-          </Grid>
-        </div>
-      </Modal>
+    return this._renderModal(
+      this.state.openEditPassword,
+      'Edit your password',
+      <Password
+        onCancel={this.onCancelButtonClick}
+        onDone={this._onCloseModal}
+      />,
     );
   }
 
@@ -156,19 +140,11 @@ class Settings extends Component {
     return (
       <List>
         <ListItem button onClick={this._onOpenEditInformation}>
-          <span>
-            <IconButton>
-              <PersonIcon />
-            </IconButton>
-          </span>
+          <PersonIcon />
           <ListItemText primary="Information" />
         </ListItem>
         <ListItem button onClick={this._onOpenEditPassword}>
-          <span>
-            <IconButton>
-              <KeyIcon />
-            </IconButton>
-          </span>
+          <KeyIcon />
           <ListItemText primary="Password" />
         </ListItem>
       </List>
@@ -189,7 +165,7 @@ class Settings extends Component {
         >
           <Tooltip placement={'bottom'} title={'Edit your account'}>
             <span>
-              <IconButton key={1}>
+              <IconButton>
                 <EditIcon />
               </IconButton>
             </span>

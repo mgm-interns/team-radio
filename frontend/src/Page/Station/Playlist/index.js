@@ -24,6 +24,26 @@ class Playlist extends Component {
     return song.up_vote.length - song.down_vote.length;
   }
 
+  componentWillReceiveProps(nextProps) {
+    // const { playlist } = this.props;
+    // if (nextProps.favouriteList.length === 0) {
+    //   playlist.map(item => {
+    //     item.is_favourited = false;
+    //   });
+    // } else {
+    //   nextProps.favouriteList.forEach(favouritedItem => {
+    //     playlist.forEach(playlistItem => {
+    //       if (playlistItem.song_id === favouritedItem.song_id) {
+    //         playlistItem.is_favourited = favouritedItem.is_favourited;
+    //       } else {
+    //         playlistItem.is_favourited = false;
+    //       }
+    //     });
+    //   });
+    // }
+    // console.log(playlist);
+  }
+
   /**
    * Filter all song that have not been played
    * Then order the list by:
@@ -34,9 +54,9 @@ class Playlist extends Component {
    * @returns {Array}
    */
   getFilteredPlaylist() {
-    const { playlist, nowPlaying, getNowPlaying } = this.props;
+    const { data, nowPlaying, getNowPlaying } = this.props;
     /* eslint-disable consistent-return */
-    playlist.forEach((item, index) => {
+    data.forEach((item, index) => {
       if (index === 0) {
         getNowPlaying(item);
         return false;
@@ -44,7 +64,7 @@ class Playlist extends Component {
     });
 
     return orderBy(
-      playlist,
+      data,
       [
         ({ song_id }) => (song_id === nowPlaying.song_id ? -1 : 1),
         Playlist.getSongScore,
@@ -114,14 +134,16 @@ Playlist.propTypes = {
   className: PropTypes.any,
   classes: PropTypes.any,
   style: PropTypes.any,
-  playlist: PropTypes.array,
+  data: PropTypes.array,
   nowPlaying: PropTypes.object,
   getNowPlaying: PropTypes.func,
   passiveUserRequest: PropTypes.func,
+  favouriteList: PropTypes.array,
 };
 
-const mapStateToProps = state => ({
-  nowPlaying: state.api.currentStation.nowPlaying,
+const mapStateToProps = ({ api }) => ({
+  nowPlaying: api.currentStation.nowPlaying,
+  favouriteList: api.currentStation.favouriteList,
 });
 
 const mapDispatchToProps = dispatch => ({

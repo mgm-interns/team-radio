@@ -28,7 +28,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: { ...action.payload },
+        error: {
+          ...action.payload,
+        },
         isAuthenticated: false,
       };
 
@@ -51,7 +53,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: { ...action.payload },
+        error: {
+          ...action.payload,
+        },
         isAuthenticated: false,
       };
     case 'ADD_USER_BY_SOCIAL_REQUEST':
@@ -73,7 +77,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: { ...action.payload },
+        error: {
+          ...action.payload,
+        },
         isAuthenticated: false,
       };
     case 'VERIFY_TOKEN_REQUEST':
@@ -96,7 +102,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: { ...action.payload },
+        error: {
+          ...action.payload,
+        },
         isAuthenticated: false,
       };
 
@@ -124,13 +132,18 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: { ...action.payload },
+        error: {
+          ...action.payload,
+        },
       };
 
     case 'SET_PASSWORD_REQUEST':
       return {
         ...state,
-        data: { ...state.data, message: '' },
+        data: {
+          ...state.data,
+          message: '',
+        },
         error: null,
         loading: true,
       };
@@ -145,7 +158,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: { ...action.payload },
+        error: {
+          ...action.payload,
+        },
       };
 
     case 'SET_USER_INFORMATION_REQUEST':
@@ -165,7 +180,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: { ...action.payload },
+        error: {
+          ...action.payload,
+        },
       };
 
     case 'SET_AVATAR_REQUEST':
@@ -185,8 +202,54 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        error: { ...action.payload },
+        error: {
+          ...action.payload,
+        },
       };
+
+    case 'FORGOT_PASSWORD_REQUEST':
+      return {
+        data: {},
+        error: null,
+        loading: true,
+      };
+    case 'FORGOT_PASSWORD_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'FORGOT_PASSWORD_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: {
+          ...action.payload,
+        },
+      };
+    case 'RESET_PASSWORD_REQUEST':
+      return {
+        data: {},
+        error: null,
+        loading: true,
+      };
+    case 'RESET_PASSWORD_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'RESET_PASSWORD_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: {
+          ...action.payload,
+        },
+      };
+
     default:
       return state;
   }

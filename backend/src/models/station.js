@@ -27,6 +27,9 @@ const stationSchema = mongoose.Schema({
           down_vote: [
             { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
           ],
+          // comment :{
+          //   type : String
+          // }
         },
       ],
       default: []
@@ -289,18 +292,19 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
  * Get playlist of station
  *
  * @param {string} stationId
+ * @param {limit} limit
  */
 module.exports.getPlaylistOfStation = async (stationId, limit) => {
   let query = { station_id: stationId };
   const station = await Station.findOne(query, { playlist: true, _id: false })
     .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1 })
     .limit(limit);
+    
   return station.playlist;
 };
 
 /**
  *
- * @param {string} stationId
  * @param {string} userId
  */
 module.exports.getStationHasSongUserAdded = async (userId) => {

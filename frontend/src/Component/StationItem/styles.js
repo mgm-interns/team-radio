@@ -20,12 +20,18 @@ export default ({ breakpoints, spacing, palette }) => ({
     fontSize: '0.75em',
   },
   stationAvatar: {
+    position: 'relative',
     display: 'flex',
     flexFlow: 'column-reverse',
     width: 150,
     height: 150,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+  },
+  playingStationWrapper: {
+    position: 'absolute',
+    top: spacing.doubleBaseMargin,
+    left: `calc(100% - 32px)`,
   },
   stationOnlineCountWrapper: {
     width: spacing.fullWidth,

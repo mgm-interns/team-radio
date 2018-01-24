@@ -3,6 +3,7 @@ import User from '../models/user';
 import authController from '../controllers/auth';
 import * as userController from '../controllers/user';
 import * as stationController from '../controllers/station';
+import * as manageUserAccountController from '../controllers/manageUserAccount';
 
 export default router => {
   router.post('/signup', async (req, res) => {
@@ -54,6 +55,12 @@ export default router => {
           success: false,
           message: 'Incorrect email/username or password',
         });
+      }
+      if (user && !user.validPassword(req.body.password)) {
+        res.status(401).json({
+          success: false,
+          message: 'Incorrect email/username or password',
+        });
       } else {
         const payload = {
           email: user.email,
@@ -76,6 +83,7 @@ export default router => {
       throw err;
     }
   });
+
   router.post('/signupWithSocialAccount', async (req, res) => {
     try {
       const user = await userController.createUserWithSocialAccount(
@@ -135,8 +143,12 @@ export default router => {
           }
           const user = await userController.getUserById(decoded.userId);
 
-          const userRes = { ...user._doc, userId: user._id };
-          return res.json(userRes);
+          if (user) {
+            const userRes = { ...user._doc, userId: user._id };
+            return res.json(userRes);
+          }
+
+          return res.status(400).json({ tokenError: 'Verify token failed.' });
         });
       } else {
         return res.status(400).json({ tokenError: 'No token provided.' });
@@ -323,20 +335,24 @@ export default router => {
     try {
       let user = await User.findOne({ _id: req.body.userId });
       const token = req.headers['access-token'];
-
+      console.log('1');
       if (user) {
+        console.log('2');
         const isOwner = await userController.isVerifidedToken(
           user._id.toString(),
           token,
           req.app.get('superSecret'),
         );
         if (isOwner) {
+          console.log(user.validPassword(req.body.currentPassword));
           if (user.password && !user.validPassword(req.body.currentPassword)) {
             return res.status(400).json({
               message: 'Current password is incorrect!',
             });
           }
+          console.log('4');
           const newPassword = user.generateHash(req.body.newPassword);
+          console.log('5');
           await userController.setPassword(user.email, newPassword);
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
@@ -418,6 +434,54 @@ export default router => {
       return res.status(400).json({
         message: 'Can not update user information!',
       });
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  router.post('/forgotPassword', async (req, res) => {
+    try {
+      const response = await manageUserAccountController.forgotPassword(
+        req.body.email,
+        req.app.get('superSecret'),
+      );
+      if (response.Error) {
+        return res.status(400).json({ message: response.message });
+      }
+      return res.json({ message: response.message });
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  router.get('/resetPassword/:token', async (req, res) => {
+    try {
+      const response = await manageUserAccountController.verifyResetPasswordToken(
+        req.params.token,
+        req.app.get('superSecret'),
+      );
+      console.log(response);
+      if (response.Error) {
+        return res.status(400).json({ message: response.message });
+      }
+      return res.json({ message: response.message });
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  router.post('/resetPassword', async (req, res) => {
+    try {
+      console.log(req.body);
+      const response = await manageUserAccountController.resetPassword(
+        req.body.token,
+        req.app.get('superSecret'),
+        req.body.password,
+      );
+      if (response.Error) {
+        return res.status(400).json({ message: response.message });
+      }
+      return res.json({ message: response.message });
     } catch (err) {
       throw err;
     }

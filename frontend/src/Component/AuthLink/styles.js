@@ -35,6 +35,7 @@ export default ({ palette, spacing }) => ({
   menuItem: {
     display: 'flex',
     alignItems: 'center',
+    textDecoration: 'none',
   },
   dropdownIcon: {
     color: palette.white,
@@ -48,5 +49,9 @@ export default ({ palette, spacing }) => ({
   profileLink: {
     textDecoration: 'none',
     color: '#000000de',
+  },
+  displayName: {
+    color: palette.white,
+    paddingLeft: spacing.doubleBaseMargin,
   },
 });

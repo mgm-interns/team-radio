@@ -13,6 +13,10 @@ const userSchema = mongoose.Schema({
     unique: true,
   },
   password: { type: String },
+  token_reset_password: {
+    type: String,
+    default: '',
+  },
   is_password: { type: Boolean },
   name: { type: String, default: '' },
   firstname: { type: String, default: '' },
@@ -68,7 +72,8 @@ userSchema.methods.validPassword = function(password) {
 userSchema.set('autoIndex', true);
 // create the model for users and expose it to our app
 
-var user = (module.exports = mongoose.model('users', userSchema));
+/* eslint-disable no-multi-assign */
+const user = (module.exports = mongoose.model('users', userSchema));
 
 module.exports.getUserByEmail = async email =>
   user.findOne({ email: email }, { password: 0 });
@@ -102,7 +107,7 @@ module.exports.updateReputation = async (email, point) =>
 module.exports.setPassword = async (email, password) =>
   user.update(
     { email: email },
-    { password: password, is_password: true },
+    { password: password, is_password: true, token_reset_password: '' },
     { multi: true },
   );
 
@@ -165,7 +170,9 @@ module.exports.deleteAsongInFavouritedSongs = (userId, songUrl) => {
  */
 module.exports.getFavouritedSongs = async userId => {
   const query = { _id: _safeObjectId(userId) };
-  return (await user.findOne(query, { favourited_songs: true }))
+  return (await user
+    .findOne(query, { favourited_songs: true })
+    .populate('favourited_songs.creator', { _id: 1, name: 1, avatar_url: 1 }))
     .favourited_songs;
 };
 
@@ -185,3 +192,13 @@ module.exports.getSongInFavouriteds = async (userId, songUrl) =>
       },
     },
   )).favourited_songs;
+
+module.exports.setTokenResetPassword = async (userId, token) =>
+  user.update(
+    { _id: _safeObjectId(userId) },
+    { token_reset_password: token },
+    { multi: true },
+  );
+
+module.exports.getUserByResetToken = async token =>
+  user.findOne({ token_reset_password: token }, { password: 0 });

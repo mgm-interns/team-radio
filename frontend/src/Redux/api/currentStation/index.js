@@ -17,16 +17,14 @@ import {
   SERVER_SKIP_SONG,
   SERVER_UPDATE_SKIPPED_SONGS,
   SERVER_NO_MULTI_STATIONS,
-  CLIENT_FAVOURITE_SONG,
-  SERVER_ADD_FAVOURITE_SONG_SUCCESS,
-  SERVER_REMOVE_FAVOURITE_SONG_SUCCESS,
-  SERVER_FAVOURITE_SONG_FAILURE,
+  SERVER_UPDATE_HISTORY,
 } from 'Redux/actions';
 
 const INITIAL_STATE = {
   station: null,
   playlist: [],
   tempPlaylist: [],
+  history: [],
   skipList: [],
   nowPlaying: {
     url: '',
@@ -44,7 +42,6 @@ const INITIAL_STATE = {
     failed: false,
     loggedInStation: null,
   },
-  favouriteSongsResponse: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -69,7 +66,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         station: action.payload.station,
-        playlist: action.payload.station.playlist,
         joined: {
           loading: false,
           success: true,
@@ -134,6 +130,14 @@ export default (state = INITIAL_STATE, action) => {
             willBeSkipped,
           };
         }),
+      };
+    /**
+     * Update history
+     */
+    case SERVER_UPDATE_HISTORY:
+      return {
+        ...state,
+        history: action.payload.history,
       };
 
     /**
@@ -220,28 +224,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         playlist: [...state.tempPlaylist],
         tempPlaylist: INITIAL_STATE.tempPlaylist,
-      };
-    /**
-     * Favourite song request (add & remove)
-     */
-    case CLIENT_FAVOURITE_SONG:
-      return {
-        ...state,
-      };
-    case SERVER_ADD_FAVOURITE_SONG_SUCCESS:
-      return {
-        ...state,
-        favouriteSongsResponse: action.payload,
-      };
-    case SERVER_REMOVE_FAVOURITE_SONG_SUCCESS:
-      return {
-        ...state,
-        favouriteSongsResponse: action.payload,
-      };
-    case SERVER_FAVOURITE_SONG_FAILURE:
-      return {
-        ...state,
-        favouriteSongsResponse: action.payload,
       };
     default:
       return state;
