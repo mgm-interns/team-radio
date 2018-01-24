@@ -19,21 +19,20 @@ class FilterFavourites extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      favouriteSongs: [],
+    };
+
     this._showNotification = this._showNotification.bind(this);
   }
+
   componentDidMount() {
     const { userId, requestFavouriteSongs } = this.props;
     requestFavouriteSongs(userId);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { favouriteSongs, requestFavouriteSongs, userId } = nextProps;
-    console.log(favouriteSongs, userId);
-
-    if (favouriteSongs.message) {
-      this._showNotification(favouriteSongs.message);
-      requestFavouriteSongs(userId);
-    }
+    // const { favouriteSongs, requestFavouriteSongs, userId } = nextProps;
   }
 
   _showNotification(content) {
@@ -49,7 +48,7 @@ class FilterFavourites extends Component {
   }
 
   render() {
-    const { classes, favouriteSongs, userId } = this.props;
+    const { classes, userId, favouriteSongs } = this.props;
 
     return (
       <Grid container className={classes.containerWrapper}>
