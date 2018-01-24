@@ -50,9 +50,7 @@ const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) =>
   // eslint-disable-next-line
   const status =
     await userController.addFavouriteSong(songId, userId, songUrl, stationId);
-
   const list = await getAvailableListSong(stationId);
-
   if (status === userController.ADD_FAVOURITE_SUCCESS) {
     /* eslint-disable consistent-return */
     list.forEach(item => {

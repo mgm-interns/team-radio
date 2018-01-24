@@ -102,7 +102,7 @@ export const deleteStation = async (stationId, userId) => {
  * @param {string} stationId
  */
 export const getStation = async stationId => {
-  if(!stationId){
+  if (!stationId) {
     throw new Error(`Station id ${stationId} is not undefined!`)
   }
   const stationOfId = await stationModels.getStationById(stationId);
@@ -140,7 +140,7 @@ export const getStationsByUserId = async userId => {
  * @param {string} songUrl
  * @param {string} userId
  */
-export const addSong = async (stationId, songUrl, userId) => {
+export const addSong = async (stationId, songUrl, userId, contentMessage) => {
   let station;
   if (!userId) {
     throw new Error(`You need to login to use this feature.`);
@@ -168,6 +168,9 @@ export const addSong = async (stationId, songUrl, userId) => {
       duration: songDetail.duration,
       creator: _safeObjectId(userId),
       created_date: new Date().getTime(),
+      message: {
+        content: contentMessage,
+      }
     };
     await stationModels.addSong(stationId, song);
     const playlist = await getAvailableListSong(stationId);

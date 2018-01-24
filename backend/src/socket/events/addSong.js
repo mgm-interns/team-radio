@@ -13,14 +13,14 @@ import * as EVENTS from '../../const/actions';
 import * as CONSTANTS from '../../const/constants';
 import * as players from '../../players';
 
-export default async (emitter, userId, stationId, songUrl) => {
+export default async (emitter, userId, stationId, songUrl, messageSong) => {
   /**
    * Decline request if the user does not exist
    * Otherwise, allow to add song
    */
   const user = await userController.getUserById(userId);
   if (user) {
-    _addSongProcess(emitter, userId, stationId, songUrl);
+    _addSongProcess(emitter, userId, stationId, songUrl, messageSong);
   } else {
     emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
       message: CONSTANTS.MESSAGE_LOGIN_REQUIRED,
@@ -28,7 +28,13 @@ export default async (emitter, userId, stationId, songUrl) => {
   }
 };
 
-const _addSongProcess = async (emitter, userId, stationId, songUrl) => {
+const _addSongProcess = async (
+  emitter,
+  userId,
+  stationId,
+  songUrl,
+  messageSong,
+) => {
   let playlist;
 
   try {
@@ -36,7 +42,12 @@ const _addSongProcess = async (emitter, userId, stationId, songUrl) => {
      * addSong function will return playlist if add song success
      * If not, it will throw an error object with error message
      */
-    playlist = await stationController.addSong(stationId, songUrl, userId);
+    playlist = await stationController.addSong(
+      stationId,
+      songUrl,
+      userId,
+      messageSong,
+    );
     emitter.emit(EVENTS.SERVER_ADD_SONG_SUCCESS, {});
   } catch (err) {
     emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
