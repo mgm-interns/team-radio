@@ -150,9 +150,6 @@ export default theme => {
       alignItems: 'center',
       marginBottom: baseMargin,
     },
-    messageInput: {
-      width: '100%',
-    },
     /* End search */
   };
 };

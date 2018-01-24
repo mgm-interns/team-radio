@@ -445,10 +445,10 @@ class AddLink extends Component {
           </Grid>
           <Grid item xs={12}>
             <TextField
+              fullWidth
               multiline
               rowsMax={5}
               placeholder="Do you want to say something about this video?..."
-              className={classes.messageInput}
               value={this.state.songMessage}
               onChange={this._onSongMessageChange}
             />
