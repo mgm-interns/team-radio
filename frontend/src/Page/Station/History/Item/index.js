@@ -41,6 +41,7 @@ class HistoryItem extends Component {
       url,
       title,
       thumbnail,
+      duration,
     } = this.props;
 
     // Check if user is not authenticated
@@ -58,6 +59,7 @@ class HistoryItem extends Component {
       stationId,
       userId,
       creator: { username, name, avatar_url },
+      duration,
     });
   }
 

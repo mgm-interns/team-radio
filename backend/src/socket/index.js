@@ -46,6 +46,9 @@ io.on('connection', socket => {
           action.payload.userId,
           action.payload.stationId,
           action.payload.songUrl,
+          action.payload.title,
+          action.payload.thumbnail,
+          action.payload.duration,
         );
         break;
 
