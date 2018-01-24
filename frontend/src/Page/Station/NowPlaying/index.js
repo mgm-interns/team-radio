@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
@@ -120,23 +121,33 @@ class NowPlaying extends Component {
   }
 
   render() {
-    const { className, nowPlaying, autoPlay, muted } = this.props;
+    const { classes, className, nowPlaying, autoPlay, muted } = this.props;
     return this.state.skipNotification ? (
       this.renderSkipNotification()
     ) : (
-      <Grid item xs={12} className={className}>
+      <Grid item xs={12} className={classNames([className, classes.container])}>
         <Player
           songId={nowPlaying.song_id}
           url={nowPlaying ? nowPlaying.url : ''}
           playing={autoPlay}
           seektime={this.state.seektime}
           receivedAt={this.state.receivedAt}
-          showProgressbar={true}
+          showProgressbar
           muted={muted}
           ref={ref => {
             this.playerRef = ref;
           }}
         />
+        {nowPlaying.message &&
+          nowPlaying.message.content && (
+            <marquee
+              className={classes.marquee}
+              behavior="scroll"
+              direction="left"
+            >
+              {nowPlaying.message.content}
+            </marquee>
+          )}
       </Grid>
     );
   }

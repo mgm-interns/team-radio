@@ -41,6 +41,7 @@ class AddLink extends Component {
     this.state = {
       videoId: '',
       searchText: '',
+      songMessage: '',
       suggestions: [],
       notFoundSearchResults: false,
       isDisableButton: true,
@@ -63,6 +64,7 @@ class AddLink extends Component {
     this._renderInput = this._renderInput.bind(this);
     this._onVolumeClick = this._onVolumeClick.bind(this);
     this._clearSearchInput = this._clearSearchInput.bind(this);
+    this._onSongMessageChange = this._onSongMessageChange.bind(this);
   }
 
   componentWillUnmount() {
@@ -314,6 +316,12 @@ class AddLink extends Component {
     }
   }
 
+  _onSongMessageChange(e) {
+    this.setState({
+      songMessage: e.target.value,
+    });
+  }
+
   _onAddClick() {
     const {
       preview,
@@ -347,6 +355,7 @@ class AddLink extends Component {
       thumbnail: preview.snippet.thumbnails.default.url,
       stationId,
       userId,
+      songMessage: this.state.songMessage,
       creator: { username, name, avatar_url },
       duration: moment
         .duration(preview.contentDetails.duration)
@@ -354,6 +363,7 @@ class AddLink extends Component {
     });
     this.setState({
       searchText: '',
+      songMessage: '',
       isDisableButton: true,
       isMute: true,
     });
@@ -431,6 +441,16 @@ class AddLink extends Component {
                 value: this.state.searchText,
                 onChange: this._onChange,
               }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              multiline
+              rowsMax={5}
+              placeholder="Do you want to say something about this video?..."
+              className={classes.messageInput}
+              value={this.state.songMessage}
+              onChange={this._onSongMessageChange}
             />
           </Grid>
         </Grid>
