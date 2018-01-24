@@ -9,6 +9,7 @@
 
 import * as userController from '../../controllers/user';
 import { getAvailableListSong } from '../../controllers/station';
+import { getAsongInStation } from '../../models/station';
 import * as EVENTS from '../../const/actions';
 import * as CONSTANTS from '../../const/constants';
 
@@ -64,6 +65,7 @@ const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) =>
           duration: object.duration,
           thumbnail: object.thumbnail,
           title: object.title,
+          url: object.url,
           song_id: object.song_id,
           created_date: object.created_date,
         };

@@ -130,4 +130,14 @@ export default ({ spacing, palette, typography }) => ({
   progressBar: {
     height: 1,
   },
+  loadingContainer: {
+    position: 'absolute',
+    zIndex: 9,
+    background: 'rgba(249,249,249,0.5)',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
