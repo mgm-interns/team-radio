@@ -22,16 +22,6 @@ import styles from './styles';
 
 // custom style when user hover by mouse
 const hover = {
-  actions: {
-    position: 'absolute',
-    width: '100%',
-    height: `calc(100% - ${25}px)`,
-    top: 0,
-    left: 0,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   inHover: {
     backgroundColor: 'rgba(0, 0, 0, 0.54)',
   },

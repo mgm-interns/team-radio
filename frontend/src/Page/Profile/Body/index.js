@@ -19,7 +19,7 @@ class Body extends Component {
     super(props);
 
     this.state = {
-      value: 1,
+      value: 0,
       open: false,
     };
 

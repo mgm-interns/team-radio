@@ -14,19 +14,46 @@ import { withNotification } from 'Component/Notification';
 import ImageUploader from 'Component/ImageUploader';
 import styles from './styles';
 
+const hover = {
+  inHover: {
+    filter: 'opacity(0.4)',
+    transition: 'all 0.9s',
+  },
+  outHover: {
+    filter: 'opacity(0.8)',
+    transition: 'all 0.9s',
+  },
+};
+
 class Header extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      defaultCover:
+        'https://static.flii.by/thumbs/user/ramas_cover_1280x850.jpg',
+      hover: 'inHover',
+    };
+
     this._onChangeCoverClick = this._onChangeCoverClick.bind(this);
     this._renderHeader = this._renderHeader.bind(this);
     this._renderSummarizeItem = this._renderSummarizeItem.bind(this);
+    this.changeFocus = this.changeFocus.bind(this);
+    this.resetFocus = this.resetFocus.bind(this);
   }
 
   _onChangeCoverClick() {
     this.props.notification.app.warning({
       message: 'This feature is not ready yet.',
     });
+  }
+
+  changeFocus() {
+    this.setState({ hover: 'outHover' });
+  }
+
+  resetFocus() {
+    this.setState({ hover: 'inHover' });
   }
 
   static _renderLoading() {
@@ -52,8 +79,8 @@ class Header extends Component {
 
     return (
       <Grid container className={classes.coverBackground}>
-        <Grid item xs={12} sm={6} className={classes.userInformationContainer}>
-          <div className={classes.userInformation}>
+        <Grid item xs={12} sm={8} className={classes.userInformationContainer}>
+          <Grid className={classes.userInformation}>
             <ImageUploader user={user} isDisabled={isDisabled} />
 
             <div className={classes.userInformationContent}>
@@ -62,16 +89,16 @@ class Header extends Component {
               </Typography>
               <Typography className={classes.text}>@{user.username}</Typography>
             </div>
-          </div>
+          </Grid>
 
-          <div className={classes.summarize}>
+          <Grid className={classes.summarize}>
             {this._renderSummarizeItem('Songs', 0)}
             {this._renderSummarizeItem('Voted', 0)}
             {this._renderSummarizeItem('Reputation', user.reputation)}
-          </div>
+          </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={6} className={classes.changeCoverActionWrapper}>
+        <Grid item xs={12} sm={4} className={classes.changeCoverActionWrapper}>
           {isDisabled && (
             <Button
               raised
@@ -102,10 +129,16 @@ class Header extends Component {
           {this._renderHeader()}
         </Grid>
 
-        <img
-          src="https://scontent.xx.fbcdn.net/v/t1.0-9/s720x720/19961481_1013554005414569_5638203489008040664_n.jpg?oh=f8661d1bfd22763de4f9bcdf01187c06&oe=5AF8C6F9"
-          className={classes.backgroundImg}
-        />
+        <div
+          style={{ ...hover[this.state.hover] }}
+          onMouseEnter={this.changeFocus}
+          onMouseLeave={this.resetFocus}
+        >
+          <img
+            src={this.props.user.cover_url || this.state.defaultCover}
+            className={classes.backgroundImg}
+          />
+        </div>
       </Grid>
     );
   }

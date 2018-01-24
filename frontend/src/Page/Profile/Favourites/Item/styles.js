@@ -54,4 +54,14 @@ export default ({ spacing, palette, typography }) => ({
     color: palette.white,
     height: 1,
   },
+  actions: {
+    position: 'absolute',
+    width: '100%',
+    height: `calc(100% - ${25}px)`,
+    top: 0,
+    left: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
