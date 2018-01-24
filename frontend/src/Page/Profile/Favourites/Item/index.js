@@ -4,6 +4,7 @@ import withStyles from 'material-ui/styles/withStyles';
 import { GridListTile } from 'material-ui/GridList';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
+import Tooltip from 'material-ui/Tooltip';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -38,16 +39,16 @@ class FavoriteItem extends Component {
   }
 
   _onAlertOpen() {
-    this.setState({ open: true });
+    this.setState({ openAlert: true });
   }
 
   _onAlertClose() {
-    this.setState({ open: false });
+    this.setState({ openAlert: false });
   }
 
   _onRemoveFavourite() {
     const { song_id, url, userId } = this.props;
-    this.props.favouriteSongRequest({
+    this.props.onRemoveSong({
       songId: song_id,
       userId,
       songUrl: url,
@@ -67,11 +68,13 @@ class FavoriteItem extends Component {
         </div>
       </Grid>,
       <div key={2} className={classes.info}>
-        <div className={classes.name}>{title || 'undefined'}</div>
+        <Tooltip placement={'top'} title={title}>
+          <div className={classes.name}>{title}</div>
+        </Tooltip>
         <div className={classes.actions}>
           <Button
             raised
-            color={'secondary'}
+            color={'default'}
             className={classes.button}
             onClick={this._onAlertOpen}
           >
@@ -85,7 +88,7 @@ class FavoriteItem extends Component {
   _renderAlertDialog() {
     return (
       <Dialog
-        open={this.state.open}
+        open={this.state.openAlert}
         onClose={this._onAlertClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -141,17 +144,18 @@ FavoriteItem.propTypes = {
   match: PropTypes.any,
   notification: PropTypes.object,
   key: PropTypes.number,
-  favouriteSongRequest: PropTypes.object,
+  favouriteSongRequest: PropTypes.func,
   url: PropTypes.string,
+  onRemoveSong: PropTypes.func,
 };
 
-const mapDispatchToProps = dispatch => ({
-  favouriteSongRequest: ({ songId, userId, stationId, songUrl }) =>
-    dispatch(favouriteSongRequest({ songId, userId, stationId, songUrl })),
-});
+// const mapDispatchToProps = dispatch => ({
+//   favouriteSongRequest: ({ songId, userId, stationId, songUrl }) =>
+//     dispatch(favouriteSongRequest({ songId, userId, stationId, songUrl })),
+// });
 
 export default compose(
   withStyles(styles),
   withNotification,
-  connect(undefined, mapDispatchToProps),
+  // connect(undefined, mapDispatchToProps),
 )(FavoriteItem);

@@ -17,8 +17,6 @@ export default ({ spacing, palette, typography }) => ({
     background: '#FFFFFF',
   },
   info: {
-    // display: 'inline',
-    // flexDirection: 'inherit',
     paddingTop: spacing.baseMargin,
   },
   duration: {

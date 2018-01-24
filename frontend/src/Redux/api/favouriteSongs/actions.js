@@ -8,11 +8,11 @@ const DEFAULT_USER_ID = '0';
 export const favouriteSongRequest = ({
   songId,
   userId = DEFAULT_USER_ID,
-  stationId,
   songUrl,
+  stationId = null,
 }) => ({
   type: CLIENT_FAVOURITE_SONG,
-  payload: { songId, userId, stationId, songUrl },
+  payload: { songId, userId, songUrl, stationId },
 });
 
 export const getFavouriteSongs = ({ userId }) => ({

@@ -12,6 +12,7 @@ import { Error } from 'mongoose';
 
 export const ADD_FAVOURITE_SUCCESS = 1000;
 export const UN_FAVOURITE_SUCCESS = 1001;
+export const UN_FAVOURITE_SUCCESS_PROFILE = 1002;
 
 export const isExistUserHandler = async email => {
   try {
@@ -280,12 +281,11 @@ export const addFavouriteSong = async (songId, userId, songUrl, stationId = null
       if (stationId) {
         return UN_FAVOURITE_SUCCESS;
       } else {
-        return await userModels.getFavouritedSongs(userId);
+        return UN_FAVOURITE_SUCCESS_PROFILE;
       }
 
     }
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
