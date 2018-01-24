@@ -26,6 +26,7 @@ export const addSong = ({
   title,
   thumbnail,
   creator,
+  duration,
 }) => ({
   type: CLIENT_ADD_SONG,
   payload: {
@@ -35,6 +36,7 @@ export const addSong = ({
     title,
     thumbnail,
     creator,
+    duration,
     is_played: false,
     up_vote: [],
     down_vote: [],

@@ -1,6 +1,7 @@
 export default ({ breakpoints, spacing }) => ({
   container: {
     margin: 'auto',
+    position: 'relative',
   },
   content: {
     display: 'flex',
@@ -28,5 +29,13 @@ export default ({ breakpoints, spacing }) => ({
   emptyContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  disabledBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    cursor: 'not-allowed',
   },
 });

@@ -1,7 +1,8 @@
 export default ({ spacing, palette, typography }) => ({
   container: {
     padding: '0 15px 15px',
-    maxWidth: 200,
+    maxWidth: 210,
+    maxHeight: 200,
   },
   thumbnail: {
     width: 210,
@@ -15,7 +16,6 @@ export default ({ spacing, palette, typography }) => ({
     background: '#FFFFFF',
   },
   info: {
-    // display: 'flex',
     display: 'inline',
     flexDirection: 'inherit',
   },

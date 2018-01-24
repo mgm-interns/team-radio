@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqualWith from 'lodash/isEqualWith';
+import isEqual from 'lodash/isEqual';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
 import LinearProgress from 'material-ui/Progress/LinearProgress';
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 import withStyles from 'material-ui/styles/withStyles';
 import ThumbUpIcon from 'react-icons/lib/md/thumb-up';
 import ThumbDownIcon from 'react-icons/lib/md/thumb-down';
-import StarIcon from 'react-icons/lib/md/star';
 import OutlineStarIcon from 'react-icons/lib/md/star-outline';
 import SkipNextIcon from 'react-icons/lib/md/skip-next';
 import classNames from 'classnames';
@@ -47,7 +48,7 @@ class PlaylistItem extends Component {
   }
 
   componentDidMount() {
-    const { up_vote, down_vote, favourite, song_id } = this.props;
+    const { up_vote, down_vote, favourite, url } = this.props;
     this.setState({
       isUpVote: PlaylistItem.isUpVote(this.props),
       isDownVote: PlaylistItem.isDownVote(this.props),
@@ -56,7 +57,7 @@ class PlaylistItem extends Component {
     });
 
     favourite.data.forEach(item => {
-      if (song_id === item.song_id) {
+      if (url === item.url) {
         this.setState({ isFavourite: true });
         return false;
       }
@@ -67,7 +68,7 @@ class PlaylistItem extends Component {
   // Always re-render upVote & downVote when props has changed
   componentWillReceiveProps(nextProps) {
     const { up_vote, down_vote } = nextProps;
-    const { song_id } = this.props;
+    const { url } = this.props;
     this.setState({
       isUpVote: PlaylistItem.isUpVote(nextProps),
       isDownVote: PlaylistItem.isDownVote(nextProps),
@@ -83,7 +84,7 @@ class PlaylistItem extends Component {
       )
     ) {
       nextProps.favourite.data.forEach(item => {
-        if (song_id === item.song_id) {
+        if (url === item.url) {
           this.setState({ isFavourite: true });
           return false;
         }
@@ -209,6 +210,11 @@ class PlaylistItem extends Component {
 
     return (
       <Grid container className={classNames(classes.container, { playing })}>
+        {!song_id && (
+          <div className={classes.loadingContainer}>
+            <CircularProgress size={20} />
+          </div>
+        )}
         <Grid item xs={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} alt="" />
           <div className={classes.duration}>
@@ -237,13 +243,15 @@ class PlaylistItem extends Component {
               </Tooltip>
             </Grid>
             <Grid item xs={2} className={classes.favouriteContainer}>
-              <IconButton
-                color={'primary'}
-                className={classes.favouriteBtn}
-                onClick={() => this._onFavouriteIconClick(song_id, url)}
-              >
-                {isFavourite ? <StarIcon /> : <OutlineStarIcon />}
-              </IconButton>
+              {song_id && (
+                <IconButton
+                  color={isFavourite ? 'primary' : 'default'}
+                  className={classes.favouriteBtn}
+                  onClick={() => this._onFavouriteIconClick(song_id, url)}
+                >
+                  <OutlineStarIcon style={{ fontSize: 20 }} />
+                </IconButton>
+              )}
             </Grid>
           </Grid>
           <div className={classes.creator}>

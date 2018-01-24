@@ -9,6 +9,7 @@
 
 import * as userController from '../../controllers/user';
 import { getAvailableListSong } from '../../controllers/station';
+import { getAsongInStation } from '../../models/station';
 import * as EVENTS from '../../const/actions';
 import * as CONSTANTS from '../../const/constants';
 
@@ -45,7 +46,7 @@ export default async (emitter, songId, userId, songUrl, stationId) => {
 // eslint-disable-next-line
 const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) => {
   let song = {};
-  let removedSongId;
+  let removedSongUrl;
 
   // eslint-disable-next-line
   const status =
@@ -62,6 +63,7 @@ const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) =>
           duration: object.duration,
           thumbnail: object.thumbnail,
           title: object.title,
+          url: object.url,
           song_id: object.song_id,
           created_date: object.created_date,
         };
@@ -75,12 +77,15 @@ const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) =>
   if (status === userController.UN_FAVOURITE_SUCCESS) {
     list.forEach(item => {
       if (item.song_id === songId) {
-        removedSongId = item.toObject().song_id;
+        removedSongUrl = item.toObject().url;
         return false;
       }
     });
     emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {
-      song_id: removedSongId,
+      url: removedSongUrl,
     });
   }
+  emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {
+    songs: status,
+  });
 };
