@@ -5,6 +5,8 @@ import {
   REPLAY_REQUEST,
   PASSIVE_USER_REQUEST,
   GET_NOW_PLAYING,
+  DISABLE_STATIONS_SWITCHER,
+  ENABLE_STATIONS_SWITCHER,
 } from './actions';
 
 const INITIAL_STATE = {
@@ -16,6 +18,7 @@ const INITIAL_STATE = {
   replayed: false,
   passive: false,
   nowPlaying: null,
+  disableSwitcher: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -51,6 +54,16 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         nowPlaying: action.payload,
+      };
+    case DISABLE_STATIONS_SWITCHER:
+      return {
+        ...state,
+        disableSwitcher: true,
+      };
+    case ENABLE_STATIONS_SWITCHER:
+      return {
+        ...state,
+        disableSwitcher: false,
       };
     default:
       return state;

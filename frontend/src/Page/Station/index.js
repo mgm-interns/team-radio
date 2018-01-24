@@ -20,6 +20,8 @@ import { getFavouriteSongs } from 'Redux/api/favouriteSongs/actions';
 import {
   muteVideoRequest,
   passiveUserRequest,
+  disableStationsSwitcher,
+  enableStationsSwitcher,
 } from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
@@ -103,9 +105,12 @@ class StationPage extends Component {
     }
     // Check if user is already joined in other station
     if (!joined.loading && joined.failed && !!joined.loggedInStation) {
+      this.props.disableStationsSwitcher();
+
       this.loggedInStationTimeout = setTimeout(() => {
         const { stationId } = joined.loggedInStation;
         history.replace(`/station/${stationId}`);
+        this.props.enableStationsSwitcher();
         this.props.joinStation({ stationId, userId });
         this.props.getFavouriteSongs(userId);
       }, 5000);
@@ -221,6 +226,7 @@ class StationPage extends Component {
       currentStation: { station, nowPlaying, playlist, joined },
       passive,
       nowPlayingFromPlaylist,
+      disableSwitcher,
     } = this.props;
     const { muted } = this.state;
 
@@ -239,7 +245,7 @@ class StationPage extends Component {
       >
         <Grid item xs={12} className={classes.switcherContainer}>
           <div className={classes.switcherContent}>
-            <StationSwitcher />
+            <StationSwitcher disable={disableSwitcher} />
           </div>
         </Grid>
         <Grid item xs={12} className={classes.container}>
@@ -348,6 +354,9 @@ StationPage.propTypes = {
   nowPlayingFromPlaylist: PropTypes.object,
   getFavouriteSongs: PropTypes.func,
   favourite: PropTypes.object,
+  disableSwitcher: PropTypes.bool,
+  disableStationsSwitcher: PropTypes.func,
+  enableStationsSwitcher: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -359,6 +368,7 @@ const mapStateToProps = ({ api, page }) => ({
   passive: page.station.passive,
   nowPlayingFromPlaylist: page.station.nowPlaying,
   favourite: api.favouriteSongs.favourite,
+  disableSwitcher: page.station.disableSwitcher,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -368,6 +378,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
   passiveUserRequest: isPassive => dispatch(passiveUserRequest(isPassive)),
   getFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
+  disableStationsSwitcher: () => dispatch(disableStationsSwitcher()),
+  enableStationsSwitcher: () => dispatch(enableStationsSwitcher()),
 });
 
 export default compose(
