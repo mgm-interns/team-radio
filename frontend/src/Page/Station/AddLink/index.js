@@ -95,7 +95,7 @@ class AddLink extends Component {
 
   /* Get info of a video or list of videos based on ids from search results */
   _getVideoUrl(video) {
-    return process.env.REACT_APP_YOUTUBE_URL + video.id;
+    return `${process.env.REACT_APP_YOUTUBE_URL + video.id}&t=0s`;
   }
 
   async _getVideoInfo(id) {

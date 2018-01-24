@@ -9,6 +9,7 @@ import {
 } from 'Redux/actions';
 
 const INITIAL_STATE = {
+  isTrigger: false, // trigger add or remove action
   favourite: {
     data: [],
     message: null,
@@ -23,6 +24,7 @@ export default (state = INITIAL_STATE, action) => {
     case CLIENT_FAVOURITE_SONG:
       return {
         ...state,
+        isTrigger: true,
         favourite: {
           ...state.favourite,
         },
@@ -30,6 +32,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_ADD_FAVOURITE_SONG_SUCCESS: {
       return {
         ...state,
+        isTrigger: false,
         favourite: {
           ...state.favourite,
           data: [...state.favourite.data, action.payload.song],
@@ -40,6 +43,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_REMOVE_FAVOURITE_SONG_SUCCESS: {
       return {
         ...state,
+        isTrigger: false,
         favourite: {
           ...state.favourite,
           data: remove(
@@ -53,6 +57,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_FAVOURITE_SONG_FAILURE:
       return {
         ...state,
+        isTrigger: false,
         favourite: {
           ...state.favourite,
           message: action.payload.message,
@@ -61,6 +66,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_GET_FAVOURITE_SONG_SUCCESS:
       return {
         ...state,
+        isTrigger: false,
         favourite: {
           ...state.favourite,
           data: [...action.payload.songs],
@@ -70,6 +76,7 @@ export default (state = INITIAL_STATE, action) => {
     case SERVER_GET_FAVOURITE_SONG_FAILURE:
       return {
         ...state,
+        isTrigger: false,
         favourite: {
           ...state.favourite,
           message: action.payload.message,

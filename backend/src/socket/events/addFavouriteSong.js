@@ -8,8 +8,6 @@
  ******************************************************** */
 
 import * as userController from '../../controllers/user';
-import { getAvailableListSong } from '../../controllers/station';
-import { getAsongInStation } from '../../models/station';
 import * as EVENTS from '../../const/actions';
 import * as CONSTANTS from '../../const/constants';
 
@@ -46,7 +44,6 @@ export default async (emitter, songId, userId, songUrl, stationId) => {
 // eslint-disable-next-line
 const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) => {
   let song = {};
-  let removedSongUrl;
 
   // eslint-disable-next-line
   const status =
@@ -64,6 +61,7 @@ const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) =>
     emitter.emit(EVENTS.SERVER_ADD_FAVOURITE_SONG_SUCCESS, {
       song,
     });
+    return;
   }
   if (
     status === userController.UN_FAVOURITE_SUCCESS ||
