@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AccessTimeIcon from 'react-icons/lib/md/access-time';
-import DeleteIcon from 'react-icons/lib/md/delete';
 import withStyles from 'material-ui/styles/withStyles';
 import { GridListTile } from 'material-ui/GridList';
-import IconButton from 'material-ui/IconButton';
-import Tooltip from 'material-ui/Tooltip';
+import Grid from 'material-ui/Grid';
+import Button from 'material-ui/Button';
 import Dialog, {
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
-import Button from 'material-ui/Button';
 
 import { withNotification } from 'Component/Notification';
 import { transformNumber } from 'Transformer';
@@ -61,21 +58,25 @@ class FavoriteItem extends Component {
   _renderItem() {
     const { classes, thumbnail, title, duration } = this.props;
     return [
-      <img key={1} className={classes.thumbnail} src={thumbnail} alt="" />,
-      <div key={1} className={classes.info}>
-        <div className={classes.name}>{title || 'undefined'}</div>
-        <div className={classes.singer}>
-          <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
+      <Grid key={1} className={classes.thumbnail}>
+        <img className={classes.img} src={thumbnail} alt="" />
+        <div className={classes.duration}>
           <span className={classes.durationText}>
             {transformNumber.millisecondsToTime(duration)}
           </span>
-        </div>,
-        <div key={1} className={classes.actions}>
-          <Tooltip placement={'bottom'} title={'Remove'}>
-            <IconButton onClick={this._onAlertOpen}>
-              {this.state.isFavourite && <DeleteIcon />}
-            </IconButton>
-          </Tooltip>
+        </div>
+      </Grid>,
+      <div key={2} className={classes.info}>
+        <div className={classes.name}>{title || 'undefined'}</div>
+        <div className={classes.actions}>
+          <Button
+            raised
+            color={'secondary'}
+            className={classes.button}
+            onClick={this._onAlertOpen}
+          >
+            Remove
+          </Button>
         </div>
       </div>,
     ];
