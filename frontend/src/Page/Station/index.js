@@ -73,11 +73,7 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      muteNowPlaying,
-      currentStation: { nowPlaying, playlist },
-    } = nextProps;
-    const { getFavouriteSongs, userId } = this.props;
+    const { muteNowPlaying, currentStation: { nowPlaying } } = nextProps;
 
     this._checkValidStation(nextProps);
 

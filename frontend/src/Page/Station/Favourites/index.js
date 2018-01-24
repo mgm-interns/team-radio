@@ -23,7 +23,7 @@ class FavouriteVideos extends Component {
         ) : (
           <List style={{ paddingTop: 0, paddingBottom: 0 }}>
             {data.map((video, index) => (
-              <Item key={!video ? index : video.song_id || index} {...video} />
+              <Item key={video.song_id || index} {...video} />
             ))}
           </List>
         )}

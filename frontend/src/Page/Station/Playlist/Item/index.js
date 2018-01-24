@@ -48,7 +48,7 @@ class PlaylistItem extends Component {
   }
 
   componentDidMount() {
-    const { up_vote, down_vote, favourite, song_id, url } = this.props;
+    const { up_vote, down_vote, favourite, url } = this.props;
     this.setState({
       isUpVote: PlaylistItem.isUpVote(this.props),
       isDownVote: PlaylistItem.isDownVote(this.props),
@@ -57,7 +57,7 @@ class PlaylistItem extends Component {
     });
 
     favourite.data.forEach(item => {
-      if (song_id === item.song_id || url === item.url) {
+      if (url === item.url) {
         this.setState({ isFavourite: true });
         return false;
       }
@@ -68,7 +68,7 @@ class PlaylistItem extends Component {
   // Always re-render upVote & downVote when props has changed
   componentWillReceiveProps(nextProps) {
     const { up_vote, down_vote } = nextProps;
-    const { song_id } = this.props;
+    const { url } = this.props;
     this.setState({
       isUpVote: PlaylistItem.isUpVote(nextProps),
       isDownVote: PlaylistItem.isDownVote(nextProps),
@@ -84,7 +84,7 @@ class PlaylistItem extends Component {
       )
     ) {
       nextProps.favourite.data.forEach(item => {
-        if (song_id === item.song_id) {
+        if (url === item.url) {
           this.setState({ isFavourite: true });
           return false;
         }

@@ -46,7 +46,7 @@ export default async (emitter, songId, userId, songUrl, stationId) => {
 // eslint-disable-next-line
 const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) => {
   let song = {};
-  let removedSongId;
+  let removedSongUrl;
 
   // eslint-disable-next-line
   const status =
@@ -79,12 +79,12 @@ const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) =>
   if (status === userController.UN_FAVOURITE_SUCCESS) {
     list.forEach(item => {
       if (item.song_id === songId) {
-        removedSongId = item.toObject().song_id;
+        removedSongUrl = item.toObject().url;
         return false;
       }
     });
     emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {
-      song_id: removedSongId,
+      url: removedSongUrl,
     });
   }
 };

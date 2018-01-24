@@ -44,7 +44,7 @@ export default (state = INITIAL_STATE, action) => {
           ...state.favourite,
           data: remove(
             state.favourite.data,
-            item => item.song_id !== action.payload.song_id,
+            item => item.url !== action.payload.url,
           ),
           message: null,
         },

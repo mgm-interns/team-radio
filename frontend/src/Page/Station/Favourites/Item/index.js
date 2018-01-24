@@ -38,6 +38,7 @@ class FavouriteVideo extends Component {
       url,
       title,
       thumbnail,
+      duration,
     } = this.props;
 
     // Check if user is not authenticated
@@ -55,6 +56,7 @@ class FavouriteVideo extends Component {
       stationId,
       userId,
       creator: { username, name, avatar_url },
+      duration,
     });
   }
 
@@ -74,22 +76,6 @@ class FavouriteVideo extends Component {
           <Tooltip placement={'bottom'} title={title}>
             <div className={classes.name}>{title}</div>
           </Tooltip>
-          {/* <Tooltip */}
-          {/* placement={'bottom'} */}
-          {/* title={ */}
-          {/* this.state.isFavourite */}
-          {/* ? 'Remove from favourite' */}
-          {/* : 'Add to favourite' */}
-          {/* } */}
-          {/* > */}
-          {/* <div */}
-          {/* className={classNames(classes.favouriteWrapper, 'hiddenAction')} */}
-          {/* > */}
-          {/* <IconButton color={'primary'} className={classes.favouriteBtn}> */}
-          {/* {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />} */}
-          {/* </IconButton> */}
-          {/* </div> */}
-          {/* </Tooltip> */}
           <div className={classes.creator}>
             Added by
             {creator === null || creator === undefined ? (
