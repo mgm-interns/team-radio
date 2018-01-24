@@ -50,12 +50,8 @@ export default ({ spacing, palette, typography }) => ({
     ...typography.body2,
     fontSize: '0.725em',
   },
-  actions: {
-    paddingTop: spacing.baseMargin / 2,
-    height: spacing.fullHeight,
-  },
   button: {
-    width: spacing.fullWidth,
-    textTransform: 'none',
+    color: palette.white,
+    height: 1,
   },
 });
