@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import List from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
+import CircularProgress from 'material-ui/Progress/CircularProgress';
 import Item from './Item';
 import styles from './styles';
 
@@ -17,11 +18,15 @@ class FavouriteVideos extends Component {
         className={className}
         style={{ ...style, overflowY: 'auto', overflowX: 'hidden' }}
       >
-        <List style={{ paddingTop: 0, paddingBottom: 0 }}>
-          {data.map((video, index) => (
-            <Item key={video.song_id || index} {...video} />
-          ))}
-        </List>
+        {data.length === 0 ? (
+          <CircularProgress />
+        ) : (
+          <List style={{ paddingTop: 0, paddingBottom: 0 }}>
+            {data.map((video, index) => (
+              <Item key={video.song_id || index} {...video} />
+            ))}
+          </List>
+        )}
       </Grid>
     );
   }

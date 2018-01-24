@@ -69,17 +69,22 @@ export const countOnlineOfAllStations = async (stations, io) =>
  * An user cannot listening on multi station at a time
  * => Force any other tabs or browser redirect to most recent station
  */
-export const leaveStationAlreadyIn = async (userId, stId, stName, io) => {
+export const leaveStationAlreadyIn = async (
+  userId,
+  stationId,
+  stationName,
+  io,
+) => {
   const listSocket = await getAllSocketConnected(io);
 
   listSocket.forEach(socketId => {
     const socket = getSocketById(socketId, io);
     const oldStation = getAllStationsSocketIn(socket)[0];
-    if (socket.userId === userId && oldStation !== stId) {
+    if (socket.userId === userId && oldStation !== stationId) {
       const emitter = createEmitter(socket, io);
       emitter.emit(EVENTS.SERVER_NO_MULTI_STATIONS, {
-        stationId: stId,
-        stationName: stName,
+        stationId: stationId,
+        stationName: stationName,
       });
     }
   });

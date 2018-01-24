@@ -35,6 +35,7 @@ class NowPlaying extends Component {
     });
   }
 
+  countDownInterval = null;
   async componentWillReceiveProps(nextProps) {
     // Replace player with skipping notification
     const { currentStation } = this.props;
@@ -46,8 +47,10 @@ class NowPlaying extends Component {
         skipNotification: true,
         countDown: nextCurrentStation.skip.delay,
       });
+      // Remove old countdown instance
+      clearInterval(this.countDownInterval);
       // After start the count down, decrease countDown value per second
-      const countDownInterval = setInterval(() => {
+      this.countDownInterval = setInterval(() => {
         // Stop counting when count to 0
         if (this.state.countDown > 0) {
           this.setState({
@@ -58,7 +61,10 @@ class NowPlaying extends Component {
       // Wait util complete the delay
       // Add 1 more delay second to prevent bad loading behavior
       await sleep(nextCurrentStation.skip.delay + 1000);
-      clearInterval(countDownInterval);
+      // Only reset the interval if countdown is less than 1 second
+      if (this.state.countDown <= 1000) {
+        clearInterval(this.countDownInterval);
+      }
       // Turn it off and show player again
       await this.setStateAsync({
         skipNotification: false,

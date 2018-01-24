@@ -79,23 +79,23 @@ const _joinStationProcess = async (socket, io, userId, station) => {
 };
 
 const _join = async (emitter, socket, userId, station, io) => {
-  const stId = station.station_id;
-  const stName = station.station_name;
-  socket.join(stId);
+  const stationId = station.station_id;
+  const stationName = station.station_name;
+  socket.join(stationId);
 
   delete station.playlist;
   emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
     station: station,
   });
 
-  const playlist = await stationController.getAvailableListSong(stId);
+  const playlist = await stationController.getAvailableListSong(stationId);
   emitter.emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
     playlist: playlist,
   });
 
   // eslint-disable-next-line
   const history =
-    await stationController.getListSongHistory(stId, CONSTANTS.HISTORY_LIMIT);
+    await stationController.getListSongHistory(stationId, CONSTANTS.HISTORY_LIMIT);
   emitter.emit(EVENTS.SERVER_UPDATE_HISTORY, {
     history: history,
   });
@@ -104,11 +104,11 @@ const _join = async (emitter, socket, userId, station, io) => {
    * An user cannot listening on multi station at a time
    * => Force any other tabs or browser redirect to most recent station
    */
-  onlineManager.leaveStationAlreadyIn(userId, stId, stName, io);
+  onlineManager.leaveStationAlreadyIn(userId, stationId, stationName, io);
 
   // Get nowplaying and emit to user
   try {
-    const player = await players.getPlayer(stId);
+    const player = await players.getPlayer(stationId);
     const nowPlaying = await player.getNowPlaying();
     emitter.emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, nowPlaying);
   } catch (err) {
@@ -116,13 +116,13 @@ const _join = async (emitter, socket, userId, station, io) => {
   }
 
   // Update users online in station
-  const count = await onlineManager.countOnlineOfStation(stId, io);
-  const users = await onlineManager.getListUserOnline(stId, io);
+  const count = await onlineManager.countOnlineOfStation(stationId, io);
+  const users = await onlineManager.getListUserOnline(stationId, io);
   emitter.emit(EVENTS.SERVER_UPDATE_ONLINE_USERS, {
     online_count: count,
     users: users,
   });
 
   // Let switcher sort station list again when online user change
-  switcher.updateNumberOfOnlineUsersInStation(stId, count);
+  switcher.updateNumberOfOnlineUsersInStation(stationId, count);
 };

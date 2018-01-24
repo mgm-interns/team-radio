@@ -3,7 +3,6 @@ import {
   CLIENT_UPVOTE_SONG,
   CLIENT_JOIN_STATION,
   CLIENT_DOWNVOTE_SONG,
-  CLIENT_FAVOURITE_SONG,
   CLIENT_LEAVE_STATION,
 } from 'Redux/actions';
 
@@ -27,6 +26,7 @@ export const addSong = ({
   title,
   thumbnail,
   creator,
+  duration,
 }) => ({
   type: CLIENT_ADD_SONG,
   payload: {
@@ -36,6 +36,7 @@ export const addSong = ({
     title,
     thumbnail,
     creator,
+    duration,
     is_played: false,
     up_vote: [],
     down_vote: [],
@@ -58,14 +59,4 @@ export const downVoteSong = ({
 }) => ({
   type: CLIENT_DOWNVOTE_SONG,
   payload: { userId, stationId, songId },
-});
-
-export const favouriteSongRequest = ({
-  songId,
-  userId = DEFAULT_USER_ID,
-  stationId,
-  songUrl,
-}) => ({
-  type: CLIENT_FAVOURITE_SONG,
-  payload: { songId, userId, stationId, songUrl },
 });

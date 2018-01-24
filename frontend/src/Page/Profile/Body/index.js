@@ -19,7 +19,7 @@ class Body extends Component {
     super(props);
 
     this.state = {
-      value: 0,
+      value: 1,
       open: false,
     };
 
@@ -76,7 +76,7 @@ class Body extends Component {
         )}
         {this.state.value === 1 && (
           <TabContainer>
-            <FilterFavourites />
+            <FilterFavourites userId={user.userId} />
           </TabContainer>
         )}
       </Grid>

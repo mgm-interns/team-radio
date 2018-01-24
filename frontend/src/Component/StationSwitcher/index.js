@@ -77,18 +77,21 @@ class StationSwitcher extends Component {
   }
 
   render() {
-    const { stations } = this.props;
+    const { stations, classes, disable } = this.props;
 
     return (
-      <StationList
-        stations={this._filterStations()}
-        enableWavingIcon
-        loading={!stations}
-        onItemClick={this._goToStationPage}
-        scrollbarRef={ref => {
-          this.scrollbarRef = ref;
-        }}
-      />
+      <div className={classes.container}>
+        <StationList
+          stations={this._filterStations()}
+          enableWavingIcon
+          loading={!stations}
+          onItemClick={this._goToStationPage}
+          scrollbarRef={ref => {
+            this.scrollbarRef = ref;
+          }}
+        />
+        {disable && <div className={classes.disabledBackdrop} />}
+      </div>
     );
   }
 }
@@ -97,6 +100,7 @@ StationSwitcher.propTypes = {
   classes: PropTypes.any,
   currentStation: PropTypes.object,
   history: PropTypes.object,
+  disable: PropTypes.bool,
   joinStationRequest: PropTypes.func,
   leaveStationRequest: PropTypes.func,
   stations: PropTypes.any,

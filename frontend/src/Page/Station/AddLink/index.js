@@ -348,6 +348,9 @@ class AddLink extends Component {
       stationId,
       userId,
       creator: { username, name, avatar_url },
+      duration: moment
+        .duration(preview.contentDetails.duration)
+        .asMilliseconds(),
     });
     this.setState({
       searchText: '',

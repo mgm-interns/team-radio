@@ -46,6 +46,10 @@ io.on('connection', socket => {
           action.payload.userId,
           action.payload.stationId,
           action.payload.songUrl,
+          action.payload.title,
+          action.payload.thumbnail,
+          action.payload.duration,
+          action.payload.songMessage,
         );
         break;
 
@@ -101,7 +105,14 @@ io.on('connection', socket => {
           createEmitter(socket, io),
           action.payload.userId,
         );
-        console.log(action.payload.userId);
+        break;
+
+      case EVENTS.CLIENT_SEARCH_STATION:
+        console.log('Action received: ' + EVENTS.CLIENT_SEARCH_STATION);
+        eventHandlers.searchStation(
+          createEmitter(socket, io),
+          action.payload.query,
+        );
         break;
 
       default:

@@ -24,6 +24,26 @@ class Playlist extends Component {
     return song.up_vote.length - song.down_vote.length;
   }
 
+  componentWillReceiveProps(nextProps) {
+    // const { playlist } = this.props;
+    // if (nextProps.favouriteList.length === 0) {
+    //   playlist.map(item => {
+    //     item.is_favourited = false;
+    //   });
+    // } else {
+    //   nextProps.favouriteList.forEach(favouritedItem => {
+    //     playlist.forEach(playlistItem => {
+    //       if (playlistItem.song_id === favouritedItem.song_id) {
+    //         playlistItem.is_favourited = favouritedItem.is_favourited;
+    //       } else {
+    //         playlistItem.is_favourited = false;
+    //       }
+    //     });
+    //   });
+    // }
+    // console.log(playlist);
+  }
+
   /**
    * Filter all song that have not been played
    * Then order the list by:
@@ -118,10 +138,12 @@ Playlist.propTypes = {
   nowPlaying: PropTypes.object,
   getNowPlaying: PropTypes.func,
   passiveUserRequest: PropTypes.func,
+  favouriteList: PropTypes.array,
 };
 
-const mapStateToProps = state => ({
-  nowPlaying: state.api.currentStation.nowPlaying,
+const mapStateToProps = ({ api }) => ({
+  nowPlaying: api.currentStation.nowPlaying,
+  favouriteList: api.currentStation.favouriteList,
 });
 
 const mapDispatchToProps = dispatch => ({

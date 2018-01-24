@@ -7,7 +7,7 @@ module.exports = station;
 
 station.addStation = async function (req, res) {
     //  var station = await stationController.addStation(req.body.station_name);
-    let station = await stationController.addStation(req.body.station_name, req.body.user_id,req.body.is_private);
+    let station = await stationController.addStation(req.body.station_name, req.body.user_id, req.body.is_private);
     res.status(200).json(station);
 
 };
@@ -47,7 +47,7 @@ station.getAllAvailableStations = async function (req, res) {
 station.setIsPrivateOfStation = async function (req, res) {
     console.log("setIsPrivateOfStation")
     //  var station = await stationController.addStation(req.body.station_name);
-    let station = await stationController.setIsPrivateOfStation(req.params.id,req.body.user_id,req.body.value);
+    let station = await stationController.setIsPrivateOfStation(req.params.id, req.body.user_id, req.body.value);
     console.log('setIsPrivateOfStation : ' + station)
     res.status(200).json(station);
 
@@ -56,8 +56,8 @@ station.setIsPrivateOfStation = async function (req, res) {
 station.getListSongHistory = async function (req, res) {
     console.log("getListSongHistory")
     //  var station = await stationController.addStation(req.body.station_name);
-    let station = await stationController.getListSongHistory(req.params.id,3);
-   // console.log('resolve : ' + station)
+    let station = await stationController.getListSongHistory(req.params.id, 3);
+    // console.log('resolve : ' + station)
     res.status(200).json(station);
 
 };
@@ -65,15 +65,15 @@ station.getAvailableListSong = async function (req, res) {
     console.log("getAvailableListSong")
     //  var station = await stationController.addStation(req.body.station_name);
     let station = await stationController.getAvailableListSong(req.params.id);
-   // console.log('resolve : ' + station)
+    // console.log('resolve : ' + station)
     res.status(200).json(station);
 
 };
 station.addSong = async function (req, res) {
     //  var station = await stationController.addStation(req.body.station_name);
-    console.log('res.body.user_i' );
+    console.log('res.body.user_i');
     console.log('res.body.user_i : ' + req.body.user_id);
-    let station = await stationController.addSong(req.params.id, req.body.url,req.body.user_id);
+    let station = await stationController.addSong(req.params.id, req.body.url, req.body.user_id);
     console.log('resolve : ' + station);
     res.status(200).json(station);
 
@@ -111,7 +111,7 @@ station.getListStationUserAddedSong = async function (req, res) {
     res.json(song);
 }
 
-station.getStationsByUserId = async function(req,res){
+station.getStationsByUserId = async function (req, res) {
     let stations = await stationController.getStationsByUserId(req.body.user_id);
     res.json(stations);
 }

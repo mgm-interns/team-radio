@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import isEqualWith from 'lodash/isEqualWith';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import LightBuldIcon from 'react-icons/lib/fa/lightbulb-o';
@@ -15,9 +16,12 @@ import fixture from 'Fixture/landing';
 import { transformNumber } from 'Transformer';
 import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
 import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
+import { getFavouriteSongs } from 'Redux/api/favouriteSongs/actions';
 import {
   muteVideoRequest,
   passiveUserRequest,
+  disableStationsSwitcher,
+  enableStationsSwitcher,
 } from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
@@ -37,6 +41,7 @@ class StationPage extends Component {
       muted: false,
       tabValue: 0,
       isPassive: false,
+      playlist: [],
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
@@ -69,6 +74,7 @@ class StationPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { muteNowPlaying, currentStation: { nowPlaying } } = nextProps;
+
     this._checkValidStation(nextProps);
 
     if (!nowPlaying.url) {
@@ -91,13 +97,18 @@ class StationPage extends Component {
     // Station must be a valid string
     if (!joined.loading && !joined.success && !joined.loggedInStation) {
       this.props.joinStation({ stationId, userId });
+      this.props.getFavouriteSongs(userId);
     }
     // Check if user is already joined in other station
     if (!joined.loading && joined.failed && !!joined.loggedInStation) {
+      this.props.disableStationsSwitcher();
+
       this.loggedInStationTimeout = setTimeout(() => {
         const { stationId } = joined.loggedInStation;
         history.replace(`/station/${stationId}`);
+        this.props.enableStationsSwitcher();
         this.props.joinStation({ stationId, userId });
+        this.props.getFavouriteSongs(userId);
       }, 5000);
       return;
     }
@@ -141,7 +152,11 @@ class StationPage extends Component {
   }
 
   _renderTabs() {
-    const { classes, currentStation: { playlist, history } } = this.props;
+    const {
+      classes,
+      favourite,
+      currentStation: { playlist, history },
+    } = this.props;
     const { tabValue } = this.state;
 
     return [
@@ -194,7 +209,7 @@ class StationPage extends Component {
             className={classNames(classes.content, {
               [classes.emptyPlaylist]: !history,
             })}
-            data={history}
+            data={favourite.data}
           />
         </TabContainer>
       ),
@@ -207,6 +222,7 @@ class StationPage extends Component {
       currentStation: { station, nowPlaying, playlist, joined },
       passive,
       nowPlayingFromPlaylist,
+      disableSwitcher,
     } = this.props;
     const { muted } = this.state;
 
@@ -225,7 +241,7 @@ class StationPage extends Component {
       >
         <Grid item xs={12} className={classes.switcherContainer}>
           <div className={classes.switcherContent}>
-            <StationSwitcher />
+            <StationSwitcher disable={disableSwitcher} />
           </div>
         </Grid>
         <Grid item xs={12} className={classes.container}>
@@ -332,6 +348,11 @@ StationPage.propTypes = {
   passiveUserRequest: PropTypes.func,
   passive: PropTypes.bool,
   nowPlayingFromPlaylist: PropTypes.object,
+  getFavouriteSongs: PropTypes.func,
+  favourite: PropTypes.object,
+  disableSwitcher: PropTypes.bool,
+  disableStationsSwitcher: PropTypes.func,
+  enableStationsSwitcher: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -342,6 +363,8 @@ const mapStateToProps = ({ api, page }) => ({
   userId: api.user.data.userId,
   passive: page.station.passive,
   nowPlayingFromPlaylist: page.station.nowPlaying,
+  favourite: api.favouriteSongs.favourite,
+  disableSwitcher: page.station.disableSwitcher,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -350,6 +373,9 @@ const mapDispatchToProps = dispatch => ({
   muteVideoRequest: ({ muteNowPlaying, mutePreview, userDid }) =>
     dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
   passiveUserRequest: isPassive => dispatch(passiveUserRequest(isPassive)),
+  getFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
+  disableStationsSwitcher: () => dispatch(disableStationsSwitcher()),
+  enableStationsSwitcher: () => dispatch(enableStationsSwitcher()),
 });
 
 export default compose(
