@@ -21,7 +21,7 @@ export default async (
   title,
   thumbnail,
   duration,
-  messageSong,
+  songMessage,
 ) => {
   /**
    * Decline request if the user does not exist
@@ -37,7 +37,7 @@ export default async (
       title,
       thumbnail,
       duration,
-      messageSong,
+      songMessage,
     );
   } else {
     emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
@@ -54,7 +54,7 @@ const _addSongProcess = async (
   title,
   thumbnail,
   duration,
-  messageSong,
+  songMessage,
 ) => {
   let playlist;
 
@@ -70,7 +70,7 @@ const _addSongProcess = async (
       title,
       thumbnail,
       duration,
-      messageSong,
+      songMessage,
     );
     emitter.emit(EVENTS.SERVER_ADD_SONG_SUCCESS, {});
   } catch (err) {

@@ -49,7 +49,7 @@ io.on('connection', socket => {
           action.payload.title,
           action.payload.thumbnail,
           action.payload.duration,
-          action.payload.messageSong,
+          action.payload.songMessage,
         );
         break;
 
