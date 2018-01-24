@@ -16,9 +16,32 @@ import pins from './fixtures';
 
 /* eslint-disable no-shadow */
 class FilterFavourites extends Component {
+  constructor(props) {
+    super(props);
+
+    this._showNotification = this._showNotification.bind(this);
+  }
   componentDidMount() {
     const { userId, requestFavouriteSongs } = this.props;
     requestFavouriteSongs(userId);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { favouriteSongs, requestFavouriteSongs, userId } = nextProps;
+    console.log(favouriteSongs, userId);
+
+    if (favouriteSongs.message) {
+      this._showNotification(favouriteSongs.message);
+      requestFavouriteSongs(userId);
+    }
+  }
+
+  _showNotification(content) {
+    const { notification } = this.props;
+
+    notification.app.success({
+      message: content,
+    });
   }
 
   static _renderLoading() {
@@ -35,7 +58,7 @@ class FilterFavourites extends Component {
           {!userId ? (
             FilterFavourites._renderLoading()
           ) : (
-            <Favourites favouriteSongs={favouriteSongs.data} />
+            <Favourites favouriteSongs={favouriteSongs.data} userId={userId} />
           )}
         </Grid>
       </Grid>
@@ -52,6 +75,8 @@ FilterFavourites.propTypes = {
   favouriteSongs: PropTypes.object,
   requestFavouriteSongs: PropTypes.func,
   userId: PropTypes.string,
+  favourite: PropTypes.object,
+  notification: PropTypes.any,
 };
 
 const mapStateToProps = ({ api }) => ({

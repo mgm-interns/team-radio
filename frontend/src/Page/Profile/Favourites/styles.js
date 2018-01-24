@@ -18,7 +18,4 @@ export default ({ spacing }) => ({
     overflowX: 'hidden',
     minWidth: 200,
   },
-  container: {
-    paddingTop: 50,
-  },
 });
