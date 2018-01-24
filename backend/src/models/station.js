@@ -1,11 +1,13 @@
 /* eslint-disable */
 import _ from 'lodash';
 import mongoose from 'mongoose';
+import textSearch from 'mongoose-text-search';
+import * as searchController from '../controllers/search';
 import { type } from 'os';
 
 const stationSchema = mongoose.Schema({
-  station_name: { type: String, require: true, },
-  station_id: { type: String, require: true, },
+  station_name: { type: String, require: true, index: true, text: true },
+  station_id: { type: String, require: true },
   is_private: { type: Boolean, default: false },
   owner_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users', default: null, },
   starting_time: { type: Number, default: 0, },
@@ -48,6 +50,8 @@ const stationSchema = mongoose.Schema({
 });
 
 var Station = (module.exports = mongoose.model('stations', stationSchema));
+
+searchController.attachStationData(stationSchema, Station);
 
 /******************** STATION **************************/
 

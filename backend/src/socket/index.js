@@ -107,6 +107,14 @@ io.on('connection', socket => {
         console.log(action.payload.userId);
         break;
 
+      case EVENTS.CLIENT_SEARCH_STATION:
+        console.log('Action received: ' + EVENTS.CLIENT_SEARCH_STATION);
+        eventHandlers.searchStation(
+          createEmitter(socket, io),
+          action.payload.query,
+        );
+        break;
+
       default:
         eventManager.chatEvents(io, socket, action);
         break;
