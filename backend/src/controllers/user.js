@@ -225,14 +225,14 @@ export const setUserInformation = async (userId, name, firstname, lastname, bio,
     if (city) data.city = city;
     if (bio) data.bio = bio;
 
-    // if (firstname && user.firstname === "") point += 5;
-    // if (lastname && user.lastname === "") point += 5;
-    // if (country && user.country === "") point += 5;
-    // if (city && user.city === "") point += 5;
-    // if (bio && user.bio === "") point += 5;
+    if (firstname && user.firstname === "") point += 2;
+    if (lastname && user.lastname === "") point += 2;
+    if (country && user.country === "") point += 2;
+    if (city && user.city === "") point += 2;
+    if (bio && user.bio === "") point += 2;
 
     await userModels.setUserInformation(userId, data);
-    // await _increaseReputation(user.email, point)
+    await _increaseReputation(user.email, point)
     return await userModels.getUserById(userId);
   } catch (err) {
     throw err;

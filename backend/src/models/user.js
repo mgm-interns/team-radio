@@ -54,7 +54,14 @@ const userSchema = mongoose.Schema({
   },
   history: {
     type: [
-      { type: mongoose.Schema.Types.ObjectId, ref: 'Stations', index: true },
+      {
+        station_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Stations',
+          index: true,
+        },
+        station_name: String,
+      },
     ],
   },
 });
