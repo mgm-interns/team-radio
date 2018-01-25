@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import { LinearProgress } from 'material-ui/Progress';
 
-const ACCEPTABLE_DELAY = 0.5;
+const ACCEPTABLE_DELAY = 1;
 class Player extends PureComponent {
   constructor(props, context) {
     super(props, context);
@@ -46,11 +46,11 @@ class Player extends PureComponent {
   static _getExactlySeektime({ seektime, receivedAt }) {
     const currentTime = new Date().getTime();
     const delayedTime = parseInt(currentTime - receivedAt, 10) / 1000;
-    return seektime + delayedTime;
+    return Math.abs(seektime + delayedTime);
   }
 
   _onStart() {
-    this.seekToTime(this.props);
+    this.seekToTime(this.state);
   }
 
   _onProgress({ played, loaded, playedSeconds }) {
@@ -61,11 +61,8 @@ class Player extends PureComponent {
       receivedAt: this.state.receivedAt,
     });
     const exactlyTime = Player._getExactlySeektime(this.state);
-    const differentTime = exactlyTime - playedSeconds;
-    if (
-      differentTime > ACCEPTABLE_DELAY ||
-      differentTime < ACCEPTABLE_DELAY * -1
-    ) {
+    const differentTime = Math.abs(exactlyTime - playedSeconds);
+    if (differentTime > ACCEPTABLE_DELAY) {
       this.playerRef.seekTo(exactlyTime);
     }
   }
