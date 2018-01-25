@@ -27,8 +27,8 @@ const hover = {
     transition: 'all 0.6s',
   },
   outHover: {
-    transition: 'all 0.6s'
-  }
+    transition: 'all 0.6s',
+  },
 };
 
 /* eslint-disable no-shadow */

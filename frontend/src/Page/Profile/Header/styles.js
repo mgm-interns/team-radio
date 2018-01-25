@@ -7,10 +7,10 @@ export default ({ breakpoints, palette, spacing }) => ({
     width: spacing.fullViewportWidth,
     overflowX: 'hidden',
     [breakpoints.down('sm')]: {
-      height: '30vh',
+      height: '350px',
     },
     [breakpoints.up('md')]: {
-      height: '25vh',
+      height: '300px',
     },
     zIndex: 0,
   },
@@ -25,16 +25,15 @@ export default ({ breakpoints, palette, spacing }) => ({
     margin: 'auto',
     position: 'absolute',
     zIndex: -1,
-    // height: '36vh',
     top: 0,
     left: 0,
     width: spacing.fullViewportWidth,
     objectFit: 'cover',
     [breakpoints.down('sm')]: {
-      height: '30vh',
+      height: '350px',
     },
     [breakpoints.up('md')]: {
-      height: '25vh',
+      height: '300px',
     },
   },
   coverBackground: {

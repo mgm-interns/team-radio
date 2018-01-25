@@ -23,6 +23,14 @@ const hover = {
     filter: 'opacity(0.8)',
     transition: 'all 0.9s',
   },
+  margininHover: {
+    marginBottom: 0,
+    transition: 'all 0.5s',
+  },
+  marginoutHover: {
+    marginBottom: 10,
+    transition: 'all 0.5s',
+  },
 };
 
 class Header extends Component {
@@ -80,7 +88,10 @@ class Header extends Component {
     return (
       <Grid container className={classes.coverBackground}>
         <Grid item xs={12} sm={8} className={classes.userInformationContainer}>
-          <Grid className={classes.userInformation}>
+          <Grid
+            className={classes.userInformation}
+            style={{ ...hover[`margin${this.state.hover}`] }}
+          >
             <ImageUploader user={user} isDisabled={isDisabled} />
 
             <div className={classes.userInformationContent}>
@@ -91,7 +102,10 @@ class Header extends Component {
             </div>
           </Grid>
 
-          <Grid className={classes.summarize}>
+          <Grid
+            className={classes.summarize}
+            style={{ ...hover[`margin${this.state.hover}`] }}
+          >
             {this._renderSummarizeItem('Songs', 0)}
             {this._renderSummarizeItem('Voted', 0)}
             {this._renderSummarizeItem('Reputation', user.reputation)}
