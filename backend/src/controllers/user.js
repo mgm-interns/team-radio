@@ -299,6 +299,11 @@ export const updateHistory = async (userId, station_id) => {
   try {
     const option = { history: 1, _id: 0 }
     const user = await userModels.getUserById(userId, option)
+    const station = await stationModels.getStationById(station_id)
+
+
+
+
     let history = user.history
     if (history.length && (history.indexOf(_safeObjectId(station_id)) !== -1))
       history.remove(station_id)
@@ -341,6 +346,12 @@ export const getFavouritedSongs = async (userId) => {
   } catch (error) {
     throw new Error("Can't get favourited songs");
   }
+}
+
+export const getallstation = async () => {
+  const user = stationModels.getAllAvailableStations();
+
+  return user;
 }
 
 // This is private function

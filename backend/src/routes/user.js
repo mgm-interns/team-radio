@@ -341,9 +341,7 @@ export default router => {
     try {
       let user = await User.findOne({ _id: req.body.userId });
       const token = req.headers['access-token'];
-      console.log('1');
       if (user) {
-        console.log('2');
         const isOwner = await userController.isVerifidedToken(
           user._id.toString(),
           token,
@@ -356,9 +354,7 @@ export default router => {
               message: 'Current password is incorrect!',
             });
           }
-          console.log('4');
           const newPassword = user.generateHash(req.body.newPassword);
-          console.log('5');
           await userController.setPassword(user.email, newPassword);
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
@@ -528,6 +524,11 @@ export default router => {
     );
     res.json(favourite);
   });
+
+  router.get('/test_getallstation', async (req, res) => {
+    const allstation = await userController.getallstation()
+      res.json(allstation)
+  })
 };
 
 // router.use(authController);

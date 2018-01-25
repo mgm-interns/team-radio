@@ -11,6 +11,7 @@ const stationSchema = mongoose.Schema({
   is_private: { type: Boolean, default: false },
   owner_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users', default: null, },
   starting_time: { type: Number, default: 0, },
+  is_delete: {type: Boolean, default: false},
   playlist:
     {
       type: [
@@ -80,11 +81,15 @@ module.exports.addStation = station => {
  * Delete station
  *
  * @param {string} stationId
- * @param {string} userId
  */
-module.exports.deleteStation = (stationId, userId) => {
+module.exports.deleteStation = (stationId) => {
   try {
-    return Station.deleteOne({ owner_id: userId, station_id: stationId });
+    let query = { station_id: stationId};
+    return Station.update(query, {
+        $set: {
+            is_delete: true,
+        },
+    });
   } catch (err) {
     throw err;
   }
