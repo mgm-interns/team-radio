@@ -17,8 +17,6 @@ export default ({ spacing, palette, typography }) => ({
     background: '#FFFFFF',
   },
   info: {
-    // display: 'inline',
-    // flexDirection: 'inherit',
     paddingTop: spacing.baseMargin,
   },
   duration: {
@@ -52,12 +50,18 @@ export default ({ spacing, palette, typography }) => ({
     ...typography.body2,
     fontSize: '0.725em',
   },
-  actions: {
-    paddingTop: spacing.baseMargin / 2,
-    height: spacing.fullHeight,
-  },
   button: {
-    width: spacing.fullWidth,
-    textTransform: 'none',
+    color: palette.white,
+    height: 1,
+  },
+  actions: {
+    position: 'absolute',
+    width: '100%',
+    height: `calc(100% - ${25}px)`,
+    top: 0,
+    left: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

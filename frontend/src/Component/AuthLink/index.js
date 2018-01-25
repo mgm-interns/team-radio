@@ -47,11 +47,7 @@ class AuthLink extends Component {
     this.props.history.replace('/');
   }
 
-  _help() {
-    this.props.notification.app.warning({
-      message: 'This feature is not ready yet.',
-    });
-  }
+  _help() {}
 
   _openMenu = event => {
     this.setState({ anchorEl: event.target });
@@ -85,10 +81,12 @@ class AuthLink extends Component {
           </ListItem>
         </Link>
 
-        <ListItem button onClick={this._help}>
-          <HelpIcon />
-          <ListItemText primary="Help" />
-        </ListItem>
+        <Link className={classes.profileLink} to={`/help`}>
+          <ListItem button>
+            <HelpIcon />
+            <ListItemText primary="Help" />
+          </ListItem>
+        </Link>
 
         <ListItem button onClick={this._logout}>
           <ExitIcon />

@@ -4,20 +4,32 @@ import withStyles from 'material-ui/styles/withStyles';
 import { GridListTile } from 'material-ui/GridList';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
+import Tooltip from 'material-ui/Tooltip';
 import Dialog, {
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import RemoveIcon from 'react-icons/lib/md/delete';
 
 import { withNotification } from 'Component/Notification';
 import { transformNumber } from 'Transformer';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { favouriteSongRequest } from 'Redux/api/favouriteSongs/actions';
 
 import styles from './styles';
+
+// custom style when user hover by mouse
+const hover = {
+  inHover: {
+    backgroundColor: 'rgba(0, 0, 0, 0.54)',
+    transition: 'all 0.6s',
+  },
+  outHover: {
+    transition: 'all 0.6s'
+  }
+};
 
 /* eslint-disable no-shadow */
 /* eslint-disable camelcase */
@@ -28,6 +40,7 @@ class FavoriteItem extends Component {
     this.state = {
       isFavourite: true,
       openAlert: false,
+      hover: 'outHover',
     };
 
     this._onRemoveFavourite = this._onRemoveFavourite.bind(this);
@@ -35,24 +48,34 @@ class FavoriteItem extends Component {
     this._onAlertClose = this._onAlertClose.bind(this);
     this._renderItem = this._renderItem.bind(this);
     this._renderAlertDialog = this._renderAlertDialog.bind(this);
+    this.changeFocus = this.changeFocus.bind(this);
+    this.resetFocus = this.resetFocus.bind(this);
   }
 
   _onAlertOpen() {
-    this.setState({ open: true });
+    this.setState({ openAlert: true });
   }
 
   _onAlertClose() {
-    this.setState({ open: false });
+    this.setState({ openAlert: false });
   }
 
   _onRemoveFavourite() {
     const { song_id, url, userId } = this.props;
-    this.props.favouriteSongRequest({
+    this.props.onRemoveSong({
       songId: song_id,
       userId,
       songUrl: url,
     });
     this._onAlertClose();
+  }
+
+  changeFocus() {
+    this.setState({ hover: 'inHover' });
+  }
+
+  resetFocus() {
+    this.setState({ hover: 'outHover' });
   }
 
   _renderItem() {
@@ -67,16 +90,25 @@ class FavoriteItem extends Component {
         </div>
       </Grid>,
       <div key={2} className={classes.info}>
-        <div className={classes.name}>{title || 'undefined'}</div>
-        <div className={classes.actions}>
-          <Button
-            raised
-            color={'secondary'}
-            className={classes.button}
-            onClick={this._onAlertOpen}
-          >
-            Remove
-          </Button>
+        <Tooltip placement={'top'} title={title}>
+          <div className={classes.name}>{title}</div>
+        </Tooltip>
+        <div
+          style={{ ...hover.actions, ...hover[this.state.hover] }}
+          className={classes.actions}
+          onMouseEnter={this.changeFocus}
+          onMouseLeave={this.resetFocus}
+        >
+          {this.state.hover === 'inHover' && (
+            <Tooltip placement={'top'} title={'Remove this song'}>
+              <IconButton
+                className={classes.button}
+                onClick={this._onAlertOpen}
+              >
+                <RemoveIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
       </div>,
     ];
@@ -85,7 +117,7 @@ class FavoriteItem extends Component {
   _renderAlertDialog() {
     return (
       <Dialog
-        open={this.state.open}
+        open={this.state.openAlert}
         onClose={this._onAlertClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -93,15 +125,15 @@ class FavoriteItem extends Component {
         <DialogTitle id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            This song will be remove from your favourite list.
+            This song will remove from your favorite list.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={this._onAlertClose} color="primary">
-            Disagree
+            No
           </Button>
           <Button onClick={this._onRemoveFavourite} color="primary" autoFocus>
-            Agree
+            Yes
           </Button>
         </DialogActions>
       </Dialog>
@@ -141,17 +173,9 @@ FavoriteItem.propTypes = {
   match: PropTypes.any,
   notification: PropTypes.object,
   key: PropTypes.number,
-  favouriteSongRequest: PropTypes.object,
+  favouriteSongRequest: PropTypes.func,
   url: PropTypes.string,
+  onRemoveSong: PropTypes.func,
 };
 
-const mapDispatchToProps = dispatch => ({
-  favouriteSongRequest: ({ songId, userId, stationId, songUrl }) =>
-    dispatch(favouriteSongRequest({ songId, userId, stationId, songUrl })),
-});
-
-export default compose(
-  withStyles(styles),
-  withNotification,
-  connect(undefined, mapDispatchToProps),
-)(FavoriteItem);
+export default compose(withStyles(styles), withNotification)(FavoriteItem);

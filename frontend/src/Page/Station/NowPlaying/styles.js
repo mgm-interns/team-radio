@@ -1,4 +1,17 @@
-export default ({ palette, spacing }) => ({
+export default ({ palette, spacing, typography }) => ({
+  container: {
+    position: 'relative',
+  },
+  marquee: {
+    ...typography.body1,
+    position: 'absolute',
+    top: 80,
+    left: spacing.baseMargin,
+    width: `calc(100% - ${spacing.doubleBaseMargin * 2}px)`,
+    padding: spacing.baseMargin,
+    backgroundColor: palette.lightBlack,
+    color: palette.white,
+  },
   skipNotificationContainer: {
     margin: 'auto',
     width: spacing.fullWidth,

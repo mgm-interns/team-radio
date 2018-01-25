@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqualWith from 'lodash/isEqualWith';
-import isEqual from 'lodash/isEqual';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
@@ -48,7 +47,7 @@ class PlaylistItem extends Component {
   }
 
   componentDidMount() {
-    const { up_vote, down_vote, favourite, url } = this.props;
+    const { up_vote, down_vote, favourite: { favourite }, url } = this.props;
     this.setState({
       isUpVote: PlaylistItem.isUpVote(this.props),
       isDownVote: PlaylistItem.isDownVote(this.props),
@@ -78,18 +77,20 @@ class PlaylistItem extends Component {
 
     if (
       !isEqualWith(
-        this.props.favourite.data,
-        nextProps.favourite.data,
+        this.props.favourite.favourite.data,
+        nextProps.favourite.favourite.data,
         (objVal, othVal) => objVal === othVal,
-      )
+      ) ||
+      nextProps.favourite.isTrigger
     ) {
-      nextProps.favourite.data.forEach(item => {
+      this.setState({ waitingForFavourite: true });
+      const state = nextProps.favourite.favourite.data.every(item => {
         if (url === item.url) {
-          this.setState({ isFavourite: true });
           return false;
         }
         return true;
       });
+      this.setState({ isFavourite: !state });
     }
   }
 
@@ -349,7 +350,7 @@ const mapStateToProps = ({ api }) => ({
   userId: api.user.data.userId,
   isAuthenticated: api.user.isAuthenticated,
   stationId: api.currentStation.station.station_id,
-  favourite: api.favouriteSongs.favourite,
+  favourite: api.favouriteSongs,
 });
 
 const mapDispatchToProps = dispatch => ({

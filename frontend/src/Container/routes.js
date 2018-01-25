@@ -10,6 +10,7 @@ import Login from 'Page/Auth/Login';
 import Register from 'Page/Auth/Register';
 import ForgotPassword from 'Page/Auth/ForgotPassword';
 import ResetPassword from 'Page/Auth/ResetPassword';
+import Help from 'Page/Help';
 
 export default [
   {
@@ -44,6 +45,10 @@ export default [
   {
     path: '/auth',
     component: Auth,
+  },
+  {
+    path: '/help',
+    component: Help,
   },
   {
     path: '/demo/image-cropper',
