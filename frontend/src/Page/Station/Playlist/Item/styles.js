@@ -140,4 +140,13 @@ export default ({ spacing, palette, typography }) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  message: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    color: palette.primary['500'],
+  },
+  messageTooltip: {
+    whiteSpace: 'nowrap',
+  },
 });
