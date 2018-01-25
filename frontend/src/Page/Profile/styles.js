@@ -1,13 +1,8 @@
 export default ({ spacing }) => ({
   containerWrapper: {
+    margin: 'auto',
+    padding: '0 !important',
     width: spacing.fullWidth,
-    margin: 0,
     paddingBottom: 50, // Footer height
-  },
-  progress: {
-    // margin: 'auto',
-    // display: 'flex',
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
 });

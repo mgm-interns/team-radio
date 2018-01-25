@@ -10,7 +10,13 @@ import WarningIcon from 'react-icons/lib/md/warning';
 import Item from './Item';
 import styles from './styles';
 
-const Favourites = ({ className, classes, favouriteSongs, userId }) => {
+const Favourites = ({
+  className,
+  classes,
+  favouriteSongs,
+  userId,
+  onRemoveSong,
+}) => {
   if (favouriteSongs.length === 0) {
     return (
       <Grid item xs={12} className={className}>
@@ -40,7 +46,12 @@ const Favourites = ({ className, classes, favouriteSongs, userId }) => {
   return (
     <GridList cellHeight={200} spacing={1} className={classes.gridList}>
       {favouriteSongs.map((video, index) => (
-        <Item key={index} userId={userId} {...video} />
+        <Item
+          key={index}
+          userId={userId}
+          {...video}
+          onRemoveSong={onRemoveSong}
+        />
       ))}
     </GridList>
   );
@@ -51,6 +62,8 @@ Favourites.propTypes = {
   classes: PropTypes.any,
   style: PropTypes.any,
   favouriteSongs: PropTypes.array,
+  userId: PropTypes.string,
+  onRemoveSong: PropTypes.func,
 };
 
 export default compose(withStyles(styles))(Favourites);

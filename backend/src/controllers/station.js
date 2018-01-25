@@ -102,7 +102,7 @@ export const deleteStation = async (stationId, userId) => {
  * @param {string} stationId
  */
 export const getStation = async stationId => {
-  if(!stationId){
+  if (!stationId) {
     throw new Error(`Station id ${stationId} is not undefined!`)
   }
   const stationOfId = await stationModels.getStationById(stationId);
@@ -124,8 +124,17 @@ export const getStation = async stationId => {
  * @param {string} userId
  */
 export const getStationsByUserId = async userId => {
+
   try {
-    const stations = stationModels.getStationsByUserId(_safeObjectId(userId));
+    const stations = await stationModels.getStationsByUserId(_safeObjectId(userId));
+    let player;
+    // Can't use forEach because can't use await..
+    for (let i = 0; i < stations.length; i++) {
+      stations[i] = stations[i].toObject();
+      player = await players.getPlayer(stations[i].station_id);
+      if (player.getNowPlaying().thumbnail)
+        stations[i].thumbnail = player.getNowPlaying().thumbnail;
+    }
     return stations;
   } catch (err) {
     console.log(err);
@@ -169,8 +178,8 @@ export const addSong = async (stationId, songUrl, userId, title, thumbnail, dura
       duration: duration,
       creator: _safeObjectId(userId),
       created_date: new Date().getTime(),
-      message : {
-        content :contentMessage,
+      message: {
+        content: contentMessage,
       }
     };
     await stationModels.addSong(stationId, song);
@@ -459,8 +468,16 @@ export const downVote = async (stationId, songId, userId) => {
  */
 export const getListStationUserAddedSong = async userId => {
   try {
-    const playList = await stationModels.getStationHasSongUserAdded(userId);
-    return playList;
+    const stations = await stationModels.getStationHasSongUserAdded(userId);
+    console.log(' -- > ', stations);
+    let player;
+    // Can't use forEach because can't use await..
+    for (let i = 0; i < stations.length; i++) {
+      player = await players.getPlayer(stations[i].station_id);
+      if (player.getNowPlaying().thumbnail)
+        stations[i].thumbnail = player.getNowPlaying().thumbnail;
+    }
+    return stations;
   } catch (error) {
     throw error;
   }

@@ -33,7 +33,6 @@ class ResetPassword extends Component {
     const { user: { error, data } } = nextProps;
 
     if (error) {
-      console.log(error);
       this.setState({
         formError: error.response,
       });

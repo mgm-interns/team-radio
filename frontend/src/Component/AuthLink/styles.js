@@ -48,7 +48,7 @@ export default ({ palette, spacing }) => ({
   },
   profileLink: {
     textDecoration: 'none',
-    color: '#000000de',
+    color: palette.black,
   },
   displayName: {
     color: palette.white,

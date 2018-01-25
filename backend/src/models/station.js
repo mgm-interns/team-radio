@@ -1,12 +1,11 @@
 /* eslint-disable */
 import _ from 'lodash';
 import mongoose from 'mongoose';
-import textSearch from 'mongoose-text-search';
 import * as searchController from '../controllers/search';
 import { type } from 'os';
 
 const stationSchema = mongoose.Schema({
-  station_name: { type: String, require: true, index: true, text: true },
+  station_name: { type: String, require: true },
   station_id: { type: String, require: true },
   is_private: { type: Boolean, default: false },
   owner_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users', default: null, },
@@ -58,9 +57,12 @@ const stationSchema = mongoose.Schema({
   created_date: { type: Number, default: new Date().getTime(), },
 });
 
+// Create text index for search perform
+stationSchema.index({ station_name: 'text', station_id: 'text' });
+
 var Station = (module.exports = mongoose.model('stations', stationSchema));
 
-searchController.attachStationData(stationSchema, Station);
+searchController.attachStationData(Station);
 
 /******************** STATION **************************/
 
@@ -168,7 +170,7 @@ module.exports.getStationById = idToFind => {
  * @param {string} userId
  */
 module.exports.getStationsByUserId = userId => {
-  return Station.find({ owner_id: userId }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 });
+  return Station.find({ owner_id: userId }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1,});
 };
 
 

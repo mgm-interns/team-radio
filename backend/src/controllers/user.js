@@ -12,6 +12,7 @@ import { Error } from 'mongoose';
 
 export const ADD_FAVOURITE_SUCCESS = 1000;
 export const UN_FAVOURITE_SUCCESS = 1001;
+export const UN_FAVOURITE_SUCCESS_PROFILE = 1002;
 
 export const isExistUserHandler = async email => {
   try {
@@ -264,6 +265,13 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
  * @param {string} userId   -- > user id  : who is favourite song
  * @param {string} stationId  -- > station id of station has song
  * @param {string} songUrl  --> url of song which is favourite
+ * 
+ * Case 1 : Favourite on station
+ * - Use 4 params ( songId, userId, songUrl, stationId )
+ * - Check : If not favourite then add song favourite return ADD_FAVOURITE_SUCCESS
+ *           If favourited then remove favorite return UN_FAVOURITE_SUCCESS
+ * Case 2 : Unfavourite on profile   return UN_FAVOURITE_SUCCESS_PROFILE
+ *   
  */
 export const addFavouriteSong = async (songId, userId, songUrl, stationId = null) => {
   try {
@@ -280,12 +288,11 @@ export const addFavouriteSong = async (songId, userId, songUrl, stationId = null
       if (stationId) {
         return UN_FAVOURITE_SUCCESS;
       } else {
-        return await userModels.getFavouritedSongs(userId);
+        return UN_FAVOURITE_SUCCESS_PROFILE;
       }
 
     }
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }

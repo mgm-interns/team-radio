@@ -8,8 +8,6 @@
  ******************************************************** */
 
 import * as userController from '../../controllers/user';
-import { getAvailableListSong } from '../../controllers/station';
-import { getAsongInStation } from '../../models/station';
 import * as EVENTS from '../../const/actions';
 import * as CONSTANTS from '../../const/constants';
 
@@ -46,46 +44,31 @@ export default async (emitter, songId, userId, songUrl, stationId) => {
 // eslint-disable-next-line
 const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) => {
   let song = {};
-  let removedSongUrl;
 
   // eslint-disable-next-line
   const status =
     await userController.addFavouriteSong(songId, userId, songUrl, stationId);
-  const list = await getAvailableListSong(stationId);
+
+  const list = await userController.getFavouritedSongs(userId);
   if (status === userController.ADD_FAVOURITE_SUCCESS) {
     /* eslint-disable consistent-return */
     list.forEach(item => {
       if (item.song_id === songId) {
-        const object = item.toObject();
-        song = {
-          _id: object._id,
-          creator: object.creator,
-          duration: object.duration,
-          thumbnail: object.thumbnail,
-          title: object.title,
-          url: object.url,
-          song_id: object.song_id,
-          created_date: object.created_date,
-        };
+        song = item;
         return false;
       }
     });
     emitter.emit(EVENTS.SERVER_ADD_FAVOURITE_SONG_SUCCESS, {
       song,
     });
+    return;
   }
-  if (status === userController.UN_FAVOURITE_SUCCESS) {
-    list.forEach(item => {
-      if (item.song_id === songId) {
-        removedSongUrl = item.toObject().url;
-        return false;
-      }
-    });
+  if (
+    status === userController.UN_FAVOURITE_SUCCESS ||
+    status === userController.UN_FAVOURITE_SUCCESS_PROFILE
+  ) {
     emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {
-      url: removedSongUrl,
+      url: songUrl,
     });
   }
-  emitter.emit(EVENTS.SERVER_REMOVE_FAVOURITE_SONG_SUCCESS, {
-    songs: status,
-  });
 };

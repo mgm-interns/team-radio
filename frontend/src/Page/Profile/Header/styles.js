@@ -2,16 +2,17 @@ export default ({ breakpoints, palette, spacing }) => ({
   coverContainer: {
     margin: 'auto',
     padding: '0 !important',
-    background: palette.darkGreen['500'],
-    height: '36vh',
+    background: 'black',
+    // height: '36vh',
     width: spacing.fullViewportWidth,
     overflowX: 'hidden',
     [breakpoints.down('sm')]: {
-      height: '80vh',
+      height: '350px',
     },
-    [breakpoints.up('sm')]: {
-      height: '40vh',
+    [breakpoints.up('md')]: {
+      height: '300px',
     },
+    zIndex: 0,
   },
   coverWrapper: {
     margin: 'auto',
@@ -19,25 +20,20 @@ export default ({ breakpoints, palette, spacing }) => ({
       minWidth: 1024,
       maxWidth: 1280,
     },
-    zIndex: 2,
   },
   backgroundImg: {
     margin: 'auto',
     position: 'absolute',
-    zIndex: 1,
-    filter: 'opacity(0.5)',
-    height: '36vh',
+    zIndex: -1,
     top: 0,
     left: 0,
-    width: spacing.fullWidth,
+    width: spacing.fullViewportWidth,
     objectFit: 'cover',
     [breakpoints.down('sm')]: {
-      height: '80vh',
-      width: spacing.fullViewportWidth,
-
+      height: '350px',
     },
-    [breakpoints.up('sm')]: {
-      height: '40vh',
+    [breakpoints.up('md')]: {
+      height: '300px',
     },
   },
   coverBackground: {
@@ -56,6 +52,7 @@ export default ({ breakpoints, palette, spacing }) => ({
   },
   userInformationContent: {
     paddingLeft: spacing.doubleBaseMargin,
+    zIndex: 1,
   },
   avatar: {
     margin: spacing.doubleBaseMargin,
@@ -84,6 +81,7 @@ export default ({ breakpoints, palette, spacing }) => ({
     flexDirection: 'column',
     alignItems: 'center',
     paddingLeft: 50,
+    zIndex: 1,
     [breakpoints.down('sm')]: {
       padding: 20,
     },
@@ -91,10 +89,12 @@ export default ({ breakpoints, palette, spacing }) => ({
   userInformation: {
     display: 'flex',
     alignItems: 'center',
+    zIndex: 1,
   },
   changeCoverActionWrapper: {
     display: 'flex',
     justifyContent: 'flex-end',
+    zIndex: 1,
     [breakpoints.down('sm')]: {
       justifyContent: 'center',
     },

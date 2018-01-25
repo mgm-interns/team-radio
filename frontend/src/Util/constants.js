@@ -3,5 +3,5 @@ export const HOST_NAME = /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$
 
 export default {
   EMAIL_REGEX,
-  HOST_NAME
+  HOST_NAME,
 };

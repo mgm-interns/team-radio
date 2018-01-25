@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqualWith from 'lodash/isEqualWith';
-import isEqual from 'lodash/isEqual';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
@@ -12,6 +11,7 @@ import ThumbUpIcon from 'react-icons/lib/md/thumb-up';
 import ThumbDownIcon from 'react-icons/lib/md/thumb-down';
 import OutlineStarIcon from 'react-icons/lib/md/star-outline';
 import SkipNextIcon from 'react-icons/lib/md/skip-next';
+import MessageIcon from 'react-icons/lib/md/message';
 import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -25,6 +25,7 @@ import {
 } from 'Redux/api/favouriteSongs/actions';
 import { withNotification } from 'Component/Notification';
 import { transformNumber } from 'Transformer';
+import { reduceByCharacters } from 'Transformer/transformText';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -48,7 +49,7 @@ class PlaylistItem extends Component {
   }
 
   componentDidMount() {
-    const { up_vote, down_vote, favourite, url } = this.props;
+    const { up_vote, down_vote, favourite: { favourite }, url } = this.props;
     this.setState({
       isUpVote: PlaylistItem.isUpVote(this.props),
       isDownVote: PlaylistItem.isDownVote(this.props),
@@ -56,7 +57,7 @@ class PlaylistItem extends Component {
       downVotes: down_vote.length,
     });
 
-    favourite.data.forEach(item => {
+    favourite.data.every(item => {
       if (url === item.url) {
         this.setState({ isFavourite: true });
         return false;
@@ -78,18 +79,18 @@ class PlaylistItem extends Component {
 
     if (
       !isEqualWith(
-        this.props.favourite.data,
-        nextProps.favourite.data,
+        this.props.favourite.favourite.data,
+        nextProps.favourite.favourite.data,
         (objVal, othVal) => objVal === othVal,
       )
     ) {
-      nextProps.favourite.data.forEach(item => {
+      const state = nextProps.favourite.favourite.data.every(item => {
         if (url === item.url) {
-          this.setState({ isFavourite: true });
           return false;
         }
         return true;
       });
+      this.setState({ isFavourite: !state });
     }
   }
 
@@ -189,9 +190,24 @@ class PlaylistItem extends Component {
   }
 
   _onFavouriteIconClick(songId, songUrl) {
-    const { userId, stationId, favouriteSongRequest } = this.props;
+    const {
+      notification,
+      userId,
+      stationId,
+      favouriteSongRequest,
+    } = this.props;
     favouriteSongRequest({ songId, userId, stationId, songUrl });
-    this.setState({ isFavourite: !this.state.isFavourite });
+
+    if (!userId) {
+      notification.app.warning({
+        message: 'You need to login to use this feature.',
+      });
+      return;
+    }
+
+    this.setState({
+      isFavourite: !this.state.isFavourite,
+    });
   }
 
   render() {
@@ -205,6 +221,8 @@ class PlaylistItem extends Component {
       duration,
       url,
       willBeSkipped,
+      loading,
+      message,
     } = this.props;
     const { isFavourite } = this.state;
 
@@ -243,15 +261,18 @@ class PlaylistItem extends Component {
               </Tooltip>
             </Grid>
             <Grid item xs={2} className={classes.favouriteContainer}>
-              {song_id && (
-                <IconButton
-                  color={isFavourite ? 'primary' : 'default'}
-                  className={classes.favouriteBtn}
-                  onClick={() => this._onFavouriteIconClick(song_id, url)}
-                >
-                  <OutlineStarIcon style={{ fontSize: 20 }} />
-                </IconButton>
-              )}
+              {song_id &&
+                (loading ? (
+                  <CircularProgress size={16} />
+                ) : (
+                  <IconButton
+                    color={isFavourite ? 'primary' : 'default'}
+                    className={classes.favouriteBtn}
+                    onClick={() => this._onFavouriteIconClick(song_id, url)}
+                  >
+                    <OutlineStarIcon style={{ fontSize: 20 }} />
+                  </IconButton>
+                ))}
             </Grid>
           </Grid>
           <div className={classes.creator}>
@@ -259,14 +280,32 @@ class PlaylistItem extends Component {
             {creator === null ? (
               ' Unregistered User'
             ) : (
-              <Tooltip placement={'bottom'} title={creator.name}>
-                <Link to={`/profile/${creator.username}`}>
-                  <img
-                    src={creator.avatar_url || Images.avatar.male01}
-                    className={classes.creatorAvatar}
-                  />
-                </Link>
-              </Tooltip>
+              <div>
+                <Tooltip
+                  placement={'bottom'}
+                  title={creator.name}
+                  className={classes.tooltip}
+                >
+                  <Link to={`/profile/${creator.username}`}>
+                    <img
+                      src={creator.avatar_url || Images.avatar.male01}
+                      className={classes.creatorAvatar}
+                    />
+                  </Link>
+                </Tooltip>
+                {message &&
+                  message.content && (
+                    <Tooltip
+                      title={reduceByCharacters(message.content)}
+                      placement={'bottom'}
+                      className={classes.tooltip}
+                    >
+                      <IconButton className={classes.messageIconWrapper}>
+                        <MessageIcon className={classes.messageIcon} />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+              </div>
             )}
           </div>
         </Grid>
@@ -343,13 +382,15 @@ PlaylistItem.propTypes = {
   getFavouriteSongs: PropTypes.func,
   favourite: PropTypes.object,
   isFavourite: PropTypes.bool,
+  loading: PropTypes.bool,
+  message: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({
   userId: api.user.data.userId,
   isAuthenticated: api.user.isAuthenticated,
   stationId: api.currentStation.station.station_id,
-  favourite: api.favouriteSongs.favourite,
+  favourite: api.favouriteSongs,
 });
 
 const mapDispatchToProps = dispatch => ({

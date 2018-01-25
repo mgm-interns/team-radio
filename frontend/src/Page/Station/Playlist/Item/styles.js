@@ -121,6 +121,7 @@ export default ({ spacing, palette, typography }) => ({
     paddingTop: '0 !important',
     display: 'flex',
     justifyContent: 'space-around',
+    alignItems: 'center',
   },
   favouriteBtn: {
     fontSize: spacing.doubleBaseMargin * 1.5,
@@ -139,5 +140,17 @@ export default ({ spacing, palette, typography }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  messageIcon: {
+    marginTop: 30,
+    width: '30%',
+  },
+  messageIconWrapper: {
+    marginTop: '-60px',
+    marginLeft: '-15px',
+    color: palette.primary['500'],
+  },
+  tooltip: {
+    whiteSpace: 'nowrap',
   },
 });

@@ -41,6 +41,7 @@ class AddLink extends Component {
     this.state = {
       videoId: '',
       searchText: '',
+      songMessage: '',
       suggestions: [],
       notFoundSearchResults: false,
       isDisableButton: true,
@@ -63,6 +64,7 @@ class AddLink extends Component {
     this._renderInput = this._renderInput.bind(this);
     this._onVolumeClick = this._onVolumeClick.bind(this);
     this._clearSearchInput = this._clearSearchInput.bind(this);
+    this._onSongMessageChange = this._onSongMessageChange.bind(this);
   }
 
   componentWillUnmount() {
@@ -93,7 +95,7 @@ class AddLink extends Component {
 
   /* Get info of a video or list of videos based on ids from search results */
   _getVideoUrl(video) {
-    return process.env.REACT_APP_YOUTUBE_URL + video.id;
+    return `${process.env.REACT_APP_YOUTUBE_URL + video.id}&t=0s`;
   }
 
   async _getVideoInfo(id) {
@@ -314,6 +316,12 @@ class AddLink extends Component {
     }
   }
 
+  _onSongMessageChange(e) {
+    this.setState({
+      songMessage: e.target.value,
+    });
+  }
+
   _onAddClick() {
     const {
       preview,
@@ -347,6 +355,7 @@ class AddLink extends Component {
       thumbnail: preview.snippet.thumbnails.default.url,
       stationId,
       userId,
+      songMessage: this.state.songMessage,
       creator: { username, name, avatar_url },
       duration: moment
         .duration(preview.contentDetails.duration)
@@ -354,6 +363,7 @@ class AddLink extends Component {
     });
     this.setState({
       searchText: '',
+      songMessage: '',
       isDisableButton: true,
       isMute: true,
     });
@@ -486,11 +496,24 @@ class AddLink extends Component {
                     {transformNumber.millisecondsToTime(videoDuration)}
                   </p>
                 )}
+                <p
+                  className={classNames(
+                    classes.secondaryText,
+                    classes.channelName,
+                  )}
+                >
+                  Channel: {preview.snippet.channelTitle}
+                </p>
               </div>
             )}
-            <p className={classes.secondaryText}>
-              Channel: {preview.snippet.channelTitle}
-            </p>
+            <TextField
+              fullWidth
+              multiline
+              rowsMax={1}
+              placeholder="Do you want to say something about this video?"
+              value={this.state.songMessage}
+              onChange={this._onSongMessageChange}
+            />
             <IconButton
               onClick={this._onVolumeClick}
               className={classes.volume}
