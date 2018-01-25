@@ -7,6 +7,7 @@ import * as stationModels from '../models/station';
 import * as userControllers from '../controllers/user';
 import * as userModels from '../models/user';
 import { Error } from 'mongoose';
+import slice from 'lodash/slice';
 import uniqBy from 'lodash/uniqBy';
 import orderBy from 'lodash/orderBy';
 import filter from 'lodash/filter';
@@ -25,6 +26,8 @@ const POINTS_FOR_NEXT_SONG = 1;
 export const addStation = async (stationName, userId, isPrivate) => {
   console.log('add station: ', stationName, ' + ', userId);
   const currentStationName = stationName.trim();
+  // if (isNaN(currentStationName) == false)
+  //   throw new Error('The station name can not be a number!');
   if (!currentStationName) {
     throw new Error('The station name can not be empty!');
   } else {
@@ -41,6 +44,7 @@ export const addStation = async (stationName, userId, isPrivate) => {
           playlist: [],
           is_private: isPrivate,
           owner_id: _safeObjectId(userId),
+
         });
         return currentStation;
       }
@@ -105,6 +109,7 @@ export const getStation = async stationId => {
   if (!stationId) {
     throw new Error(`Station id ${stationId} is not undefined!`)
   }
+
   const stationOfId = await stationModels.getStationById(stationId);
   if (!stationOfId) {
     throw new Error(`Station id ${stationId} is not exist!`);
@@ -282,11 +287,13 @@ export const getAllStationDetails = async () => {
  */
 export const getListSongHistory = async (stationId, limit) => {
   try {
-    const listSong = await stationModels.getPlaylistOfStation(stationId, limit);
+    const listSong = await stationModels.getPlaylistOfStation(stationId);
+    console.log("length : " + listSong.length)
     const history = filter(listSong, ['is_played', true]);
     const orderedSongs = orderBy(history, ['created_date'], ['desc']);
     const uniqueHistory = uniqBy(orderedSongs, 'url');
-    return uniqueHistory;
+    const limitHistory = slice(uniqueHistory,0,limit);
+    return limitHistory;
   } catch (error) {
     throw error;
   }
@@ -469,7 +476,6 @@ export const downVote = async (stationId, songId, userId) => {
 export const getListStationUserAddedSong = async userId => {
   try {
     const stations = await stationModels.getStationHasSongUserAdded(userId);
-    console.log(' -- > ', stations);
     let player;
     // Can't use forEach because can't use await..
     for (let i = 0; i < stations.length; i++) {

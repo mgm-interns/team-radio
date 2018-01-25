@@ -38,7 +38,9 @@
     "type": "git",
     "url": "https://github.com/mgm-interns/team-radio.git"
   },
-  "keywords": ["team-radio"],
+  "keywords": [
+    "team-radio"
+  ],
   "author": "@pvtri96",
   "license": "ISC",
   "bugs": {
