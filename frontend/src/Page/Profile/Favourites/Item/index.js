@@ -24,7 +24,11 @@ import styles from './styles';
 const hover = {
   inHover: {
     backgroundColor: 'rgba(0, 0, 0, 0.54)',
+    transition: 'all 0.6s',
   },
+  outHover: {
+    transition: 'all 0.6s'
+  }
 };
 
 /* eslint-disable no-shadow */
@@ -36,7 +40,7 @@ class FavoriteItem extends Component {
     this.state = {
       isFavourite: true,
       openAlert: false,
-      hover: '',
+      hover: 'outHover',
     };
 
     this._onRemoveFavourite = this._onRemoveFavourite.bind(this);
@@ -71,7 +75,7 @@ class FavoriteItem extends Component {
   }
 
   resetFocus() {
-    this.setState({ hover: '' });
+    this.setState({ hover: 'outHover' });
   }
 
   _renderItem() {
@@ -91,6 +95,7 @@ class FavoriteItem extends Component {
         </Tooltip>
         <div
           style={{ ...hover.actions, ...hover[this.state.hover] }}
+          className={classes.actions}
           onMouseEnter={this.changeFocus}
           onMouseLeave={this.resetFocus}
         >
