@@ -22,19 +22,14 @@ class Player extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     // Force update seektime when component receive new props
-    if (
-      this.props.url === nextProps.url &&
-      this.props.seektime !== nextProps.seektime
-    ) {
-      this.setState({
-        played: this.state.played,
-        buffer: this.state.buffer,
-        url: nextProps.url,
-        seektime: nextProps.seektime,
-        receivedAt: nextProps.receivedAt,
-      });
-      this.seekToTime(nextProps);
-    }
+    this.setState({
+      played: this.state.played,
+      buffer: this.state.buffer,
+      url: nextProps.url,
+      seektime: nextProps.seektime,
+      receivedAt: nextProps.receivedAt,
+    });
+    this.seekToTime(nextProps);
   }
 
   shouldComponentUpdate(nextProps) {

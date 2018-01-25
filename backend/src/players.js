@@ -242,7 +242,6 @@ class Player {
   };
   _skipNowPlayingSong = delay => {
     this._emitSkippedSong(delay);
-    stationController.setPlayedSongs(this.stationId, [this.nowPlaying.song_id]);
     stationController.setSkippedSong(this.stationId, this.nowPlaying.song_id);
   };
   // TODO: [start server, add new song to empty station, next song nomarly]
