@@ -5,7 +5,7 @@ export default ({ palette, spacing, typography }) => ({
   marquee: {
     ...typography.body1,
     position: 'absolute',
-    top: 80,
+    top: spacing.baseMargin,
     left: spacing.baseMargin,
     width: `calc(100% - ${spacing.doubleBaseMargin * 2}px)`,
     padding: spacing.baseMargin,
