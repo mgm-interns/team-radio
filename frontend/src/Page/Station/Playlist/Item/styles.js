@@ -141,13 +141,16 @@ export default ({ spacing, palette, typography }) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  message: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
+  messageIcon: {
+    marginTop: 30,
+    width: '30%',
+  },
+  messageIconWrapper: {
+    marginTop: '-40px',
+    marginLeft: '-10px',
     color: palette.primary['500'],
   },
-  messageTooltip: {
+  tooltip: {
     whiteSpace: 'nowrap',
   },
 });

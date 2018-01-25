@@ -11,7 +11,7 @@ import ThumbUpIcon from 'react-icons/lib/md/thumb-up';
 import ThumbDownIcon from 'react-icons/lib/md/thumb-down';
 import OutlineStarIcon from 'react-icons/lib/md/star-outline';
 import SkipNextIcon from 'react-icons/lib/md/skip-next';
-import MessageIcon from 'react-icons/lib/md/mode-comment';
+import MessageIcon from 'react-icons/lib/md/message';
 import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -240,18 +240,6 @@ class PlaylistItem extends Component {
               {transformNumber.millisecondsToTime(duration)}
             </span>
           </div>
-          <div className={classes.message}>
-            {message &&
-              message.content && (
-                <Tooltip
-                  title={reduceByCharacters(message.content)}
-                  placement={'bottom'}
-                  className={classes.messageTooltip}
-                >
-                  <MessageIcon className={classes.messageIcon} />
-                </Tooltip>
-              )}
-          </div>
           {willBeSkipped && (
             <Tooltip
               placement={'bottom'}
@@ -292,14 +280,32 @@ class PlaylistItem extends Component {
             {creator === null ? (
               ' Unregistered User'
             ) : (
-              <Tooltip placement={'bottom'} title={creator.name}>
-                <Link to={`/profile/${creator.username}`}>
-                  <img
-                    src={creator.avatar_url || Images.avatar.male01}
-                    className={classes.creatorAvatar}
-                  />
-                </Link>
-              </Tooltip>
+              <div>
+                <Tooltip
+                  placement={'bottom'}
+                  title={creator.name}
+                  className={classes.tooltip}
+                >
+                  <Link to={`/profile/${creator.username}`}>
+                    <img
+                      src={creator.avatar_url || Images.avatar.male01}
+                      className={classes.creatorAvatar}
+                    />
+                  </Link>
+                </Tooltip>
+                {message &&
+                  message.content && (
+                    <Tooltip
+                      title={reduceByCharacters(message.content)}
+                      placement={'bottom'}
+                      className={classes.tooltip}
+                    >
+                      <IconButton className={classes.messageIconWrapper}>
+                        <MessageIcon className={classes.messageIcon} />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+              </div>
             )}
           </div>
         </Grid>
