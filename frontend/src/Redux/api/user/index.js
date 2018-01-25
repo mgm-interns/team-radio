@@ -85,7 +85,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case 'VERIFY_TOKEN_REQUEST':
       return {
         ...state,
-        data: {},
         error: null,
         loading: true,
         isAuthenticated: false,
