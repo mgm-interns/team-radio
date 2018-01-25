@@ -308,15 +308,17 @@ export const updateHistory = async (userId, station_id) => {
     const user = await userModels.getUserById(userId, option)
     const station = await stationModels.getStationById(station_id)
 
-
-
-
     let history = user.history
-    if (history.length && (history.indexOf(_safeObjectId(station_id)) !== -1))
-      history.remove(station_id)
-    history.push(station_id)
-    await userModels.updateHistory(userId, history)
-    history = await userModels.getUserById(userId, option)
+
+
+
+
+    // let history = user.history
+    // if (history.length && (history.indexOf(_safeObjectId(station_id)) !== -1))
+    //   history.remove(station_id)
+    // history.push(station_id)
+    // await userModels.updateHistory(userId, history)
+    // history = await userModels.getUserById(userId, option)
   } catch (err) {
     throw err
   }

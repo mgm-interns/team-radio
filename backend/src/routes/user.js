@@ -213,7 +213,6 @@ export default router => {
     try {
       let user = await userController.getUserById(req.body.userId);
       const token = req.headers['access-token'];
-      console.log(req.body.userId);
       if (user) {
         // verify token
         const isOwner = await userController.isVerifidedToken(
@@ -348,7 +347,6 @@ export default router => {
           req.app.get('superSecret'),
         );
         if (isOwner) {
-          console.log(user.validPassword(req.body.currentPassword));
           if (user.password && !user.validPassword(req.body.currentPassword)) {
             return res.status(400).json({
               message: 'Current password is incorrect!',
@@ -374,7 +372,6 @@ export default router => {
   });
 
   router.get('/stations/getstationbyadded/:user_id', async (req, res) => {
-    console.log(req.params.user_id);
     const stations = await stationController.getListStationUserAddedSong(
       req.params.user_id,
     );
@@ -462,7 +459,6 @@ export default router => {
         req.params.token,
         req.app.get('superSecret'),
       );
-      console.log(response);
       if (response.Error) {
         return res.status(400).json({ message: response.message });
       }
@@ -474,7 +470,6 @@ export default router => {
 
   router.post('/resetPassword', async (req, res) => {
     try {
-      console.log(req.body);
       const response = await manageUserAccountController.resetPassword(
         req.body.token,
         req.app.get('superSecret'),
