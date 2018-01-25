@@ -1,5 +1,5 @@
 import * as EVENTS from '../../const/actions';
-import * as searchController from '../../controllers/search';
+import searchController from '../../controllers/search';
 
 export default async (emitter, searchQuery) => {
   // Search perform when query is not null
