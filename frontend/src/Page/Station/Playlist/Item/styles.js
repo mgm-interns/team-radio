@@ -121,6 +121,7 @@ export default ({ spacing, palette, typography }) => ({
     paddingTop: '0 !important',
     display: 'flex',
     justifyContent: 'space-around',
+    alignItems: 'center',
   },
   favouriteBtn: {
     fontSize: spacing.doubleBaseMargin * 1.5,

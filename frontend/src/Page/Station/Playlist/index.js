@@ -24,8 +24,6 @@ class Playlist extends Component {
     return song.up_vote.length - song.down_vote.length;
   }
 
-  componentWillReceiveProps(nextProps) {}
-
   /**
    * Filter all song that have not been played
    * Then order the list by:

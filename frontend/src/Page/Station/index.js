@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import isEqualWith from 'lodash/isEqualWith';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import LightBuldIcon from 'react-icons/lib/fa/lightbulb-o';
@@ -73,7 +72,10 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { muteNowPlaying, currentStation: { nowPlaying } } = nextProps;
+    const {
+      muteNowPlaying,
+      currentStation: { nowPlaying},
+    } = nextProps;
 
     this._checkValidStation(nextProps);
 
@@ -154,7 +156,7 @@ class StationPage extends Component {
   _renderTabs() {
     const {
       classes,
-      favourite,
+      favourite: { favourite },
       currentStation: { playlist, history },
     } = this.props;
     const { tabValue } = this.state;
@@ -363,7 +365,7 @@ const mapStateToProps = ({ api, page }) => ({
   userId: api.user.data.userId,
   passive: page.station.passive,
   nowPlayingFromPlaylist: page.station.nowPlaying,
-  favourite: api.favouriteSongs.favourite,
+  favourite: api.favouriteSongs,
   disableSwitcher: page.station.disableSwitcher,
 });
 

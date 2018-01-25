@@ -57,7 +57,7 @@ class PlaylistItem extends Component {
       downVotes: down_vote.length,
     });
 
-    favourite.data.forEach(item => {
+    favourite.data.every(item => {
       if (url === item.url) {
         this.setState({ isFavourite: true });
         return false;
@@ -82,10 +82,8 @@ class PlaylistItem extends Component {
         this.props.favourite.favourite.data,
         nextProps.favourite.favourite.data,
         (objVal, othVal) => objVal === othVal,
-      ) ||
-      nextProps.favourite.isTrigger
+      )
     ) {
-      this.setState({ waitingForFavourite: true });
       const state = nextProps.favourite.favourite.data.every(item => {
         if (url === item.url) {
           return false;
@@ -192,9 +190,24 @@ class PlaylistItem extends Component {
   }
 
   _onFavouriteIconClick(songId, songUrl) {
-    const { userId, stationId, favouriteSongRequest } = this.props;
+    const {
+      notification,
+      userId,
+      stationId,
+      favouriteSongRequest,
+    } = this.props;
     favouriteSongRequest({ songId, userId, stationId, songUrl });
-    this.setState({ isFavourite: !this.state.isFavourite });
+
+    if (!userId) {
+      notification.app.warning({
+        message: 'You need to login to use this feature.',
+      });
+      return;
+    }
+
+    this.setState({
+      isFavourite: !this.state.isFavourite,
+    });
   }
 
   render() {
@@ -208,6 +221,7 @@ class PlaylistItem extends Component {
       duration,
       url,
       willBeSkipped,
+      loading,
       message,
     } = this.props;
     const { isFavourite } = this.state;
@@ -259,15 +273,18 @@ class PlaylistItem extends Component {
               </Tooltip>
             </Grid>
             <Grid item xs={2} className={classes.favouriteContainer}>
-              {song_id && (
-                <IconButton
-                  color={isFavourite ? 'primary' : 'default'}
-                  className={classes.favouriteBtn}
-                  onClick={() => this._onFavouriteIconClick(song_id, url)}
-                >
-                  <OutlineStarIcon style={{ fontSize: 20 }} />
-                </IconButton>
-              )}
+              {song_id &&
+                (loading ? (
+                  <CircularProgress size={16} />
+                ) : (
+                  <IconButton
+                    color={isFavourite ? 'primary' : 'default'}
+                    className={classes.favouriteBtn}
+                    onClick={() => this._onFavouriteIconClick(song_id, url)}
+                  >
+                    <OutlineStarIcon style={{ fontSize: 20 }} />
+                  </IconButton>
+                ))}
             </Grid>
           </Grid>
           <div className={classes.creator}>
@@ -359,6 +376,7 @@ PlaylistItem.propTypes = {
   getFavouriteSongs: PropTypes.func,
   favourite: PropTypes.object,
   isFavourite: PropTypes.bool,
+  loading: PropTypes.bool,
   message: PropTypes.object,
 };
 
