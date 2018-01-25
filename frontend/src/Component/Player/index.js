@@ -84,20 +84,19 @@ class Player extends PureComponent {
     const { played, buffer } = this.state;
     return [
       <ReactPlayer
-        start={0}
         key={1}
         url={url}
         ref={input => {
           this.playerRef = input;
         }}
-        controls={true}
+        controls={false}
         playing={playing}
         onStart={this._onStart}
         onPlay={onPlay}
         onPause={onPause}
         onProgress={this._onProgress}
         youtubeConfig={{ playerVars: { disablekb: 1 } }}
-        // style={{ pointerEvents: 'none' }}
+        style={{ pointerEvents: 'none' }}
         {...othersProps}
       />,
       showProgressbar &&
