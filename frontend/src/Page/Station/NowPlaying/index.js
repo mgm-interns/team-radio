@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import { Player } from 'Component';
+import ReactEmojiMixin from 'react-emoji';
 import ThumbDownIcon from 'react-icons/lib/fa/thumbs-down';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
@@ -145,7 +146,9 @@ class NowPlaying extends Component {
               behavior="scroll"
               direction="left"
             >
-              {nowPlaying.message.content}
+              {ReactEmojiMixin.emojify(nowPlaying.message.content, {
+                attributes: { width: 12, height: 12 },
+              })}
             </marquee>
           )}
       </Grid>
