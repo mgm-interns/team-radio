@@ -163,7 +163,7 @@ module.exports.getStationById = idToFind => {
  * @param {string} userId
  */
 module.exports.getStationsByUserId = userId => {
-  return Station.find({ owner_id: userId }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 });
+  return Station.find({ owner_id: userId }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1,});
 };
 
 

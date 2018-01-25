@@ -96,7 +96,6 @@ io.on('connection', socket => {
           action.payload.songUrl,
           action.payload.stationId,
         );
-        console.log('Action received: ' + action.payload.stationId);
         break;
 
       case EVENTS.CLIENT_GET_FAVOURITE_SONG:

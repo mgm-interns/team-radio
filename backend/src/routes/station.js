@@ -59,4 +59,8 @@ export default router => {
     console.log("***********************");
     station.getListStationUserAddedSong(req, res);
   });
+  router.put('/stations/getStationsByUserId/get', function(req, res) {
+    console.log("***********************");
+    station.getStationsByUserId(req, res);
+  });
 };
