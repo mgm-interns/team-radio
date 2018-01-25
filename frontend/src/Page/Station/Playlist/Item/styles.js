@@ -146,8 +146,8 @@ export default ({ spacing, palette, typography }) => ({
     width: '30%',
   },
   messageIconWrapper: {
-    marginTop: '-40px',
-    marginLeft: '-10px',
+    marginTop: '-60px',
+    marginLeft: '-15px',
     color: palette.primary['500'],
   },
   tooltip: {
