@@ -13,9 +13,12 @@ class Player extends PureComponent {
       url: this.props.url,
       seektime: this.props.seektime,
       receivedAt: this.props.receivedAt,
+      isPaused: false,
     };
     console.log('constructor:', this.props);
     this._onStart = this._onStart.bind(this);
+    this._onPause = this._onPause.bind(this);
+    this._onPlay = this._onPlay.bind(this);
     this._onProgress = this._onProgress.bind(this);
     this.seekToTime = this.seekToTime.bind(this);
   }
@@ -70,7 +73,32 @@ class Player extends PureComponent {
       this.playerRef.seekTo(exactlyTime);
     }
   }
-
+  _onPause() {
+    console.log('onPause');
+    this.setState({
+      played: this.state.played,
+      buffer: this.state.buffer,
+      url: this.state.url,
+      seektime: this.state.seektime,
+      receivedAt: this.state.receivedAt,
+      isPaused: true,
+    });
+  }
+  _onPlay() {
+    console.log('onPlay');
+    if (this.state.isPaused){
+      this.setState({
+        played: this.state.played,
+        buffer: this.state.buffer,
+        url: this.state.url,
+        seektime: this.state.seektime,
+        receivedAt: this.state.receivedAt,
+        isPaused: false,
+      });
+      const exactlyTime = Player._getExactlySeektime(this.state);
+      this.playerRef.seekTo(exactlyTime);
+    }
+  }
   render() {
     const {
       receivedAt, // unused
@@ -93,11 +121,11 @@ class Player extends PureComponent {
         controls={false}
         playing={playing}
         onStart={this._onStart}
-        onPlay={onPlay}
-        onPause={onPause}
+        onPlay={this._onPlay}
+        onPause={this._onPause}
         onProgress={this._onProgress}
         youtubeConfig={{ playerVars: { disablekb: 1 } }}
-        style={{ pointerEvents: 'none' }}
+        // style={{ pointerEvents: 'none' }}
         {...othersProps}
       />,
       showProgressbar &&

@@ -228,10 +228,6 @@ class Player {
     setTimeout(async () => {
       // The song was not skipped
       if (playingSongId === this.nowPlaying.song_id) {
-        console.log(
-          '_nextSongByTimeout: ',
-          Date.now() - this.nowPlaying.starting_time,
-        );
         await stationController.setPlayedSongs(this.stationId, [
           this.nowPlaying.song_id,
         ]);
