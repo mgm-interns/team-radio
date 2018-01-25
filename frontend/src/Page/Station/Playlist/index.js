@@ -67,7 +67,7 @@ class Playlist extends Component {
     const { className, classes, style } = this.props;
     const { playlist, nowPlaying } = this.getFilteredPlaylist();
 
-    if (playlist.length === 0) {
+    if (playlist.length === 0 && !nowPlaying) {
       return (
         <Grid item xs={12} className={className}>
           <Grid
