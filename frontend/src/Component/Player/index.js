@@ -7,10 +7,11 @@ const ACCEPTABLE_DELAY = 0.5;
 class Player extends PureComponent {
   constructor(props, context) {
     super(props, context);
-
     this.state = {
       played: 0,
       buffer: 0,
+      seektime: this.props.seektime,
+      receivedAt: this.props.receivedAt,
     };
 
     this._onStart = this._onStart.bind(this);
@@ -21,12 +22,18 @@ class Player extends PureComponent {
   componentWillReceiveProps(nextProps) {
     // Force update seektime when component receive new props
     if (this.props.seektime !== nextProps.seektime) {
+      this.setState({
+        played: this.state.played,
+        buffer: this.state.played,
+        seektime: nextProps.seektime,
+        receivedAt: nextProps.receivedAt,
+      });
       this.seekToTime(nextProps);
     }
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.seektime !== nextProps.seektime) {
+    if (this.state.seektime !== nextProps.seektime) {
       return false;
     }
     return true;
@@ -47,9 +54,13 @@ class Player extends PureComponent {
   }
 
   _onProgress({ played, loaded, playedSeconds }) {
-    this.setState({ played: played * 100, buffer: loaded * 100 });
-
-    const exactlyTime = Player._getExactlySeektime(this.props);
+    this.setState({
+      played: played * 100,
+      buffer: loaded * 100,
+      seektime: this.state.seektime,
+      receivedAt: this.state.receivedAt,
+    });
+    const exactlyTime = Player._getExactlySeektime(this.state);
     const differentTime = exactlyTime - playedSeconds;
     if (
       differentTime > ACCEPTABLE_DELAY ||
@@ -73,19 +84,20 @@ class Player extends PureComponent {
     const { played, buffer } = this.state;
     return [
       <ReactPlayer
+        start={0}
         key={1}
         url={url}
         ref={input => {
           this.playerRef = input;
         }}
-        controls={false}
+        controls={true}
         playing={playing}
         onStart={this._onStart}
         onPlay={onPlay}
         onPause={onPause}
         onProgress={this._onProgress}
         youtubeConfig={{ playerVars: { disablekb: 1 } }}
-        style={{ pointerEvents: 'none' }}
+        // style={{ pointerEvents: 'none' }}
         {...othersProps}
       />,
       showProgressbar &&
