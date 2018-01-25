@@ -10,10 +10,11 @@ class Player extends PureComponent {
     this.state = {
       played: 0,
       buffer: 0,
+      url: this.props.url,
       seektime: this.props.seektime,
       receivedAt: this.props.receivedAt,
     };
-
+    console.log('constructor:', this.props);
     this._onStart = this._onStart.bind(this);
     this._onProgress = this._onProgress.bind(this);
     this.seekToTime = this.seekToTime.bind(this);
@@ -21,10 +22,14 @@ class Player extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     // Force update seektime when component receive new props
-    if (this.props.seektime !== nextProps.seektime) {
+    if (
+      this.props.url === nextProps.url &&
+      this.props.seektime !== nextProps.seektime
+    ) {
       this.setState({
         played: this.state.played,
-        buffer: this.state.played,
+        buffer: this.state.buffer,
+        url: nextProps.url,
         seektime: nextProps.seektime,
         receivedAt: nextProps.receivedAt,
       });
@@ -33,7 +38,10 @@ class Player extends PureComponent {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.state.seektime !== nextProps.seektime) {
+    if (
+      this.state.url === nextProps.url &&
+      this.state.seektime !== nextProps.seektime
+    ) {
       return false;
     }
     return true;
@@ -57,6 +65,7 @@ class Player extends PureComponent {
     this.setState({
       played: played * 100,
       buffer: loaded * 100,
+      url: this.state.url,
       seektime: this.state.seektime,
       receivedAt: this.state.receivedAt,
     });
