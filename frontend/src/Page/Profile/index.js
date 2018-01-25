@@ -30,6 +30,7 @@ class Profile extends Component {
 
   componentDidMount() {
     const { match: { params } } = this.props;
+    console.log(params.username);
     this.props.getVisitorByUsername(params.username);
   }
 

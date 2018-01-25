@@ -17,7 +17,7 @@ export const saveAuthenticationState = async state => {
   await sleep();
   try {
     // const serializedState = JSON.stringify(state);
-    console.log(state);
+    // console.log(state);
     await localStorage.setItem('token', state.token);
     await localStorage.setItem('userId', state.userId);
   } catch (error) {

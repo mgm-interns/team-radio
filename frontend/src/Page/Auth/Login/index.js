@@ -19,7 +19,7 @@ import {
   saveAuthenticationState,
   loadAuthenticationState,
 } from 'Configuration';
-import { email, required } from 'Util/validate';
+import { required } from 'Util/validate';
 import styles from './styles';
 
 class Login extends Component {
@@ -44,7 +44,7 @@ class Login extends Component {
   async componentWillReceiveProps(nextProps) {
     const { getUserResponse: { error, data, isAuthenticated } } = nextProps;
     const { getUserResponse: { data: { token } } } = this.props;
-    console.log(data.token, isAuthenticated, error);
+    // console.log(data.token, isAuthenticated, error);
 
     if (error) {
       this.setState({

@@ -119,6 +119,7 @@ export default ({ palette, breakpoints, spacing }) => ({
     width: spacing.fullWidth,
   },
   callout: {
+    width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
     fontSize: '14px',
@@ -144,6 +145,6 @@ export default ({ palette, breakpoints, spacing }) => ({
   cardActionContainer: {
     display: 'flex',
     flexDirection: 'column',
-    // alignItems: 'center',
+    alignItems: 'center',
   },
 });
