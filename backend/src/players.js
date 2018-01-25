@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as stationController from './controllers/station';
 import * as EVENTS from './const/actions';
+import * as CONSTANTS from './const/constants';
 import * as switcher from './switcher';
 
 const _players = [];
@@ -124,7 +125,10 @@ class Player {
     });
   };
   _emitHistory = async () => {
-    const history = await stationController.getListSongHistory(this.stationId);
+    const history = await stationController.getListSongHistory(
+      this.stationId,
+      CONSTANTS.HISTORY_LIMIT,
+    );
     this._emit(EVENTS.SERVER_UPDATE_HISTORY, {
       history: history,
     });
