@@ -96,7 +96,7 @@ class StationList extends Component {
             onClick={onItemClick}
           />
         ))}
-        {emptyStations !== 0 &&
+        {emptyStations > 0 &&
           [...Array(emptyStations)].map((item, index) => (
             <div key={index} className={classes.stationWrapper}>
               <div
