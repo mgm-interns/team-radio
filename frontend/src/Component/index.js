@@ -15,3 +15,4 @@ export { default as TextView } from './TextView';
 export { default as TabContainer } from './TabContainer';
 export { default as Scrollbar } from './Scrollbar';
 export { default as WavingAnimation } from './WavingAnimation';
+export { default as UserAvatar } from './UserAvatar';

@@ -50,3 +50,4 @@ export const setAvatar = setAvatarRequest.getAction();
 export const setPassword = setPasswordRequest.getAction();
 export const setUsername = setUsernameRequest.getAction();
 export const setUserInformation = setUserInformationRequest.getAction();
+export const setCover = setCoverRequest.getAction();

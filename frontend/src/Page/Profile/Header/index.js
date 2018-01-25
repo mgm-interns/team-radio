@@ -5,13 +5,11 @@ import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-import Hidden from 'material-ui/Hidden';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
-import IconButton from 'material-ui/IconButton';
 import CameraIcon from 'react-icons/lib/md/camera-alt';
 
 import { withNotification } from 'Component/Notification';
-import ImageUploader from 'Component/ImageUploader';
+import UserAvatar from 'Component/UserAvatar';
 import styles from './styles';
 
 const hover = {
@@ -22,14 +20,6 @@ const hover = {
   outHover: {
     filter: 'opacity(0.8)',
     transition: 'all 0.9s',
-  },
-  margininHover: {
-    marginBottom: 0,
-    transition: 'all 0.5s',
-  },
-  marginoutHover: {
-    marginBottom: 10,
-    transition: 'all 0.5s',
   },
 };
 
@@ -88,11 +78,8 @@ class Header extends Component {
     return (
       <Grid container className={classes.coverBackground}>
         <Grid item xs={12} sm={8} className={classes.userInformationContainer}>
-          <Grid
-            className={classes.userInformation}
-            style={{ ...hover[`margin${this.state.hover}`] }}
-          >
-            <ImageUploader user={user} isDisabled={isDisabled} />
+          <Grid className={classes.userInformation}>
+            <UserAvatar user={user} isDisabled={isDisabled} />
 
             <div className={classes.userInformationContent}>
               <Typography type="headline" className={classes.text}>
@@ -102,10 +89,7 @@ class Header extends Component {
             </div>
           </Grid>
 
-          <Grid
-            className={classes.summarize}
-            style={{ ...hover[`margin${this.state.hover}`] }}
-          >
+          <Grid className={classes.summarize}>
             {this._renderSummarizeItem('Songs', 0)}
             {this._renderSummarizeItem('Voted', 0)}
             {this._renderSummarizeItem('Reputation', user.reputation)}
