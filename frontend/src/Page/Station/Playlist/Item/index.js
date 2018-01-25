@@ -300,9 +300,11 @@ class PlaylistItem extends Component {
                       placement={'bottom'}
                       className={classes.tooltip}
                     >
-                      <IconButton className={classes.messageIconWrapper}>
-                        <MessageIcon className={classes.messageIcon} />
-                      </IconButton>
+                      <div className={classes.messageIconContainer}>
+                        <span className={classes.messageIconWrapper}>
+                          <MessageIcon className={classes.messageIcon} />
+                        </span>
+                      </div>
                     </Tooltip>
                   )}
               </div>
