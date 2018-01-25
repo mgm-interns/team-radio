@@ -11,12 +11,12 @@ const DEFAULT_USER_ID = '0';
 // Client action creator
 export const joinStation = ({ stationId, userId = DEFAULT_USER_ID }) => ({
   type: CLIENT_JOIN_STATION,
-  payload: { userId, stationId },
+  payload: { userId, stationId: stationId.toString() },
 });
 
 export const leaveStation = ({ stationId, userId = DEFAULT_USER_ID }) => ({
   type: CLIENT_LEAVE_STATION,
-  payload: { userId, stationId },
+  payload: { userId, stationId: stationId.toString() },
 });
 
 export const addSong = ({
@@ -32,7 +32,7 @@ export const addSong = ({
   type: CLIENT_ADD_SONG,
   payload: {
     userId,
-    stationId,
+    stationId: stationId.toString(),
     songUrl,
     title,
     thumbnail,
@@ -51,7 +51,7 @@ export const upVoteSong = ({
   songId,
 }) => ({
   type: CLIENT_UPVOTE_SONG,
-  payload: { userId, stationId, songId },
+  payload: { userId, stationId: stationId.toString(), songId },
 });
 
 export const downVoteSong = ({
@@ -60,5 +60,5 @@ export const downVoteSong = ({
   songId,
 }) => ({
   type: CLIENT_DOWNVOTE_SONG,
-  payload: { userId, stationId, songId },
+  payload: { userId, stationId: stationId.toString(), songId },
 });
