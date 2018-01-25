@@ -509,7 +509,7 @@ class AddLink extends Component {
             <TextField
               fullWidth
               multiline
-              rowsMax={2}
+              rowsMax={1}
               placeholder="Do you want to say something about this video?"
               value={this.state.songMessage}
               onChange={this._onSongMessageChange}
