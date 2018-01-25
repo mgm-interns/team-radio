@@ -83,13 +83,13 @@ class FilterAll extends Component {
             stationsTitle,
             all.data.stations,
             all.loading,
-            'You have no station.',
+            'You have no station',
           )}
           {this._renderStationList(
             'Recent',
             recent.data.stations,
             recent.loading,
-            "You haven't interact with any station yet.",
+            "You haven't interact with any station yet",
           )}
         </Grid>
       </Grid>

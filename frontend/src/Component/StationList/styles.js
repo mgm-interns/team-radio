@@ -31,6 +31,7 @@ export default ({ breakpoints, spacing }) => ({
   loadingContainer: {
     display: 'flex',
     flexDirection: 'row',
+    position: 'relative',
   },
   loadingAvatar: {
     background: 'rgba(0,0,0,0.075)',
@@ -41,9 +42,16 @@ export default ({ breakpoints, spacing }) => ({
     height: spacing.doubleBaseMargin,
     marginTop: spacing.baseMargin,
   },
-  emptyContainer: {
+  messageContainer: {
+    display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   [breakpoints.down('sm')]: {
     stationWrapper: {
