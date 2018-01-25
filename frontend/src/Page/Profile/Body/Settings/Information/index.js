@@ -156,15 +156,19 @@ class Information extends Component {
             >
               Cancel
             </Button>
-            <Button
-              raised
-              disabled={pristine || submitting}
-              color="primary"
-              type="submit"
-              className={classes.button}
-            >
-              {loading ? Information._renderLoading() : 'Save changes'}
-            </Button>
+            {loading ? (
+              Information._renderLoading()
+            ) : (
+              <Button
+                raised
+                disabled={pristine || submitting}
+                color="primary"
+                type="submit"
+                className={classes.button}
+              >
+                Save
+              </Button>
+            )}
           </Grid>
         </form>
       </Grid>

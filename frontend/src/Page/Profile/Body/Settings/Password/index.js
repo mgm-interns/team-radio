@@ -122,15 +122,20 @@ class Password extends Component {
             >
               Cancel
             </Button>
-            <Button
-              raised
-              disabled={pristine || submitting}
-              color="primary"
-              type="submit"
-              className={classes.button}
-            >
-              {loading ? Password._renderLoading() : 'Save changes'}
-            </Button>
+
+            {loading ? (
+              Password._renderLoading()
+            ) : (
+              <Button
+                raised
+                disabled={pristine || submitting}
+                color="primary"
+                type="submit"
+                className={classes.button}
+              >
+                Save
+              </Button>
+            )}
           </Grid>
         </form>
       </Grid>
