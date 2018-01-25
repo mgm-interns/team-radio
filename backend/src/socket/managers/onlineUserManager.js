@@ -75,11 +75,12 @@ export const leaveStationAlreadyIn = async (
   stationName,
   io,
 ) => {
+  stationId = stationId.toString();
   const listSocket = await getAllSocketConnected(io);
 
   listSocket.forEach(socketId => {
     const socket = getSocketById(socketId, io);
-    const oldStation = getAllStationsSocketIn(socket)[0];
+    const oldStation = getAllStationsSocketIn(socket)[0].toString();
     if (socket.userId === userId && oldStation !== stationId) {
       const emitter = createEmitter(socket, io);
       emitter.emit(EVENTS.SERVER_NO_MULTI_STATIONS, {
