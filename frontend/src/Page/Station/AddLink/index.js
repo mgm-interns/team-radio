@@ -443,16 +443,6 @@ class AddLink extends Component {
               }}
             />
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              multiline
-              rowsMax={5}
-              placeholder="Do you want to say something about this video?..."
-              value={this.state.songMessage}
-              onChange={this._onSongMessageChange}
-            />
-          </Grid>
         </Grid>
       </Grid>
     );
@@ -506,11 +496,24 @@ class AddLink extends Component {
                     {transformNumber.millisecondsToTime(videoDuration)}
                   </p>
                 )}
+                <p
+                  className={classNames(
+                    classes.secondaryText,
+                    classes.channelName,
+                  )}
+                >
+                  Channel: {preview.snippet.channelTitle}
+                </p>
               </div>
             )}
-            <p className={classes.secondaryText}>
-              Channel: {preview.snippet.channelTitle}
-            </p>
+            <TextField
+              fullWidth
+              multiline
+              rowsMax={1}
+              placeholder="Do you want to say something about this video?"
+              value={this.state.songMessage}
+              onChange={this._onSongMessageChange}
+            />
             <IconButton
               onClick={this._onVolumeClick}
               className={classes.volume}

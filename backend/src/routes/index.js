@@ -1,4 +1,3 @@
-/* eslint-disable */
 import express from 'express';
 
 // Initiate new Router instance

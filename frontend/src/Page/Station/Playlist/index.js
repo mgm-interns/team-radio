@@ -24,25 +24,7 @@ class Playlist extends Component {
     return song.up_vote.length - song.down_vote.length;
   }
 
-  componentWillReceiveProps(nextProps) {
-    // const { playlist } = this.props;
-    // if (nextProps.favouriteList.length === 0) {
-    //   playlist.map(item => {
-    //     item.is_favourited = false;
-    //   });
-    // } else {
-    //   nextProps.favouriteList.forEach(favouritedItem => {
-    //     playlist.forEach(playlistItem => {
-    //       if (playlistItem.song_id === favouritedItem.song_id) {
-    //         playlistItem.is_favourited = favouritedItem.is_favourited;
-    //       } else {
-    //         playlistItem.is_favourited = false;
-    //       }
-    //     });
-    //   });
-    // }
-    // console.log(playlist);
-  }
+  componentWillReceiveProps(nextProps) {}
 
   /**
    * Filter all song that have not been played
@@ -55,30 +37,37 @@ class Playlist extends Component {
    */
   getFilteredPlaylist() {
     const { data, nowPlaying, getNowPlaying } = this.props;
-    /* eslint-disable consistent-return */
-    data.forEach((item, index) => {
-      if (index === 0) {
-        getNowPlaying(item);
+    let nowPlayingSong = null;
+
+    const playlistWithoutNowPlaying = data.filter(item => {
+      if (item.song_id === nowPlaying.song_id) {
+        nowPlayingSong = item;
         return false;
       }
+      return true;
     });
 
-    return orderBy(
-      data,
-      [
-        ({ song_id }) => (song_id === nowPlaying.song_id ? -1 : 1),
-        Playlist.getSongScore,
-        'created_date',
-      ],
-      ['asc', 'desc', 'asc'],
-    );
+    getNowPlaying(nowPlayingSong);
+
+    return {
+      nowPlaying: nowPlayingSong,
+      playlist: orderBy(
+        playlistWithoutNowPlaying,
+        [
+          ({ song_id }) => (song_id === nowPlaying.song_id ? -1 : 1),
+          Playlist.getSongScore,
+          'created_date',
+        ],
+        ['asc', 'desc', 'asc'],
+      ),
+    };
   }
 
   render() {
     const { className, classes, style } = this.props;
-    const playlist = this.getFilteredPlaylist();
+    const { playlist, nowPlaying } = this.getFilteredPlaylist();
 
-    if (playlist.length === 0) {
+    if (playlist.length === 0 && !nowPlaying) {
       return (
         <Grid item xs={12} className={className}>
           <Grid
@@ -121,8 +110,11 @@ class Playlist extends Component {
             paddingBottom: 0,
           }}
         >
+          {nowPlaying && (
+            <Item key={nowPlaying.song_id} {...nowPlaying} playing />
+          )}
           {playlist.map((song, index) => (
-            <Item key={song.song_id || index} {...song} playing={index === 0} />
+            <Item key={song.song_id || index} {...song} />
           ))}
         </FlipMoveList>
       </Grid>

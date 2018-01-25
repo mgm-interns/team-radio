@@ -3,16 +3,31 @@ export default ({ breakpoints, palette, spacing }) => ({
     margin: 'auto',
     width: '100%',
     overflowX: 'hidden',
-    // [breakpoints.down('sm')]: {
-    //   height: '80vh',
-    // },
-    // [breakpoints.up('sm')]: {
-    //   // height: '20vh',
-    // },
+    paddingBottom: 150,
+  },
+  coverContainer: {
+    margin: 'auto',
+    // padding: '0 !important',
+    width: '100%',
+    overflowX: 'hidden',
+    [breakpoints.down('sm')]: {
+      height: '350px',
+    },
+    [breakpoints.up('md')]: {
+      height: '300px',
+    },
+  },
+  coverWrapper: {
+    margin: 'auto',
+    // width: spacing.fullViewportWidth,
+    [breakpoints.up('lg')]: {
+      minWidth: 1024,
+      maxWidth: 1280,
+    },
   },
   wrapper: {
     margin: 'auto',
-    paddingTop: 80,
+    // paddingTop: 80,
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
@@ -29,17 +44,16 @@ export default ({ breakpoints, palette, spacing }) => ({
   backgroundImg: {
     margin: 'auto',
     position: 'absolute',
-    zIndex: 1,
+    zIndex: -1,
     top: 0,
     left: 0,
-    width: spacing.fullWidth,
+    width: '100%',
     objectFit: 'cover',
     [breakpoints.down('sm')]: {
-      height: '80vh',
-      width: spacing.fullViewportWidth,
+      height: '350px',
     },
-    [breakpoints.up('sm')]: {
-      height: '20vh',
+    [breakpoints.up('md')]: {
+      height: '300px',
     },
   },
   markdownWrapper: {

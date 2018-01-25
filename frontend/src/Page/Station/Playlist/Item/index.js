@@ -11,6 +11,7 @@ import ThumbUpIcon from 'react-icons/lib/md/thumb-up';
 import ThumbDownIcon from 'react-icons/lib/md/thumb-down';
 import OutlineStarIcon from 'react-icons/lib/md/star-outline';
 import SkipNextIcon from 'react-icons/lib/md/skip-next';
+import MessageIcon from 'react-icons/lib/md/mode-comment';
 import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -24,6 +25,7 @@ import {
 } from 'Redux/api/favouriteSongs/actions';
 import { withNotification } from 'Component/Notification';
 import { transformNumber } from 'Transformer';
+import { reduceByCharacters } from 'Transformer/transformText';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -206,6 +208,7 @@ class PlaylistItem extends Component {
       duration,
       url,
       willBeSkipped,
+      message,
     } = this.props;
     const { isFavourite } = this.state;
 
@@ -222,6 +225,18 @@ class PlaylistItem extends Component {
             <span className={classes.durationText}>
               {transformNumber.millisecondsToTime(duration)}
             </span>
+          </div>
+          <div className={classes.message}>
+            {message &&
+              message.content && (
+                <Tooltip
+                  title={reduceByCharacters(message.content)}
+                  placement={'bottom'}
+                  className={classes.messageTooltip}
+                >
+                  <MessageIcon className={classes.messageIcon} />
+                </Tooltip>
+              )}
           </div>
           {willBeSkipped && (
             <Tooltip
@@ -344,6 +359,7 @@ PlaylistItem.propTypes = {
   getFavouriteSongs: PropTypes.func,
   favourite: PropTypes.object,
   isFavourite: PropTypes.bool,
+  message: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({
