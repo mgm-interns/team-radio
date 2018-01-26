@@ -101,6 +101,7 @@ class Settings extends Component {
         aria-labelledby="information-modal-title"
         aria-describedby="information-modal-description"
         open={openState}
+        onClose={this._onCloseModal}
       >
         <div style={getModalStyle()}>
           <Grid container>

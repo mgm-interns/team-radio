@@ -100,6 +100,7 @@ class Profile extends Component {
   render() {
     const { classes, visitor, isOwner } = this.props;
     let content = null;
+    console.log('render', isOwner);
 
     if (Array.isArray(visitor)) {
       content = Profile._renderLoading();

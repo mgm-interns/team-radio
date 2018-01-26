@@ -249,7 +249,7 @@ export default router => {
     //     user: user,
     // }); if updating success
     // Return res.json({
-    //     message: 'Can not update avatar!',
+    //     message: 'Can not update cover!',
     // }); if updating fail
     try {
       let user = await userController.getUserById(req.body.userId);
@@ -266,11 +266,16 @@ export default router => {
             req.body.userId,
             req.body.cover_url,
           );
-          return res.json({ ...user._doc, userId: user._id });
+          return res.json({
+            message: 'Update cover successfully!',
+            isOwner,
+            ...user._doc,
+            userId: user._id,
+          });
         }
       }
       return res.json({
-        message: 'Can not update avatar!',
+        message: 'Can not update cover!',
       });
     } catch (err) {
       throw err;
@@ -521,9 +526,9 @@ export default router => {
   });
 
   router.get('/test_getallstation', async (req, res) => {
-    const allstation = await userController.getallstation()
-      res.json(allstation)
-  })
+    const allstation = await userController.getallstation();
+    res.json(allstation);
+  });
 };
 
 // router.use(authController);

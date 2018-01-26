@@ -44,6 +44,9 @@ const setCoverRequest = new HttpRequest({
   method: 'POST',
   type: 'SET_COVER',
   endpoint: `${ENDPOINT}/setCover`,
+  headers: {
+    'access-token': localStorage.getItem('token'),
+  },
 });
 
 export const setAvatar = setAvatarRequest.getAction();

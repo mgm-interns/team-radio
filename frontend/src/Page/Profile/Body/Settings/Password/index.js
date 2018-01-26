@@ -119,6 +119,8 @@ class Password extends Component {
             <Button
               onClick={this._onCancelButtonClick}
               className={classes.button}
+              color="primary"
+              autoFocus
             >
               Cancel
             </Button>
@@ -127,7 +129,6 @@ class Password extends Component {
               Password._renderLoading()
             ) : (
               <Button
-                raised
                 disabled={pristine || submitting}
                 color="primary"
                 type="submit"

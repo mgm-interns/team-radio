@@ -151,6 +151,7 @@ class Information extends Component {
           </Grid>
           <Grid item xs={12} className={classes.modalFooter}>
             <Button
+              color="primary"
               onClick={this._onCancelButtonClick}
               className={classes.button}
             >
@@ -160,7 +161,6 @@ class Information extends Component {
               Information._renderLoading()
             ) : (
               <Button
-                raised
                 disabled={pristine || submitting}
                 color="primary"
                 type="submit"

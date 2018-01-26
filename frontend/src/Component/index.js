@@ -16,3 +16,4 @@ export { default as TabContainer } from './TabContainer';
 export { default as Scrollbar } from './Scrollbar';
 export { default as WavingAnimation } from './WavingAnimation';
 export { default as UserAvatar } from './UserAvatar';
+export { default as CoverPhoto } from './CoverPhoto';

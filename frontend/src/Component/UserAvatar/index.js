@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import withStyles from 'material-ui/styles/withStyles';
 import PropTypes from 'prop-types';
 import Avatar from 'material-ui/Avatar';
+import Icon from 'material-ui/Icon';
 import { Images } from 'Theme';
 import { connect } from 'react-redux';
 import { setAvatar } from 'Redux/api/user/profile';
@@ -16,7 +17,6 @@ class UserAvatar extends Component {
 
     this.state = {
       avatar_url: null,
-      activeInputForm: false,
     };
 
     this.upload = this.upload.bind(this);
@@ -35,7 +35,9 @@ class UserAvatar extends Component {
   render() {
     const { classes, user, isDisabled } = this.props;
     const titleCropper = 'Crop your new profile photo';
-    const aspectRatio = '1 / 1';
+    const aspectRatio = 1;
+
+    console.log('render', isDisabled);
 
     return (
       <ImageUploader
@@ -44,13 +46,18 @@ class UserAvatar extends Component {
         aspectRatio={aspectRatio}
         onUpload={this.upload}
         isDisabled={isDisabled}
-        activeInputForm={this.state.activeInputForm}
       >
-        <div className={classes.avatarWrapper}>
-          <Avatar
-            className={classes.avatar}
-            src={!user.avatar_url ? Images.avatar.male01 : user.avatar_url}
-          />
+        <div className={classes.avatarContainer}>
+          <div className={classes.avatarWrapper}>
+            <div className="hoverButton">
+              <Icon className={classes.uploadIcon}>camera_alt</Icon>
+              <p style={{ textAlign: 'center' }}>Upload profile photo</p>
+            </div>
+            <Avatar
+              className={classes.avatar}
+              src={!user.avatar_url ? Images.avatar.male01 : user.avatar_url}
+            />
+          </div>
         </div>
       </ImageUploader>
     );

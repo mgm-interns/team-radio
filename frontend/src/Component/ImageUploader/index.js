@@ -6,6 +6,7 @@ import toBase64 from 'Util//toBase64';
 import Modal from 'material-ui/Modal';
 import Button from 'material-ui/Button';
 import Card, { CardContent, CardHeader, CardActions } from 'material-ui/Card';
+import CameraIcon from 'react-icons/lib/md/camera-alt';
 import { CircularProgress } from 'material-ui/Progress';
 import PropTypes from 'prop-types';
 import { withNotification } from 'Component/Notification';
@@ -79,10 +80,9 @@ class ImageUploader extends Component {
   }
 
   _openFilePickerDialog(event) {
+    console.log('_openFilePickerDialog');
     event.preventDefault();
-    if (this.props.isDisabled) {
-      this.input.click();
-    }
+    this.input.click();
   }
 
   async _onImagePicked(event) {
@@ -109,27 +109,12 @@ class ImageUploader extends Component {
   };
 
   render() {
-    const {
-      classes,
-      isDisabled,
-      children,
-      titleCropper,
-      aspectRatio,
-    } = this.props;
+    const { classes, children, titleCropper, aspectRatio } = this.props;
 
     return (
       <div>
-        <div className={classes.avatarContainer} style={this.state.size}>
-          <div className="hoverButton" onClick={this._openFilePickerDialog}>
-            {isDisabled && (
-              <Fragment>
-                <Icon className={classes.uploadIcon}>camera_alt</Icon>
-                <p style={{ textAlign: 'center' }}>Upload profile photo</p>
-              </Fragment>
-            )}
-          </div>
-          {children}
-        </div>
+        <div onClick={this._openFilePickerDialog}>{children}</div>
+
         <input
           key={2}
           type="file"
@@ -182,12 +167,11 @@ class ImageUploader extends Component {
 ImageUploader.propTypes = {
   classes: PropTypes.any,
   updateAvatar: PropTypes.any,
-  isDisabled: PropTypes.any,
   user: PropTypes.any,
   children: PropTypes.node,
   onUpload: PropTypes.func,
   titleCropper: PropTypes.string,
-  aspectRatio: PropTypes.string,
+  aspectRatio: PropTypes.any,
 };
 
 export default compose(withNotification)(withStyles(styles)(ImageUploader));

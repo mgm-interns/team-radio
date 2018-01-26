@@ -206,6 +206,28 @@ const userReducer = (state = INITIAL_STATE, action) => {
         },
       };
 
+    case 'SET_COVER_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'SET_COVER_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'SET_COVER_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: {
+          ...action.payload,
+        },
+      };
+
     case 'FORGOT_PASSWORD_REQUEST':
       return {
         data: {},

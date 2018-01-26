@@ -29,6 +29,7 @@ export default ({ breakpoints, palette, spacing }) => ({
     left: 0,
     width: spacing.fullViewportWidth,
     objectFit: 'cover',
+    filter: 'opacity(0.5)',
     [breakpoints.down('sm')]: {
       height: '350px',
     },

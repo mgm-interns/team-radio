@@ -125,7 +125,7 @@ class FavoriteItem extends Component {
         <DialogTitle id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            This song will remove from your favorite list.
+            This song will be removed from your favourite list.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
