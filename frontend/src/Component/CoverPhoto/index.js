@@ -28,12 +28,11 @@ class CoverPhoto extends Component {
   }
 
   upload(userId, response_url) {
-    console.log(userId, response_url);
     this.props.uploadCover(userId, response_url);
   }
 
   render() {
-    const { classes, user } = this.props;
+    const { classes, user, isDisabled } = this.props;
     const titleCropper = 'Crop your new cover photo';
     const aspectRatio = 16 / 9;
 
@@ -43,6 +42,7 @@ class CoverPhoto extends Component {
         titleCropper={titleCropper}
         aspectRatio={aspectRatio}
         onUpload={this.upload}
+        isDisabled={isDisabled}
       >
         <Button
           raised

@@ -3,11 +3,10 @@ export default ({ breakpoints, palette, spacing }) => ({
     margin: 'auto',
     padding: '0 !important',
     background: 'black',
-    // height: '36vh',
-    width: spacing.fullViewportWidth,
+    width: spacing.fullWidth,
     overflowX: 'hidden',
     [breakpoints.down('sm')]: {
-      height: '350px',
+      height: '400px',
     },
     [breakpoints.up('md')]: {
       height: '300px',
@@ -16,6 +15,7 @@ export default ({ breakpoints, palette, spacing }) => ({
   },
   coverWrapper: {
     margin: 'auto',
+    width: spacing.fullWidth,
     [breakpoints.up('lg')]: {
       minWidth: 1024,
       maxWidth: 1280,
@@ -23,15 +23,15 @@ export default ({ breakpoints, palette, spacing }) => ({
   },
   backgroundImg: {
     margin: 'auto',
+    width: spacing.fullWidth,
     position: 'absolute',
     zIndex: -1,
     top: 0,
     left: 0,
-    width: spacing.fullViewportWidth,
     objectFit: 'cover',
     filter: 'opacity(0.5)',
     [breakpoints.down('sm')]: {
-      height: '350px',
+      height: '400px',
     },
     [breakpoints.up('md')]: {
       height: '300px',
@@ -39,6 +39,7 @@ export default ({ breakpoints, palette, spacing }) => ({
   },
   coverBackground: {
     paddingTop: 56,
+    width: spacing.fullWidth,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',

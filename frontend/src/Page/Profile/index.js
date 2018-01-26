@@ -30,7 +30,6 @@ class Profile extends Component {
 
   componentDidMount() {
     const { match: { params } } = this.props;
-    console.log(params.username);
     this.props.getVisitorByUsername(params.username);
   }
 
@@ -100,7 +99,6 @@ class Profile extends Component {
   render() {
     const { classes, visitor, isOwner } = this.props;
     let content = null;
-    console.log('render', isOwner);
 
     if (Array.isArray(visitor)) {
       content = Profile._renderLoading();

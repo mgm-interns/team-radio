@@ -75,7 +75,6 @@ class StationList extends Component {
       disableOnlineCount,
       scrollbarInstanceLevel,
     } = this.props;
-    const emptyStations = 6 - stations.length;
     return (
       <Scrollbar
         speed={1.6}
@@ -96,23 +95,6 @@ class StationList extends Component {
             onClick={onItemClick}
           />
         ))}
-        {emptyStations > 0 &&
-          [...Array(emptyStations)].map((item, index) => (
-            <div key={index} className={classes.stationWrapper}>
-              <div
-                className={classNames([
-                  classes.stationAvatar,
-                  classes.loadingAvatar,
-                ])}
-              />
-              <div
-                className={classNames([
-                  classes.stationInfo,
-                  classes.loadingInfo,
-                ])}
-              />
-            </div>
-          ))}
       </Scrollbar>
     );
   }

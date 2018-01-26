@@ -80,9 +80,10 @@ class ImageUploader extends Component {
   }
 
   _openFilePickerDialog(event) {
-    console.log('_openFilePickerDialog');
     event.preventDefault();
-    this.input.click();
+    if (this.props.isDisabled) {
+      this.input.click();
+    }
   }
 
   async _onImagePicked(event) {
@@ -172,6 +173,7 @@ ImageUploader.propTypes = {
   onUpload: PropTypes.func,
   titleCropper: PropTypes.string,
   aspectRatio: PropTypes.any,
+  isDisabled: PropTypes.bool,
 };
 
 export default compose(withNotification)(withStyles(styles)(ImageUploader));

@@ -74,7 +74,7 @@ class Header extends Component {
             sm={4}
             className={classes.changeCoverActionWrapper}
           >
-            <CoverPhoto user={user} />
+            <CoverPhoto user={user} isDisabled={isDisabled} />
           </Grid>
         )}
       </Grid>

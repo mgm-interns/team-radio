@@ -49,10 +49,12 @@ class UserAvatar extends Component {
       >
         <div className={classes.avatarContainer}>
           <div className={classes.avatarWrapper}>
-            <div className="hoverButton">
-              <Icon className={classes.uploadIcon}>camera_alt</Icon>
-              <p style={{ textAlign: 'center' }}>Upload profile photo</p>
-            </div>
+            {isDisabled && (
+              <div className="hoverButton">
+                <Icon className={classes.uploadIcon}>camera_alt</Icon>
+                <p style={{ textAlign: 'center' }}>Upload profile photo</p>
+              </div>
+            )}
             <Avatar
               className={classes.avatar}
               src={!user.avatar_url ? Images.avatar.male01 : user.avatar_url}

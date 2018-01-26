@@ -44,7 +44,6 @@ class Login extends Component {
   async componentWillReceiveProps(nextProps) {
     const { getUserResponse: { error, data, isAuthenticated } } = nextProps;
     const { getUserResponse: { data: { token } } } = this.props;
-    // console.log(data.token, isAuthenticated, error);
 
     if (error) {
       this.setState({
