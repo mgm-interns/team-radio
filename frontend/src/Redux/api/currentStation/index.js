@@ -35,10 +35,7 @@ const INITIAL_STATE = {
     url: '',
     starting_time: 0,
   },
-  skip: {
-    _id: new Date().getTime(),
-    delay: 0,
-  },
+  skip: null,
   users: [],
   online_count: 0,
   joined: {
@@ -152,6 +149,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         nowPlaying: action.payload,
+        skip: null,
       };
 
     /**
@@ -161,7 +159,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         skip: {
-          _id: new Date().getTime(),
+          song_id: action.payload.now_playing.song_id,
           delay: action.payload.delay,
           thumbnail: action.payload.now_playing.thumbnail,
         },

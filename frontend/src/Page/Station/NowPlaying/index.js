@@ -42,8 +42,14 @@ class NowPlaying extends Component {
     // Replace player with skipping notification
     const { currentStation } = this.props;
     const nextCurrentStation = nextProps.currentStation;
-    // only trigger when received a new skip notification
-    if (currentStation.skip._id !== nextCurrentStation.skip._id) {
+    // only trigger when received a new skip event
+    if (
+      (currentStation.skip &&
+        nextCurrentStation.skip &&
+        currentStation.skip.song_id !== nextCurrentStation.skip.song_id) ||
+      (nextCurrentStation.skip &&
+        currentStation.skip !== nextCurrentStation.skip)
+    ) {
       // Show notification
       await this.setStateAsync({
         skipNotification: true,
