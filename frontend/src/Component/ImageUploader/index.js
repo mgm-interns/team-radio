@@ -33,6 +33,15 @@ class ImageUploader extends Component {
     this._crop = this._crop.bind(this);
   }
 
+  componentWillUnmount() {
+    this.setState({
+      open: false,
+      uploading: false,
+      uploadedFile: null,
+      response_url: null,
+    });
+  }
+
   setStateAsync(state) {
     return new Promise(resolve => {
       this.setState(state, resolve);
