@@ -29,6 +29,9 @@ export default theme => {
     secondaryText: {
       color: 'rgba(0,0,0,0.54)',
     },
+    channelName: {
+      marginLeft: 'auto',
+    },
     warningText: {
       color: yellow[900],
     },
@@ -148,7 +151,7 @@ export default theme => {
     durationContainer: {
       display: 'flex',
       alignItems: 'center',
-      marginBottom: baseMargin,
+      marginBottom: smallMargin,
     },
     /* End search */
   };

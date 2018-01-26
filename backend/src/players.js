@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as stationController from './controllers/station';
 import * as EVENTS from './const/actions';
+import * as CONSTANTS from './const/constants';
 import * as switcher from './switcher';
 
 const _players = [];
@@ -15,6 +16,7 @@ class Player {
     url: '',
     starting_time: 0,
     thumbnail: '',
+    message: {},
   };
   skippedSongs = new Set();
   // isPopular needs to be false, but now it is true to test
@@ -71,7 +73,8 @@ class Player {
       let skipTime = Date.now() - this.nowPlaying.starting_time;
       console.log('#1:', skipTime);
       console.log('#2:', TIME_BUFFER);
-      skipTime = skipTime < TIME_BUFFER ? skipTime + TIME_BUFFER : 2 * TIME_BUFFER;
+      skipTime =
+        skipTime < TIME_BUFFER ? skipTime + TIME_BUFFER : 2 * TIME_BUFFER;
       this._skipNowPlayingSong(skipTime);
       this._nextSongByTimeout(skipTime, this.nowPlaying.song_id);
     }
@@ -93,6 +96,7 @@ class Player {
       ? Date.now() - this.nowPlaying.starting_time
       : 0,
     thumbnail: this.nowPlaying.thumbnail,
+    message: this.nowPlaying.message,
   });
 
   updatePlaylist = async (station = null) => {
@@ -121,7 +125,10 @@ class Player {
     });
   };
   _emitHistory = async () => {
-    const history = await stationController.getListSongHistory(this.stationId);
+    const history = await stationController.getListSongHistory(
+      this.stationId,
+      CONSTANTS.HISTORY_LIMIT,
+    );
     this._emit(EVENTS.SERVER_UPDATE_HISTORY, {
       history: history,
     });
@@ -171,6 +178,7 @@ class Player {
       url: '',
       starting_time: 0,
       thumbnail: '',
+      message: {},
     };
   };
   _setNowPlaying = (song, starting_time) => {
@@ -178,6 +186,7 @@ class Player {
     this.nowPlaying.url = song.url;
     this.nowPlaying.thumbnail = song.thumbnail;
     this.nowPlaying.starting_time = starting_time;
+    this.nowPlaying.message = song.message;
   };
   // TODO: check change state of the station to update available stations
   _startSong = async (song, starting_time) => {
@@ -219,7 +228,6 @@ class Player {
     setTimeout(async () => {
       // The song was not skipped
       if (playingSongId === this.nowPlaying.song_id) {
-        console.log('_nextSongByTimeout: ', Date.now() - this.nowPlaying.starting_time);
         await stationController.setPlayedSongs(this.stationId, [
           this.nowPlaying.song_id,
         ]);
@@ -234,9 +242,8 @@ class Player {
   };
   _skipNowPlayingSong = delay => {
     this._emitSkippedSong(delay);
-    stationController.setPlayedSongs(this.stationId, [this.nowPlaying.song_id]);
     stationController.setSkippedSong(this.stationId, this.nowPlaying.song_id);
-  }
+  };
   // TODO: [start server, add new song to empty station, next song nomarly]
   _setPlayableSong = async (station = null) => {
     if (!station) {

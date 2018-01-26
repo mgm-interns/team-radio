@@ -3,7 +3,6 @@ import * as EVENTS from '../../const/actions';
 
 export default async (emitter, userId) => {
   const user = await userController.getUserById(userId);
-  console.log(' user: ' + user);
   if (user) {
     try {
       _getFavouriteSongs(emitter, userId);

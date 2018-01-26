@@ -38,6 +38,7 @@ class FavouriteVideo extends Component {
       url,
       title,
       thumbnail,
+      duration,
     } = this.props;
 
     // Check if user is not authenticated
@@ -55,11 +56,12 @@ class FavouriteVideo extends Component {
       stationId,
       userId,
       creator: { username, name, avatar_url },
+      duration,
     });
   }
 
   render() {
-    const { thumbnail, title, creator, duration, classes } = this.props;
+    const { thumbnail, title, duration, classes } = this.props;
     return (
       <Grid container className={classes.container}>
         <Grid item xs={3} className={classes.thumbnail}>
@@ -74,37 +76,6 @@ class FavouriteVideo extends Component {
           <Tooltip placement={'bottom'} title={title}>
             <div className={classes.name}>{title}</div>
           </Tooltip>
-          {/* <Tooltip */}
-          {/* placement={'bottom'} */}
-          {/* title={ */}
-          {/* this.state.isFavourite */}
-          {/* ? 'Remove from favourite' */}
-          {/* : 'Add to favourite' */}
-          {/* } */}
-          {/* > */}
-          {/* <div */}
-          {/* className={classNames(classes.favouriteWrapper, 'hiddenAction')} */}
-          {/* > */}
-          {/* <IconButton color={'primary'} className={classes.favouriteBtn}> */}
-          {/* {this.state.isFavourite ? <StarIcon /> : <OutlineStarIcon />} */}
-          {/* </IconButton> */}
-          {/* </div> */}
-          {/* </Tooltip> */}
-          <div className={classes.creator}>
-            Added by
-            {creator === null || creator === undefined ? (
-              ' Unregistered User'
-            ) : (
-              <Tooltip placement={'bottom'} title={creator.name}>
-                <Link to={`/profile/${creator.username}`}>
-                  <img
-                    src={creator.avatar_url || Images.avatar.male01}
-                    className={classes.creatorAvatar}
-                  />
-                </Link>
-              </Tooltip>
-            )}
-          </div>
         </Grid>
         <Grid item xs={1} className={classes.actions}>
           <Tooltip

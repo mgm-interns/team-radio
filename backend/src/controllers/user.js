@@ -12,6 +12,7 @@ import { Error } from 'mongoose';
 
 export const ADD_FAVOURITE_SUCCESS = 1000;
 export const UN_FAVOURITE_SUCCESS = 1001;
+export const UN_FAVOURITE_SUCCESS_PROFILE = 1002;
 
 export const isExistUserHandler = async email => {
   try {
@@ -225,14 +226,14 @@ export const setUserInformation = async (userId, name, firstname, lastname, bio,
     if (city) data.city = city;
     if (bio) data.bio = bio;
 
-    // if (firstname && user.firstname === "") point += 5;
-    // if (lastname && user.lastname === "") point += 5;
-    // if (country && user.country === "") point += 5;
-    // if (city && user.city === "") point += 5;
-    // if (bio && user.bio === "") point += 5;
+    if (firstname && user.firstname === "") point += 2;
+    if (lastname && user.lastname === "") point += 2;
+    if (country && user.country === "") point += 2;
+    if (city && user.city === "") point += 2;
+    if (bio && user.bio === "") point += 2;
 
     await userModels.setUserInformation(userId, data);
-    // await _increaseReputation(user.email, point)
+    await _increaseReputation(user.email, point)
     return await userModels.getUserById(userId);
   } catch (err) {
     throw err;
@@ -264,6 +265,13 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
  * @param {string} userId   -- > user id  : who is favourite song
  * @param {string} stationId  -- > station id of station has song
  * @param {string} songUrl  --> url of song which is favourite
+ * 
+ * Case 1 : Favourite on station
+ * - Use 4 params ( songId, userId, songUrl, stationId )
+ * - Check : If not favourite then add song favourite return ADD_FAVOURITE_SUCCESS
+ *           If favourited then remove favorite return UN_FAVOURITE_SUCCESS
+ * Case 2 : Unfavourite on profile   return UN_FAVOURITE_SUCCESS_PROFILE
+ *   
  */
 export const addFavouriteSong = async (songId, userId, songUrl, stationId = null) => {
   try {
@@ -280,12 +288,11 @@ export const addFavouriteSong = async (songId, userId, songUrl, stationId = null
       if (stationId) {
         return UN_FAVOURITE_SUCCESS;
       } else {
-        return await userModels.getFavouritedSongs(userId);
+        return UN_FAVOURITE_SUCCESS_PROFILE;
       }
 
     }
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -299,12 +306,19 @@ export const updateHistory = async (userId, station_id) => {
   try {
     const option = { history: 1, _id: 0 }
     const user = await userModels.getUserById(userId, option)
+    const station = await stationModels.getStationById(station_id)
+
     let history = user.history
-    if (history.length && (history.indexOf(_safeObjectId(station_id)) !== -1))
-      history.remove(station_id)
-    history.push(station_id)
-    await userModels.updateHistory(userId, history)
-    history = await userModels.getUserById(userId, option)
+
+
+
+
+    // let history = user.history
+    // if (history.length && (history.indexOf(_safeObjectId(station_id)) !== -1))
+    //   history.remove(station_id)
+    // history.push(station_id)
+    // await userModels.updateHistory(userId, history)
+    // history = await userModels.getUserById(userId, option)
   } catch (err) {
     throw err
   }
@@ -341,6 +355,12 @@ export const getFavouritedSongs = async (userId) => {
   } catch (error) {
     throw new Error("Can't get favourited songs");
   }
+}
+
+export const getallstation = async () => {
+  const user = stationModels.getAllAvailableStations();
+
+  return user;
 }
 
 // This is private function

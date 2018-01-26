@@ -10,6 +10,8 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { NavBar, Footer } from 'Component';
 import { getVisitorByUsername } from 'Redux/api/visitor';
+
+import tokenInjector from 'Util/redux/tokenInjector';
 import { withNotification } from 'Component/Notification';
 
 import Header from './Header';
@@ -51,7 +53,7 @@ class Profile extends Component {
     }
 
     // get message for user activities
-    if (authenticatedUser.message !== user.message && user.message) {
+    if (authenticatedUser !== user && user.message) {
       this._showNotification(user.message);
 
       const increaseReputation = Profile._calculateIncreaseReputation(
@@ -145,7 +147,8 @@ const mapStateToProps = ({ api }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getVisitorByUsername: username => dispatch(getVisitorByUsername(username)),
+  getVisitorByUsername: username =>
+    dispatch(tokenInjector(getVisitorByUsername(username))),
 });
 
 export default compose(

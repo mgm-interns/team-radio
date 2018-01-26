@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import isEqualWith from 'lodash/isEqualWith';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import LightBuldIcon from 'react-icons/lib/fa/lightbulb-o';
@@ -20,6 +19,8 @@ import { getFavouriteSongs } from 'Redux/api/favouriteSongs/actions';
 import {
   muteVideoRequest,
   passiveUserRequest,
+  disableStationsSwitcher,
+  enableStationsSwitcher,
 } from 'Redux/page/station/actions';
 import AddLink from './AddLink';
 import Playlist from './Playlist';
@@ -39,7 +40,7 @@ class StationPage extends Component {
       muted: false,
       tabValue: 0,
       isPassive: false,
-      playlist: [],
+      nowPlayingSong: null,
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
@@ -47,6 +48,7 @@ class StationPage extends Component {
     this._renderTabs = this._renderTabs.bind(this);
     this._handleTabChange = this._handleTabChange.bind(this);
     this._checkValidStation = this._checkValidStation.bind(this);
+    this._getFilteredPlaylist = this._getFilteredPlaylist.bind(this);
   }
 
   componentWillMount() {
@@ -71,11 +73,7 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      muteNowPlaying,
-      currentStation: { nowPlaying, playlist },
-    } = nextProps;
-    const { getFavouriteSongs, userId } = this.props;
+    const { muteNowPlaying, currentStation: { nowPlaying } } = nextProps;
 
     this._checkValidStation(nextProps);
 
@@ -86,6 +84,21 @@ class StationPage extends Component {
     this.setState({
       muted: muteNowPlaying,
     });
+  }
+
+  _getFilteredPlaylist() {
+    const { currentStation: { playlist, nowPlaying } } = this.props;
+    let nowPlayingSong = null;
+
+    playlist.filter(item => {
+      if (item.song_id === nowPlaying.song_id) {
+        nowPlayingSong = item;
+        return false;
+      }
+      return true;
+    });
+
+    this.setState({ nowPlayingSong });
   }
 
   _checkValidStation(props) {
@@ -103,9 +116,12 @@ class StationPage extends Component {
     }
     // Check if user is already joined in other station
     if (!joined.loading && joined.failed && !!joined.loggedInStation) {
+      this.props.disableStationsSwitcher();
+
       this.loggedInStationTimeout = setTimeout(() => {
         const { stationId } = joined.loggedInStation;
         history.replace(`/station/${stationId}`);
+        this.props.enableStationsSwitcher();
         this.props.joinStation({ stationId, userId });
         this.props.getFavouriteSongs(userId);
       }, 5000);
@@ -144,6 +160,8 @@ class StationPage extends Component {
         }
       },
     );
+
+    this._getFilteredPlaylist();
   }
 
   _handleTabChange(e, value) {
@@ -153,7 +171,7 @@ class StationPage extends Component {
   _renderTabs() {
     const {
       classes,
-      favourite,
+      favourite: { favourite },
       currentStation: { playlist, history },
     } = this.props;
     const { tabValue } = this.state;
@@ -220,9 +238,9 @@ class StationPage extends Component {
       classes,
       currentStation: { station, nowPlaying, playlist, joined },
       passive,
-      nowPlayingFromPlaylist,
+      disableSwitcher,
     } = this.props;
-    const { muted } = this.state;
+    const { muted, nowPlayingSong } = this.state;
 
     return [
       passive && (
@@ -239,7 +257,7 @@ class StationPage extends Component {
       >
         <Grid item xs={12} className={classes.switcherContainer}>
           <div className={classes.switcherContent}>
-            <StationSwitcher />
+            <StationSwitcher disable={disableSwitcher} />
           </div>
         </Grid>
         <Grid item xs={12} className={classes.container}>
@@ -305,12 +323,12 @@ class StationPage extends Component {
                   muted={muted}
                   nowPlaying={nowPlaying}
                 />
-                {nowPlayingFromPlaylist && passive ? (
+                {nowPlayingSong && passive ? (
                   <div className={classes.nowPlayingInfo}>
-                    <p>{nowPlayingFromPlaylist.title}</p>
+                    <p>{nowPlayingSong.title}</p>
                     <p>
                       {transformNumber.millisecondsToTime(
-                        nowPlayingFromPlaylist.duration,
+                        nowPlayingSong.duration,
                       )}
                     </p>
                   </div>
@@ -345,9 +363,11 @@ StationPage.propTypes = {
   preview: PropTypes.object,
   passiveUserRequest: PropTypes.func,
   passive: PropTypes.bool,
-  nowPlayingFromPlaylist: PropTypes.object,
   getFavouriteSongs: PropTypes.func,
   favourite: PropTypes.object,
+  disableSwitcher: PropTypes.bool,
+  disableStationsSwitcher: PropTypes.func,
+  enableStationsSwitcher: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -357,8 +377,8 @@ const mapStateToProps = ({ api, page }) => ({
   preview: page.station.preview,
   userId: api.user.data.userId,
   passive: page.station.passive,
-  nowPlayingFromPlaylist: page.station.nowPlaying,
-  favourite: api.favouriteSongs.favourite,
+  favourite: api.favouriteSongs,
+  disableSwitcher: page.station.disableSwitcher,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -368,6 +388,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
   passiveUserRequest: isPassive => dispatch(passiveUserRequest(isPassive)),
   getFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
+  disableStationsSwitcher: () => dispatch(disableStationsSwitcher()),
+  enableStationsSwitcher: () => dispatch(enableStationsSwitcher()),
 });
 
 export default compose(

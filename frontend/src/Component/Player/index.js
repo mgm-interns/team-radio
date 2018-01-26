@@ -3,30 +3,43 @@ import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import { LinearProgress } from 'material-ui/Progress';
 
-const ACCEPTABLE_DELAY = 0.5;
+const ACCEPTABLE_DELAY = 1;
 class Player extends PureComponent {
   constructor(props, context) {
     super(props, context);
-
     this.state = {
       played: 0,
       buffer: 0,
+      url: this.props.url,
+      seektime: this.props.seektime,
+      receivedAt: this.props.receivedAt,
+      isPaused: false,
     };
-
+    console.log('constructor:', this.props);
     this._onStart = this._onStart.bind(this);
+    this._onPause = this._onPause.bind(this);
+    this._onPlay = this._onPlay.bind(this);
     this._onProgress = this._onProgress.bind(this);
     this.seekToTime = this.seekToTime.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     // Force update seektime when component receive new props
-    if (this.props.seektime !== nextProps.seektime) {
-      this.seekToTime(nextProps);
-    }
+    this.setState({
+      played: this.state.played,
+      buffer: this.state.buffer,
+      url: nextProps.url,
+      seektime: nextProps.seektime,
+      receivedAt: nextProps.receivedAt,
+    });
+    this.seekToTime(nextProps);
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.seektime !== nextProps.seektime) {
+    if (
+      this.state.url === nextProps.url &&
+      this.state.seektime !== nextProps.seektime
+    ) {
       return false;
     }
     return true;
@@ -39,26 +52,53 @@ class Player extends PureComponent {
   static _getExactlySeektime({ seektime, receivedAt }) {
     const currentTime = new Date().getTime();
     const delayedTime = parseInt(currentTime - receivedAt, 10) / 1000;
-    return seektime + delayedTime;
+    return Math.abs(seektime + delayedTime);
   }
 
   _onStart() {
-    this.seekToTime(this.props);
+    this.seekToTime(this.state);
   }
 
   _onProgress({ played, loaded, playedSeconds }) {
-    this.setState({ played: played * 100, buffer: loaded * 100 });
-
-    const exactlyTime = Player._getExactlySeektime(this.props);
-    const differentTime = exactlyTime - playedSeconds;
-    if (
-      differentTime > ACCEPTABLE_DELAY ||
-      differentTime < ACCEPTABLE_DELAY * -1
-    ) {
+    this.setState({
+      played: played * 100,
+      buffer: loaded * 100,
+      url: this.state.url,
+      seektime: this.state.seektime,
+      receivedAt: this.state.receivedAt,
+    });
+    const exactlyTime = Player._getExactlySeektime(this.state);
+    const differentTime = Math.abs(exactlyTime - playedSeconds);
+    if (differentTime > ACCEPTABLE_DELAY) {
       this.playerRef.seekTo(exactlyTime);
     }
   }
-
+  _onPause() {
+    console.log('onPause');
+    this.setState({
+      played: this.state.played,
+      buffer: this.state.buffer,
+      url: this.state.url,
+      seektime: this.state.seektime,
+      receivedAt: this.state.receivedAt,
+      isPaused: true,
+    });
+  }
+  _onPlay() {
+    console.log('onPlay');
+    if (this.state.isPaused){
+      this.setState({
+        played: this.state.played,
+        buffer: this.state.buffer,
+        url: this.state.url,
+        seektime: this.state.seektime,
+        receivedAt: this.state.receivedAt,
+        isPaused: false,
+      });
+      const exactlyTime = Player._getExactlySeektime(this.state);
+      this.playerRef.seekTo(exactlyTime);
+    }
+  }
   render() {
     const {
       receivedAt, // unused
@@ -81,11 +121,11 @@ class Player extends PureComponent {
         controls={false}
         playing={playing}
         onStart={this._onStart}
-        onPlay={onPlay}
-        onPause={onPause}
+        onPlay={this._onPlay}
+        onPause={this._onPause}
         onProgress={this._onProgress}
         youtubeConfig={{ playerVars: { disablekb: 1 } }}
-        style={{ pointerEvents: 'none' }}
+        // style={{ pointerEvents: 'none' }}
         {...othersProps}
       />,
       showProgressbar &&

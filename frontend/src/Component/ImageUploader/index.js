@@ -6,12 +6,9 @@ import toBase64 from 'Util//toBase64';
 import Modal from 'material-ui/Modal';
 import Button from 'material-ui/Button';
 import Card, { CardContent, CardHeader, CardActions } from 'material-ui/Card';
+import CameraIcon from 'react-icons/lib/md/camera-alt';
 import { CircularProgress } from 'material-ui/Progress';
 import PropTypes from 'prop-types';
-import Avatar from 'material-ui/Avatar';
-import { Images } from 'Theme';
-import { connect } from 'react-redux';
-import { setAvatar } from 'Redux/api/user/profile';
 import { withNotification } from 'Component/Notification';
 import { compose } from 'redux';
 import styles from './styles';
@@ -27,15 +24,22 @@ class ImageUploader extends Component {
       open: false,
       uploading: false,
       uploadedFile: null,
-      avatar_url: null,
+      response_url: null,
     };
 
     this._openFilePickerDialog = this._openFilePickerDialog.bind(this);
     this._onImagePicked = this._onImagePicked.bind(this);
+    this.upload = this.upload.bind(this);
+    this._crop = this._crop.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({ avatar_url: this.props.user.avatar_url });
+  componentWillUnmount() {
+    this.setState({
+      open: false,
+      uploading: false,
+      uploadedFile: null,
+      response_url: null,
+    });
   }
 
   setStateAsync(state) {
@@ -46,7 +50,7 @@ class ImageUploader extends Component {
 
   _crop() {
     this.setState({
-      avatar_url: this.cropper.getCroppedCanvas().toDataURL(),
+      response_url: this.cropper.getCroppedCanvas().toDataURL(),
     });
   }
 
@@ -67,19 +71,20 @@ class ImageUploader extends Component {
         // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
 
         this.setState({
-          avatar_url: response.secure_url,
+          response_url: response.secure_url,
           uploading: false,
           open: false,
         });
+
         const { user: { userId } } = this.props;
 
-        this.props.updateAvatar(userId, response.secure_url);
+        this.props.onUpload(userId, response.secure_url);
       }
     };
 
     fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
     fd.append('tags', 'browser_upload'); // Optional - add tag for image admin in Cloudinary
-    fd.append('file', this.state.avatar_url);
+    fd.append('file', this.state.response_url);
     xhr.send(fd);
   }
 
@@ -110,29 +115,21 @@ class ImageUploader extends Component {
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({
+      open: false,
+      uploading: false,
+      uploadedFile: null,
+      response_url: null,
+    });
   };
 
   render() {
-    const { classes, user: { avatar_url }, isDisabled } = this.props;
+    const { classes, children, titleCropper, aspectRatio } = this.props;
+
     return (
       <div>
-        <div className={classes.avatarContainer} style={this.state.size}>
-          <div className="hoverButton" onClick={this._openFilePickerDialog}>
-            {isDisabled && (
-              <Fragment>
-                <Icon className={classes.uploadIcon}>camera_alt</Icon>
-                <p style={{ textAlign: 'center' }}>Upload profile photo</p>
-              </Fragment>
-            )}
-          </div>
-          <div className={classes.avatarWrapper}>
-            <Avatar
-              className={classes.avatar}
-              src={!avatar_url ? Images.avatar.male01 : avatar_url}
-            />
-          </div>
-        </div>
+        <div onClick={this._openFilePickerDialog}>{children}</div>
+
         <input
           key={2}
           type="file"
@@ -146,10 +143,7 @@ class ImageUploader extends Component {
 
         <Modal open={this.state.open} onClose={this.handleClose}>
           <Card className={classes.modalContainer}>
-            <CardHeader
-              className={classes.cardHeader}
-              title="Crop your new profile photo"
-            />
+            <CardHeader className={classes.cardHeader} title={titleCropper} />
             <CardContent className={classes.cardContent}>
               <Cropper
                 ref={node => {
@@ -161,18 +155,13 @@ class ImageUploader extends Component {
                   width: 400,
                 }}
                 // Cropper.js options
-                aspectRatio={1 / 1}
+                aspectRatio={aspectRatio}
                 guides={false}
-                crop={this._crop.bind(this)}
+                crop={this._crop}
               />
             </CardContent>
             <CardActions className={classes.cardActions}>
-              <Button
-                raised
-                // color={}
-                className={classes.button}
-                onClick={this.upload.bind(this)}
-              >
+              <Button raised className={classes.button} onClick={this.upload}>
                 Apply
               </Button>
             </CardActions>
@@ -193,16 +182,12 @@ class ImageUploader extends Component {
 ImageUploader.propTypes = {
   classes: PropTypes.any,
   updateAvatar: PropTypes.any,
-  isDisabled: PropTypes.any,
   user: PropTypes.any,
+  children: PropTypes.node,
+  onUpload: PropTypes.func,
+  titleCropper: PropTypes.string,
+  aspectRatio: PropTypes.any,
+  isDisabled: PropTypes.bool,
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateAvatar: (userId, avatar_url) =>
-    dispatch(setAvatar({ userId, avatar_url })),
-});
-
-export default compose(
-  withNotification,
-  connect(undefined, mapDispatchToProps),
-)(withStyles(styles)(ImageUploader));
+export default compose(withNotification)(withStyles(styles)(ImageUploader));

@@ -16,32 +16,46 @@ class StationList extends Component {
     this._renderEmptyComponent = this._renderEmptyComponent.bind(this);
   }
 
-  _renderLoading() {
+  _renderLoading(message = '') {
     const { classes, scrollbarInstanceLevel, scrollbarRef } = this.props;
 
     return (
       <Scrollbar
         level={scrollbarInstanceLevel}
-        className={classNames([classes.container, classes.loadingContainer])}
+        className={classNames([classes.container])}
         contentClassName={classes.content}
         swapWheelAxes={true}
         smoothScrolling
         stopScrollPropagation
         ref={scrollbarRef}
       >
-        {[1, 2, 3, 4, 5, 6].map((item, index) => (
-          <div key={index} className={classes.stationWrapper}>
-            <div
-              className={classNames([
-                classes.stationAvatar,
-                classes.loadingAvatar,
-              ])}
-            />
-            <div
-              className={classNames([classes.stationInfo, classes.loadingInfo])}
-            />
+        <div className={classNames([classes.loadingContainer])}>
+          {[1, 2, 3, 4, 5, 6].map((item, index) => (
+            <div key={index} className={classes.stationWrapper}>
+              <div
+                className={classNames([
+                  classes.stationAvatar,
+                  classes.loadingAvatar,
+                ])}
+              />
+              <div
+                className={classNames([
+                  classes.stationInfo,
+                  classes.loadingInfo,
+                ])}
+              />
+            </div>
+          ))}
+
+          <div
+            className={classNames([
+              classes.container,
+              classes.messageContainer,
+            ])}
+          >
+            <Typography type={'subheading'}>{message}</Typography>
           </div>
-        ))}
+        </div>
       </Scrollbar>
     );
   }
@@ -49,18 +63,9 @@ class StationList extends Component {
   _renderEmptyComponent() {
     const { classes, emptyMessage } = this.props;
 
-    return (
-      <div
-        className={classNames([
-          classes.container,
-          classes.loadingContainer,
-          classes.emptyContainer,
-        ])}
-      >
-        <Typography type={'subheading'}>{emptyMessage}</Typography>
-      </div>
-    );
+    return this._renderLoading(emptyMessage);
   }
+
   _renderList() {
     const {
       classes,

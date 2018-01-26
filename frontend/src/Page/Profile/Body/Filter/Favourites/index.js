@@ -9,16 +9,54 @@ import { withStyles } from 'material-ui/styles/index';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import Favourites from 'Page/Profile/Favourites';
-import { getFavouriteSongs } from 'Redux/api/favouriteSongs/actions';
+import {
+  getFavouriteSongs,
+  favouriteSongRequest,
+} from 'Redux/api/favouriteSongs/actions';
 
 import styles from './styles';
 import pins from './fixtures';
 
 /* eslint-disable no-shadow */
 class FilterFavourites extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      favouriteSongs: [],
+    };
+
+    this._showNotification = this._showNotification.bind(this);
+    this._requestFavouriteSongs = this._requestFavouriteSongs.bind(this);
+    this._onRemoveSong = this._onRemoveSong.bind(this);
+  }
+
   componentDidMount() {
-    const { userId, requestFavouriteSongs } = this.props;
-    requestFavouriteSongs(userId);
+    this._requestFavouriteSongs(this.props);
+  }
+
+  _requestFavouriteSongs(props) {
+    const { userId } = props;
+
+    this.props.requestFavouriteSongs(userId);
+  }
+
+  _onRemoveSong({ songId, userId, songUrl }) {
+    this.props.favouriteSongRequest({
+      songId,
+      userId,
+      songUrl,
+    });
+    this._requestFavouriteSongs({ userId });
+    this.forceUpdate();
+  }
+
+  _showNotification(content) {
+    const { notification } = this.props;
+
+    notification.app.success({
+      message: content,
+    });
   }
 
   static _renderLoading() {
@@ -26,7 +64,7 @@ class FilterFavourites extends Component {
   }
 
   render() {
-    const { classes, favouriteSongs, userId } = this.props;
+    const { classes, userId, favouriteSongs } = this.props;
 
     return (
       <Grid container className={classes.containerWrapper}>
@@ -35,7 +73,11 @@ class FilterFavourites extends Component {
           {!userId ? (
             FilterFavourites._renderLoading()
           ) : (
-            <Favourites favouriteSongs={favouriteSongs.data} />
+            <Favourites
+              favouriteSongs={favouriteSongs.data}
+              userId={userId}
+              onRemoveSong={this._onRemoveSong}
+            />
           )}
         </Grid>
       </Grid>
@@ -52,6 +94,9 @@ FilterFavourites.propTypes = {
   favouriteSongs: PropTypes.object,
   requestFavouriteSongs: PropTypes.func,
   userId: PropTypes.string,
+  favourite: PropTypes.object,
+  notification: PropTypes.any,
+  favouriteSongRequest: PropTypes.func,
 };
 
 const mapStateToProps = ({ api }) => ({
@@ -60,6 +105,8 @@ const mapStateToProps = ({ api }) => ({
 
 const mapDispatchToProps = dispatch => ({
   requestFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
+  favouriteSongRequest: ({ songId, userId, stationId, songUrl }) =>
+    dispatch(favouriteSongRequest({ songId, userId, stationId, songUrl })),
 });
 
 export default compose(

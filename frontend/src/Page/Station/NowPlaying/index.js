@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Grid from 'material-ui/Grid';
 import { Player } from 'Component';
+import ReactEmojiMixin from 'react-emoji';
 import ThumbDownIcon from 'react-icons/lib/fa/thumbs-down';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
@@ -16,7 +18,6 @@ class NowPlaying extends Component {
 
     this.state = {
       refPlayer: null,
-      skipNotification: false,
       countDown: 0,
       seektime: null,
       receivedAt: new Date().getTime(),
@@ -35,36 +36,44 @@ class NowPlaying extends Component {
     });
   }
 
+  countDownInterval = null;
   async componentWillReceiveProps(nextProps) {
     // Replace player with skipping notification
-    const { currentStation } = this.props;
-    const nextCurrentStation = nextProps.currentStation;
-    // only trigger when received a new skip notification
-    if (currentStation.skip._id !== nextCurrentStation.skip._id) {
-      // Show notification
-      await this.setStateAsync({
-        skipNotification: true,
-        countDown: nextCurrentStation.skip.delay,
-      });
-      // After start the count down, decrease countDown value per second
-      const countDownInterval = setInterval(() => {
-        // Stop counting when count to 0
-        if (this.state.countDown > 0) {
-          this.setState({
-            countDown: this.state.countDown - 1000,
-          });
-        }
-      }, 1000);
-      // Wait util complete the delay
-      // Add 1 more delay second to prevent bad loading behavior
-      await sleep(nextCurrentStation.skip.delay + 1000);
-      clearInterval(countDownInterval);
-      // Turn it off and show player again
-      await this.setStateAsync({
-        skipNotification: false,
-        countDown: 0,
-      });
-    }
+    // const { currentStation } = this.props;
+    // const nextCurrentStation = nextProps.currentStation;
+    // only trigger when received a new skip event
+    // if (
+    //   (currentStation.skip &&
+    //     nextCurrentStation.skip &&
+    //     currentStation.skip.song_id !== nextCurrentStation.skip.song_id) ||
+    //   (nextCurrentStation.skip &&
+    //     currentStation.skip !== nextCurrentStation.skip)
+    // ) {
+    //   // Show notification
+    //   await this.setStateAsync({
+    //     countDown: nextCurrentStation.skip.delay,
+    //   });
+    //   // After start the count down, decrease countDown value per second
+    //   this.countDownInterval = setInterval(() => {
+    //     // Stop counting when count to 0
+    //     if (this.state.countDown > 0) {
+    //       this.setState({
+    //         countDown: this.state.countDown - 1000,
+    //       });
+    //     }
+    //   }, 1000);
+    //   // Wait util complete the delay
+    //   // Add 1 more delay second to prevent bad loading behavior
+    //   await sleep(nextCurrentStation.skip.delay + 1000);
+    //   // Only reset the interval if countdown is less than 1 second
+    //   if (this.state.countDown <= 1000) {
+    //     clearInterval(this.countDownInterval);
+    //   }
+    //   // Turn it off and show player again
+    //   await this.setStateAsync({
+    //     countDown: 0,
+    //   });
+    // }
 
     // Force player to re-render after the song has changed
     const { nowPlaying } = this.props;
@@ -93,7 +102,10 @@ class NowPlaying extends Component {
           alignContent={'center'}
           direction={'column'}
           className={classes.skipNotificationContainer}
-          style={{ backgroundImage: `url(${currentStation.skip.thumbnail})` }}
+          style={{
+            backgroundImage: `url(${currentStation.skip &&
+              currentStation.skip.thumbnail})`,
+          }}
         >
           <div className={classes.skipNotificationBackdrop} />
           <ThumbDownIcon className={classes.skipNotificationIcon} />
@@ -104,8 +116,8 @@ class NowPlaying extends Component {
           >
             {`Our listeners don't like this song.`}
             <br />
-            It will be skipped in {parseInt(this.state.countDown / 1000, 10)}...
-            <br />
+            {/* It will be skipped in {parseInt(this.state.countDown / 1000, 10)}... */}
+            {/* <br /> */}
             {/* For more information about the skipping rule, refer to this link. */}
           </Typography>
         </Grid>
@@ -114,23 +126,42 @@ class NowPlaying extends Component {
   }
 
   render() {
-    const { className, nowPlaying, autoPlay, muted } = this.props;
-    return this.state.skipNotification ? (
+    const {
+      classes,
+      className,
+      nowPlaying,
+      autoPlay,
+      muted,
+      currentStation,
+    } = this.props;
+    return currentStation.skip ? (
       this.renderSkipNotification()
     ) : (
-      <Grid item xs={12} className={className}>
+      <Grid item xs={12} className={classNames([className, classes.container])}>
         <Player
           songId={nowPlaying.song_id}
           url={nowPlaying ? nowPlaying.url : ''}
           playing={autoPlay}
           seektime={this.state.seektime}
           receivedAt={this.state.receivedAt}
-          showProgressbar={true}
+          showProgressbar
           muted={muted}
           ref={ref => {
             this.playerRef = ref;
           }}
         />
+        {nowPlaying.message &&
+          nowPlaying.message.content && (
+            <marquee
+              className={classes.marquee}
+              behavior="scroll"
+              direction="left"
+            >
+              {ReactEmojiMixin.emojify(nowPlaying.message.content, {
+                attributes: { width: 12, height: 12 },
+              })}
+            </marquee>
+          )}
       </Grid>
     );
   }

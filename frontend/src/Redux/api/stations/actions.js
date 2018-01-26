@@ -6,7 +6,7 @@ export const createStation = ({
   isPrivate = false,
 }) => ({
   type: CLIENT_CREATE_STATION,
-  payload: { stationName, userId, isPrivate },
+  payload: { stationName: stationName.toString(), userId, isPrivate },
 });
 
 export default {

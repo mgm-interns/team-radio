@@ -121,6 +121,7 @@ export default ({ spacing, palette, typography }) => ({
     paddingTop: '0 !important',
     display: 'flex',
     justifyContent: 'space-around',
+    alignItems: 'center',
   },
   favouriteBtn: {
     fontSize: spacing.doubleBaseMargin * 1.5,
@@ -129,5 +130,37 @@ export default ({ spacing, palette, typography }) => ({
   },
   progressBar: {
     height: 1,
+  },
+  loadingContainer: {
+    position: 'absolute',
+    zIndex: 9,
+    background: 'rgba(249,249,249,0.5)',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  messageIconContainer: {
+    flex: '0 0 auto',
+    fontSize: '1.5rem',
+    display: 'inline-flex',
+    position: 'relative',
+    alignItems: 'center',
+    verticalAlign: 'middle',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  messageIconWrapper: {
+    marginTop: '-25px',
+    marginLeft: '-10px',
+    color: palette.primary['500'],
+    width: '100%',
+    display: 'flex',
+    alignItems: 'inherit',
+    justifyContent: 'inherit',
+  },
+  tooltip: {
+    whiteSpace: 'nowrap',
   },
 });

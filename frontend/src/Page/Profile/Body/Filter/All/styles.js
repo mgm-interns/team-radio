@@ -8,10 +8,10 @@ export default ({ breakpoints, spacing }) => ({
   },
   container: {
     margin: 'auto',
-    padding: '0 !important',
   },
   stationSection: {
     width: '100% !important',
     margin: 'auto',
+    float: 'left',
   },
 });

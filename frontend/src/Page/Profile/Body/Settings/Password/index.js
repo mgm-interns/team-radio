@@ -14,7 +14,7 @@ import { withRouter } from 'react-router';
 import { setPassword } from 'Redux/api/user/profile';
 
 import { trimText } from 'Transformer/transformText';
-
+import tokenInjector from 'Util/redux/tokenInjector';
 import styles from '../styles';
 
 class Password extends Component {
@@ -116,21 +116,28 @@ class Password extends Component {
             {this._renderChangePasswordForm()}
           </Grid>
           <Grid item xs={12} className={classes.modalFooter}>
-            <Button
-              onClick={this._onCancelButtonClick}
-              className={classes.button}
-            >
-              Cancel
-            </Button>
-            <Button
-              raised
-              disabled={pristine || submitting}
-              color="primary"
-              type="submit"
-              className={classes.button}
-            >
-              {loading ? Password._renderLoading() : 'Save changes'}
-            </Button>
+            {loading
+              ? Password._renderLoading()
+              : [
+                  <Button
+                    key={1}
+                    onClick={this._onCancelButtonClick}
+                    className={classes.button}
+                    color="primary"
+                    autoFocus
+                  >
+                    Cancel
+                  </Button>,
+                  <Button
+                    key={2}
+                    disabled={pristine || submitting}
+                    color="primary"
+                    type="submit"
+                    className={classes.button}
+                  >
+                    Save
+                  </Button>,
+                ]}
           </Grid>
         </form>
       </Grid>
@@ -161,11 +168,13 @@ const mapStateToProps = ({ api }) => ({
 const mapDispatchToProps = dispatch => ({
   onSubmit: ({ userId, currentPassword, newPassword }) =>
     dispatch(
-      setPassword({
-        userId,
-        currentPassword: trimText(currentPassword),
-        newPassword: trimText(newPassword),
-      }),
+      tokenInjector(
+        setPassword({
+          userId,
+          currentPassword: trimText(currentPassword),
+          newPassword: trimText(newPassword),
+        }),
+      ),
     ),
 });
 

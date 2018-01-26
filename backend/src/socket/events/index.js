@@ -8,6 +8,7 @@ import socketDisconnect from './socketDisconnect';
 import socketConnect from './socketConnect';
 import addFavourite from './addFavouriteSong';
 import getFavouriteSongs from './getFavouriteSongs';
+import searchStation from './searchStation';
 
 export default {
   socketConnect,
@@ -20,4 +21,5 @@ export default {
   socketDisconnect,
   getFavouriteSongs,
   addFavourite,
+  searchStation,
 };

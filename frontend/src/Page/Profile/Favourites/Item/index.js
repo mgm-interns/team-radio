@@ -1,15 +1,35 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AccessTimeIcon from 'react-icons/lib/md/access-time';
-import DeleteIcon from 'react-icons/lib/md/delete';
 import withStyles from 'material-ui/styles/withStyles';
 import { GridListTile } from 'material-ui/GridList';
-import IconButton from 'material-ui/IconButton';
+import Grid from 'material-ui/Grid';
+import Button from 'material-ui/Button';
 import Tooltip from 'material-ui/Tooltip';
-import { compose } from 'redux';
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import RemoveIcon from 'react-icons/lib/md/delete';
+
 import { withNotification } from 'Component/Notification';
 import { transformNumber } from 'Transformer';
+import { compose } from 'redux';
+
 import styles from './styles';
+
+// custom style when user hover by mouse
+const hover = {
+  inHover: {
+    backgroundColor: 'rgba(0, 0, 0, 0.54)',
+    transition: 'all 0.6s',
+  },
+  outHover: {
+    transition: 'all 0.6s',
+  },
+};
 
 /* eslint-disable no-shadow */
 /* eslint-disable camelcase */
@@ -19,41 +39,114 @@ class FavoriteItem extends Component {
 
     this.state = {
       isFavourite: true,
+      openAlert: false,
+      hover: 'outHover',
     };
 
-    this.deleteSong = this.deleteSong.bind(this);
+    this._onRemoveFavourite = this._onRemoveFavourite.bind(this);
+    this._onAlertOpen = this._onAlertOpen.bind(this);
+    this._onAlertClose = this._onAlertClose.bind(this);
+    this._renderItem = this._renderItem.bind(this);
+    this._renderAlertDialog = this._renderAlertDialog.bind(this);
+    this.changeFocus = this.changeFocus.bind(this);
+    this.resetFocus = this.resetFocus.bind(this);
   }
 
-  deleteSong(event) {
-    event.preventDefault();
-    const { notification } = this.props;
-    notification.app.warning({
-      message: 'This feature is not ready yet!',
+  _onAlertOpen() {
+    this.setState({ openAlert: true });
+  }
+
+  _onAlertClose() {
+    this.setState({ openAlert: false });
+  }
+
+  _onRemoveFavourite() {
+    const { song_id, url, userId } = this.props;
+    this.props.onRemoveSong({
+      songId: song_id,
+      userId,
+      songUrl: url,
     });
+    this._onAlertClose();
+  }
+
+  changeFocus() {
+    this.setState({ hover: 'inHover' });
+  }
+
+  resetFocus() {
+    this.setState({ hover: 'outHover' });
+  }
+
+  _renderItem() {
+    const { classes, thumbnail, title, duration } = this.props;
+    return [
+      <Grid key={1} className={classes.thumbnail}>
+        <img className={classes.img} src={thumbnail} alt="" />
+        <div className={classes.duration}>
+          <span className={classes.durationText}>
+            {transformNumber.millisecondsToTime(duration)}
+          </span>
+        </div>
+      </Grid>,
+      <div key={2} className={classes.info}>
+        <Tooltip placement={'top'} title={title}>
+          <div className={classes.name}>{title}</div>
+        </Tooltip>
+        <div
+          style={{ ...hover.actions, ...hover[this.state.hover] }}
+          className={classes.actions}
+          onMouseEnter={this.changeFocus}
+          onMouseLeave={this.resetFocus}
+        >
+          {this.state.hover === 'inHover' && (
+            <Tooltip placement={'top'} title={'Remove this song'}>
+              <IconButton
+                className={classes.button}
+                onClick={this._onAlertOpen}
+              >
+                <RemoveIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </div>
+      </div>,
+    ];
+  }
+
+  _renderAlertDialog() {
+    return (
+      <Dialog
+        open={this.state.openAlert}
+        onClose={this._onAlertClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            This song will be removed from your favourite list.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this._onAlertClose} color="primary">
+            No
+          </Button>
+          <Button onClick={this._onRemoveFavourite} color="primary" autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
   }
 
   render() {
-    const { thumbnail, title, singer, classes, duration } = this.props;
+    const { key, classes } = this.props;
 
     return [
-      <GridListTile key={thumbnail} className={classes.container}>
-        <img className={classes.thumbnail} src={thumbnail} alt="" />
-        <div className={classes.info}>
-          <div className={classes.name}>{title || 'undefined'}</div>
-          <div className={classes.singer}>
-            <AccessTimeIcon color={'rgba(0,0,0,0.54)'} size={14} />
-            <span className={classes.durationText}>
-              {transformNumber.millisecondsToTime(duration)}
-            </span>
-          </div>
-          <div className={classes.actions}>
-            <span>
-              <IconButton onClick={this.deleteSong}>
-                {this.state.isFavourite && <DeleteIcon />}
-              </IconButton>
-            </span>
-          </div>
-        </div>
+      <GridListTile key={key} className={classes.container}>
+        {this._renderItem()}
+        {this._renderAlertDialog()}
       </GridListTile>,
     ];
   }
@@ -79,6 +172,10 @@ FavoriteItem.propTypes = {
   isAuthenticated: PropTypes.bool,
   match: PropTypes.any,
   notification: PropTypes.object,
+  key: PropTypes.number,
+  favouriteSongRequest: PropTypes.func,
+  url: PropTypes.string,
+  onRemoveSong: PropTypes.func,
 };
 
 export default compose(withStyles(styles), withNotification)(FavoriteItem);

@@ -16,6 +16,7 @@ import { setUsername, setUserInformation } from 'Redux/api/user/profile';
 import { TextView } from 'Component';
 import { trimText } from 'Transformer/transformText';
 import { maxLength15, required } from 'Util/validate';
+import tokenInjector from 'Util/redux/tokenInjector';
 
 import styles from '../styles';
 
@@ -150,21 +151,28 @@ class Information extends Component {
             {this._renderChangeInformationForm()}
           </Grid>
           <Grid item xs={12} className={classes.modalFooter}>
-            <Button
-              onClick={this._onCancelButtonClick}
-              className={classes.button}
-            >
-              Cancel
-            </Button>
-            <Button
-              raised
-              disabled={pristine || submitting}
-              color="primary"
-              type="submit"
-              className={classes.button}
-            >
-              {loading ? Information._renderLoading() : 'Save changes'}
-            </Button>
+            {loading
+              ? Information._renderLoading()
+              : [
+                  <Button
+                    key={1}
+                    onClick={this._onCancelButtonClick}
+                    className={classes.button}
+                    color="primary"
+                    autoFocus
+                  >
+                    Cancel
+                  </Button>,
+                  <Button
+                    key={2}
+                    disabled={pristine || submitting}
+                    color="primary"
+                    type="submit"
+                    className={classes.button}
+                  >
+                    Save
+                  </Button>,
+                ]}
           </Grid>
         </form>
       </Grid>
@@ -190,21 +198,25 @@ const mapDispatchToProps = dispatch => ({
   }) =>
     Promise.all([
       dispatch(
-        setUsername({
-          userId,
-          username: trimText(username),
-        }),
+        tokenInjector(
+          setUsername({
+            userId,
+            username: trimText(username),
+          }),
+        ),
       ),
       dispatch(
-        setUserInformation({
-          userId,
-          name: trimText(name),
-          firstname: trimText(firstname),
-          lastname: trimText(lastname),
-          bio: trimText(bio),
-          city: trimText(city),
-          country: trimText(country),
-        }),
+        tokenInjector(
+          setUserInformation({
+            userId,
+            name: trimText(name),
+            firstname: trimText(firstname),
+            lastname: trimText(lastname),
+            bio: trimText(bio),
+            city: trimText(city),
+            country: trimText(country),
+          }),
+        ),
       ),
     ]),
 });

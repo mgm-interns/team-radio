@@ -18,7 +18,12 @@ import {
   SERVER_UPDATE_SKIPPED_SONGS,
   SERVER_NO_MULTI_STATIONS,
   SERVER_UPDATE_HISTORY,
+  CLIENT_FAVOURITE_SONG,
+  SERVER_ADD_FAVOURITE_SONG_SUCCESS,
+  SERVER_REMOVE_FAVOURITE_SONG_SUCCESS,
+  SERVER_FAVOURITE_SONG_FAILURE,
 } from 'Redux/actions';
+import remove from 'lodash/remove';
 
 const INITIAL_STATE = {
   station: null,
@@ -30,10 +35,7 @@ const INITIAL_STATE = {
     url: '',
     starting_time: 0,
   },
-  skip: {
-    _id: new Date().getTime(),
-    delay: 0,
-  },
+  skip: null,
   users: [],
   online_count: 0,
   joined: {
@@ -147,6 +149,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         nowPlaying: action.payload,
+        skip: null,
       };
 
     /**
@@ -156,7 +159,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         skip: {
-          _id: new Date().getTime(),
+          song_id: action.payload.now_playing.song_id,
           delay: action.payload.delay,
           thumbnail: action.payload.now_playing.thumbnail,
         },
@@ -225,6 +228,46 @@ export default (state = INITIAL_STATE, action) => {
         playlist: [...state.tempPlaylist],
         tempPlaylist: INITIAL_STATE.tempPlaylist,
       };
+    /* Favourite song request
+    *  Set loading status for each item in playlist when a favourite song action (add/remove) is requested
+    */
+    case CLIENT_FAVOURITE_SONG:
+      return {
+        ...state,
+        playlist: [
+          ...state.playlist.map(item => {
+            if (item.url === action.payload.songUrl) {
+              return { ...item, loading: true };
+            }
+            return { ...item, loading: false };
+          }),
+        ],
+      };
+
+    case SERVER_ADD_FAVOURITE_SONG_SUCCESS: {
+      return {
+        ...state,
+        playlist: [
+          ...state.playlist.map(item => ({ ...item, loading: false })),
+        ],
+      };
+    }
+    case SERVER_REMOVE_FAVOURITE_SONG_SUCCESS: {
+      return {
+        ...state,
+        playlist: [
+          ...state.playlist.map(item => ({ ...item, loading: false })),
+        ],
+      };
+    }
+    case SERVER_FAVOURITE_SONG_FAILURE:
+      return {
+        ...state,
+        playlist: [
+          ...state.playlist.map(item => ({ ...item, loading: false })),
+        ],
+      };
+
     default:
       return state;
   }

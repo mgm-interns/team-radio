@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { passiveUserRequest, getNowPlaying } from 'Redux/page/station/actions';
+import { passiveUserRequest } from 'Redux/page/station/actions';
 import Grid from 'material-ui/Grid';
 import FlipMoveList from 'react-flip-move';
 import { withStyles } from 'material-ui/styles';
@@ -24,26 +24,6 @@ class Playlist extends Component {
     return song.up_vote.length - song.down_vote.length;
   }
 
-  componentWillReceiveProps(nextProps) {
-    // const { playlist } = this.props;
-    // if (nextProps.favouriteList.length === 0) {
-    //   playlist.map(item => {
-    //     item.is_favourited = false;
-    //   });
-    // } else {
-    //   nextProps.favouriteList.forEach(favouritedItem => {
-    //     playlist.forEach(playlistItem => {
-    //       if (playlistItem.song_id === favouritedItem.song_id) {
-    //         playlistItem.is_favourited = favouritedItem.is_favourited;
-    //       } else {
-    //         playlistItem.is_favourited = false;
-    //       }
-    //     });
-    //   });
-    // }
-    // console.log(playlist);
-  }
-
   /**
    * Filter all song that have not been played
    * Then order the list by:
@@ -54,31 +34,36 @@ class Playlist extends Component {
    * @returns {Array}
    */
   getFilteredPlaylist() {
-    const { data, nowPlaying, getNowPlaying } = this.props;
-    /* eslint-disable consistent-return */
-    data.forEach((item, index) => {
-      if (index === 0) {
-        getNowPlaying(item);
+    const { data, nowPlaying } = this.props;
+    let nowPlayingSong = null;
+
+    const playlistWithoutNowPlaying = data.filter(item => {
+      if (item.song_id === nowPlaying.song_id) {
+        nowPlayingSong = item;
         return false;
       }
+      return true;
     });
 
-    return orderBy(
-      data,
-      [
-        ({ song_id }) => (song_id === nowPlaying.song_id ? -1 : 1),
-        Playlist.getSongScore,
-        'created_date',
-      ],
-      ['asc', 'desc', 'asc'],
-    );
+    return {
+      nowPlaying: nowPlayingSong,
+      playlist: orderBy(
+        playlistWithoutNowPlaying,
+        [
+          ({ song_id }) => (song_id === nowPlaying.song_id ? -1 : 1),
+          Playlist.getSongScore,
+          'created_date',
+        ],
+        ['asc', 'desc', 'asc'],
+      ),
+    };
   }
 
   render() {
     const { className, classes, style } = this.props;
-    const playlist = this.getFilteredPlaylist();
+    const { playlist, nowPlaying } = this.getFilteredPlaylist();
 
-    if (playlist.length === 0) {
+    if (playlist.length === 0 && !nowPlaying) {
       return (
         <Grid item xs={12} className={className}>
           <Grid
@@ -121,8 +106,11 @@ class Playlist extends Component {
             paddingBottom: 0,
           }}
         >
+          {nowPlaying && (
+            <Item key={nowPlaying.song_id} {...nowPlaying} playing />
+          )}
           {playlist.map((song, index) => (
-            <Item key={song.song_id || index} {...song} playing={index === 0} />
+            <Item key={song.song_id || index} {...song} />
           ))}
         </FlipMoveList>
       </Grid>
@@ -136,7 +124,6 @@ Playlist.propTypes = {
   style: PropTypes.any,
   data: PropTypes.array,
   nowPlaying: PropTypes.object,
-  getNowPlaying: PropTypes.func,
   passiveUserRequest: PropTypes.func,
   favouriteList: PropTypes.array,
 };
@@ -148,7 +135,6 @@ const mapStateToProps = ({ api }) => ({
 
 const mapDispatchToProps = dispatch => ({
   passiveUserRequest: passive => dispatch(passiveUserRequest(passive)),
-  getNowPlaying: data => dispatch(getNowPlaying(data)),
 });
 
 export default compose(

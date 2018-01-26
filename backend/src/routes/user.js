@@ -56,6 +56,12 @@ export default router => {
           message: 'Incorrect email/username or password',
         });
       }
+      if (!user.is_password) {
+        res.status(401).json({
+          success: false,
+          message: 'Incorrect email/username or password',
+        });
+      }
       if (user && !user.validPassword(req.body.password)) {
         res.status(401).json({
           success: false,
@@ -207,7 +213,6 @@ export default router => {
     try {
       let user = await userController.getUserById(req.body.userId);
       const token = req.headers['access-token'];
-      console.log(req.body.userId);
       if (user) {
         // verify token
         const isOwner = await userController.isVerifidedToken(
@@ -244,7 +249,7 @@ export default router => {
     //     user: user,
     // }); if updating success
     // Return res.json({
-    //     message: 'Can not update avatar!',
+    //     message: 'Can not update cover!',
     // }); if updating fail
     try {
       let user = await userController.getUserById(req.body.userId);
@@ -261,11 +266,16 @@ export default router => {
             req.body.userId,
             req.body.cover_url,
           );
-          return res.json({ ...user._doc, userId: user._id });
+          return res.json({
+            message: 'Update cover successfully!',
+            isOwner,
+            ...user._doc,
+            userId: user._id,
+          });
         }
       }
       return res.json({
-        message: 'Can not update avatar!',
+        message: 'Can not update cover!',
       });
     } catch (err) {
       throw err;
@@ -335,24 +345,19 @@ export default router => {
     try {
       let user = await User.findOne({ _id: req.body.userId });
       const token = req.headers['access-token'];
-      console.log('1');
       if (user) {
-        console.log('2');
         const isOwner = await userController.isVerifidedToken(
           user._id.toString(),
           token,
           req.app.get('superSecret'),
         );
         if (isOwner) {
-          console.log(user.validPassword(req.body.currentPassword));
           if (user.password && !user.validPassword(req.body.currentPassword)) {
             return res.status(400).json({
               message: 'Current password is incorrect!',
             });
           }
-          console.log('4');
           const newPassword = user.generateHash(req.body.newPassword);
-          console.log('5');
           await userController.setPassword(user.email, newPassword);
           user = await User.findOne({ _id: req.body.userId });
           return res.json({
@@ -372,7 +377,6 @@ export default router => {
   });
 
   router.get('/stations/getstationbyadded/:user_id', async (req, res) => {
-    console.log(req.params.user_id);
     const stations = await stationController.getListStationUserAddedSong(
       req.params.user_id,
     );
@@ -460,7 +464,6 @@ export default router => {
         req.params.token,
         req.app.get('superSecret'),
       );
-      console.log(response);
       if (response.Error) {
         return res.status(400).json({ message: response.message });
       }
@@ -472,7 +475,6 @@ export default router => {
 
   router.post('/resetPassword', async (req, res) => {
     try {
-      console.log(req.body);
       const response = await manageUserAccountController.resetPassword(
         req.body.token,
         req.app.get('superSecret'),
@@ -521,6 +523,11 @@ export default router => {
       req.params.user_id,
     );
     res.json(favourite);
+  });
+
+  router.get('/test_getallstation', async (req, res) => {
+    const allstation = await userController.getallstation();
+    res.json(allstation);
   });
 };
 

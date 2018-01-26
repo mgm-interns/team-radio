@@ -26,7 +26,7 @@ class SwitcherItem extends Component {
       disableOnlineCount,
       enableWavingIcon,
     } = this.props;
-    let { thumbnail = Images.fixture.avatar1, online_count } = this.props;
+    let { thumbnail = Images.stationDefault, online_count } = this.props;
     if ((station && station.station_id) === station_id) {
       thumbnail = (nowPlaying && nowPlaying.thumbnail) || thumbnail;
 

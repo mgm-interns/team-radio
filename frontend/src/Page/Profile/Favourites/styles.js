@@ -1,6 +1,6 @@
 export default ({ spacing }) => ({
   emptyContainer: {
-    backgroundColor: 'rgba(0,0,0,0.0225)',
+    paddingTop: spacing.doubleBaseMargin * 2,
     height: spacing.fullHeight,
   },
   emptyIcon: {
@@ -17,8 +17,5 @@ export default ({ spacing }) => ({
     overflowY: 'auto',
     overflowX: 'hidden',
     minWidth: 200,
-  },
-  container: {
-    paddingTop: 50,
   },
 });

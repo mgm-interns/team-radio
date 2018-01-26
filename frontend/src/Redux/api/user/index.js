@@ -85,7 +85,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case 'VERIFY_TOKEN_REQUEST':
       return {
         ...state,
-        data: {},
         error: null,
         loading: true,
         isAuthenticated: false,
@@ -199,6 +198,28 @@ const userReducer = (state = INITIAL_STATE, action) => {
       };
 
     case 'SET_AVATAR_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: {
+          ...action.payload,
+        },
+      };
+
+    case 'SET_COVER_REQUEST':
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    case 'SET_COVER_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+
+    case 'SET_COVER_FAILURE':
       return {
         ...state,
         loading: false,

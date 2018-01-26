@@ -4,7 +4,8 @@ import {
   MUTE_VIDEO_REQUEST,
   REPLAY_REQUEST,
   PASSIVE_USER_REQUEST,
-  GET_NOW_PLAYING,
+  DISABLE_STATIONS_SWITCHER,
+  ENABLE_STATIONS_SWITCHER,
 } from './actions';
 
 const INITIAL_STATE = {
@@ -15,7 +16,7 @@ const INITIAL_STATE = {
   userDid: false,
   replayed: false,
   passive: false,
-  nowPlaying: null,
+  disableSwitcher: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -47,10 +48,15 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         passive: action.payload,
       };
-    case GET_NOW_PLAYING:
+    case DISABLE_STATIONS_SWITCHER:
       return {
         ...state,
-        nowPlaying: action.payload,
+        disableSwitcher: true,
+      };
+    case ENABLE_STATIONS_SWITCHER:
+      return {
+        ...state,
+        disableSwitcher: false,
       };
     default:
       return state;

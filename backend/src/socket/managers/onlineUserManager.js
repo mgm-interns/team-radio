@@ -16,6 +16,21 @@ export const getAllSocketConnected = io =>
     });
   });
 
+// Get list of all sockets has created by user
+export const getAllSocketsOfUser = async (userId, io) => {
+  const allSockets = await getAllSocketConnected(io);
+  const socketsOfUser = [];
+
+  allSockets.forEach(socketId => {
+    const socket = getSocketById(socketId, io);
+    if (socket.userId === userId) {
+      socketsOfUser.push(socket);
+    }
+  });
+
+  return socketsOfUser;
+};
+
 // Get all station socket is in
 export const getAllStationsSocketIn = socket =>
   Object.keys(socket.rooms).slice(1);
@@ -73,15 +88,24 @@ export const leaveStationAlreadyIn = async (
   userId,
   stationId,
   stationName,
+  socket,
   io,
 ) => {
-  const listSocket = await getAllSocketConnected(io);
+  // All console log here for testing
+  // console.log('Socket call id ' + socket.id);
+  // Get list of all sockets has created by user
+  const listSocket = await getAllSocketsOfUser(userId, io);
+  // console.log('All socket of ' + userId + ': ' + listSocket.length);
 
-  listSocket.forEach(socketId => {
-    const socket = getSocketById(socketId, io);
-    const oldStation = getAllStationsSocketIn(socket)[0];
-    if (socket.userId === userId && oldStation !== stationId) {
-      const emitter = createEmitter(socket, io);
+  listSocket.forEach(socketTmp => {
+    const oldStation = getAllStationsSocketIn(socketTmp)[0];
+    // console.log('Old station of ' + socketTmp.id + ': ' + oldStation);
+    if (
+      oldStation &&
+      socket.id !== socketTmp.id &&
+      oldStation.toString() !== stationId.toString()
+    ) {
+      const emitter = createEmitter(socketTmp, io);
       emitter.emit(EVENTS.SERVER_NO_MULTI_STATIONS, {
         stationId: stationId,
         stationName: stationName,
@@ -238,7 +262,6 @@ const _leaveStation = (io, socket, stationId, userId, name) => {
   const emitter = createEmitter(socket, io);
   return new Promise(async resolve => {
     socket.leave(stationId, resolve);
-    socket.userId = undefined;
     switcher.updateNumberOfOnlineUsersInStation(
       stationId,
       await countOnlineOfStation(stationId, io),

@@ -7,6 +7,7 @@ import * as stationModels from '../models/station';
 import * as userControllers from '../controllers/user';
 import * as userModels from '../models/user';
 import { Error } from 'mongoose';
+import slice from 'lodash/slice';
 import uniqBy from 'lodash/uniqBy';
 import orderBy from 'lodash/orderBy';
 import filter from 'lodash/filter';
@@ -23,8 +24,9 @@ const POINTS_FOR_NEXT_SONG = 1;
  * @param {boolean} isPrivate - If false then station is public, if true then station is private
  */
 export const addStation = async (stationName, userId, isPrivate) => {
-  console.log('add station: ', stationName, ' + ', userId);
   const currentStationName = stationName.trim();
+  // if (isNaN(currentStationName) == false)
+  //   throw new Error('The station name can not be a number!');
   if (!currentStationName) {
     throw new Error('The station name can not be empty!');
   } else {
@@ -41,6 +43,7 @@ export const addStation = async (stationName, userId, isPrivate) => {
           playlist: [],
           is_private: isPrivate,
           owner_id: _safeObjectId(userId),
+
         });
         return currentStation;
       }
@@ -102,9 +105,10 @@ export const deleteStation = async (stationId, userId) => {
  * @param {string} stationId
  */
 export const getStation = async stationId => {
-  if(!stationId){
+  if (!stationId) {
     throw new Error(`Station id ${stationId} is not undefined!`)
   }
+
   const stationOfId = await stationModels.getStationById(stationId);
   if (!stationOfId) {
     throw new Error(`Station id ${stationId} is not exist!`);
@@ -124,8 +128,17 @@ export const getStation = async stationId => {
  * @param {string} userId
  */
 export const getStationsByUserId = async userId => {
+
   try {
-    const stations = stationModels.getStationsByUserId(_safeObjectId(userId));
+    const stations = await stationModels.getStationsByUserId(_safeObjectId(userId));
+    let player;
+    // Can't use forEach because can't use await..
+    for (let i = 0; i < stations.length; i++) {
+      stations[i] = stations[i].toObject();
+      player = await players.getPlayer(stations[i].station_id);
+      if (player.getNowPlaying().thumbnail)
+        stations[i].thumbnail = player.getNowPlaying().thumbnail;
+    }
     return stations;
   } catch (err) {
     console.log(err);
@@ -140,7 +153,7 @@ export const getStationsByUserId = async userId => {
  * @param {string} songUrl
  * @param {string} userId
  */
-export const addSong = async (stationId, songUrl, userId) => {
+export const addSong = async (stationId, songUrl, userId, title, thumbnail, duration, contentMessage) => {
   let station;
   if (!userId) {
     throw new Error(`You need to login to use this feature.`);
@@ -153,21 +166,25 @@ export const addSong = async (stationId, songUrl, userId) => {
   if (!station) {
     throw new Error(`Station id ${stationId} is not exist!`);
   }
-  const songDetail = await getSongDetails(songUrl);
-  if (!songDetail) {
-    throw new Error('Song url is incorrect!');
-  }
+  // Disable getSongDetail in server side to improve performance
+  // const songDetail = await getSongDetails(songUrl);
+  // if (!songDetail) {
+  //   throw new Error('Song url is incorrect!');
+  // }
 
   try {
     const song = {
       song_id: new Date().getTime(),
       is_played: false,
-      url: songDetail.url,
-      title: songDetail.title,
-      thumbnail: songDetail.thumbnail,
-      duration: songDetail.duration,
+      url: songUrl,
+      title: title,
+      thumbnail: thumbnail,
+      duration: duration,
       creator: _safeObjectId(userId),
       created_date: new Date().getTime(),
+      message: {
+        content: contentMessage,
+      }
     };
     await stationModels.addSong(stationId, song);
     const playlist = await getAvailableListSong(stationId);
@@ -269,11 +286,12 @@ export const getAllStationDetails = async () => {
  */
 export const getListSongHistory = async (stationId, limit) => {
   try {
-    const listSong = await stationModels.getPlaylistOfStation(stationId, limit);
+    const listSong = await stationModels.getPlaylistOfStation(stationId);
     const history = filter(listSong, ['is_played', true]);
     const orderedSongs = orderBy(history, ['created_date'], ['desc']);
     const uniqueHistory = uniqBy(orderedSongs, 'url');
-    return uniqueHistory;
+    const limitHistory = slice(uniqueHistory,0,limit);
+    return limitHistory;
   } catch (error) {
     throw error;
   }
@@ -455,8 +473,15 @@ export const downVote = async (stationId, songId, userId) => {
  */
 export const getListStationUserAddedSong = async userId => {
   try {
-    const playList = await stationModels.getStationHasSongUserAdded(userId);
-    return playList;
+    const stations = await stationModels.getStationHasSongUserAdded(userId);
+    let player;
+    // Can't use forEach because can't use await..
+    for (let i = 0; i < stations.length; i++) {
+      player = await players.getPlayer(stations[i].station_id);
+      if (player.getNowPlaying().thumbnail)
+        stations[i].thumbnail = player.getNowPlaying().thumbnail;
+    }
+    return stations;
   } catch (error) {
     throw error;
   }
