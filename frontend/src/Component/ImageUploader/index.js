@@ -115,7 +115,12 @@ class ImageUploader extends Component {
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({
+      open: false,
+      uploading: false,
+      uploadedFile: null,
+      response_url: null,
+    });
   };
 
   render() {
