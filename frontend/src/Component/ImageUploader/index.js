@@ -40,6 +40,7 @@ class ImageUploader extends Component {
       uploadedFile: null,
       response_url: null,
     });
+    this.input.value = null;
   }
 
   setStateAsync(state) {
@@ -121,6 +122,7 @@ class ImageUploader extends Component {
       uploadedFile: null,
       response_url: null,
     });
+    this.input.value = null;
   };
 
   render() {
