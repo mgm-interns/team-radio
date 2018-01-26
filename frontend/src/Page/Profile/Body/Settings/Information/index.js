@@ -16,6 +16,7 @@ import { setUsername, setUserInformation } from 'Redux/api/user/profile';
 import { TextView } from 'Component';
 import { trimText } from 'Transformer/transformText';
 import { maxLength15, required } from 'Util/validate';
+import tokenInjector from 'Util/redux/tokenInjector';
 
 import styles from '../styles';
 
@@ -197,21 +198,25 @@ const mapDispatchToProps = dispatch => ({
   }) =>
     Promise.all([
       dispatch(
-        setUsername({
-          userId,
-          username: trimText(username),
-        }),
+        tokenInjector(
+          setUsername({
+            userId,
+            username: trimText(username),
+          }),
+        ),
       ),
       dispatch(
-        setUserInformation({
-          userId,
-          name: trimText(name),
-          firstname: trimText(firstname),
-          lastname: trimText(lastname),
-          bio: trimText(bio),
-          city: trimText(city),
-          country: trimText(country),
-        }),
+        tokenInjector(
+          setUserInformation({
+            userId,
+            name: trimText(name),
+            firstname: trimText(firstname),
+            lastname: trimText(lastname),
+            bio: trimText(bio),
+            city: trimText(city),
+            country: trimText(country),
+          }),
+        ),
       ),
     ]),
 });

@@ -10,6 +10,8 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { NavBar, Footer } from 'Component';
 import { getVisitorByUsername } from 'Redux/api/visitor';
+
+import tokenInjector from 'Util/redux/tokenInjector';
 import { withNotification } from 'Component/Notification';
 
 import Header from './Header';
@@ -145,7 +147,8 @@ const mapStateToProps = ({ api }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getVisitorByUsername: username => dispatch(getVisitorByUsername(username)),
+  getVisitorByUsername: username =>
+    dispatch(tokenInjector(getVisitorByUsername(username))),
 });
 
 export default compose(

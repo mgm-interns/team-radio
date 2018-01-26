@@ -14,7 +14,7 @@ import { withRouter } from 'react-router';
 import { setPassword } from 'Redux/api/user/profile';
 
 import { trimText } from 'Transformer/transformText';
-
+import tokenInjector from 'Util/redux/tokenInjector';
 import styles from '../styles';
 
 class Password extends Component {
@@ -168,11 +168,13 @@ const mapStateToProps = ({ api }) => ({
 const mapDispatchToProps = dispatch => ({
   onSubmit: ({ userId, currentPassword, newPassword }) =>
     dispatch(
-      setPassword({
-        userId,
-        currentPassword: trimText(currentPassword),
-        newPassword: trimText(newPassword),
-      }),
+      tokenInjector(
+        setPassword({
+          userId,
+          currentPassword: trimText(currentPassword),
+          newPassword: trimText(newPassword),
+        }),
+      ),
     ),
 });
 
