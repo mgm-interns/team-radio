@@ -105,7 +105,10 @@ class NowPlaying extends Component {
           alignContent={'center'}
           direction={'column'}
           className={classes.skipNotificationContainer}
-          style={{ backgroundImage: `url(${currentStation.skip.thumbnail})` }}
+          style={{
+            backgroundImage: `url(${currentStation.skip &&
+              currentStation.skip.thumbnail})`,
+          }}
         >
           <div className={classes.skipNotificationBackdrop} />
           <ThumbDownIcon className={classes.skipNotificationIcon} />
