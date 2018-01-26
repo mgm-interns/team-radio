@@ -86,7 +86,7 @@ class Player extends PureComponent {
   }
   _onPlay() {
     console.log('onPlay');
-    if (this.state.isPaused){
+    if (this.state.isPaused) {
       this.setState({
         played: this.state.played,
         buffer: this.state.buffer,
@@ -125,7 +125,7 @@ class Player extends PureComponent {
         onPause={this._onPause}
         onProgress={this._onProgress}
         youtubeConfig={{ playerVars: { disablekb: 1 } }}
-        // style={{ pointerEvents: 'none' }}
+        style={{ pointerEvents: 'none' }}
         {...othersProps}
       />,
       showProgressbar &&
