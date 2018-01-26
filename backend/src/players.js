@@ -21,6 +21,7 @@ class Player {
   skippedSongs = new Set();
   // isPopular needs to be false, but now it is true to test
   isPopular = true;
+  isSkipped = false;
 
   constructor(station) {
     this.stationId = station.station_id;
@@ -43,6 +44,7 @@ class Player {
           }
         });
       });
+      // Skip the song if the down votes greater 50% online users.
       if (-points / userIds.size > PERCENT_SKIP_SONG / 100) {
         this.addSkippedSong(song.song_id);
       } else {
@@ -50,38 +52,30 @@ class Player {
       }
     });
     // compare current skipped and preSkippedSongs
-    if (this.skippedSongs.size === preSkippedSongs.size) {
-      for (let i = 0; i < preSkippedSongs.size; i++) {
-        if (!this.skippedSongs.has(preSkippedSongs[i])) {
-          this._emitSkippedSongs();
-          break;
-        }
-      }
-    } else {
+    if (!_.isEqual(this.skippedSongs, preSkippedSongs)) {
       this._emitSkippedSongs();
     }
-  };
-  _emitSkippedSongs = () => {
-    this._emit(EVENTS.SERVER_UPDATE_SKIPPED_SONGS, this.skippedSongs);
   };
   addSkippedSong = songId => {
     if (this.skippedSongs.has(songId)) {
       return;
     }
-    this.skippedSongs.add(songId);
-    if (songId === this.nowPlaying.song_id) {
+    if (!_.isEqual(songId, this.nowPlaying.song_id)) {
+      this.skippedSongs.add(songId);
+    } else if (this.isSkipped === false) {
+      this.isSkipped = true;
       let skipTime = Date.now() - this.nowPlaying.starting_time;
-      console.log('#1:', skipTime);
-      console.log('#2:', TIME_BUFFER);
       skipTime =
         skipTime < TIME_BUFFER ? skipTime + TIME_BUFFER : 2 * TIME_BUFFER;
       this._skipNowPlayingSong(skipTime);
-      this._nextSongByTimeout(skipTime, this.nowPlaying.song_id);
     }
     // TODO: check this.nowPlaying.song_id
   };
 
   removeSkippedSong = songId => {
+    if (_.isEqual(songId, this.nowPlaying.song_id)) {
+      return;
+    }
     this.skippedSongs.delete(songId);
   };
 
@@ -114,6 +108,10 @@ class Player {
 
   _emitNowPlaying = () => {
     this._emit(EVENTS.SERVER_UPDATE_NOW_PLAYING, this.getNowPlaying());
+  };
+
+  _emitSkippedSongs = () => {
+    this._emit(EVENTS.SERVER_UPDATE_SKIPPED_SONGS, this.skippedSongs);
   };
 
   _emitPlaylist = async () => {
@@ -206,7 +204,6 @@ class Player {
           this.skippedSongs.delete(song.song_id);
           // TODO: setSkippedSong not working well now
           this._skipNowPlayingSong(TIME_BUFFER);
-          this._nextSongByTimeout(TIME_BUFFER, this.nowPlaying.song_id);
         } else {
           this._nextSongByTimeout(
             song.duration + TIME_BUFFER,
@@ -228,21 +225,28 @@ class Player {
     setTimeout(async () => {
       // The song was not skipped
       if (playingSongId === this.nowPlaying.song_id) {
-        await stationController.setPlayedSongs(this.stationId, [
-          this.nowPlaying.song_id,
-        ]);
-        stationController.addPointsByPlayedSong(
+        await stationController.setPlayedSongs(
+          this.stationId,
+          [this.nowPlaying.song_id],
+          this.isSkipped,
+        );
+        if (this.isSkipped) {
+          this.isSkipped = false;
+        }
+        /*
+        stationController.addCreatorPoints(
           this.stationId,
           this.nowPlaying.song_id,
         );
-        this.skippedSongs.delete(playingSongId);
+        */
         this._setPlayableSong();
       }
     }, timeout);
   };
-  _skipNowPlayingSong = delay => {
-    this._emitSkippedSong(delay);
-    stationController.setSkippedSong(this.stationId, this.nowPlaying.song_id);
+
+  _skipNowPlayingSong = skipTime => {
+    this._nextSongByTimeout(skipTime, this.nowPlaying.song_id);
+    this._emitSkippedSong(skipTime);
   };
   // TODO: [start server, add new song to empty station, next song nomarly]
   _setPlayableSong = async (station = null) => {
