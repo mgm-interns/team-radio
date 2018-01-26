@@ -49,8 +49,6 @@ class NowPlaying extends Component {
         skipNotification: true,
         countDown: nextCurrentStation.skip.delay,
       });
-      // Remove old countdown instance
-      clearInterval(this.countDownInterval);
       // After start the count down, decrease countDown value per second
       this.countDownInterval = setInterval(() => {
         // Stop counting when count to 0
