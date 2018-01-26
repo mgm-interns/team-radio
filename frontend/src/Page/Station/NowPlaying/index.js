@@ -39,41 +39,41 @@ class NowPlaying extends Component {
   countDownInterval = null;
   async componentWillReceiveProps(nextProps) {
     // Replace player with skipping notification
-    const { currentStation } = this.props;
-    const nextCurrentStation = nextProps.currentStation;
+    // const { currentStation } = this.props;
+    // const nextCurrentStation = nextProps.currentStation;
     // only trigger when received a new skip event
-    if (
-      (currentStation.skip &&
-        nextCurrentStation.skip &&
-        currentStation.skip.song_id !== nextCurrentStation.skip.song_id) ||
-      (nextCurrentStation.skip &&
-        currentStation.skip !== nextCurrentStation.skip)
-    ) {
-      // Show notification
-      await this.setStateAsync({
-        countDown: nextCurrentStation.skip.delay,
-      });
-      // After start the count down, decrease countDown value per second
-      this.countDownInterval = setInterval(() => {
-        // Stop counting when count to 0
-        if (this.state.countDown > 0) {
-          this.setState({
-            countDown: this.state.countDown - 1000,
-          });
-        }
-      }, 1000);
-      // Wait util complete the delay
-      // Add 1 more delay second to prevent bad loading behavior
-      await sleep(nextCurrentStation.skip.delay + 1000);
-      // Only reset the interval if countdown is less than 1 second
-      if (this.state.countDown <= 1000) {
-        clearInterval(this.countDownInterval);
-      }
-      // Turn it off and show player again
-      await this.setStateAsync({
-        countDown: 0,
-      });
-    }
+    // if (
+    //   (currentStation.skip &&
+    //     nextCurrentStation.skip &&
+    //     currentStation.skip.song_id !== nextCurrentStation.skip.song_id) ||
+    //   (nextCurrentStation.skip &&
+    //     currentStation.skip !== nextCurrentStation.skip)
+    // ) {
+    //   // Show notification
+    //   await this.setStateAsync({
+    //     countDown: nextCurrentStation.skip.delay,
+    //   });
+    //   // After start the count down, decrease countDown value per second
+    //   this.countDownInterval = setInterval(() => {
+    //     // Stop counting when count to 0
+    //     if (this.state.countDown > 0) {
+    //       this.setState({
+    //         countDown: this.state.countDown - 1000,
+    //       });
+    //     }
+    //   }, 1000);
+    //   // Wait util complete the delay
+    //   // Add 1 more delay second to prevent bad loading behavior
+    //   await sleep(nextCurrentStation.skip.delay + 1000);
+    //   // Only reset the interval if countdown is less than 1 second
+    //   if (this.state.countDown <= 1000) {
+    //     clearInterval(this.countDownInterval);
+    //   }
+    //   // Turn it off and show player again
+    //   await this.setStateAsync({
+    //     countDown: 0,
+    //   });
+    // }
 
     // Force player to re-render after the song has changed
     const { nowPlaying } = this.props;
@@ -116,8 +116,8 @@ class NowPlaying extends Component {
           >
             {`Our listeners don't like this song.`}
             <br />
-            It will be skipped in {parseInt(this.state.countDown / 1000, 10)}...
-            <br />
+            {/* It will be skipped in {parseInt(this.state.countDown / 1000, 10)}... */}
+            {/* <br /> */}
             {/* For more information about the skipping rule, refer to this link. */}
           </Typography>
         </Grid>
