@@ -61,8 +61,8 @@ class FavoriteItem extends Component {
   }
 
   _onRemoveFavourite() {
-    const { song_id, url, userId } = this.props;
-    this.props.onRemoveSong({
+    const { song_id, url, userId, onRemoveSong } = this.props;
+    onRemoveSong({
       songId: song_id,
       userId,
       songUrl: url,
@@ -80,6 +80,7 @@ class FavoriteItem extends Component {
 
   _renderItem() {
     const { classes, thumbnail, title, duration } = this.props;
+
     return [
       <Grid key={1} className={classes.thumbnail}>
         <img className={classes.img} src={thumbnail} alt="" />
@@ -115,9 +116,11 @@ class FavoriteItem extends Component {
   }
 
   _renderAlertDialog() {
+    const { openAlert } = this.state;
+
     return (
       <Dialog
-        open={this.state.openAlert}
+        open={openAlert}
         onClose={this._onAlertClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -141,7 +144,7 @@ class FavoriteItem extends Component {
   }
 
   render() {
-    const { key, classes } = this.props;
+    const { classes, key } = this.props;
 
     return [
       <GridListTile key={key} className={classes.container}>
@@ -154,28 +157,19 @@ class FavoriteItem extends Component {
 
 FavoriteItem.propTypes = {
   classes: PropTypes.any,
-  song_id: PropTypes.any,
+  song_id: PropTypes.number,
   playing: PropTypes.bool,
   score: PropTypes.number,
-  singer: PropTypes.string,
   thumbnail: PropTypes.string,
   title: PropTypes.any,
-  creator: PropTypes.object,
   name: PropTypes.string,
-  theme: PropTypes.any,
-  upVoteSong: PropTypes.func,
-  downVoteSong: PropTypes.func,
-  up_vote: PropTypes.array,
-  down_vote: PropTypes.array,
   duration: PropTypes.number,
-  userId: PropTypes.any,
-  isAuthenticated: PropTypes.bool,
+  userId: PropTypes.string,
   match: PropTypes.any,
   notification: PropTypes.object,
-  key: PropTypes.number,
-  favouriteSongRequest: PropTypes.func,
   url: PropTypes.string,
   onRemoveSong: PropTypes.func,
+  key: PropTypes.number,
 };
 
 export default compose(withStyles(styles), withNotification)(FavoriteItem);

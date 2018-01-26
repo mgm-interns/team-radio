@@ -106,14 +106,13 @@ class Profile extends Component {
       content = Profile._renderLoading();
     } else {
       content = (
-        <Grid
-          key={2}
-          direction="row"
-          container
-          className={classes.containerWrapper}
-        >
+        <Grid direction="row" container className={classes.containerWrapper}>
           <Header user={visitor} isDisabled={isOwner} />
-          <Body user={visitor} isDisabled={isOwner} />
+          <Body
+            userId={visitor.userId}
+            name={visitor.name || visitor.username}
+            isDisabled={isOwner}
+          />
         </Grid>
       );
     }
@@ -137,7 +136,7 @@ Profile.propTypes = {
   getVisitorByUsername: PropTypes.func,
   notification: PropTypes.object,
   match: PropTypes.any,
-  history: PropTypes.any,
+  history: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({

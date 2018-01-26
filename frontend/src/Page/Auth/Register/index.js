@@ -54,7 +54,6 @@ class Register extends Component {
 
     this._showNotification = this._showNotification.bind(this);
     this._renderGuidline = this._renderGuidline.bind(this);
-    this._renderHeadline = this._renderHeadline.bind(this);
     this._renderRegisterLocalForm = this._renderRegisterLocalForm.bind(this);
     this._renderRegisterLocalActions = this._renderRegisterLocalActions.bind(
       this,
@@ -121,7 +120,7 @@ class Register extends Component {
     );
   }
 
-  _renderHeadline() {
+  static _renderHeadline() {
     return (
       <Grid style={{ paddingBottom: '2em' }}>
         <Typography type="headline" component="h2">
@@ -249,7 +248,7 @@ class Register extends Component {
               <Card raised className={classes.cardForm}>
                 <form onSubmit={handleSubmit}>
                   <CardContent>
-                    {this._renderHeadline()}
+                    {Register._renderHeadline()}
                     {this._renderRegisterLocalForm()}
                   </CardContent>
                   <CardActions>
@@ -268,12 +267,13 @@ class Register extends Component {
 
 Register.propTypes = {
   addUserResponse: PropTypes.any,
-  history: PropTypes.any,
-  classes: PropTypes.any,
+  history: PropTypes.object,
+  classes: PropTypes.object,
   loading: PropTypes.bool,
   handleSubmit: PropTypes.any,
   submitSucceeded: PropTypes.any,
   submitting: PropTypes.bool,
+  notification: PropTypes.any,
 };
 
 const mapDispatchToProps = dispatch => ({

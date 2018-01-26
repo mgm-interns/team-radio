@@ -8,7 +8,6 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 import { TabContainer } from 'Component';
-
 import Settings from './Settings';
 import { FilterAll, FilterFavourites } from './Filter';
 
@@ -20,10 +19,10 @@ class Body extends Component {
 
     this.state = {
       value: 0,
-      open: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this._renderTabsLabel = this._renderTabsLabel.bind(this);
   }
 
   handleChange(event, value) {
@@ -34,49 +33,55 @@ class Body extends Component {
     return <CircularProgress />;
   }
 
+  _renderTabsLabel() {
+    const { classes, isDisabled } = this.props;
+
+    return (
+      <Grid item xs={12} className={classes.actions}>
+        <Tabs
+          value={this.state.value}
+          onChange={this.handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+        >
+          <Tab
+            label="Stations"
+            classes={{
+              label: classes.tabLabel,
+            }}
+          />
+          {isDisabled && (
+            <Tab
+              label="Favourite songs"
+              classes={{
+                label: classes.tabLabel,
+              }}
+            />
+          )}
+        </Tabs>
+      </Grid>
+    );
+  }
+
   render() {
-    const { classes, user, isDisabled } = this.props;
+    const { classes, userId, name, isDisabled } = this.props;
 
     return (
       <Grid container className={classes.container}>
         <Grid item xs={11}>
-          <Grid container>
-            <Grid item xs={12} className={classes.actions}>
-              <Tabs
-                value={this.state.value}
-                onChange={this.handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-              >
-                <Tab
-                  label="Stations"
-                  classes={{
-                    label: classes.tabLabel,
-                  }}
-                />
-                {isDisabled && (
-                  <Tab
-                    label="Favourite songs"
-                    classes={{
-                      label: classes.tabLabel,
-                    }}
-                  />
-                )}
-              </Tabs>
-            </Grid>
-          </Grid>
+          <Grid container>{this._renderTabsLabel()}</Grid>
         </Grid>
         <Grid item xs={1} className={classes.buttonEditProfile}>
           {isDisabled && <Settings />}
         </Grid>
         {this.state.value === 0 && (
           <TabContainer>
-            <FilterAll user={user} isDisabled={isDisabled} />
+            <FilterAll userId={userId} name={name} isDisabled={isDisabled} />
           </TabContainer>
         )}
         {this.state.value === 1 && (
           <TabContainer>
-            <FilterFavourites userId={user.userId} />
+            <FilterFavourites userId={userId} />
           </TabContainer>
         )}
       </Grid>
@@ -85,11 +90,16 @@ class Body extends Component {
 }
 
 Body.propTypes = {
-  classes: PropTypes.any,
-  user: PropTypes.any,
-  visitor: PropTypes.any,
-  loading: PropTypes.bool,
-  isDisabled: PropTypes.bool,
+  userId: PropTypes.any.isRequired,
+  isDisabled: PropTypes.bool.isRequired,
+  classes: PropTypes.object,
+  name: PropTypes.string,
+};
+
+Body.defaultProps = {
+  userId: 0,
+  isDisabled: false,
+  name: '',
 };
 
 export default compose(withStyles(styles))(Body);

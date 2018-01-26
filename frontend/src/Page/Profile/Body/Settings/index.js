@@ -14,12 +14,12 @@ import Popover from 'material-ui/Popover';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Tooltip from 'material-ui/Tooltip';
 
-import styles from './styles';
-
 import Information from './Information';
 import Password from './Password';
 
-function getModalStyle() {
+import styles from './styles';
+
+const getModalStyle = () => {
   const top = 50;
   const left = 50;
 
@@ -34,7 +34,7 @@ function getModalStyle() {
     boxShadow: '0 5px 15px rgba(0, 0, 0, .5)',
     padding: 8 * 4,
   };
-}
+};
 
 class Settings extends Component {
   constructor(props) {

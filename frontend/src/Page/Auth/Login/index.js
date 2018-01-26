@@ -34,7 +34,6 @@ class Login extends Component {
     this._showNotification = this._showNotification.bind(this);
     this._onLoginSocialClick = this._onLoginSocialClick.bind(this);
     this._onLoginSocialFailure = this._onLoginSocialFailure.bind(this);
-    this._renderHeadline = this._renderHeadline.bind(this);
     this._renderLoginSocial = this._renderLoginSocial.bind(this);
     this._renderLoginLocalForm = this._renderLoginLocalForm.bind(this);
     this._renderLoginLocalActions = this._renderLoginLocalActions.bind(this);
@@ -111,7 +110,7 @@ class Login extends Component {
     });
   }
 
-  _renderHeadline() {
+  static _renderHeadline() {
     return (
       <Grid
         style={{
@@ -244,7 +243,7 @@ class Login extends Component {
             <Card raised className={classes.cardForm}>
               <form onSubmit={handleSubmit}>
                 <CardContent>
-                  {this._renderHeadline()} {this._renderLoginSocial()}
+                  {Login._renderHeadline()} {this._renderLoginSocial()}
                   {this._renderLoginLocalForm()}
                 </CardContent>
                 <CardActions> {this._renderLoginLocalActions()} </CardActions>
@@ -260,10 +259,10 @@ class Login extends Component {
 
 Login.propTypes = {
   getUserResponse: PropTypes.any,
-  history: PropTypes.any,
-  classes: PropTypes.any,
+  history: PropTypes.object,
+  classes: PropTypes.object,
   loading: PropTypes.bool,
-  handleSubmit: PropTypes.any,
+  handleSubmit: PropTypes.func,
   submitSucceeded: PropTypes.any,
   notification: PropTypes.object,
   addUserBySocialAccount: PropTypes.func,

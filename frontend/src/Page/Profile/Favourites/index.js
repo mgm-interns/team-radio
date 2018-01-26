@@ -47,7 +47,7 @@ const Favourites = ({
     <GridList cellHeight={200} spacing={1} className={classes.gridList}>
       {favouriteSongs.map((video, index) => (
         <Item
-          key={index}
+          key={video.song_id || index}
           userId={userId}
           {...video}
           onRemoveSong={onRemoveSong}

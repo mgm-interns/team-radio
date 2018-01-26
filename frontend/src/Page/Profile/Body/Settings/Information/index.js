@@ -35,7 +35,8 @@ class Information extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { user: { username }, user: { error } } = nextProps;
+    const { user: { username, error } } = nextProps;
+    const currentUser = this.props.user;
 
     if (error !== null) {
       this.setState({
@@ -47,7 +48,8 @@ class Information extends Component {
       });
     }
 
-    if (username !== this.props.user.username) {
+    // redirect again when user change their username
+    if (username !== currentUser.username) {
       this.props.history.push(`/profile/${username}`);
     }
   }
@@ -231,7 +233,7 @@ Information.propTypes = {
   loading: PropTypes.bool,
   onSubmit: PropTypes.func,
   initialValues: PropTypes.any,
-  history: PropTypes.any,
+  history: PropTypes.object,
   submitSucceeded: PropTypes.any,
 };
 
