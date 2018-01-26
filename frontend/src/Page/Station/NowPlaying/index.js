@@ -18,7 +18,6 @@ class NowPlaying extends Component {
 
     this.state = {
       refPlayer: null,
-      skipNotification: false,
       countDown: 0,
       seektime: null,
       receivedAt: new Date().getTime(),
@@ -52,7 +51,6 @@ class NowPlaying extends Component {
     ) {
       // Show notification
       await this.setStateAsync({
-        skipNotification: true,
         countDown: nextCurrentStation.skip.delay,
       });
       // After start the count down, decrease countDown value per second
@@ -73,7 +71,6 @@ class NowPlaying extends Component {
       }
       // Turn it off and show player again
       await this.setStateAsync({
-        skipNotification: false,
         countDown: 0,
       });
     }
@@ -129,8 +126,15 @@ class NowPlaying extends Component {
   }
 
   render() {
-    const { classes, className, nowPlaying, autoPlay, muted } = this.props;
-    return this.state.skipNotification ? (
+    const {
+      classes,
+      className,
+      nowPlaying,
+      autoPlay,
+      muted,
+      currentStation,
+    } = this.props;
+    return currentStation.skip ? (
       this.renderSkipNotification()
     ) : (
       <Grid item xs={12} className={classNames([className, classes.container])}>
