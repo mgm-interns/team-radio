@@ -116,27 +116,28 @@ class Password extends Component {
             {this._renderChangePasswordForm()}
           </Grid>
           <Grid item xs={12} className={classes.modalFooter}>
-            <Button
-              onClick={this._onCancelButtonClick}
-              className={classes.button}
-              color="primary"
-              autoFocus
-            >
-              Cancel
-            </Button>
-
-            {loading ? (
-              Password._renderLoading()
-            ) : (
-              <Button
-                disabled={pristine || submitting}
-                color="primary"
-                type="submit"
-                className={classes.button}
-              >
-                Save
-              </Button>
-            )}
+            {loading
+              ? Password._renderLoading()
+              : [
+                  <Button
+                    key={1}
+                    onClick={this._onCancelButtonClick}
+                    className={classes.button}
+                    color="primary"
+                    autoFocus
+                  >
+                    Cancel
+                  </Button>,
+                  <Button
+                    key={2}
+                    disabled={pristine || submitting}
+                    color="primary"
+                    type="submit"
+                    className={classes.button}
+                  >
+                    Save
+                  </Button>,
+                ]}
           </Grid>
         </form>
       </Grid>
