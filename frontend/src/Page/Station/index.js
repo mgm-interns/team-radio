@@ -40,7 +40,7 @@ class StationPage extends Component {
       muted: false,
       tabValue: 0,
       isPassive: false,
-      playlist: [],
+      nowPlayingSong: null,
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
@@ -48,6 +48,7 @@ class StationPage extends Component {
     this._renderTabs = this._renderTabs.bind(this);
     this._handleTabChange = this._handleTabChange.bind(this);
     this._checkValidStation = this._checkValidStation.bind(this);
+    this._getFilteredPlaylist = this._getFilteredPlaylist.bind(this);
   }
 
   componentWillMount() {
@@ -72,10 +73,7 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      muteNowPlaying,
-      currentStation: { nowPlaying},
-    } = nextProps;
+    const { muteNowPlaying, currentStation: { nowPlaying } } = nextProps;
 
     this._checkValidStation(nextProps);
 
@@ -86,6 +84,21 @@ class StationPage extends Component {
     this.setState({
       muted: muteNowPlaying,
     });
+  }
+
+  _getFilteredPlaylist() {
+    const { currentStation: { playlist, nowPlaying } } = this.props;
+    let nowPlayingSong = null;
+
+    playlist.filter(item => {
+      if (item.song_id === nowPlaying.song_id) {
+        nowPlayingSong = item;
+        return false;
+      }
+      return true;
+    });
+
+    this.setState({ nowPlayingSong });
   }
 
   _checkValidStation(props) {
@@ -147,6 +160,8 @@ class StationPage extends Component {
         }
       },
     );
+
+    this._getFilteredPlaylist();
   }
 
   _handleTabChange(e, value) {
@@ -223,10 +238,9 @@ class StationPage extends Component {
       classes,
       currentStation: { station, nowPlaying, playlist, joined },
       passive,
-      nowPlayingFromPlaylist,
       disableSwitcher,
     } = this.props;
-    const { muted } = this.state;
+    const { muted, nowPlayingSong } = this.state;
 
     return [
       passive && (
@@ -309,12 +323,12 @@ class StationPage extends Component {
                   muted={muted}
                   nowPlaying={nowPlaying}
                 />
-                {nowPlayingFromPlaylist && passive ? (
+                {nowPlayingSong && passive ? (
                   <div className={classes.nowPlayingInfo}>
-                    <p>{nowPlayingFromPlaylist.title}</p>
+                    <p>{nowPlayingSong.title}</p>
                     <p>
                       {transformNumber.millisecondsToTime(
-                        nowPlayingFromPlaylist.duration,
+                        nowPlayingSong.duration,
                       )}
                     </p>
                   </div>
@@ -349,7 +363,6 @@ StationPage.propTypes = {
   preview: PropTypes.object,
   passiveUserRequest: PropTypes.func,
   passive: PropTypes.bool,
-  nowPlayingFromPlaylist: PropTypes.object,
   getFavouriteSongs: PropTypes.func,
   favourite: PropTypes.object,
   disableSwitcher: PropTypes.bool,
@@ -364,7 +377,6 @@ const mapStateToProps = ({ api, page }) => ({
   preview: page.station.preview,
   userId: api.user.data.userId,
   passive: page.station.passive,
-  nowPlayingFromPlaylist: page.station.nowPlaying,
   favourite: api.favouriteSongs,
   disableSwitcher: page.station.disableSwitcher,
 });

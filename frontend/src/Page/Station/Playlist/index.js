@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { passiveUserRequest, getNowPlaying } from 'Redux/page/station/actions';
+import { passiveUserRequest } from 'Redux/page/station/actions';
 import Grid from 'material-ui/Grid';
 import FlipMoveList from 'react-flip-move';
 import { withStyles } from 'material-ui/styles';
@@ -34,7 +34,7 @@ class Playlist extends Component {
    * @returns {Array}
    */
   getFilteredPlaylist() {
-    const { data, nowPlaying, getNowPlaying } = this.props;
+    const { data, nowPlaying } = this.props;
     let nowPlayingSong = null;
 
     const playlistWithoutNowPlaying = data.filter(item => {
@@ -44,8 +44,6 @@ class Playlist extends Component {
       }
       return true;
     });
-
-    getNowPlaying(nowPlayingSong);
 
     return {
       nowPlaying: nowPlayingSong,
@@ -126,7 +124,6 @@ Playlist.propTypes = {
   style: PropTypes.any,
   data: PropTypes.array,
   nowPlaying: PropTypes.object,
-  getNowPlaying: PropTypes.func,
   passiveUserRequest: PropTypes.func,
   favouriteList: PropTypes.array,
 };
@@ -138,7 +135,6 @@ const mapStateToProps = ({ api }) => ({
 
 const mapDispatchToProps = dispatch => ({
   passiveUserRequest: passive => dispatch(passiveUserRequest(passive)),
-  getNowPlaying: data => dispatch(getNowPlaying(data)),
 });
 
 export default compose(

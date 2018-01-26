@@ -33,11 +33,6 @@ export const passiveUserRequest = (passive = false) => ({
   payload: passive,
 });
 
-export const getNowPlaying = nowPlaying => ({
-  type: GET_NOW_PLAYING,
-  payload: nowPlaying,
-});
-
 export const disableStationsSwitcher = () => ({
   type: DISABLE_STATIONS_SWITCHER,
 });
