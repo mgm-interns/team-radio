@@ -55,7 +55,7 @@ const _joinStationProcess = async (socket, io, userId, station) => {
     _join(emitter, socket, userId, station, io);
 
     // Skip song decision when online user change
-    skipDecider(io, station.station_id);
+    skipDecider(io, stationId);
 
     // Send join notification
     if (user) {
@@ -83,30 +83,19 @@ const _join = async (emitter, socket, userId, station, io) => {
   const stationName = station.station_name;
   socket.join(stationId);
 
+  // Notify join success
   delete station.playlist;
   emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
     station: station,
   });
 
+  // Update playlist
   const playlist = await stationController.getAvailableListSong(stationId);
   emitter.emit(EVENTS.SERVER_UPDATE_PLAYLIST, {
     playlist: playlist,
   });
 
-  // eslint-disable-next-line
-  const history =
-    await stationController.getListSongHistory(stationId, CONSTANTS.HISTORY_LIMIT);
-  emitter.emit(EVENTS.SERVER_UPDATE_HISTORY, {
-    history: history,
-  });
-
-  /**
-   * An user cannot listening on multi station at a time
-   * => Force any other tabs or browser redirect to most recent station
-   */
-  onlineManager.leaveStationAlreadyIn(userId, stationId, stationName, io);
-
-  // Get nowplaying and emit to user
+  // Update nowplaying
   try {
     const player = await players.getPlayer(stationId);
     const nowPlaying = await player.getNowPlaying();
@@ -115,6 +104,14 @@ const _join = async (emitter, socket, userId, station, io) => {
     console.log('Players error: ' + err.message);
   }
 
+  // Update history
+  // eslint-disable-next-line
+  const history =
+    await stationController.getListSongHistory(stationId, CONSTANTS.HISTORY_LIMIT);
+  emitter.emit(EVENTS.SERVER_UPDATE_HISTORY, {
+    history: history,
+  });
+
   // Update users online in station
   const count = await onlineManager.countOnlineOfStation(stationId, io);
   const users = await onlineManager.getListUserOnline(stationId, io);
@@ -122,6 +119,18 @@ const _join = async (emitter, socket, userId, station, io) => {
     online_count: count,
     users: users,
   });
+
+  /**
+   * An user cannot listening on multi station at a time
+   * => Force any other tabs or browser redirect to most recent station
+   */
+  onlineManager.leaveStationAlreadyIn(
+    userId,
+    stationId,
+    stationName,
+    socket,
+    io,
+  );
 
   // Let switcher sort station list again when online user change
   switcher.updateNumberOfOnlineUsersInStation(stationId, count);

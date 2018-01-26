@@ -113,7 +113,6 @@ export const resetPassword = async (token, superSecret, newPassword) => {
     if (token === user.token_reset_password) {
       const decoded = jwt.verify(token, superSecret);
       if (decoded) {
-        console.log(newPassword);
         const password = user.generateHash(newPassword);
         await User.setPassword(user.email, password);
 
