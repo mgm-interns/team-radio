@@ -48,6 +48,11 @@ class Information extends Component {
       });
     }
 
+    // close modal when information updated!
+    if (nextProps.user !== currentUser) {
+      this._onCancelButtonClick();
+    }
+
     // redirect again when user change their username
     if (username !== currentUser.username) {
       this.props.history.push(`/profile/${username}`);

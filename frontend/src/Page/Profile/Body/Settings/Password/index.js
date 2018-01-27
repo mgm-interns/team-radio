@@ -32,6 +32,7 @@ class Password extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { user: { error } } = nextProps;
+    const currentUser = this.props.user;
     if (error !== null) {
       this.setState({
         formErrors: error.response.message,
@@ -40,6 +41,11 @@ class Password extends Component {
       this.setState({
         formErrors: null,
       });
+    }
+
+    // close modal when information updated!
+    if (nextProps.user !== currentUser) {
+      this._onCancelButtonClick();
     }
   }
 
