@@ -100,7 +100,7 @@ export const deleteStation = async (stationId, userId) => {
 };
 
 /**
- * Get a statio by id
+ * Get a station by id
  *
  * @param {string} stationId
  */

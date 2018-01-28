@@ -3,21 +3,18 @@ import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
 import * as CONSTANTS from '../../const/constants';
 import skipDecider from '../managers/skipDecider';
-import createEmitter from '../managers/createEmitter';
 
-export default (action, io, socket, userId, stationId, songId) => {
+export default (action, emitter, userId, stationId, songId) => {
   if (action === CONSTANTS.UPVOTE_ACTION) {
-    _upVoteSong(io, socket, userId, stationId, songId);
+    _upVoteSong(emitter, userId, stationId, songId);
   }
 
   if (action === CONSTANTS.DOWNVOTE_ACTION) {
-    _downVoteSong(io, socket, userId, stationId, songId);
+    _downVoteSong(emitter, userId, stationId, songId);
   }
 };
 
-const _upVoteSong = async (io, socket, userId, stationId, songId) => {
-  const emitter = createEmitter(socket, io);
-
+const _upVoteSong = async (emitter, userId, stationId, songId) => {
   // Check if anonymous user try to vote song
   if (!_checkUserExist(userId)) {
     emitter.emit(EVENTS.SERVER_UPVOTE_SONG_FAILURE, {
@@ -31,7 +28,7 @@ const _upVoteSong = async (io, socket, userId, stationId, songId) => {
     const playlist = await stationController.upVote(stationId, songId, userId);
 
     // Skip song decision when vote change
-    skipDecider(io, stationId);
+    skipDecider(stationId);
 
     // Emit result
     emitter.emit(EVENTS.SERVER_UPVOTE_SONG_SUCCESS, {});
@@ -45,9 +42,7 @@ const _upVoteSong = async (io, socket, userId, stationId, songId) => {
   }
 };
 
-const _downVoteSong = async (io, socket, userId, stationId, songId) => {
-  const emitter = createEmitter(socket, io);
-
+const _downVoteSong = async (emitter, userId, stationId, songId) => {
   // Check if anonymous user try to vote song
   if (!_checkUserExist(userId)) {
     emitter.emit(EVENTS.SERVER_DOWNVOTE_SONG_FAILURE, {
@@ -63,7 +58,7 @@ const _downVoteSong = async (io, socket, userId, stationId, songId) => {
       await stationController.downVote(stationId, songId, userId);
 
     // Skip song decision when vote change
-    skipDecider(io, stationId);
+    skipDecider(stationId);
 
     // Emit result
     emitter.emit(EVENTS.SERVER_DOWNVOTE_SONG_SUCCESS, {});
