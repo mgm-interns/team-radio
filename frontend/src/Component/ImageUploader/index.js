@@ -87,20 +87,22 @@ class ImageUploader extends Component {
     fd.append('tags', 'browser_upload'); // Optional - add tag for image admin in Cloudinary
     fd.append('file', this.state.response_url);
     xhr.send(fd);
+    this._resetValuesToDefault();
   }
 
   _openFilePickerDialog(event) {
     event.preventDefault();
     if (this.props.isDisabled) {
       this.input.click();
-    } else {
-      this._resetValuesToDefault();
     }
+    this._resetValuesToDefault();
   }
 
   async _onImagePicked(event) {
     const { notification } = this.props;
+    console.log(event.target.files);
     const file = event.target.files[0];
+    console.log(event.target.files);
 
     if (file.size / 1024 / 1024 > 2) {
       notification.app.warning({
