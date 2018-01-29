@@ -1,10 +1,15 @@
-import { EMAIL_REGEX } from './constants';
+import { EMAIL_REGEX, USERNAME_REGEX } from './constants';
 
 export const required = value => (value ? undefined : 'This field is required');
 
 export const email = value =>
   value && !EMAIL_REGEX.test(value)
     ? 'Please enter a valid email address'
+    : undefined;
+
+export const username = value =>
+  value && !USERNAME_REGEX.test(value)
+    ? 'Please enter a valid username'
     : undefined;
 
 export const minLength = min => value =>

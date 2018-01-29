@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
@@ -26,14 +26,9 @@ import {
   loadAuthenticationState,
 } from 'Configuration';
 
-import {
-  registerValidate,
-  required,
-  email,
-  minLength6,
-  maxLength15,
-} from 'Util/validate';
+import { registerValidate } from 'Util/validate';
 
+import fields from './fields';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -131,54 +126,24 @@ class Register extends Component {
     );
   }
 
+  static _renderForm(form, key) {
+    return [
+      <Field
+        key={key}
+        component={TextView}
+        {...form.field}
+        {...form.field.props}
+      />,
+    ];
+  }
+
   _renderRegisterLocalForm() {
     const { classes, submitSucceeded } = this.props;
     return [
-      <Field
-        key={1}
-        name="name"
-        placeholder="Enter your display name"
-        type="text"
-        component={TextView}
-        label="Display name"
-        validate={[required, maxLength15]}
-      />,
-      <Field
-        key={2}
-        name="username"
-        placeholder="Enter your username"
-        type="text"
-        component={TextView}
-        label="Username"
-      />,
-      <Field
-        key={3}
-        name="email"
-        placeholder="hello@example.com"
-        type="text"
-        component={TextView}
-        label="Email"
-        validate={[required, email]}
-      />,
-      <Field
-        key={4}
-        name="password"
-        placeholder="Must be at least 6 characters"
-        type="password"
-        component={TextView}
-        label="Password"
-        validate={[required, minLength6]}
-      />,
-      <Field
-        key={5}
-        name="confirmPassword"
-        placeholder="Re-enter your password"
-        type="password"
-        component={TextView}
-        label="Confirm Password"
-        validate={[required]}
-      />,
-      <FormHelperText key={6} className={classes.error}>
+      <Fragment key={1}>
+        {Object.keys(fields).map(key => Register._renderForm(fields[key], key))}
+      </Fragment>,
+      <FormHelperText key={2} className={classes.error}>
         {submitSucceeded && this.state.asyncError}
       </FormHelperText>,
     ];

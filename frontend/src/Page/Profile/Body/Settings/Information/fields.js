@@ -1,4 +1,4 @@
-import { maxLength15, required } from 'Util/validate';
+import { maxLength15, required, username } from 'Util/validate';
 
 const inputForm = {
   name: {
@@ -8,7 +8,7 @@ const inputForm = {
       name: 'name',
       validate: [required, maxLength15],
       props: {
-        placeholder: 'Display name',
+        placeholder: 'Enter your display name',
       },
     },
   },
@@ -17,7 +17,7 @@ const inputForm = {
     field: {
       label: 'Username',
       name: 'username',
-      validate: [required],
+      validate: [required, username],
       props: {
         placeholder: 'Username',
       },
@@ -30,7 +30,7 @@ const inputForm = {
       name: 'email',
       validate: [required],
       props: {
-        placeholder: 'Username',
+        placeholder: 'hello@example.com',
       },
       disabled: true,
     },

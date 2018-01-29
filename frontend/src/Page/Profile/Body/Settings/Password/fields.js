@@ -25,7 +25,7 @@ const inputForm = {
       },
     },
   },
-  name: {
+  confirmPassword: {
     icon: {},
     field: {
       label: 'Confirm password',

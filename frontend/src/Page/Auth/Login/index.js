@@ -19,7 +19,8 @@ import {
   saveAuthenticationState,
   loadAuthenticationState,
 } from 'Configuration';
-import { required } from 'Util/validate';
+
+import fields from './fields';
 import styles from './styles';
 
 class Login extends Component {
@@ -160,26 +161,22 @@ class Login extends Component {
     );
   }
 
+  static _renderForm(form, key) {
+    return [
+      <Field
+        key={key}
+        component={TextView}
+        {...form.field}
+        {...form.field.props}
+      />,
+    ];
+  }
+
   _renderLoginLocalForm() {
     const { classes, submitSucceeded } = this.props;
     return (
       <Grid>
-        <Field
-          name="email"
-          placeholder="Email or Username"
-          type="text"
-          component={TextView}
-          label="Email or Username"
-          validate={[required]}
-        />
-        <Field
-          name="password"
-          placeholder="Password"
-          type="password"
-          component={TextView}
-          label="Password"
-          validate={required}
-        />
+        {Object.keys(fields).map(key => Login._renderForm(fields[key], key))}
         <FormHelperText className={classes.error}>
           {submitSucceeded && this.state.formErrors.message}
         </FormHelperText>
