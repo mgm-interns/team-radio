@@ -53,6 +53,7 @@ class StationPage extends Component {
 
   componentWillMount() {
     this._checkValidStation(this.props);
+    this.props.getFavouriteSongs(this.props.userId);
   }
 
   componentWillUnmount() {
@@ -112,7 +113,7 @@ class StationPage extends Component {
     // Station must be a valid string
     if (!joined.loading && !joined.success && !joined.loggedInStation) {
       this.props.joinStation({ stationId, userId });
-      this.props.getFavouriteSongs(userId);
+      // this.props.getFavouriteSongs(userId);
     }
     // Check if user is already joined in other station
     if (!joined.loading && joined.failed && !!joined.loggedInStation) {
@@ -123,7 +124,7 @@ class StationPage extends Component {
         history.replace(`/station/${stationId}`);
         this.props.enableStationsSwitcher();
         this.props.joinStation({ stationId, userId });
-        this.props.getFavouriteSongs(userId);
+        // this.props.getFavouriteSongs(userId);
       }, 5000);
       return;
     }
