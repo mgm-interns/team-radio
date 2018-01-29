@@ -9,7 +9,7 @@ import ReactEmojiMixin from 'react-emoji';
 import ThumbDownIcon from 'react-icons/lib/fa/thumbs-down';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import sleep from 'Util/sleep';
+import CountDown from './Countdown';
 import styles from './styles';
 
 class NowPlaying extends Component {
@@ -18,7 +18,6 @@ class NowPlaying extends Component {
 
     this.state = {
       refPlayer: null,
-      countDown: 0,
       seektime: null,
       receivedAt: new Date().getTime(),
     };
@@ -36,7 +35,6 @@ class NowPlaying extends Component {
     });
   }
 
-  countDownInterval = null;
   async componentWillReceiveProps(nextProps) {
     // Force player to re-render after the song has changed
     const { nowPlaying } = this.props;
@@ -78,7 +76,7 @@ class NowPlaying extends Component {
           >
             {`Our listeners don't like this song.`}
             <br />
-            {/* It will be skipped in {parseInt(this.state.countDown / 1000, 10)}... */}
+            It will be skipped in <CountDown delay={skip.delay} />....
             {/* <br /> */}
             {/* For more information about the skipping rule, refer to this link. */}
           </Typography>
