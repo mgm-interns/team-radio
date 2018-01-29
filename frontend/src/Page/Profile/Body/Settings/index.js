@@ -43,6 +43,7 @@ class Settings extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this._updateStyle);
+    this._updateStyle();
   }
 
   _updateStyle() {
@@ -94,7 +95,6 @@ class Settings extends Component {
 
   _renderModal(openState, modalHeadline, component) {
     const { classes } = this.props;
-    console.log(classes.modalHeadline);
     return (
       <Modal
         aria-labelledby="information-modal-title"
