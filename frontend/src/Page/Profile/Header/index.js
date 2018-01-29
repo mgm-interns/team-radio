@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
+
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
-import CameraIcon from 'react-icons/lib/md/camera-alt';
 
 import { withNotification } from 'Component/Notification';
 import { UserAvatar, CoverPhoto } from 'Component';
@@ -44,26 +43,34 @@ class Header extends Component {
   }
 
   _renderHeader() {
-    const { classes, user, isDisabled } = this.props;
+    const {
+      classes,
+      user: { userId, avatar_url, name, username, reputation, cover_url },
+      isDisabled,
+    } = this.props;
 
     return (
       <Grid container className={classes.coverBackground}>
         <Grid item xs={12} sm={8} className={classes.userInformationContainer}>
           <Grid className={classes.userInformation}>
-            <UserAvatar user={user} isDisabled={isDisabled} />
+            <UserAvatar
+              userId={userId}
+              avatarUrl={avatar_url}
+              isDisabled={isDisabled}
+            />
 
             <div className={classes.userInformationContent}>
               <Typography type="headline" className={classes.text}>
-                {user.name}
+                {name}
               </Typography>
-              <Typography className={classes.text}>@{user.username}</Typography>
+              <Typography className={classes.text}>@{username}</Typography>
             </div>
           </Grid>
 
           <Grid className={classes.summarize}>
             {this._renderSummarizeItem('Songs', 0)}
             {this._renderSummarizeItem('Voted', 0)}
-            {this._renderSummarizeItem('Reputation', user.reputation)}
+            {this._renderSummarizeItem('Reputation', reputation)}
           </Grid>
         </Grid>
 
@@ -74,7 +81,11 @@ class Header extends Component {
             sm={4}
             className={classes.changeCoverActionWrapper}
           >
-            <CoverPhoto user={user} isDisabled={isDisabled} />
+            <CoverPhoto
+              coverUrl={cover_url}
+              userId={userId}
+              isDisabled={isDisabled}
+            />
           </Grid>
         )}
       </Grid>
@@ -82,7 +93,7 @@ class Header extends Component {
   }
 
   render() {
-    const { classes, loading } = this.props;
+    const { classes, loading, user: { cover_url } } = this.props;
 
     if (loading) {
       return this._renderLoading();
@@ -96,7 +107,7 @@ class Header extends Component {
 
         <div>
           <img
-            src={this.props.user.cover_url || this.state.defaultCover}
+            src={cover_url || this.state.defaultCover}
             className={classes.backgroundImg}
           />
         </div>

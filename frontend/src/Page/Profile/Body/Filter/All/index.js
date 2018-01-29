@@ -29,18 +29,13 @@ class FilterAll extends Component {
   }
 
   componentDidMount() {
-    const { user: { userId } } = this.props;
-    this.props.requestStationsByUserId(userId);
-    this.props.requestRecentStationsByUserId(userId);
+    const { userId } = this.props;
+    this.props.getStationsByUserId(userId);
+    this.props.getRecentStationByUserId(userId);
   }
 
   _goToStationPage(station) {
-    const {
-      history,
-      joinStationRequest,
-      notification,
-      user: { userId },
-    } = this.props;
+    const { history, joinStationRequest, notification, userId } = this.props;
 
     // redirect to station page
     history.push(`/station/${station.station_id}`);
@@ -59,7 +54,6 @@ class FilterAll extends Component {
       </Typography>,
       <div key={2} className={classes.stationSection}>
         <StationList
-          key={2}
           stations={data}
           loading={loading}
           emptyMessage={emptyMessage}
@@ -71,10 +65,8 @@ class FilterAll extends Component {
   }
 
   render() {
-    const { classes, all, recent, isDisabled, user } = this.props;
-    const stationsTitle = isDisabled
-      ? 'My stations'
-      : `${user.name || user.username}'s stations`;
+    const { classes, all, recent, isDisabled, name } = this.props;
+    const stationsTitle = isDisabled ? 'My stations' : `${name}'s stations`;
 
     return (
       <Grid container className={classes.containerWrapper}>
@@ -100,19 +92,19 @@ class FilterAll extends Component {
 FilterAll.propTypes = {
   classes: PropTypes.any,
   createStation: PropTypes.func,
-  redirectToStationPageRequest: PropTypes.func,
   station: PropTypes.object,
   history: PropTypes.object,
-  requestStationsByUserId: PropTypes.func,
-  requestRecentStationsByUserId: PropTypes.func,
+  getStationsByUserId: PropTypes.func,
+  getRecentStationByUserId: PropTypes.func,
   all: PropTypes.any,
   recent: PropTypes.any,
   match: PropTypes.object,
   notification: PropTypes.object,
   setPreviewVideo: PropTypes.func,
   joinStationRequest: PropTypes.func,
-  user: PropTypes.any,
+  userId: PropTypes.any,
   isDisabled: PropTypes.bool,
+  name: PropTypes.string,
 };
 
 const mapStateToProps = ({ api }) => ({
@@ -121,8 +113,8 @@ const mapStateToProps = ({ api }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  requestStationsByUserId: userId => dispatch(getStationsByUserId(userId)),
-  requestRecentStationsByUserId: userId =>
+  getStationsByUserId: userId => dispatch(getStationsByUserId(userId)),
+  getRecentStationByUserId: userId =>
     dispatch(getRecentStationsByUserId(userId)),
   joinStationRequest: option => dispatch(joinStation(option)),
   setPreviewVideo: () => dispatch(setPreviewVideo()),

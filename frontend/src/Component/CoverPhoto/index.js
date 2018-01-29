@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+
 import withStyles from 'material-ui/styles/withStyles';
 import CameraIcon from 'react-icons/lib/md/camera-alt';
-import PropTypes from 'prop-types';
-import Avatar from 'material-ui/Avatar';
 import Button from 'material-ui/Button';
-import { Images } from 'Theme';
-import { connect } from 'react-redux';
+
 import { setCover } from 'Redux/api/user/profile';
+
 import { withNotification } from 'Component/Notification';
 import ImageUploader from 'Component/ImageUploader';
-import { compose } from 'redux';
 import styles from './styles';
 
 class CoverPhoto extends Component {
@@ -24,7 +25,7 @@ class CoverPhoto extends Component {
   }
 
   componentDidMount() {
-    this.setState({ cover_url: this.props.user.cover_url });
+    this.setState({ cover_url: this.props.coverUrl });
   }
 
   upload(userId, response_url) {
@@ -32,13 +33,13 @@ class CoverPhoto extends Component {
   }
 
   render() {
-    const { classes, user, isDisabled } = this.props;
+    const { classes, userId, isDisabled } = this.props;
     const titleCropper = 'Crop your new cover photo';
     const aspectRatio = 16 / 9;
 
     return (
       <ImageUploader
-        user={user}
+        userId={userId}
         titleCropper={titleCropper}
         aspectRatio={aspectRatio}
         onUpload={this.upload}
@@ -60,10 +61,11 @@ class CoverPhoto extends Component {
 }
 
 CoverPhoto.propTypes = {
-  classes: PropTypes.any,
-  updateAvatar: PropTypes.any,
-  isDisabled: PropTypes.any,
-  user: PropTypes.any,
+  classes: PropTypes.object,
+  isDisabled: PropTypes.bool,
+  userId: PropTypes.string,
+  coverUrl: PropTypes.string,
+  uploadCover: PropTypes.func,
 };
 
 const mapDispatchToProps = dispatch => ({

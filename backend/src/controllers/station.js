@@ -100,7 +100,7 @@ export const deleteStation = async (stationId, userId) => {
 };
 
 /**
- * Get a statio by id
+ * Get a station by id
  *
  * @param {string} stationId
  */
@@ -219,7 +219,7 @@ export const updateStartingTime = async (stationId, time) => {
  * @param {string} stationId
  * @param {string} songIds
  */
-export const setPlayedSongs = async (stationId, songIds) => {
+export const setPlayedSongs = async (stationId, songIds, isSkipped = false) => {
   try {
     const currentPlaylist = await getListSong(stationId);
     if (currentPlaylist) {
@@ -227,6 +227,7 @@ export const setPlayedSongs = async (stationId, songIds) => {
         for (let j = 0; j < currentPlaylist.length; j++) {
           if (currentPlaylist[j].song_id === songIds[i]) {
             currentPlaylist[j].is_played = true;
+            currentPlaylist[j].is_skipped = isSkipped;
           }
         }
       }

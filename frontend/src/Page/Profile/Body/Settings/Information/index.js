@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { Field, reduxForm } from 'redux-form';
@@ -15,10 +15,14 @@ import { setUsername, setUserInformation } from 'Redux/api/user/profile';
 
 import { TextView } from 'Component';
 import { trimText } from 'Transformer/transformText';
-import { maxLength15, required } from 'Util/validate';
 import tokenInjector from 'Util/redux/tokenInjector';
 
+import fields from './fields';
 import styles from '../styles';
+
+// TODO: fix bugs username is available but still notification success
+// TODO: add scrollbar to this form
+// TODO: close modal after success
 
 class Information extends Component {
   constructor(props) {
@@ -35,7 +39,8 @@ class Information extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { user: { username }, user: { error } } = nextProps;
+    const { user: { error, data } } = nextProps;
+    const currentUser = this.props.user.data;
 
     if (error !== null) {
       this.setState({
@@ -47,8 +52,9 @@ class Information extends Component {
       });
     }
 
-    if (username !== this.props.user.username) {
-      this.props.history.push(`/profile/${username}`);
+    // redirect again when user change their username
+    if (data.username !== currentUser.username) {
+      this.props.history.push(`/profile/${data.username}`);
     }
   }
 
@@ -56,77 +62,26 @@ class Information extends Component {
     this.props.onCancel();
   }
 
+  static _renderForm(form, key) {
+    return [
+      <Field
+        key={key}
+        component={TextView}
+        {...form.field}
+        {...form.field.props}
+      />,
+    ];
+  }
+
   _renderChangeInformationForm() {
     const { classes, submitSucceeded } = this.props;
     return [
-      <Field
-        key={1}
-        name="name"
-        placeholder="Display name"
-        type="text"
-        component={TextView}
-        label="Display name"
-        validate={[required, maxLength15]}
-      />,
-      <Field
-        key={2}
-        name="username"
-        placeholder="Username"
-        type="text"
-        component={TextView}
-        label="Username"
-        validate={[required]}
-      />,
-      <Field
-        key={3}
-        name="email"
-        placeholder="Email"
-        type="email"
-        component={TextView}
-        label="Email"
-        disabled
-      />,
-      <Field
-        key={4}
-        name="firstname"
-        placeholder="First name"
-        type="text"
-        component={TextView}
-        label="First name"
-      />,
-      <Field
-        key={5}
-        name="lastname"
-        placeholder="Last name"
-        type="text"
-        component={TextView}
-        label="Last name"
-      />,
-      <Field
-        key={6}
-        name="bio"
-        placeholder="Bio"
-        type="text"
-        component={TextView}
-        label="Bio"
-      />,
-      <Field
-        key={7}
-        name="city"
-        placeholder="City"
-        type="text"
-        component={TextView}
-        label="City"
-      />,
-      <Field
-        key={8}
-        name="country"
-        placeholder="Country"
-        type="text"
-        component={TextView}
-        label="Country"
-      />,
-      <FormHelperText key={10} className={classes.error}>
+      <Fragment key={1}>
+        {Object.keys(fields).map(key =>
+          Information._renderForm(fields[key], key),
+        )}
+      </Fragment>,
+      <FormHelperText key={2} className={classes.error}>
         {submitSucceeded && this.state.formErrors}
       </FormHelperText>,
     ];
@@ -231,7 +186,7 @@ Information.propTypes = {
   loading: PropTypes.bool,
   onSubmit: PropTypes.func,
   initialValues: PropTypes.any,
-  history: PropTypes.any,
+  history: PropTypes.object,
   submitSucceeded: PropTypes.any,
 };
 

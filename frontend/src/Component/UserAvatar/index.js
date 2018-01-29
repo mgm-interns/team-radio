@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import withStyles from 'material-ui/styles/withStyles';
 import PropTypes from 'prop-types';
 import Avatar from 'material-ui/Avatar';
@@ -6,7 +6,6 @@ import Icon from 'material-ui/Icon';
 import { Images } from 'Theme';
 import { connect } from 'react-redux';
 import { setAvatar } from 'Redux/api/user/profile';
-import { withNotification } from 'Component/Notification';
 import ImageUploader from 'Component/ImageUploader';
 import { compose } from 'redux';
 import styles from './styles';
@@ -23,25 +22,21 @@ class UserAvatar extends Component {
   }
 
   componentDidMount() {
-    this.setState({ avatar_url: this.props.user.avatar_url });
+    this.setState({ avatar_url: this.props.avatarUrl });
   }
 
   upload(userId, response_url) {
-    console.log('uploaded');
-    console.log(userId, response_url);
     this.props.updateAvatar(userId, response_url);
   }
 
   render() {
-    const { classes, user, isDisabled } = this.props;
+    const { classes, userId, avatarUrl, isDisabled } = this.props;
     const titleCropper = 'Crop your new profile photo';
     const aspectRatio = 1;
 
-    console.log('render', isDisabled);
-
     return (
       <ImageUploader
-        user={user}
+        userId={userId}
         titleCropper={titleCropper}
         aspectRatio={aspectRatio}
         onUpload={this.upload}
@@ -57,7 +52,7 @@ class UserAvatar extends Component {
             )}
             <Avatar
               className={classes.avatar}
-              src={!user.avatar_url ? Images.avatar.male01 : user.avatar_url}
+              src={!avatarUrl ? Images.avatar.male01 : avatarUrl}
             />
           </div>
         </div>
@@ -67,10 +62,11 @@ class UserAvatar extends Component {
 }
 
 UserAvatar.propTypes = {
-  classes: PropTypes.any,
-  updateAvatar: PropTypes.any,
-  isDisabled: PropTypes.any,
-  user: PropTypes.any,
+  classes: PropTypes.object,
+  updateAvatar: PropTypes.func,
+  isDisabled: PropTypes.bool,
+  userId: PropTypes.string,
+  avatarUrl: PropTypes.string,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -78,7 +74,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setAvatar({ userId, avatar_url })),
 });
 
-export default compose(
-  withNotification,
-  connect(undefined, mapDispatchToProps),
-)(withStyles(styles)(UserAvatar));
+export default compose(connect(undefined, mapDispatchToProps))(
+  withStyles(styles)(UserAvatar),
+);

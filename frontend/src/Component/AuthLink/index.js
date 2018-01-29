@@ -170,11 +170,11 @@ class AuthLink extends Component {
 }
 
 AuthLink.propTypes = {
-  classes: PropTypes.any,
+  classes: PropTypes.object,
   dispatch: PropTypes.any,
   notification: PropTypes.object,
   user: PropTypes.any,
-  history: PropTypes.any,
+  history: PropTypes.object,
   navigateToProfile: PropTypes.func,
   logout: PropTypes.func,
 };

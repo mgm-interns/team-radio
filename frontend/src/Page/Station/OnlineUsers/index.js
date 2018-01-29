@@ -193,7 +193,7 @@ OnlineUsers.propTypes = {
   currentStation: PropTypes.object,
   notification: PropTypes.object,
   currentUser: PropTypes.object,
-  history: PropTypes.any,
+  history: PropTypes.object,
 };
 
 OnlineUsers.defaultProps = {

@@ -350,11 +350,11 @@ class StationPage extends Component {
 }
 
 StationPage.propTypes = {
-  classes: PropTypes.any,
+  classes: PropTypes.object,
   joinStation: PropTypes.func,
   leaveStation: PropTypes.func,
   match: PropTypes.any,
-  history: PropTypes.any,
+  history: PropTypes.object,
   currentStation: PropTypes.any,
   userId: PropTypes.string,
   muteVideoRequest: PropTypes.func,

@@ -71,7 +71,7 @@ class Profile extends Component {
       }
 
       // fetch again when user change information
-      this.props.getVisitorByUsername(user.username);
+      // this.props.getVisitorByUsername(user.username);
     }
 
     // check user is available and redirect to homepage
@@ -99,21 +99,22 @@ class Profile extends Component {
   }
 
   render() {
-    const { classes, visitor, isOwner } = this.props;
+    const { classes, visitor, user, isOwner } = this.props;
     let content = null;
 
     if (Array.isArray(visitor)) {
       content = Profile._renderLoading();
     } else {
+      const data = isOwner ? user : visitor;
+
       content = (
-        <Grid
-          key={2}
-          direction="row"
-          container
-          className={classes.containerWrapper}
-        >
-          <Header user={visitor} isDisabled={isOwner} />
-          <Body user={visitor} isDisabled={isOwner} />
+        <Grid direction="row" container className={classes.containerWrapper}>
+          <Header user={data} isDisabled={isOwner} />
+          <Body
+            userId={data.userId}
+            name={data.name || data.username}
+            isDisabled={isOwner}
+          />
         </Grid>
       );
     }
@@ -137,7 +138,7 @@ Profile.propTypes = {
   getVisitorByUsername: PropTypes.func,
   notification: PropTypes.object,
   match: PropTypes.any,
-  history: PropTypes.any,
+  history: PropTypes.object,
 };
 
 const mapStateToProps = ({ api }) => ({
