@@ -9,7 +9,7 @@ import ReactEmojiMixin from 'react-emoji';
 import ThumbDownIcon from 'react-icons/lib/fa/thumbs-down';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import sleep from 'Util/sleep';
+import CountDown from './Countdown';
 import styles from './styles';
 
 class NowPlaying extends Component {
@@ -18,7 +18,6 @@ class NowPlaying extends Component {
 
     this.state = {
       refPlayer: null,
-      countDown: 0,
       seektime: null,
       receivedAt: new Date().getTime(),
     };
@@ -36,45 +35,7 @@ class NowPlaying extends Component {
     });
   }
 
-  countDownInterval = null;
   async componentWillReceiveProps(nextProps) {
-    // Replace player with skipping notification
-    // const { currentStation } = this.props;
-    // const nextCurrentStation = nextProps.currentStation;
-    // only trigger when received a new skip event
-    // if (
-    //   (currentStation.skip &&
-    //     nextCurrentStation.skip &&
-    //     currentStation.skip.song_id !== nextCurrentStation.skip.song_id) ||
-    //   (nextCurrentStation.skip &&
-    //     currentStation.skip !== nextCurrentStation.skip)
-    // ) {
-    //   // Show notification
-    //   await this.setStateAsync({
-    //     countDown: nextCurrentStation.skip.delay,
-    //   });
-    //   // After start the count down, decrease countDown value per second
-    //   this.countDownInterval = setInterval(() => {
-    //     // Stop counting when count to 0
-    //     if (this.state.countDown > 0) {
-    //       this.setState({
-    //         countDown: this.state.countDown - 1000,
-    //       });
-    //     }
-    //   }, 1000);
-    //   // Wait util complete the delay
-    //   // Add 1 more delay second to prevent bad loading behavior
-    //   await sleep(nextCurrentStation.skip.delay + 1000);
-    //   // Only reset the interval if countdown is less than 1 second
-    //   if (this.state.countDown <= 1000) {
-    //     clearInterval(this.countDownInterval);
-    //   }
-    //   // Turn it off and show player again
-    //   await this.setStateAsync({
-    //     countDown: 0,
-    //   });
-    // }
-
     // Force player to re-render after the song has changed
     const { nowPlaying } = this.props;
     const nextNowPlaying = nextProps.nowPlaying;
@@ -92,7 +53,7 @@ class NowPlaying extends Component {
   }
 
   renderSkipNotification() {
-    const { className, classes, currentStation } = this.props;
+    const { className, classes, skip } = this.props;
     return (
       <Grid item xs={12} className={className}>
         <Grid
@@ -103,8 +64,7 @@ class NowPlaying extends Component {
           direction={'column'}
           className={classes.skipNotificationContainer}
           style={{
-            backgroundImage: `url(${currentStation.skip &&
-              currentStation.skip.thumbnail})`,
+            backgroundImage: `url(${skip && skip.thumbnail})`,
           }}
         >
           <div className={classes.skipNotificationBackdrop} />
@@ -116,7 +76,7 @@ class NowPlaying extends Component {
           >
             {`Our listeners don't like this song.`}
             <br />
-            {/* It will be skipped in {parseInt(this.state.countDown / 1000, 10)}... */}
+            It will be skipped in <CountDown delay={skip.delay} />....
             {/* <br /> */}
             {/* For more information about the skipping rule, refer to this link. */}
           </Typography>
@@ -132,9 +92,9 @@ class NowPlaying extends Component {
       nowPlaying,
       autoPlay,
       muted,
-      currentStation,
+      skip,
     } = this.props;
-    return currentStation.skip ? (
+    return skip ? (
       this.renderSkipNotification()
     ) : (
       <Grid item xs={12} className={classNames([className, classes.container])}>
@@ -174,11 +134,11 @@ NowPlaying.propTypes = {
   autoPlay: PropTypes.bool,
   muted: PropTypes.bool,
   classes: PropTypes.object,
-  currentStation: PropTypes.object,
+  skip: PropTypes.object,
 };
 
 const mapStateToProps = ({ api: { currentStation } }) => ({
-  currentStation,
+  skip: currentStation.skip,
 });
 
 export default compose(connect(mapStateToProps), withStyles(styles))(

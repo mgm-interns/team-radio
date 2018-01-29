@@ -14,27 +14,10 @@ import Popover from 'material-ui/Popover';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Tooltip from 'material-ui/Tooltip';
 
-import Information from './Information';
-import Password from './Password';
-
 import styles from './styles';
 
-const getModalStyle = () => {
-  const top = 50;
-  const left = 50;
-
-  return {
-    position: 'absolute',
-    width: '35vw',
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-    border: '1px solid #e5e5e5',
-    backgroundColor: '#fff',
-    boxShadow: '0 5px 15px rgba(0, 0, 0, .5)',
-    padding: 8 * 4,
-  };
-};
+import Information from './Information';
+import Password from './Password';
 
 class Settings extends Component {
   constructor(props) {
@@ -44,6 +27,7 @@ class Settings extends Component {
       openEditInformation: false,
       openEditPassword: false,
       anchorEl: null,
+      modalStyle: {},
     };
 
     this._onOpenEditInformation = this._onOpenEditInformation.bind(this);
@@ -54,6 +38,21 @@ class Settings extends Component {
     this._closeMenu = this._closeMenu.bind(this);
     this._renderPopoverContent = this._renderPopoverContent.bind(this);
     this._renderModal = this._renderModal.bind(this);
+    this._updateStyle = this._updateStyle.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this._updateStyle);
+    this._updateStyle();
+  }
+
+  _updateStyle() {
+    this.setState({
+      modalStyle: {
+        height: window.innerHeight < 810 ? window.innerHeight - 100 : 'auto',
+        overflowY: window.innerHeight < 810 ? 'scroll' : 'none',
+      },
+    });
   }
 
   onCancelButtonClick() {
@@ -103,7 +102,7 @@ class Settings extends Component {
         open={openState}
         onClose={this._onCloseModal}
       >
-        <div style={getModalStyle()}>
+        <div style={this.state.modalStyle} className={classes.modal}>
           <Grid container>
             <Grid item xs={12} className={classes.modalHeadline}>
               {modalHeadline}

@@ -53,7 +53,7 @@ class Profile extends Component {
     }
 
     // get message for user activities
-    if (authenticatedUser !== user && user.message) {
+    if (authenticatedUser.message !== user.message && user.message) {
       this._showNotification(user.message);
 
       const increaseReputation = Profile._calculateIncreaseReputation(

@@ -54,26 +54,22 @@ station.getListSongHistory = async function (req, res) {
 
 };
 station.getAvailableListSong = async function (req, res) {
-    //  var station = await stationController.addStation(req.body.station_name);
     let station = await stationController.getAvailableListSong(req.params.id);
     res.status(200).json(station);
 
 };
 station.addSong = async function (req, res) {
-    //  var station = await stationController.addStation(req.body.station_name);
     let station = await stationController.addSong(req.params.id, req.body.url, req.body.user_id);
     res.status(200).json(station);
 
 };
 
 station.updateStartingTime = async function (req, res) {
-    //  var station = await stationController.addStation(req.body.station_name);
     let station = await stationController.updateStartingTime(req.params.id, req.body.starting_time);
     res.status(200).json(station);
 
 };
 station.setPlayedSongs = async function (req, res) {
-    //  var station = await stationController.addStation(req.body.station_name);
     let station = await stationController.setPlayedSongs(req.params.id, req.body.songIds);
     res.status(200).json(station);
 

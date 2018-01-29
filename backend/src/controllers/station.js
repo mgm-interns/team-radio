@@ -24,13 +24,13 @@ const POINTS_FOR_NEXT_SONG = 1;
  * @param {boolean} isPrivate - If false then station is public, if true then station is private
  */
 export const addStation = async (stationName, userId, isPrivate) => {
-  const currentStationName = stationName.trim();
-  // if (isNaN(currentStationName) == false)
-  //   throw new Error('The station name can not be a number!');
+  const currentStationName = stationName.trim().toString();
   if (!currentStationName) {
     throw new Error('The station name can not be empty!');
   } else {
     try {
+      // if (isNaN(currentStationName) == false)
+      //   throw new Error('The station name can not be a number!');
       const availableStation = await stationModels.getStationByName(
         currentStationName,
       );
@@ -291,7 +291,7 @@ export const getListSongHistory = async (stationId, limit) => {
     const history = filter(listSong, ['is_played', true]);
     const orderedSongs = orderBy(history, ['created_date'], ['desc']);
     const uniqueHistory = uniqBy(orderedSongs, 'url');
-    const limitHistory = slice(uniqueHistory,0,limit);
+    const limitHistory = slice(uniqueHistory, 0, limit);
     return limitHistory;
   } catch (error) {
     throw error;
