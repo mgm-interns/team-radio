@@ -24,9 +24,9 @@ export default async (io, socket, userId, stationId) => {
     const station = await stationController.getStation(stationId);
 
     // Leave all staion has joined before
-    await onlineManager.leaveAllStation(io, socket, userId);
+    await onlineManager.leaveAllStation(socket, userId);
 
-    _joinStationProcess(socket, io, userId, station);
+    _joinStationProcess(emitter, socket, userId, station);
   } catch (err) {
     socket.leaveAll();
     emitter.emit(EVENTS.SERVER_JOINED_STATION_FAILURE, {
@@ -35,8 +35,7 @@ export default async (io, socket, userId, stationId) => {
   }
 };
 
-const _joinStationProcess = async (socket, io, userId, station) => {
-  const emitter = createEmitter(socket, io);
+const _joinStationProcess = async (emitter, socket, userId, station) => {
   const stationId = station.station_id;
 
   const user = await userController.getUserById(userId);
@@ -44,7 +43,7 @@ const _joinStationProcess = async (socket, io, userId, station) => {
 
   // eslint-disable-next-line
   const alreadyInRoom =
-    await onlineManager.userAlreadyInRoom(stationId, userId, io);
+    await onlineManager.userAlreadyInRoom(stationId, userId);
 
   /**
    * This conditional check if user already in station:
@@ -52,10 +51,10 @@ const _joinStationProcess = async (socket, io, userId, station) => {
    * - If user already in station, allow join request and not send any notification
    */
   if (!alreadyInRoom) {
-    _join(emitter, socket, userId, station, io);
+    _join(emitter, socket, userId, station);
 
     // Skip song decision when online user change
-    skipDecider(io, stationId);
+    skipDecider(stationId);
 
     // Send join notification
     if (user) {
@@ -63,22 +62,20 @@ const _joinStationProcess = async (socket, io, userId, station) => {
         station.station_id,
         user.name || user.username || CONSTANTS.ANONYMOUS_NAME,
         emitter,
-        io,
       );
     } else {
       onlineManager.joinNotification(
         station.station_id,
         CONSTANTS.ANONYMOUS_NAME,
         emitter,
-        io,
       );
     }
   } else {
-    _join(emitter, socket, userId, station, io);
+    _join(emitter, socket, userId, station);
   }
 };
 
-const _join = async (emitter, socket, userId, station, io) => {
+const _join = async (emitter, socket, userId, station) => {
   const stationId = station.station_id;
   const stationName = station.station_name;
   socket.join(stationId);
@@ -87,6 +84,14 @@ const _join = async (emitter, socket, userId, station, io) => {
   delete station.playlist;
   emitter.emit(EVENTS.SERVER_JOINED_STATION_SUCCESS, {
     station: station,
+  });
+
+  // Update users online in station
+  const count = await onlineManager.countOnlineOfStation(stationId);
+  const users = await onlineManager.getListUserOnline(stationId);
+  emitter.emit(EVENTS.SERVER_UPDATE_ONLINE_USERS, {
+    online_count: count,
+    users: users,
   });
 
   // Update playlist
@@ -112,25 +117,11 @@ const _join = async (emitter, socket, userId, station, io) => {
     history: history,
   });
 
-  // Update users online in station
-  const count = await onlineManager.countOnlineOfStation(stationId, io);
-  const users = await onlineManager.getListUserOnline(stationId, io);
-  emitter.emit(EVENTS.SERVER_UPDATE_ONLINE_USERS, {
-    online_count: count,
-    users: users,
-  });
-
   /**
    * An user cannot listening on multi station at a time
    * => Force any other tabs or browser redirect to most recent station
    */
-  onlineManager.leaveStationAlreadyIn(
-    userId,
-    stationId,
-    stationName,
-    socket,
-    io,
-  );
+  onlineManager.leaveStationAlreadyIn(userId, stationId, stationName, socket);
 
   // Let switcher sort station list again when online user change
   switcher.updateNumberOfOnlineUsersInStation(stationId, count);

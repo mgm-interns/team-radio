@@ -5,7 +5,7 @@ export default (query, limit) =>
     /**
      * Full text search using text indexes: Best performance
      * Problem: Cannot search part of string like `like` in SQL DB
-     * i.e: Cannot use `kha`, `anh` to search something like `Khanh`
+     * i.e: Cannot use `hel`, `llo` to search something like `Hello`
      */
     // Station.find({ $text: { $search: query } })
 

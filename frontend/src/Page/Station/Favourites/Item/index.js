@@ -4,15 +4,13 @@ import { transformNumber } from 'Transformer';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import withRouter from 'react-router-dom/withRouter';
-import { Link } from 'react-router-dom';
 import { addSong } from 'Redux/api/currentStation/actions';
+import ReplayIcon from 'react-icons/lib/md/replay';
 import Grid from 'material-ui/Grid';
 import Tooltip from 'material-ui/Tooltip';
 import IconButton from 'material-ui/IconButton';
 import withStyles from 'material-ui/styles/withStyles';
-import AddIcon from 'react-icons/lib/md/add-to-queue';
 import { withNotification } from 'Component/Notification';
-import { Images } from 'Theme';
 import styles from './styles';
 
 /* eslint-disable no-shadow */
@@ -87,7 +85,7 @@ class FavouriteVideo extends Component {
               color="default"
               onClick={this._onReplayClick}
             >
-              <AddIcon />
+              <ReplayIcon />
             </IconButton>
           </Tooltip>
         </Grid>

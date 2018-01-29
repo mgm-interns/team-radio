@@ -29,7 +29,7 @@ class RouteWrapper extends Component {
 }
 
 RouteWrapper.propTypes = {
-  history: PropTypes.any,
+  history: PropTypes.object,
   path: PropTypes.string,
   routes: PropTypes.array,
 };

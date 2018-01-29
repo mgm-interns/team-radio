@@ -10,6 +10,7 @@ import withStyles from 'material-ui/styles/withStyles';
 import ThumbUpIcon from 'react-icons/lib/md/thumb-up';
 import ThumbDownIcon from 'react-icons/lib/md/thumb-down';
 import OutlineStarIcon from 'react-icons/lib/md/star-outline';
+import StarIcon from 'react-icons/lib/md/star';
 import SkipNextIcon from 'react-icons/lib/md/skip-next';
 import MessageIcon from 'react-icons/lib/md/message';
 import classNames from 'classnames';
@@ -270,7 +271,11 @@ class PlaylistItem extends Component {
                     className={classes.favouriteBtn}
                     onClick={() => this._onFavouriteIconClick(song_id, url)}
                   >
-                    <OutlineStarIcon style={{ fontSize: 20 }} />
+                    {isFavourite ? (
+                      <StarIcon style={{ fontSize: 20 }} />
+                    ) : (
+                      <OutlineStarIcon style={{ fontSize: 20 }} />
+                    )}
                   </IconButton>
                 ))}
             </Grid>

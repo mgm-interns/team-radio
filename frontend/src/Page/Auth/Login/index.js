@@ -19,7 +19,8 @@ import {
   saveAuthenticationState,
   loadAuthenticationState,
 } from 'Configuration';
-import { required } from 'Util/validate';
+
+import fields from './fields';
 import styles from './styles';
 
 class Login extends Component {
@@ -34,7 +35,6 @@ class Login extends Component {
     this._showNotification = this._showNotification.bind(this);
     this._onLoginSocialClick = this._onLoginSocialClick.bind(this);
     this._onLoginSocialFailure = this._onLoginSocialFailure.bind(this);
-    this._renderHeadline = this._renderHeadline.bind(this);
     this._renderLoginSocial = this._renderLoginSocial.bind(this);
     this._renderLoginLocalForm = this._renderLoginLocalForm.bind(this);
     this._renderLoginLocalActions = this._renderLoginLocalActions.bind(this);
@@ -111,7 +111,7 @@ class Login extends Component {
     });
   }
 
-  _renderHeadline() {
+  static _renderHeadline() {
     return (
       <Grid
         style={{
@@ -161,26 +161,22 @@ class Login extends Component {
     );
   }
 
+  static _renderForm(form, key) {
+    return [
+      <Field
+        key={key}
+        component={TextView}
+        {...form.field}
+        {...form.field.props}
+      />,
+    ];
+  }
+
   _renderLoginLocalForm() {
     const { classes, submitSucceeded } = this.props;
     return (
       <Grid>
-        <Field
-          name="email"
-          placeholder="Email or Username"
-          type="text"
-          component={TextView}
-          label="Email or Username"
-          validate={[required]}
-        />
-        <Field
-          name="password"
-          placeholder="Password"
-          type="password"
-          component={TextView}
-          label="Password"
-          validate={required}
-        />
+        {Object.keys(fields).map(key => Login._renderForm(fields[key], key))}
         <FormHelperText className={classes.error}>
           {submitSucceeded && this.state.formErrors.message}
         </FormHelperText>
@@ -244,7 +240,7 @@ class Login extends Component {
             <Card raised className={classes.cardForm}>
               <form onSubmit={handleSubmit}>
                 <CardContent>
-                  {this._renderHeadline()} {this._renderLoginSocial()}
+                  {Login._renderHeadline()} {this._renderLoginSocial()}
                   {this._renderLoginLocalForm()}
                 </CardContent>
                 <CardActions> {this._renderLoginLocalActions()} </CardActions>
@@ -260,10 +256,10 @@ class Login extends Component {
 
 Login.propTypes = {
   getUserResponse: PropTypes.any,
-  history: PropTypes.any,
-  classes: PropTypes.any,
+  history: PropTypes.object,
+  classes: PropTypes.object,
   loading: PropTypes.bool,
-  handleSubmit: PropTypes.any,
+  handleSubmit: PropTypes.func,
   submitSucceeded: PropTypes.any,
   notification: PropTypes.object,
   addUserBySocialAccount: PropTypes.func,

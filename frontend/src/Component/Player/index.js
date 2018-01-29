@@ -10,12 +10,10 @@ class Player extends PureComponent {
     this.state = {
       played: 0,
       buffer: 0,
-      url: this.props.url,
-      seektime: this.props.seektime,
-      receivedAt: this.props.receivedAt,
+      seektime: props.seektime,
+      receivedAt: props.receivedAt,
       isPaused: false,
     };
-    console.log('constructor:', this.props);
     this._onStart = this._onStart.bind(this);
     this._onPause = this._onPause.bind(this);
     this._onPlay = this._onPlay.bind(this);
@@ -26,23 +24,15 @@ class Player extends PureComponent {
   componentWillReceiveProps(nextProps) {
     // Force update seektime when component receive new props
     this.setState({
-      played: this.state.played,
-      buffer: this.state.buffer,
-      url: nextProps.url,
       seektime: nextProps.seektime,
       receivedAt: nextProps.receivedAt,
     });
     this.seekToTime(nextProps);
   }
 
-  shouldComponentUpdate(nextProps) {
-    if (
-      this.state.url === nextProps.url &&
-      this.state.seektime !== nextProps.seektime
-    ) {
-      return false;
-    }
-    return true;
+  // Prevent calling render when isPaused changed
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.isPaused === nextState.isPaused;
   }
 
   seekToTime({ seektime, receivedAt }) {
@@ -63,9 +53,6 @@ class Player extends PureComponent {
     this.setState({
       played: played * 100,
       buffer: loaded * 100,
-      url: this.state.url,
-      seektime: this.state.seektime,
-      receivedAt: this.state.receivedAt,
     });
     const exactlyTime = Player._getExactlySeektime(this.state);
     const differentTime = Math.abs(exactlyTime - playedSeconds);
@@ -74,25 +61,14 @@ class Player extends PureComponent {
     }
   }
   _onPause() {
-    console.log('onPause');
     this.setState({
-      played: this.state.played,
-      buffer: this.state.buffer,
-      url: this.state.url,
-      seektime: this.state.seektime,
-      receivedAt: this.state.receivedAt,
       isPaused: true,
     });
   }
+
   _onPlay() {
-    console.log('onPlay');
     if (this.state.isPaused) {
       this.setState({
-        played: this.state.played,
-        buffer: this.state.buffer,
-        url: this.state.url,
-        seektime: this.state.seektime,
-        receivedAt: this.state.receivedAt,
         isPaused: false,
       });
       const exactlyTime = Player._getExactlySeektime(this.state);
@@ -103,11 +79,9 @@ class Player extends PureComponent {
     const {
       receivedAt, // unused
       songId, // unused
-      url,
       playing,
       showProgressbar,
-      onPlay,
-      onPause,
+      url,
       ...othersProps
     } = this.props;
     const { played, buffer } = this.state;
@@ -148,8 +122,6 @@ Player.propTypes = {
   receivedAt: PropTypes.number,
   songId: PropTypes.any,
   playing: PropTypes.bool,
-  onPlay: PropTypes.func,
-  onPause: PropTypes.func,
   showProgressbar: PropTypes.bool,
 };
 

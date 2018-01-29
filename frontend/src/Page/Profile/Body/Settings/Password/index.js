@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { settingsValidate, minLength6, required } from 'Util/validate';
+import { settingsValidate } from 'Util/validate';
 import { TextView } from 'Component';
 import { withStyles } from 'material-ui/styles/index';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
@@ -15,7 +15,10 @@ import { setPassword } from 'Redux/api/user/profile';
 
 import { trimText } from 'Transformer/transformText';
 import tokenInjector from 'Util/redux/tokenInjector';
+import fields from './fields';
 import styles from '../styles';
+
+// TODO: close modal after success
 
 class Password extends Component {
   constructor(props) {
@@ -28,6 +31,7 @@ class Password extends Component {
     this._renderChangePasswordForm = this._renderChangePasswordForm.bind(this);
     this._onCancelButtonClick = this._onCancelButtonClick.bind(this);
     this._submitModal = this._submitModal.bind(this);
+    this._renderForm = this._renderForm.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -47,40 +51,31 @@ class Password extends Component {
     this.props.onCancel();
   }
 
+  _renderForm(form, key) {
+    if (
+      form.field.name === 'currentPassword' &&
+      !this.props.user.data.is_password
+    ) {
+      return undefined;
+    }
+    return [
+      <Field
+        key={key}
+        component={TextView}
+        {...form.field}
+        {...form.field.props}
+      />,
+    ];
+  }
+
   _renderChangePasswordForm() {
-    const { classes, submitSucceeded, user: { data } } = this.props;
+    const { classes, submitSucceeded } = this.props;
 
     return [
-      data.is_password !== false && (
-        <Field
-          key={1}
-          name="currentPassword"
-          placeholder="Current password"
-          type="password"
-          component={TextView}
-          label="Current password"
-          validate={[required, minLength6]}
-        />
-      ),
-      <Field
-        key={2}
-        name="newPassword"
-        placeholder="New password"
-        type="password"
-        component={TextView}
-        label="New password"
-        validate={[required, minLength6]}
-      />,
-      <Field
-        key={3}
-        name="confirmPassword"
-        placeholder="Re-enter your password"
-        type="password"
-        component={TextView}
-        label="Confirm password"
-        validate={[required]}
-      />,
-      <FormHelperText key={4} className={classes.error}>
+      <Fragment key={1}>
+        {Object.keys(fields).map(key => this._renderForm(fields[key], key))}
+      </Fragment>,
+      <FormHelperText key={2} className={classes.error}>
         {submitSucceeded && this.state.formErrors}
       </FormHelperText>,
     ];

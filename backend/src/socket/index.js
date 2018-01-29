@@ -1,6 +1,7 @@
 import SocketIO from 'socket.io';
 import eventHandlers from './events';
 import eventManager from './managers';
+import { attachSocketIO } from './managers/onlineUserManager';
 import * as players from '../players';
 import * as EVENTS from '../const/actions';
 import * as CONSTANTS from '../const/constants';
@@ -9,7 +10,7 @@ import createEmitter from './managers/createEmitter';
 const io = SocketIO();
 
 io.on('connection', socket => {
-  eventHandlers.socketConnect(io, socket);
+  eventHandlers.socketConnect(createEmitter(socket, io));
 
   // Listening for action request
   socket.on('action', action => {
@@ -33,7 +34,7 @@ io.on('connection', socket => {
         break;
 
       case EVENTS.CLIENT_LEAVE_STATION:
-        eventHandlers.leaveStation(io, socket, action.payload.userId);
+        eventHandlers.leaveStation(socket, action.payload.userId);
         break;
 
       case EVENTS.CLIENT_ADD_SONG:
@@ -61,8 +62,7 @@ io.on('connection', socket => {
       case EVENTS.CLIENT_UPVOTE_SONG:
         eventHandlers.voteSong(
           CONSTANTS.UPVOTE_ACTION,
-          io,
-          socket,
+          createEmitter(socket, io),
           action.payload.userId,
           action.payload.stationId,
           action.payload.songId,
@@ -72,8 +72,7 @@ io.on('connection', socket => {
       case EVENTS.CLIENT_DOWNVOTE_SONG:
         eventHandlers.voteSong(
           CONSTANTS.DOWNVOTE_ACTION,
-          io,
-          socket,
+          createEmitter(socket, io),
           action.payload.userId,
           action.payload.stationId,
           action.payload.songId,
@@ -111,10 +110,14 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnecting', () => {
-    eventHandlers.socketDisconnect(io, socket);
+    eventHandlers.socketDisconnect(socket);
   });
 });
 
+// Attach web socket for Player
 players.attachWebSocket(io);
+
+// Attach web socket for online user manager
+attachSocketIO(io);
 
 export default io;

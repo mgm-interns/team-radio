@@ -1,16 +1,15 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { compose } from 'redux';
 import Cropper from 'react-cropper';
 import withStyles from 'material-ui/styles/withStyles';
-import Icon from 'material-ui/Icon';
-import toBase64 from 'Util//toBase64';
+import toBase64 from 'Util/toBase64';
 import Modal from 'material-ui/Modal';
 import Button from 'material-ui/Button';
 import Card, { CardContent, CardHeader, CardActions } from 'material-ui/Card';
-import CameraIcon from 'react-icons/lib/md/camera-alt';
 import { CircularProgress } from 'material-ui/Progress';
-import PropTypes from 'prop-types';
 import { withNotification } from 'Component/Notification';
-import { compose } from 'redux';
+
 import styles from './styles';
 
 const CLOUDINARY_UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
@@ -29,6 +28,7 @@ class ImageUploader extends Component {
 
     this._openFilePickerDialog = this._openFilePickerDialog.bind(this);
     this._onImagePicked = this._onImagePicked.bind(this);
+    this._resetValuesToDefault = this._resetValuesToDefault.bind(this);
     this.upload = this.upload.bind(this);
     this._crop = this._crop.bind(this);
   }
@@ -40,6 +40,7 @@ class ImageUploader extends Component {
       uploadedFile: null,
       response_url: null,
     });
+    this.input.value = null;
   }
 
   setStateAsync(state) {
@@ -76,7 +77,7 @@ class ImageUploader extends Component {
           open: false,
         });
 
-        const { user: { userId } } = this.props;
+        const { userId } = this.props;
 
         this.props.onUpload(userId, response.secure_url);
       }
@@ -86,6 +87,7 @@ class ImageUploader extends Component {
     fd.append('tags', 'browser_upload'); // Optional - add tag for image admin in Cloudinary
     fd.append('file', this.state.response_url);
     xhr.send(fd);
+    this._resetValuesToDefault();
   }
 
   _openFilePickerDialog(event) {
@@ -93,11 +95,15 @@ class ImageUploader extends Component {
     if (this.props.isDisabled) {
       this.input.click();
     }
+    this._resetValuesToDefault();
   }
 
   async _onImagePicked(event) {
     const { notification } = this.props;
+    console.log(event.target.files);
     const file = event.target.files[0];
+    console.log(event.target.files);
+
     if (file.size / 1024 / 1024 > 2) {
       notification.app.warning({
         message: `The picture size can not exceed 2MB.`,
@@ -114,17 +120,19 @@ class ImageUploader extends Component {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  _resetValuesToDefault() {
     this.setState({
       open: false,
       uploading: false,
       uploadedFile: null,
       response_url: null,
     });
-  };
+    this.input.value = null;
+  }
 
   render() {
     const { classes, children, titleCropper, aspectRatio } = this.props;
+    const { open, uploading } = this.state;
 
     return (
       <div>
@@ -141,7 +149,7 @@ class ImageUploader extends Component {
           onChange={this._onImagePicked}
         />
 
-        <Modal open={this.state.open} onClose={this.handleClose}>
+        <Modal open={open} onClose={this._resetValuesToDefault}>
           <Card className={classes.modalContainer}>
             <CardHeader className={classes.cardHeader} title={titleCropper} />
             <CardContent className={classes.cardContent}>
@@ -168,7 +176,7 @@ class ImageUploader extends Component {
 
             <div
               className={classes.loadingBackdrop}
-              style={{ display: !this.state.uploading && 'none' }}
+              style={{ display: !uploading && 'none' }}
             >
               <CircularProgress className={classes.loadingIcon} />
             </div>
@@ -180,9 +188,9 @@ class ImageUploader extends Component {
 }
 
 ImageUploader.propTypes = {
-  classes: PropTypes.any,
-  updateAvatar: PropTypes.any,
-  user: PropTypes.any,
+  classes: PropTypes.object,
+  updateAvatar: PropTypes.func,
+  userId: PropTypes.string,
   children: PropTypes.node,
   onUpload: PropTypes.func,
   titleCropper: PropTypes.string,

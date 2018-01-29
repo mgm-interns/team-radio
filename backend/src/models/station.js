@@ -17,6 +17,7 @@ const stationSchema = mongoose.Schema({
         {
           song_id: { type: Number, require: true, },
           is_played: { type: Boolean, },
+          is_skipped: { type: Boolean, default: false},
           url: { type: String, required: true, },
           title: { type: String, },
           thumbnail: { type: String, },
@@ -392,7 +393,9 @@ module.exports.isFirstAddedSong = async (stationId, songId, songUrl) => {
   }
 }
 
-
+module.exports.addCreatorPoints = async (stationId, songId) => {
+  return true;
+}
 // module.exports.getListSongHistory = async stationId => {
 //   // TODO :
 //   const station = await Station.aggregate(

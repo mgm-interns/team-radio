@@ -27,18 +27,18 @@ class FilterFavourites extends Component {
     };
 
     this._showNotification = this._showNotification.bind(this);
-    this._requestFavouriteSongs = this._requestFavouriteSongs.bind(this);
+    this._getFavouriteSongs = this._getFavouriteSongs.bind(this);
     this._onRemoveSong = this._onRemoveSong.bind(this);
   }
 
   componentDidMount() {
-    this._requestFavouriteSongs(this.props);
+    this._getFavouriteSongs(this.props);
   }
 
-  _requestFavouriteSongs(props) {
+  _getFavouriteSongs(props) {
     const { userId } = props;
 
-    this.props.requestFavouriteSongs(userId);
+    this.props.getFavouriteSongs(userId);
   }
 
   _onRemoveSong({ songId, userId, songUrl }) {
@@ -47,7 +47,7 @@ class FilterFavourites extends Component {
       userId,
       songUrl,
     });
-    this._requestFavouriteSongs({ userId });
+    this._getFavouriteSongs({ userId });
     this.forceUpdate();
   }
 
@@ -92,7 +92,7 @@ FilterFavourites.propTypes = {
   station: PropTypes.object,
   history: PropTypes.object,
   favouriteSongs: PropTypes.object,
-  requestFavouriteSongs: PropTypes.func,
+  getFavouriteSongs: PropTypes.func,
   userId: PropTypes.string,
   favourite: PropTypes.object,
   notification: PropTypes.any,
@@ -104,7 +104,7 @@ const mapStateToProps = ({ api }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  requestFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
+  getFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
   favouriteSongRequest: ({ songId, userId, stationId, songUrl }) =>
     dispatch(favouriteSongRequest({ songId, userId, stationId, songUrl })),
 });

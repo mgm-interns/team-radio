@@ -24,13 +24,13 @@ const POINTS_FOR_NEXT_SONG = 1;
  * @param {boolean} isPrivate - If false then station is public, if true then station is private
  */
 export const addStation = async (stationName, userId, isPrivate) => {
-  const currentStationName = stationName.trim();
-  // if (isNaN(currentStationName) == false)
-  //   throw new Error('The station name can not be a number!');
+  const currentStationName = stationName.trim().toString();
   if (!currentStationName) {
     throw new Error('The station name can not be empty!');
   } else {
     try {
+      // if (isNaN(currentStationName) == false)
+      //   throw new Error('The station name can not be a number!');
       const availableStation = await stationModels.getStationByName(
         currentStationName,
       );
@@ -100,7 +100,7 @@ export const deleteStation = async (stationId, userId) => {
 };
 
 /**
- * Get a statio by id
+ * Get a station by id
  *
  * @param {string} stationId
  */
@@ -219,7 +219,7 @@ export const updateStartingTime = async (stationId, time) => {
  * @param {string} stationId
  * @param {string} songIds
  */
-export const setPlayedSongs = async (stationId, songIds) => {
+export const setPlayedSongs = async (stationId, songIds, isSkipped = false) => {
   try {
     const currentPlaylist = await getListSong(stationId);
     if (currentPlaylist) {
@@ -227,6 +227,7 @@ export const setPlayedSongs = async (stationId, songIds) => {
         for (let j = 0; j < currentPlaylist.length; j++) {
           if (currentPlaylist[j].song_id === songIds[i]) {
             currentPlaylist[j].is_played = true;
+            currentPlaylist[j].is_skipped = isSkipped;
           }
         }
       }
@@ -290,7 +291,7 @@ export const getListSongHistory = async (stationId, limit) => {
     const history = filter(listSong, ['is_played', true]);
     const orderedSongs = orderBy(history, ['created_date'], ['desc']);
     const uniqueHistory = uniqBy(orderedSongs, 'url');
-    const limitHistory = slice(uniqueHistory,0,limit);
+    const limitHistory = slice(uniqueHistory, 0, limit);
     return limitHistory;
   } catch (error) {
     throw error;
