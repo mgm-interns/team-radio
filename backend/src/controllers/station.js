@@ -446,7 +446,6 @@ export const downVote = async (stationId, songId, userId) => {
       userAddedPoints = -1;
       downVoteArray.push(userId);
     }
-    /*
     // Update user points when down vote
     await stationModels.updateVotes(
       stationId,
@@ -454,13 +453,14 @@ export const downVote = async (stationId, songId, userId) => {
       upVoteArray,
       downVoteArray,
     );
-    */
+    /*
     // TODO: update votes of users in the station
     stationModels.increaseUserPoints(
       stationId,
       currentSong.creator,
       userAddedPoints,
     );
+    */
     const playList = await getAvailableListSong(stationId);
     return playList;
   } catch (err) {
