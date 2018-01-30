@@ -17,6 +17,7 @@ import user from '../routes/user';
 const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 const POINTS_FOR_FIRST_SONG = 2;
 const POINTS_FOR_NEXT_SONG = 1;
+const MINIMUM_DURATION = 60;
 /**
  *
  * @param {string} stationName
@@ -385,11 +386,14 @@ export const upVote = async (stationId, songId, userId) => {
       downVoteArray,
     );
     // TODO: update votes of users in the station
+    /*
+    // Update user points when up vote
     stationModels.increaseUserPoints(
       stationId,
       currentSong.creator,
       userAddedPoints,
     );
+    */
     const playList = await getAvailableListSong(stationId);
     return playList;
   } catch (err) {
@@ -442,12 +446,15 @@ export const downVote = async (stationId, songId, userId) => {
       userAddedPoints = -1;
       downVoteArray.push(userId);
     }
+    /*
+    // Update user points when down vote
     await stationModels.updateVotes(
       stationId,
       songId,
       upVoteArray,
       downVoteArray,
     );
+    */
     // TODO: update votes of users in the station
     stationModels.increaseUserPoints(
       stationId,
@@ -491,6 +498,34 @@ export const getListStationUserAddedSong = async userId => {
 export const setSkippedSong = async (stationId, songId) => {
   // TODO: set the song to skipped and update the song to played
 };
+
+// When user join station
+export const joinStation = async (stationId, userId) => {
+  userId = _safeObjectId(userId);
+  await stationModels.joinStation(stationId, userId);
+  // await stationModels.joinStation(stationId, userId);
+}
+
+export const addCreatorPoints = async (stationId, songId) => {
+  const song = (await stationModels.getAsongInStation(stationId, songId))[0];
+  let receivedPoints = 0;
+  // TODO: change hard number to const
+  if (song.is_skipped) {
+    receivedPoints = receivedPoints - 1;
+  } else if (song.duration > MINIMUM_DURATION) {
+    if (stationModels.isFirstAddedSong(stationId, song.song_id, song.url)) {
+      receivedPoints = receivedPoints + 5;
+    } else {
+      receivedPoints = receivedPoints + 1;
+    }
+  }
+  receivedPoints = receivedPoints + song.up_vote.length - song.down_vote.length;
+  console.log('receivedPoints: ', receivedPoints);
+  stationModels.increaseUserPoints(stationId, song.creator, receivedPoints);
+
+}
+
+
 
 // Covert string to ObjectId
 const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);

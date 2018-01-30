@@ -226,9 +226,6 @@ module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) =
  * @param {{}} song
  */
 module.exports.addSong = (stationId, song) => {
-  if (song.creator) {
-    addUserPoints(stationId, song.creator);
-  }
   let query = { station_id: stationId };
   return Station.update(query, {
     $addToSet: {
@@ -347,7 +344,8 @@ module.exports.getStationHasSongUserAdded = async (userId) => {
   return usreStations;
 }
 
-async function addUserPoints(stationId, userId) {
+
+module.exports.joinStation = async (stationId, userId) => {
   const station = await module.exports.getStationById(stationId);
   const user_points = station.user_points;
   for (let i = 0; i < user_points.length; i++) {
@@ -371,6 +369,9 @@ module.exports.increaseUserPoints = async (stationId, userId, increasingPoints) 
     for (let i = 0; i < user_points.length; i++) {
       if (user_points[i].user_id.equals(userId)) {
         user_points[i].points += increasingPoints;
+        if (user_points[i].points < 0)
+          user_points[i].points = 0;
+        break;
       }
     }
     return Station.update({ station_id: stationId, is_delete: false }, {

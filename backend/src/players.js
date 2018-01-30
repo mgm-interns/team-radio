@@ -201,7 +201,6 @@ class Player {
         );
         this._emitStationState();
         if (this.skippedSongs.has(song.song_id)) {
-          this.skippedSongs.delete(song.song_id);
           // TODO: setSkippedSong not working well now
           this._skipNowPlayingSong(TIME_BUFFER);
         } else {
@@ -230,21 +229,19 @@ class Player {
           [this.nowPlaying.song_id],
           this.isSkipped,
         );
-        if (this.isSkipped) {
-          this.isSkipped = false;
-        }
-        /*
+        this.isSkipped = false;
         stationController.addCreatorPoints(
           this.stationId,
           this.nowPlaying.song_id,
         );
-        */
         this._setPlayableSong();
       }
     }, timeout);
   };
 
   _skipNowPlayingSong = skipTime => {
+    this.skippedSongs.delete(this.nowPlaying.song_id);
+    this.isSkipped = true;
     this._nextSongByTimeout(skipTime, this.nowPlaying.song_id);
     this._emitSkippedSong(skipTime);
   };
