@@ -51,7 +51,7 @@ const _joinStationProcess = async (emitter, socket, userId, station) => {
    * - If user already in station, allow join request and not send any notification
    */
   if (!alreadyInRoom) {
-    stationController.joinStation(stationId, userId);
+    if (userId) stationController.joinStation(stationId, userId);
     _join(emitter, socket, userId, station);
 
     // Skip song decision when online user change
