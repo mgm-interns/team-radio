@@ -139,6 +139,7 @@ NowPlaying.propTypes = {
 
 const mapStateToProps = ({ api: { currentStation } }) => ({
   skip: currentStation.skip,
+  nowPlaying: currentStation.nowPlaying,
 });
 
 export default compose(connect(mapStateToProps), withStyles(styles))(

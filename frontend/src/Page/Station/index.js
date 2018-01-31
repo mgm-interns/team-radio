@@ -322,7 +322,6 @@ class StationPage extends Component {
                   })}
                   autoPlay={true}
                   muted={muted}
-                  nowPlaying={nowPlaying}
                 />
                 {nowPlayingSong && passive ? (
                   <div className={classes.nowPlayingInfo}>
