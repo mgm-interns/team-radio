@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import LightBuldIcon from 'react-icons/lib/fa/lightbulb-o';
+import VolumeUpIcon from 'react-icons/lib/md/volume-up';
+import VolumeOffIcon from 'react-icons/lib/md/volume-off';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
@@ -313,7 +315,7 @@ class StationPage extends Component {
                           [classes.passiveStationMainColor]: passive,
                         })}
                       >
-                        {muted ? 'volume_off' : 'volume_up'}
+                        {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
                       </IconButton>
                     )}
                     <IconButton

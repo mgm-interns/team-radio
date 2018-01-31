@@ -106,7 +106,8 @@ export default ({ palette, breakpoints, spacing }) => ({
     },
   },
   sendIcon: {
-    paddingLeft: '0.5em',
+    marginLeft: '0.5em',
+    fontSize: '1.5em',
   },
   bar: {},
   checked: {

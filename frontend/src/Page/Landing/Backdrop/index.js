@@ -10,6 +10,7 @@ import { FormControl, FormHelperText } from 'material-ui/Form';
 import Input, { InputLabel } from 'material-ui/Input';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
+import RadioIcon from 'react-icons/lib/md/radio';
 
 import { withStyles } from 'material-ui/styles';
 import { createStation } from 'Redux/api/stations/actions';
@@ -110,7 +111,9 @@ class Backdrop extends Component {
               disabled={!this.state.stationName}
             >
               {fixture.button.name}
-              <Icon className={classes.sendIcon}>radio</Icon>
+              <Icon className={classes.sendIcon}>
+                <RadioIcon />
+              </Icon>
             </Button>
           </Grid>
           <Grid item xs className={classes.backgroundImg}>

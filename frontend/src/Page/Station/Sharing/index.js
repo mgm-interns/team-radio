@@ -10,6 +10,7 @@ import Card, { CardContent, CardActions } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import Input from 'material-ui/Input';
 import IconButton from 'material-ui/IconButton';
+import ShareIcon from 'react-icons/lib/md/share';
 import FacebookIcon from 'react-icons/lib/fa/facebook-square';
 import GoogleIcon from 'react-icons/lib/fa/google-plus-square';
 import TwitterIcon from 'react-icons/lib/fa/twitter-square';
@@ -131,7 +132,7 @@ class StationSharing extends Component {
           color={this.state.open ? 'primary' : 'default'}
           className={classNames({ [classes.passiveStationMainColor]: passive })}
         >
-          share
+          <ShareIcon />
         </IconButton>
         <Popover
           anchorOrigin={{
