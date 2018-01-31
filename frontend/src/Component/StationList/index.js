@@ -82,7 +82,6 @@ class StationList extends Component {
         className={classes.container}
         contentClassName={classes.content}
         smoothScrolling
-        stopScrollPropagation
         ref={scrollbarRef}
       >
         {stations.map((station, index) => (
