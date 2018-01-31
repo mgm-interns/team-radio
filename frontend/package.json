@@ -43,6 +43,7 @@
     "react-router-dom": "^4.2.2",
     "react-scrollbar": "^0.5.1",
     "react-virtual-list": "^2.2.3",
+    "react-virtualized": "^9.18.1",
     "redux": "^3.7.2",
     "redux-api-middleware": "^2.0.1",
     "redux-form": "^7.2.0",

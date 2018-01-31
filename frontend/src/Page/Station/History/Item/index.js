@@ -64,7 +64,7 @@ class HistoryItem extends Component {
     const { thumbnail, title, creator, duration, classes } = this.props;
     return (
       <Grid container className={classes.container}>
-        <Grid item xs={3} className={classes.thumbnail}>
+        <Grid item xs={3} sm={2} md={3} className={classes.thumbnail}>
           <img className={classes.img} src={thumbnail} />
           <div className={classes.duration}>
             <span className={classes.durationText}>
@@ -72,7 +72,7 @@ class HistoryItem extends Component {
             </span>
           </div>
         </Grid>
-        <Grid item xs={8} className={classes.info}>
+        <Grid item xs={8} sm={9} md={8} className={classes.info}>
           <Tooltip placement={'bottom'} title={title}>
             <div className={classes.name}>{title}</div>
           </Tooltip>

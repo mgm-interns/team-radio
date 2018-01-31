@@ -31,6 +31,7 @@ export default theme => {
     },
     channelName: {
       marginLeft: 'auto',
+      fontSize: '0.9em',
     },
     warningText: {
       color: yellow[900],
@@ -90,7 +91,7 @@ export default theme => {
     content: {
       margin: 0,
       width: fullWidth,
-      height: 186,
+      height: 230,
     },
     loadingContainer: {
       height: fullHeight,
@@ -98,7 +99,7 @@ export default theme => {
     },
     emptyCollection: {
       width: fullWidth,
-      height: 186,
+      height: 230,
       margin: 'auto',
     },
     emptyImg: {
@@ -108,6 +109,9 @@ export default theme => {
     },
     notFound: {
       width: '40%',
+    },
+    messageInput: {
+      marginTop: baseMargin,
     },
 
     /* Search */

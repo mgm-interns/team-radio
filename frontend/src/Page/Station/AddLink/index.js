@@ -410,7 +410,7 @@ class AddLink extends Component {
     const { classes } = this.props;
 
     return (
-      <Grid item md={5} xs={12} className={classes.addLinkBoxLeft}>
+      <Grid item md={4} xs={12} className={classes.addLinkBoxLeft}>
         <Grid
           container
           className={classes.gridContainer}
@@ -436,8 +436,7 @@ class AddLink extends Component {
               renderSuggestion={this._renderSuggestion}
               inputProps={{
                 classes,
-                placeholder:
-                  "Type the Youtube's video name. e.g. Shape of you,...",
+                placeholder: 'Type the video name. e.g. Shape of you,...',
                 value: this.state.searchText,
                 onChange: this._onChange,
               }}
@@ -459,7 +458,7 @@ class AddLink extends Component {
       const videoDuration = moment.duration(preview.contentDetails.duration);
       view = (
         <Grid container className={classes.content}>
-          <Grid item sm={4} xs={12} className={classes.previewImg}>
+          <Grid item xs={12} sm={4} className={classes.previewImg}>
             <Player
               url={this._getVideoUrl(preview)}
               showProgressbar={false}
@@ -513,6 +512,7 @@ class AddLink extends Component {
               placeholder="Do you want to say something about this video?"
               value={this.state.songMessage}
               onChange={this._onSongMessageChange}
+              className={classes.messageInput}
             />
             <IconButton
               onClick={this._onVolumeClick}
@@ -540,7 +540,7 @@ class AddLink extends Component {
     }
 
     return (
-      <Grid item md={7} xs={12} className={classes.addLinkBoxRight}>
+      <Grid item xs={12} md={8} className={classes.addLinkBoxRight}>
         {view}
       </Grid>
     );
