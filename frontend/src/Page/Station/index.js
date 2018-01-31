@@ -14,7 +14,11 @@ import classNames from 'classnames';
 import fixture from 'Fixture/landing';
 import { transformNumber } from 'Transformer';
 import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
-import { joinStation, leaveStation } from 'Redux/api/currentStation/actions';
+import {
+  joinStation,
+  redirectStation,
+  leaveStation,
+} from 'Redux/api/currentStation/actions';
 import { getFavouriteSongs } from 'Redux/api/favouriteSongs/actions';
 import {
   muteVideoRequest,
@@ -116,14 +120,20 @@ class StationPage extends Component {
       // this.props.getFavouriteSongs(userId);
     }
     // Check if user is already joined in other station
-    if (!joined.loading && joined.failed && !!joined.loggedInStation) {
+    if (
+      !joined.loading &&
+      joined.failed &&
+      !!joined.loggedInStation &&
+      !this.loggedInStationTimeout
+    ) {
       this.props.disableStationsSwitcher();
 
       this.loggedInStationTimeout = setTimeout(() => {
         const { stationId } = joined.loggedInStation;
+        console.log(stationId);
         history.replace(`/station/${stationId}`);
         this.props.enableStationsSwitcher();
-        this.props.joinStation({ stationId, userId });
+        this.props.redirectStation({ stationId, userId });
         // this.props.getFavouriteSongs(userId);
       }, 5000);
       return;
@@ -132,7 +142,7 @@ class StationPage extends Component {
     if (!joined.loggedInStation) {
       clearTimeout(this.loggedInStationTimeout);
     }
-    if (!joined.loading && joined.failed) {
+    if (!joined.loading && joined.failed && !joined.loggedInStation) {
       history.replace('/');
     }
   }
@@ -353,6 +363,7 @@ StationPage.propTypes = {
   classes: PropTypes.object,
   joinStation: PropTypes.func,
   leaveStation: PropTypes.func,
+  redirectStation: PropTypes.func,
   match: PropTypes.any,
   history: PropTypes.object,
   currentStation: PropTypes.any,
@@ -384,6 +395,7 @@ const mapStateToProps = ({ api, page }) => ({
 const mapDispatchToProps = dispatch => ({
   joinStation: stationId => dispatch(joinStation(stationId)),
   leaveStation: option => dispatch(leaveStation(option)),
+  redirectStation: stationId => dispatch(redirectStation(stationId)),
   muteVideoRequest: ({ muteNowPlaying, mutePreview, userDid }) =>
     dispatch(muteVideoRequest({ muteNowPlaying, mutePreview, userDid })),
   passiveUserRequest: isPassive => dispatch(passiveUserRequest(isPassive)),

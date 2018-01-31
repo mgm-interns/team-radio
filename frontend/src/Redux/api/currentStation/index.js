@@ -21,7 +21,7 @@ import {
   CLIENT_FAVOURITE_SONG,
   SERVER_ADD_FAVOURITE_SONG_SUCCESS,
   SERVER_REMOVE_FAVOURITE_SONG_SUCCESS,
-  SERVER_FAVOURITE_SONG_FAILURE,
+  SERVER_FAVOURITE_SONG_FAILURE, CLIENT_REDIRECT_STATION,
 } from 'Redux/actions';
 import remove from 'lodash/remove';
 
@@ -58,7 +58,20 @@ export default (state = INITIAL_STATE, action) => {
           station_id: action.payload.stationId,
         },
         joined: {
-          ...state,
+          ...state.joined,
+          loading: true,
+          success: false,
+          failed: false,
+        },
+      };
+    case CLIENT_REDIRECT_STATION:
+      return {
+        ...state,
+        station: {
+          station_id: action.payload.stationId,
+        },
+        joined: {
+          ...state.joined,
           loading: true,
           success: false,
           failed: false,

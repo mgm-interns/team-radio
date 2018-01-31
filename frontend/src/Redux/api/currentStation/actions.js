@@ -4,6 +4,7 @@ import {
   CLIENT_JOIN_STATION,
   CLIENT_DOWNVOTE_SONG,
   CLIENT_LEAVE_STATION,
+  CLIENT_REDIRECT_STATION,
 } from 'Redux/actions';
 
 const DEFAULT_USER_ID = '0';
@@ -11,6 +12,11 @@ const DEFAULT_USER_ID = '0';
 // Client action creator
 export const joinStation = ({ stationId, userId = DEFAULT_USER_ID }) => ({
   type: CLIENT_JOIN_STATION,
+  payload: { userId, stationId: stationId.toString() },
+});
+
+export const redirectStation = ({ stationId, userId = DEFAULT_USER_ID }) => ({
+  type: CLIENT_REDIRECT_STATION,
   payload: { userId, stationId: stationId.toString() },
 });
 
