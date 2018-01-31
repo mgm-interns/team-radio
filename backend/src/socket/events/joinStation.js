@@ -131,4 +131,12 @@ const _join = async (emitter, socket, userId, station) => {
 
   // Let switcher sort station list again when online user change
   switcher.updateNumberOfOnlineUsersInStation(stationId, count);
+
+  // update Station Score
+  try {
+    const stationScores = await stationController.getStationScores(stationId);
+    emitter.emit(EVENTS.SERVER_UPDATE_STATION_SCORE, stationScores);
+  } catch (err) {
+    console.log('update station scores error: ' + err.message);
+  }
 };

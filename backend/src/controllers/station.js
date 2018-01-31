@@ -514,19 +514,22 @@ export const addCreatorPoints = async (stationId, songId) => {
     receivedPoints = receivedPoints - 1;
   } else if (song.duration > MINIMUM_DURATION) {
     if (stationModels.isFirstAddedSong(stationId, song.song_id, song.url)) {
-      receivedPoints = receivedPoints + 5;
+      receivedPoints = receivedPoints + POINTS_FOR_FIRST_SONG;
     } else {
-      receivedPoints = receivedPoints + 1;
+      receivedPoints = receivedPoints + POINTS_FOR_NEXT_SONG;
     }
   }
   receivedPoints = receivedPoints + song.up_vote.length - song.down_vote.length;
   if (receivedPoints !== 0) {
     stationModels.increaseUserPoints(stationId, song.creator, receivedPoints);
-    return stationModels.getAllStationScore(stationId);
+    return stationModels.getAllStationScores(stationId);
   }
   return null;
 }
 
+export const getStationScores = async stationId => {
+  return stationModels.getAllStationScores(stationId);
+}
 
 
 // Covert string to ObjectId
@@ -538,33 +541,6 @@ function _stringToId(str) {
     .replace(/ /g, '-')
     .replace(/[^a-z0-9-]/g, '');
 }
-
-export const addPointsByPlayedSong = async (stationId, songId) => {
-  try {
-    let song = await stationModels.getAsongInStation(stationId, songId);
-    song = song[0];
-    if (!song) {
-      throw new Error('Song id is not avalable: ', songId);
-    }
-    if (
-      await stationModels.isFirstAddedSong(stationId, song.song_id, song.url)
-    ) {
-      stationModels.increaseUserPoints(
-        stationId,
-        song.creator,
-        POINTS_FOR_FIRST_SONG,
-      );
-    } else {
-      stationModels.increaseUserPoints(
-        stationId,
-        song.creator,
-        POINTS_FOR_NEXT_SONG,
-      );
-    }
-  } catch (err) {
-    throw err;
-  }
-};
 
 export const countSongAddByUserId = async (userId, station_id) => {
   try {

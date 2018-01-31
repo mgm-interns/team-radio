@@ -395,7 +395,7 @@ module.exports.isFirstAddedSong = async (stationId, songId, songUrl) => {
   throw new Error('The song do not exist');
 }
 
-module.exports.getAllStationScore = async (stationId) => {
+module.exports.getAllStationScores = async (stationId) => {
   const station = await Station.findOne({ station_id: stationId});
   if (station){
     return station.user_points;
