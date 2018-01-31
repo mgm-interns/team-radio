@@ -63,7 +63,7 @@ export const countOnlineOfStation = async stationId => {
   const listSocket = await getListSocketIdInStation(stationId);
   listSocket.forEach(socketId => {
     const socket = getSocketById(socketId);
-    if (!socket.userId || socket.userId === '0') {
+    if (!socket.userId || socket.userId === CONSTANTS.ANONYMOUS_ID) {
       anonymous += 1;
     }
   });
@@ -162,7 +162,7 @@ export const getListUserIdOnline = async stationId => {
   socketList.forEach(socketId => {
     const socket = getSocketById(socketId);
     const userId = socket.userId;
-    if (userId && userId !== '0') {
+    if (userId && userId !== CONSTANTS.ANONYMOUS_ID) {
       userList.add(userId);
     }
   });

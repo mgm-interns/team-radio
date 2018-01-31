@@ -1,5 +1,6 @@
 import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
+import * as CONSTANTS from '../../const/constants';
 
 export default async (emitter, userId) => {
   const user = await userController.getUserById(userId);
@@ -13,7 +14,7 @@ export default async (emitter, userId) => {
     }
   } else {
     emitter.emit(EVENTS.SERVER_GET_FAVOURITE_SONG_FAILURE, {
-      message: 'You need to login to use this feature.',
+      message: CONSTANTS.MESSAGE_LOGIN_REQUIRED,
     });
   }
 };
@@ -31,6 +32,6 @@ const _getFavouriteSongs = async (emitter, userId) => {
     return;
   }
   emitter.emit(EVENTS.SERVER_GET_FAVOURITE_SONG_FAILURE, {
-    message: "Can't get favourite songs of this user",
+    message: CONSTANTS.MESSAGE_LOGIN_REQUIRED,
   });
 };
