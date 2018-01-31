@@ -84,8 +84,14 @@ class StationPage extends Component {
 
     this._checkValidStation(nextProps);
 
+    // Close passive screen if nowPlaying is finished
     if (!nowPlaying.url) {
       this.props.passiveUserRequest();
+    }
+
+    // Update video's information when nowPlaying is changed
+    if (this.state.isPassive && nowPlaying.url) {
+      this._getFilteredPlaylist();
     }
 
     this.setState({

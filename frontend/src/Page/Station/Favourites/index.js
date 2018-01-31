@@ -8,6 +8,8 @@ import { withStyles } from 'material-ui/styles';
 import Item from './Item';
 import styles from './styles';
 
+const ROW_HEIGHT = 80;
+
 class FavouriteVideos extends Component {
   constructor(props) {
     super(props);
@@ -60,7 +62,7 @@ class FavouriteVideos extends Component {
             width={listWidth}
             height={listHeight}
             rowCount={data.length}
-            rowHeight={80}
+            rowHeight={ROW_HEIGHT}
             rowRenderer={this._renderRow}
             overscanRowCount={10}
           />
