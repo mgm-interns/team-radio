@@ -81,7 +81,6 @@ class StationList extends Component {
         level={scrollbarInstanceLevel}
         className={classes.container}
         contentClassName={classes.content}
-        swapWheelAxes={true}
         smoothScrolling
         stopScrollPropagation
         ref={scrollbarRef}
