@@ -76,10 +76,21 @@ const _joinStationProcess = async (emitter, socket, userId, station) => {
   }
 };
 
+/**
+ * TODO: Enhancement performance:
+ * - Use Promise All instead of await
+ * - Some other way.
+ */
 const _join = async (emitter, socket, userId, station) => {
   const stationId = station.station_id;
   const stationName = station.station_name;
   socket.join(stationId);
+
+  /**
+   * An user cannot listening on multi station at a time
+   * => Force any other tabs or browser redirect to most recent station
+   */
+  onlineManager.leaveStationAlreadyIn(userId, stationId, stationName, socket);
 
   // Notify join success
   delete station.playlist;
@@ -117,12 +128,6 @@ const _join = async (emitter, socket, userId, station) => {
   emitter.emit(EVENTS.SERVER_UPDATE_HISTORY, {
     history: history,
   });
-
-  /**
-   * An user cannot listening on multi station at a time
-   * => Force any other tabs or browser redirect to most recent station
-   */
-  onlineManager.leaveStationAlreadyIn(userId, stationId, stationName, socket);
 
   // Let switcher sort station list again when online user change
   switcher.updateNumberOfOnlineUsersInStation(stationId, count);
