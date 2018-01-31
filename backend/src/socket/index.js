@@ -1,14 +1,16 @@
 import SocketIO from 'socket.io';
 import eventHandlers from './events';
 import eventManager from './managers';
-import { attachSocketIO } from './managers/onlineUserManager';
+import createEmitter from './managers/createEmitter';
+import * as onlineManager from './managers/onlineUserManager';
 import * as players from '../players';
 import * as EVENTS from '../const/actions';
 import * as CONSTANTS from '../const/constants';
-import createEmitter from './managers/createEmitter';
 
+// Create web socket
 const io = SocketIO();
 
+// Listening for Web socket events
 io.on('connection', socket => {
   eventHandlers.socketConnect(createEmitter(socket, io));
 
@@ -96,6 +98,15 @@ io.on('connection', socket => {
         );
         break;
 
+      case EVENTS.CLIENT_REDIRECT_STATION:
+        eventHandlers.redirectStation(
+          createEmitter(socket, io),
+          socket,
+          action.payload.userId,
+          action.payload.stationId,
+        );
+        break;
+
       case EVENTS.CLIENT_SEARCH_STATION:
         eventHandlers.searchStation(
           createEmitter(socket, io),
@@ -104,11 +115,14 @@ io.on('connection', socket => {
         break;
 
       default:
+        eventManager.stationEvents(io, socket, action);
+        eventManager.songEvents(io, socket, action);
         eventManager.chatEvents(io, socket, action);
         break;
     }
   });
 
+  // Handle when socket disconnect
   socket.on('disconnecting', () => {
     eventHandlers.socketDisconnect(socket);
   });
@@ -118,6 +132,6 @@ io.on('connection', socket => {
 players.attachWebSocket(io);
 
 // Attach web socket for online user manager
-attachSocketIO(io);
+onlineManager.attachSocketIO(io);
 
 export default io;

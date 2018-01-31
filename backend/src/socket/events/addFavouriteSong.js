@@ -49,20 +49,24 @@ const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) =>
   const status =
     await userController.addFavouriteSong(songId, userId, songUrl, stationId);
 
-  const list = await userController.getFavouritedSongs(userId);
+  const listFavorited = await userController.getFavouritedSongs(userId);
+
   if (status === userController.ADD_FAVOURITE_SUCCESS) {
     /* eslint-disable consistent-return */
-    list.forEach(item => {
-      if (item.song_id === songId) {
-        song = item;
+    listFavorited.forEach(songItem => {
+      if (songItem.song_id === songId) {
+        song = songItem;
         return false;
       }
     });
+
     emitter.emit(EVENTS.SERVER_ADD_FAVOURITE_SONG_SUCCESS, {
       song,
     });
+
     return;
   }
+
   if (
     status === userController.UN_FAVOURITE_SUCCESS ||
     status === userController.UN_FAVOURITE_SUCCESS_PROFILE

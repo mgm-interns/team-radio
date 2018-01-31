@@ -9,6 +9,7 @@ import socketConnect from './socketConnect';
 import addFavourite from './addFavouriteSong';
 import getFavouriteSongs from './getFavouriteSongs';
 import searchStation from './searchStation';
+import redirectStation from './redirectStation';
 
 export default {
   socketConnect,
@@ -22,4 +23,5 @@ export default {
   getFavouriteSongs,
   addFavourite,
   searchStation,
+  redirectStation,
 };

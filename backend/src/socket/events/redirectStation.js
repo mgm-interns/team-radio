@@ -1,32 +1,21 @@
-/** *******************************************************
- *                                                        *
- *                                                        *
- *                      JOIN STATION                      *
- *                        By Ryker                        *
- *                                                        *
- *                                                        *
- ******************************************************** */
-
-import * as EVENTS from '../../const/actions';
-import * as CONSTANTS from '../../const/constants';
 import * as stationController from '../../controllers/station';
 import * as userController from '../../controllers/user';
-import * as players from '../../players';
 import * as onlineManager from '../managers/onlineUserManager';
+import * as EVENTS from '../../const/actions';
+import * as CONSTANTS from '../../const/constants';
+import * as players from '../../players';
 import * as switcher from '../../switcher';
-import createEmitter from '../managers/createEmitter';
 import skipDecider from '../managers/skipDecider';
 
-export default async (io, socket, userId, stationId) => {
-  const emitter = createEmitter(socket, io);
+export default async (emitter, socket, userId, stationId) => {
   try {
-    // Check if stationId is not exist, decline join request
+    // Check if stationId is not exist, decline redirect request
     const station = await stationController.getStation(stationId);
 
     // Leave all station has joined before
     await onlineManager.leaveAllStation(socket, userId);
 
-    _joinStationProcess(emitter, socket, userId, station);
+    _redirectStationProcess(emitter, socket, userId, station);
   } catch (err) {
     socket.leaveAll();
     emitter.emit(EVENTS.SERVER_JOINED_STATION_FAILURE, {
@@ -35,15 +24,15 @@ export default async (io, socket, userId, stationId) => {
   }
 };
 
-const _joinStationProcess = async (emitter, socket, userId, station) => {
+const _redirectStationProcess = async (emitter, socket, userId, station) => {
   const stationId = station.station_id;
 
   const user = await userController.getUserById(userId);
   socket.userId = user ? userId : undefined;
 
   // eslint-disable-next-line
-  const alreadyInRoom =
-    await onlineManager.userAlreadyInRoom(stationId, userId);
+    const alreadyInRoom =
+      await onlineManager.userAlreadyInRoom(stationId, userId);
 
   /**
    * This conditional check if user already in station:
@@ -78,7 +67,6 @@ const _joinStationProcess = async (emitter, socket, userId, station) => {
 
 const _join = async (emitter, socket, userId, station) => {
   const stationId = station.station_id;
-  const stationName = station.station_name;
   socket.join(stationId);
 
   // Notify join success
@@ -112,17 +100,11 @@ const _join = async (emitter, socket, userId, station) => {
 
   // Update history
   // eslint-disable-next-line
-  const history =
-    await stationController.getListSongHistory(stationId, CONSTANTS.HISTORY_LIMIT);
+    const history =
+      await stationController.getListSongHistory(stationId, CONSTANTS.HISTORY_LIMIT);
   emitter.emit(EVENTS.SERVER_UPDATE_HISTORY, {
     history: history,
   });
-
-  /**
-   * An user cannot listening on multi station at a time
-   * => Force any other tabs or browser redirect to most recent station
-   */
-  onlineManager.leaveStationAlreadyIn(userId, stationId, stationName, socket);
 
   // Let switcher sort station list again when online user change
   switcher.updateNumberOfOnlineUsersInStation(stationId, count);
