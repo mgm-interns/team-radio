@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import LightBuldIcon from 'react-icons/lib/fa/lightbulb-o';
+import LightBulbIcon from 'react-icons/lib/fa/lightbulb-o';
 import VolumeUpIcon from 'react-icons/lib/md/volume-up';
 import VolumeOffIcon from 'react-icons/lib/md/volume-off';
 import Grid from 'material-ui/Grid';
@@ -322,7 +322,7 @@ class StationPage extends Component {
                       color={passive ? 'primary' : 'default'}
                       onClick={this._onLightClick}
                     >
-                      <LightBuldIcon />
+                      <LightBulbIcon />
                     </IconButton>
                     {passive ? null : <StationSharing />}
                   </div>
