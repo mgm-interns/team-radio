@@ -520,9 +520,11 @@ export const addCreatorPoints = async (stationId, songId) => {
     }
   }
   receivedPoints = receivedPoints + song.up_vote.length - song.down_vote.length;
-  console.log('receivedPoints: ', receivedPoints);
-  stationModels.increaseUserPoints(stationId, song.creator, receivedPoints);
-
+  if (receivedPoints !== 0) {
+    stationModels.increaseUserPoints(stationId, song.creator, receivedPoints);
+    return stationModels.getAllStationScore(stationId);
+  }
+  return null;
 }
 
 

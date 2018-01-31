@@ -1,6 +1,6 @@
 /* eslint-disable */
 import _ from 'lodash';
-import mongoose from 'mongoose';
+import mongoose, { Error } from 'mongoose';
 import * as searchController from '../controllers/search';
 import { type } from 'os';
 
@@ -392,10 +392,15 @@ module.exports.isFirstAddedSong = async (stationId, songId, songUrl) => {
       return songId.equals(playlist[i].song_id) ? true : false;
     }
   }
+  throw new Error('The song do not exist');
 }
 
-module.exports.addCreatorPoints = async (stationId, songId) => {
-  return true;
+module.exports.getAllStationScore = async (stationId) => {
+  const station = await Station.findOne({ station_id: stationId});
+  if (station){
+    return station.user_points;
+  }
+  throw new Error('The station do not exist');  
 }
 // module.exports.getListSongHistory = async stationId => {
 //   // TODO :

@@ -169,7 +169,9 @@ class Player {
       now_playing: this.getNowPlaying(),
     });
   };
-
+  _emitStationScores = stationScores => {
+    this._emit(EVENTS.SERVER_UPDATE_STATION_SCORE, stationScores);
+  };
   _resetNowPlaying = () => {
     this.nowPlaying = {
       song_id: 0,
@@ -230,10 +232,11 @@ class Player {
           this.isSkipped,
         );
         this.isSkipped = false;
-        stationController.addCreatorPoints(
+        const stationScores = await stationController.addCreatorPoints(
           this.stationId,
           this.nowPlaying.song_id,
         );
+        this._emitStationScores(stationScores);
         this._setPlayableSong();
       }
     }, timeout);
