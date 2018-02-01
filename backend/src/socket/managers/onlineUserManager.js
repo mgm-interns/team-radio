@@ -171,8 +171,8 @@ export const getListUserIdOnline = async stationId => {
 };
 
 /**
- * Get list users online, include: name, username, avatar_url
- * @returns array [ { name, username, avatar_url } ]
+ * Get list users online, include: user_id, name, username, avatar_url
+ * @returns array [ { user_id, name, username, avatar_url } ]
  */
 export const getListUserOnline = async stationId => {
   const setOfUserId = await getListUserIdOnline(stationId);
@@ -182,6 +182,7 @@ export const getListUserOnline = async stationId => {
     listUsersIdOnline.map(async userId => {
       const user = await userController.getUserById(userId);
       return {
+        user_id: user._id,
         name: user.name,
         username: user.username,
         avatar_url: user.avatar_url,

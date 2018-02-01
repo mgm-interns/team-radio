@@ -21,9 +21,10 @@ import {
   CLIENT_FAVOURITE_SONG,
   SERVER_ADD_FAVOURITE_SONG_SUCCESS,
   SERVER_REMOVE_FAVOURITE_SONG_SUCCESS,
-  SERVER_FAVOURITE_SONG_FAILURE, CLIENT_REDIRECT_STATION,
+  SERVER_FAVOURITE_SONG_FAILURE,
+  CLIENT_REDIRECT_STATION,
+  SERVER_UPDATE_STATION_SCORE,
 } from 'Redux/actions';
-import remove from 'lodash/remove';
 
 const INITIAL_STATE = {
   station: null,
@@ -38,6 +39,7 @@ const INITIAL_STATE = {
   skip: null,
   users: [],
   online_count: 0,
+  stationScores: [],
   joined: {
     loading: false,
     success: false,
@@ -280,7 +282,11 @@ export default (state = INITIAL_STATE, action) => {
           ...state.playlist.map(item => ({ ...item, loading: false })),
         ],
       };
-
+    case SERVER_UPDATE_STATION_SCORE:
+      return {
+        ...state,
+        stationScores: action.payload,
+      };
     default:
       return state;
   }

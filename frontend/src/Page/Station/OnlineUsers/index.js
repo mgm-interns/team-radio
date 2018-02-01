@@ -67,18 +67,36 @@ class OnlineUsers extends Component {
   renderPopoverContent() {
     const {
       classes,
-      currentStation: { users = [], online_count },
+      currentStation: { users = [], online_count, stationScores },
       currentUser,
     } = this.props;
     // Only display keep top 10 users
-    const filteredUsers = users.sort(
+
+    const usersWithStationScore = [];
+    if (stationScores.length > 0) {
+      for (let i = 0; i < users.length; i++) {
+        for (let j = 0; j < stationScores.length; j++) {
+          if (users[i].user_id === stationScores[j].user_id) {
+            usersWithStationScore.push({
+              ...users[i],
+              points: stationScores[j].points,
+            });
+            break;
+          }
+        }
+      }
+    }
+
+    // console.log(usersWithStationScore);
+
+    const filteredUsers = usersWithStationScore.sort(
       user => (user.username === currentUser.username ? 1 : 0),
     );
     // Group the rest people to anonymous group
     const anonymousUsers = online_count - filteredUsers.length;
     return (
       <List disablePadding>
-        {filteredUsers.map(({ name, username, avatar_url }, index) => (
+        {filteredUsers.map(({ name, username, avatar_url, points }, index) => (
           <ListItem
             key={index}
             dense
@@ -93,9 +111,9 @@ class OnlineUsers extends Component {
               className={classes.userAvatar}
             />
             <ListItemText
-              primary={
+              primary={`${
                 currentUser.username === username ? 'You' : name || 'Unknown'
-              }
+              } (${points})`}
             />
           </ListItem>
         ))}
@@ -117,6 +135,10 @@ class OnlineUsers extends Component {
       currentStation: { users = [], online_count },
       currentUser,
     } = this.props;
+
+    // console.log(users);
+    // console.log(stationScores);
+
     // Only display keep top 10 users
     const filteredUsers = users.filter((user, index) => index < 10);
     // Group the rest people to anonymous group

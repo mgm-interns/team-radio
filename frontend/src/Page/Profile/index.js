@@ -109,21 +109,19 @@ class Profile extends Component {
 
       content = (
         <Grid direction="row" container className={classes.containerWrapper}>
-          <Header user={data} isDisabled={isOwner} />
+          <Header user={data} isDisabled={isOwner} />{' '}
           <Body
             userId={data.userId}
             name={data.name || data.username}
             isDisabled={isOwner}
-          />
+          />{' '}
         </Grid>
       );
     }
 
     return (
       <Fragment>
-        <NavBar key={1} color="primary" />
-        {content}
-        <Footer key={3} />
+        <NavBar key={1} color="primary" /> {content} <Footer key={3} />{' '}
       </Fragment>
     );
   }
