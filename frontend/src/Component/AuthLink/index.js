@@ -44,7 +44,7 @@ class AuthLink extends Component {
     });
     removeAuthenticationState();
     this.props.logout();
-    this.props.history.replace('/');
+    // this.props.history.replace('/');
   }
 
   _help() {}
