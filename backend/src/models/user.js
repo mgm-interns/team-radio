@@ -93,6 +93,9 @@ module.exports.getUserById = async (userId, option) => {
   return user.findOne({ _id: _safeObjectId(userId) }, { password: 0 });
 };
 
+module.exports.getUserByFacebookId = async facebookId =>
+    user.findOne({ facebook_id: facebookId }, { password: 0 });
+
 module.exports.setFacebookId = async (email, facebookId) =>
   user.update({ email: email }, { facebook_id: facebookId }, { multi: true });
 
