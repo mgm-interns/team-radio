@@ -52,11 +52,15 @@ export const getUserById = async (userId) => {
  */
 export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null, name) => {
   try {
-    let user = facebookId ? await userModels.getUserByFacebookId(facebookId) : await userModels.getUserByEmail(email);
+    let user = facebookId ? await userModels.getUserByFacebookId(facebookId) : null;
     if (user) {
-        await _linkSocicalAccountToExistingUser(user, email, googleId, facebookId, avatar_url, name);
+        return user;
+    }
+    user = email ? await userModels.getUserByEmail(email) : null;
+    if (user) {
+      await _linkSocicalAccountToExistingUser(user, email, googleId, facebookId, avatar_url, name);
     } else {
-        user = await _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name);
+      user = await _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name);
     }
     return await userModels.getUserById(user.id);
   } catch (err) {

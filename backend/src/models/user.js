@@ -9,8 +9,8 @@ const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
 const userSchema = mongoose.Schema({
   email: {
     type: String,
-    require: [true, 'Email can not be empty'],
-    unique: true,
+    require: [false, 'Email can not be empty'],
+    unique: false,
   },
   password: { type: String },
   token_reset_password: {
