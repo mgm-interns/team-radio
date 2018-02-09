@@ -16,7 +16,10 @@ debug.log
 
 # Editor
 .vscode/
-.idea/
 .editorconfig
 .DS_Store
 dist/
+
+# Intellij
+*.iml
+.idea/
