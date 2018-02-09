@@ -52,35 +52,17 @@ export const getUserById = async (userId) => {
  */
 export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null, name) => {
   try {
-    let user = await userModels.getUserByEmail(email);
+    let user = facebookId ? await userModels.getUserByFacebookId(facebookId) : null;
     if (user) {
-      if (googleId)
-        await userModels.setGoogleId(email, googleId);
-      if (facebookId)
-        await userModels.setFacebookId(email, facebookId);
-      if (avatar_url && !user.avatar_url) {
-        await userModels.setAvatarUrl(email, avatar_url);
-        await _increaseReputation(email, 20)
-      }
-    } else {
-      let user = await new userModels({
-        email: email,
-        google_id: googleId,
-        facebook_id: facebookId,
-        name: name,
-        is_password: false,
-        favourited_songs: []
-      });
-      await user.save();
-      const username = await _createUsername(name);
-      await userModels.setUsername(email, username);
-      if (avatar_url) {
-        await userModels.setAvatarUrl(email, avatar_url);
-        await _increaseReputation(email, 20)
-      }
+        return user;
     }
-    user = await userModels.getUserByEmail(email);
-    return user;
+    user = email ? await userModels.getUserByEmail(email) : null;
+    if (user) {
+      await _linkSocicalAccountToExistingUser(user, email, googleId, facebookId, avatar_url, name);
+    } else {
+      user = await _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name);
+    }
+    return await userModels.getUserById(user.id);
   } catch (err) {
     throw err;
   }
@@ -405,5 +387,36 @@ async function _createUsername(username) {
   }
   return currentId;
 }
+
+async function _linkSocicalAccountToExistingUser(user, email, googleId = null, facebookId = null, avatar_url = null, name) {
+    if (googleId)
+        userModels.setGoogleId(email, googleId);
+    if (facebookId)
+        userModels.setFacebookId(email, facebookId);
+    if (avatar_url && !user.avatar_url) {
+        userModels.setAvatarUrl(email, avatar_url);
+        _increaseReputation(email, 20)
+    }
+}
+
+async function _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name) {
+    let user = await new userModels({
+        email: email,
+        google_id: googleId,
+        facebook_id: facebookId,
+        name: name,
+        is_password: false,
+        favourited_songs: []
+    });
+    await user.save();
+    const username = await _createUsername(name);
+    await userModels.setUsername(email, username);
+    if (avatar_url) {
+        await userModels.setAvatarUrl(email, avatar_url);
+        await _increaseReputation(email, 20)
+    }
+    return user;
+}
+
 const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
 

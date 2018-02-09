@@ -9,8 +9,8 @@ const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
 const userSchema = mongoose.Schema({
   email: {
     type: String,
-    require: [true, 'Email can not be empty'],
-    unique: true,
+    require: [false, 'Email can not be empty'],
+    unique: false,
   },
   password: { type: String },
   token_reset_password: {
@@ -92,6 +92,9 @@ module.exports.getUserById = async (userId, option) => {
   if (option) return user.findOne({ _id: _safeObjectId(userId) }, option);
   return user.findOne({ _id: _safeObjectId(userId) }, { password: 0 });
 };
+
+module.exports.getUserByFacebookId = async facebookId =>
+    user.findOne({ facebook_id: facebookId }, { password: 0 });
 
 module.exports.setFacebookId = async (email, facebookId) =>
   user.update({ email: email }, { facebook_id: facebookId }, { multi: true });
