@@ -12,7 +12,7 @@ class Footer extends Component {
         <Grid item xs className={classes.wrapper}>
           <Grid item xs={12} className={classes.copyright}>
             <span className={classes.copyrightText}>
-              Copyright 2018 &copy; mgm Internship 2018. All rights reversed.
+              Copyright 2018 &copy; mgm. All rights reversed.
             </span>
           </Grid>
         </Grid>
