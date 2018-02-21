@@ -8,6 +8,7 @@
     "dev": "nodemon ./bin/start",
     "test": "mocha --recursive './test/*Test.js' --compilers js:babel-core/register",
     "copy-env:dev": "cp .env.development .env",
+    "copy-env:stag": "cp .env.staging .env",
     "copy-env:production": "cp .env.production .env",
     "postinstall": "run-s copy-env:production"
   },

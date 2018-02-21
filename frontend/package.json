@@ -17,6 +17,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "copy-env:dev": "cp .env.development .env",
+    "copy-env:stag": "cp .env.staging .env",
     "copy-env:production": "cp .env.production .env",
     "postinstall": "run-s copy-env:production build"
   },
