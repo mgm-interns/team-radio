@@ -9,6 +9,7 @@ import { withStyles } from 'material-ui/styles';
 import orderBy from 'lodash/orderBy';
 import Typography from 'material-ui/Typography';
 import WarningIcon from 'react-icons/lib/md/warning';
+import { addSong } from 'Redux/api/currentStation/actions';
 import Item from './Item';
 import styles from './styles';
 

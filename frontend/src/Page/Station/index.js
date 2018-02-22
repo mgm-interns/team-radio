@@ -20,6 +20,7 @@ import {
   joinStation,
   redirectStation,
   leaveStation,
+  addSong,
 } from 'Redux/api/currentStation/actions';
 import { getFavouriteSongs } from 'Redux/api/favouriteSongs/actions';
 import {
@@ -28,6 +29,7 @@ import {
   disableStationsSwitcher,
   enableStationsSwitcher,
 } from 'Redux/page/station/actions';
+
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
@@ -97,6 +99,32 @@ class StationPage extends Component {
     this.setState({
       muted: muteNowPlaying,
     });
+
+    // Auto re-add a random song from history when there is no song on the playlist
+    const { currentStation: { playlist, history }, userId } = this.props;
+    const nextPlaylist = nextProps.currentStation.playlist;
+    if (playlist && nextPlaylist && nextPlaylist.length !== playlist.length) {
+      if (nextPlaylist.length === 0) {
+        const { match: { params: { stationId } } } = this.props;
+        const randomIndex = Math.floor(
+          Math.random() * Math.floor(history.length),
+        );
+        const { url, title, thumbnail, creator, duration } = history[
+          randomIndex
+        ];
+        const { username, name, avatar_url } = creator;
+
+        this.props.addSong({
+          songUrl: url,
+          title,
+          thumbnail,
+          stationId,
+          userId,
+          creator: { username, name, avatar_url },
+          duration,
+        });
+      }
+    }
   }
 
   _getFilteredPlaylist() {
@@ -340,6 +368,7 @@ class StationPage extends Component {
                   })}
                   autoPlay={true}
                   muted={muted}
+                  playlistLength={playlist.length}
                 />
                 {nowPlayingSong && passive ? (
                   <div className={classes.nowPlayingInfo}>
@@ -387,6 +416,7 @@ StationPage.propTypes = {
   disableSwitcher: PropTypes.bool,
   disableStationsSwitcher: PropTypes.func,
   enableStationsSwitcher: PropTypes.func,
+  addSong: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -410,6 +440,7 @@ const mapDispatchToProps = dispatch => ({
   getFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
   disableStationsSwitcher: () => dispatch(disableStationsSwitcher()),
   enableStationsSwitcher: () => dispatch(enableStationsSwitcher()),
+  addSong: option => dispatch(addSong(option)),
 });
 
 export default compose(

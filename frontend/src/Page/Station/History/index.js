@@ -28,7 +28,7 @@ class History extends Component {
     });
   }
 
-  _renderRow({ index, style, isScrolling, isVisible, key, parent }) {
+  _renderRow({ index, style, key }) {
     const { data } = this.props;
 
     return (
