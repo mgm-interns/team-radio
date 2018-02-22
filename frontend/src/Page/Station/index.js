@@ -100,12 +100,11 @@ class StationPage extends Component {
       muted: muteNowPlaying,
     });
 
-    //
+    // Auto re-add a random song from history when there is no song on the playlist
     const { currentStation: { playlist, history }, userId } = this.props;
     const nextPlaylist = nextProps.currentStation.playlist;
     if (playlist && nextPlaylist && nextPlaylist.length !== playlist.length) {
       if (nextPlaylist.length === 0) {
-        // console.log(history[0]);
         const { match: { params: { stationId } } } = this.props;
         const randomIndex = Math.floor(
           Math.random() * Math.floor(history.length),
