@@ -24,7 +24,7 @@ const MINIMUM_DURATION = 60;
  * @param {string} userId
  * @param {boolean} isPrivate - If false then station is public, if true then station is private
  */
-export const addStation = async (stationName, userId, isPrivate) => {
+export const addStation = async (stationName, userId, isPrivate, anonymouseClientToken = null) => {
   const currentStationName = stationName.trim().toString();
   if (!currentStationName) {
     throw new Error('The station name can not be empty!');

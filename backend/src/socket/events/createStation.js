@@ -20,11 +20,23 @@ export default async (emitter, userId, stationName, isPrivate) => {
      * addStation function will return that station if create success
      * If not, it will throw an Error object with error message
      */
-    station = await stationController.addStation(
-      stationName,
-      userId,
-      isPrivate,
-    );
+    if(userId) {
+        station = await stationController.addStation(
+            stationName,
+            userId,
+            isPrivate,
+        );
+    }
+    else {
+        //let clientCookieToken = checkClientToken();
+        let clientCookieToken = 'a';
+        station = await stationController.addStation(
+            stationName,
+            userId,
+            isPrivate,
+            clientCookieToken
+        );
+    }
     emitter.emit(EVENTS.SERVER_CREATE_STATION_SUCCESS, {
       station: station,
     });
@@ -50,3 +62,22 @@ export default async (emitter, userId, stationName, isPrivate) => {
     });
   }
 };
+
+function checkClientToken() {
+    let clientCookieToken = localStorage.getItem('anonymous-user-token');
+    if(!clientCookieToken){
+      clientCookieToken = randomString(20);
+      localStorage.setItem("anonymous-user-token", clientCookieToken);
+    }
+    return clientCookieToken;
+}
+
+function randomString(len, charSet) {
+    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var randomString = '';
+    for (var i = 0; i < len; i++) {
+        var randomPoz = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPoz,randomPoz+1);
+    }
+    return randomString;
+}

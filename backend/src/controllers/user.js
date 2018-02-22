@@ -79,6 +79,13 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
 export const createUser = async (email, password, name, username) => {
   try {
     let usernameAutoGenerate;
+    if(window.localStorage) {
+        let clientToken = retrieveClientToken();
+        console.warn("Client token is: " + clientToken)
+    }
+    else {
+      console.warn("Local storage not ready")
+    }
     let user = await new userModels({
       email: email,
       name: name,
@@ -104,6 +111,11 @@ export const createUser = async (email, password, name, username) => {
     throw err;
   }
 };
+
+function retrieveClientToken() {
+    let clientCookieToken = localStorage.getItem('anonymous-user-token');
+    return clientCookieToken;
+}
 
 export const isExistUsername = async (username) => {
   try {
