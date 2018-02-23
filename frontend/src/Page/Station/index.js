@@ -40,6 +40,7 @@ import OnlineUsers from './OnlineUsers';
 import styles from './styles';
 import StationSharing from './Sharing';
 import { Util } from '../../Util/index'
+import { QRCode } from 'Component';
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -296,6 +297,11 @@ class StationPage extends Component {
             <StationSwitcher disable={disableSwitcher} />
           </div>
         </Grid>
+
+          <Grid item xs={12} className={classes.container}>
+              <div className={classes.qrCodeContainer}><QRCode text={window.location.href}/></div>
+          </Grid>
+
         <Grid item xs={12} className={classes.container}>
           <Grid container>
             <Grid

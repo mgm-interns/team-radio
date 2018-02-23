@@ -51,6 +51,13 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     width: '100%',
     margin: 0,
   },
+  qrCodeContainer: {
+    textAlign: 'center',
+    '& > img': {
+      minWidth: '200px',
+      width: '30%'
+    }
+  },
   content: {
     position: 'relative',
     width: '100%',
