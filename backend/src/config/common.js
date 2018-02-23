@@ -1,0 +1,14 @@
+var common = {};
+
+common.ACTION_DEFINITIONS = [
+  'UPLOAD_AVATAR',
+  'UPDATE_CITY',
+  'UPDATE_COUNTRY',
+  'UPDATE_BIO',
+  'UPDATE_FIRSTNAME',
+  'UPDATE_LASTNAME',
+  'USER_JOIN_STATION',
+  'ADD_SONG_STATION',
+];
+
+module.exports = common;
