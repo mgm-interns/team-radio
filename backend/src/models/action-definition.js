@@ -5,7 +5,8 @@ const ActionDefinitionSchema = mongoose.Schema({
   action_key: {
     type: String,
     require: true,
-    enum: config.common.ACTION_DEFINITIONS,
+    enum: Object.values(config.action.ACTION_DEFINITIONS),
+    unique: true,
   },
   score: {
     type: Number,

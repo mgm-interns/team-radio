@@ -13,7 +13,7 @@ const ScoreLogSchema = mongoose.Schema({
   },
   action_key: {
     type: String,
-    enum: config.common.ACTION_DEFINITIONS,
+    enum: Object.values(config.action.ACTION_DEFINITIONS),
     require: true,
   },
 });

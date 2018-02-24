@@ -1,5 +1,5 @@
-import common from './common';
+import action from './action-definition';
 
 export default {
-  common,
+  action,
 };
