@@ -101,26 +101,35 @@ class StationPage extends Component {
     });
 
     // Auto re-add a random song from history when there is no song on the playlist
-    const { currentStation: { playlist, history }, userId } = this.props;
+    const {
+      currentStation: { playlist, history, station },
+      userId,
+    } = this.props;
+
     const nextPlaylist = nextProps.currentStation.playlist;
-    if (playlist && nextPlaylist && nextPlaylist.length !== playlist.length) {
-      if (nextPlaylist.length === 0) {
+    const nextStation = nextProps.currentStation.station;
+
+    if (playlist.length > 0 && nextPlaylist.length === 0) {
+      // check if user stays in the same station
+      if (station && station.station_id === nextStation.station_id) {
         const { match: { params: { stationId } } } = this.props;
         const randomIndex = Math.floor(
           Math.random() * Math.floor(history.length),
         );
-        const { url, title, thumbnail, creator, duration } = history[
-          randomIndex
-        ];
+        const song = history.length ? history[randomIndex] : playlist[0];
+        const { url, title, thumbnail, creator, duration } = song;
         const { username, name, avatar_url } = creator;
-
         this.props.addSong({
           songUrl: url,
           title,
           thumbnail,
           stationId,
           userId,
-          creator: { username, name, avatar_url },
+          creator: {
+            username,
+            name,
+            avatar_url,
+          },
           duration,
         });
       }

@@ -59,6 +59,7 @@ export default (state = INITIAL_STATE, action) => {
         station: {
           station_id: action.payload.stationId,
         },
+        playlist: [],
         joined: {
           ...state.joined,
           loading: true,
