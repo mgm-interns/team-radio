@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import LightBulbIcon from 'react-icons/lib/fa/lightbulb-o';
 import VolumeUpIcon from 'react-icons/lib/md/volume-up';
 import VolumeOffIcon from 'react-icons/lib/md/volume-off';
+import MdMusicVideo from 'react-icons/lib/md/music-video';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
@@ -49,6 +50,7 @@ class StationPage extends Component {
       tabValue: 0,
       isPassive: false,
       nowPlayingSong: null,
+      isEnabledVideo: true,
     };
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
@@ -57,6 +59,7 @@ class StationPage extends Component {
     this._handleTabChange = this._handleTabChange.bind(this);
     this._checkValidStation = this._checkValidStation.bind(this);
     this._getFilteredPlaylist = this._getFilteredPlaylist.bind(this);
+    this._toggleShowingVideoPlayer = this._toggleShowingVideoPlayer.bind(this);
   }
 
   componentWillMount() {
@@ -220,6 +223,12 @@ class StationPage extends Component {
     this._getFilteredPlaylist();
   }
 
+  _toggleShowingVideoPlayer() {
+    this.setState(
+      { isEnabledVideo: !this.state.isEnabledVideo }
+    );
+  }
+
   _handleTabChange(e, value) {
     this.setState({ tabValue: value });
   }
@@ -296,7 +305,9 @@ class StationPage extends Component {
       passive,
       disableSwitcher,
     } = this.props;
-    const { muted, nowPlayingSong } = this.state;
+    const { muted, nowPlayingSong, isEnabledVideo } = this.state;
+
+    console.log(passive, isEnabledVideo, this.props);
 
     return [
       passive && (
@@ -351,7 +362,7 @@ class StationPage extends Component {
                     )}
                   </div>
                   <div className={classes.nowPlayingActions}>
-                    {!nowPlaying.url ? null : (
+                    {!nowPlaying.url && isEnabledVideo ? null : (
                       <IconButton
                         onClick={this._onVolumeClick}
                         className={classNames({
@@ -367,18 +378,26 @@ class StationPage extends Component {
                     >
                       <LightBulbIcon />
                     </IconButton>
+                    <IconButton
+                        color={isEnabledVideo ? 'primary' : 'default'}
+                        onClick={this._toggleShowingVideoPlayer}
+                    >
+                        <MdMusicVideo />
+                    </IconButton>
                     {passive ? null : <StationSharing />}
                   </div>
                 </Grid>
-                <NowPlaying
-                  className={classNames([classes.content], {
-                    [classes.emptyNowPlaying]: !playlist,
-                    [classes.nowPlayingPassive]: passive,
-                  })}
-                  autoPlay={true}
-                  muted={muted}
-                  playlistLength={playlist.length}
-                />
+                {isEnabledVideo ? (
+                  <NowPlaying
+                    className={classNames([classes.content], {
+                        [classes.emptyNowPlaying]: !playlist,
+                        [classes.nowPlayingPassive]: passive,
+                    })}
+                    autoPlay={true}
+                    muted={muted}
+                    playlistLength={playlist.length}
+                  />
+                ) : null}
                 {nowPlayingSong && passive ? (
                   <div className={classes.nowPlayingInfo}>
                     <p>{nowPlayingSong.title}</p>
@@ -425,7 +444,7 @@ StationPage.propTypes = {
   disableSwitcher: PropTypes.bool,
   disableStationsSwitcher: PropTypes.func,
   enableStationsSwitcher: PropTypes.func,
-  addSong: PropTypes.func,
+  addSong: PropTypes.func
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -436,7 +455,7 @@ const mapStateToProps = ({ api, page }) => ({
   userId: api.user.data.userId,
   passive: page.station.passive,
   favourite: api.favouriteSongs,
-  disableSwitcher: page.station.disableSwitcher,
+  disableSwitcher: page.station.disableSwitcher
 });
 
 const mapDispatchToProps = dispatch => ({
