@@ -360,7 +360,7 @@ class StationPage extends Component {
                     )}
                   </div>
                   <div className={classes.nowPlayingActions}>
-                    {!nowPlaying.url && isEnabledVideo ? null : (
+                    {!nowPlaying.url || !isEnabledVideo ? null : (
                       <IconButton
                         onClick={this._onVolumeClick}
                         className={classNames({
@@ -370,12 +370,14 @@ class StationPage extends Component {
                         {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
                       </IconButton>
                     )}
-                    <IconButton
-                      color={passive ? 'primary' : 'default'}
-                      onClick={this._onLightClick}
-                    >
-                      <LightBulbIcon />
-                    </IconButton>
+                    {!isEnabledVideo ? null : (
+                        <IconButton
+                            color={passive ? 'primary' : 'default'}
+                            onClick={this._onLightClick}
+                        >
+                          <LightBulbIcon />
+                        </IconButton>
+                    )}
                     <IconButton
                         color={isEnabledVideo ? 'primary' : 'default'}
                         onClick={this._toggleShowingVideoPlayer}
