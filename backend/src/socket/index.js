@@ -25,6 +25,13 @@ io.on('connection', socket => {
           action.payload.isPrivate,
         );
         break;
+      case EVENTS.CLIENT_CREATE_STATION:
+        eventHandlers.updateStationOwner(
+          createEmitter(socket, io),
+          action.payload.userId,
+          action.payload.stationName
+        );
+        break;
 
       case EVENTS.CLIENT_JOIN_STATION:
         eventHandlers.joinStation(

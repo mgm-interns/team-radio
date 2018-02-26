@@ -223,6 +223,20 @@ module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) =
   }
 };
 
+module.exports.updateStationOwner = (stationId, userId) => {
+  try {
+    let query = { station_id: stationId };
+    return Station.update(query, {
+      $set: {
+        owner_id: userId
+      }
+    });
+  } catch (err) {
+    console.log('Err - update station owner : ' + err);
+  }
+
+}
+
 /******************** A SONG**************************/
 
 /**

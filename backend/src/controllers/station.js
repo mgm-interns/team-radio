@@ -55,6 +55,25 @@ export const addStation = async (stationName, userId, isPrivate, anonymouseClien
   }
 };
 
+export const updateStationOwner = async (stationName, userId) => {
+  const currentStationName = stationName.trim().toString();
+  if(currentStationName) {
+    throw new Error('The station name can not be empty!');
+  } else {
+    try {
+      const availableStation = await stationModels.getStationByName(currentStationName);
+      if(availableStation) {
+        const updatedStation = await stationModels.updateStationOwner(availableStation.station_id, userId);
+        return updatedStation;
+      } else {
+        throw new Error('The station name is not existed!');
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+}
+
 /**
  * Set station is private public/private
  *
