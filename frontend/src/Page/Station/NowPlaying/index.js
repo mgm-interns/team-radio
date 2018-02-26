@@ -94,6 +94,9 @@ class NowPlaying extends Component {
       muted,
       skip,
     } = this.props;
+    if (!nowPlaying.receivedAt) {
+      nowPlaying.receivedAt = new Date().getTime();
+    }
     return skip ? (
       this.renderSkipNotification()
     ) : (
@@ -102,8 +105,8 @@ class NowPlaying extends Component {
           songId={nowPlaying.song_id}
           url={nowPlaying ? nowPlaying.url : ''}
           playing={autoPlay}
-          seektime={this.state.seektime}
-          receivedAt={this.state.receivedAt}
+          seektime={NowPlaying.calculateSeekTime(nowPlaying.starting_time)}
+          receivedAt={nowPlaying.receivedAt}
           showProgressbar
           muted={muted}
           ref={ref => {

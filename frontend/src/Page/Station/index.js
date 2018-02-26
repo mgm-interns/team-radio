@@ -307,8 +307,6 @@ class StationPage extends Component {
     } = this.props;
     const { muted, nowPlayingSong, isEnabledVideo } = this.state;
 
-    console.log(passive, isEnabledVideo, this.props);
-
     return [
       passive && (
         <div key={0} className={classes.passiveContainer}>
