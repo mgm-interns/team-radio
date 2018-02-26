@@ -5,7 +5,7 @@ A playlist for teams that can be edited collaboratively by all users
 
 ## Demo
 
-- Our Page is live at: [https://teamradio.herokuapp.com](https://teamradio.herokuapp.com)
+- Our Page is live at: [https://teamrad.io](https://teamrad.io)
 
 ## Installation Guide
 
