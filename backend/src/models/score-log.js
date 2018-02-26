@@ -19,3 +19,18 @@ const ScoreLogSchema = mongoose.Schema({
 });
 
 var ScoreLog = (module.exports = mongoose.model('ScoreLog', ScoreLogSchema));
+
+module.exports.createScoreLog = async (userId, score, actionKey) => {
+  return ScoreLog.create(
+    {
+      user_id : userId,
+      score : score,
+      action_key : actionKey
+    }, function (error, data) {
+      if (error) {
+        console.log(error);
+      }
+      return data;
+    }
+  );
+};

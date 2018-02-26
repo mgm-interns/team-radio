@@ -247,13 +247,13 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
  * @param {string} userId   -- > user id  : who is favourite song
  * @param {string} stationId  -- > station id of station has song
  * @param {string} songUrl  --> url of song which is favourite
- * 
+ *
  * Case 1 : Favourite on station
  * - Use 4 params ( songId, userId, songUrl, stationId )
  * - Check : If not favourite then add song favourite return ADD_FAVOURITE_SUCCESS
  *           If favourited then remove favorite return UN_FAVOURITE_SUCCESS
  * Case 2 : Unfavourite on profile   return UN_FAVOURITE_SUCCESS_PROFILE
- *   
+ *
  */
 export const addFavouriteSong = async (songId, userId, songUrl, stationId = null) => {
   try {
@@ -345,6 +345,12 @@ export const getallstation = async () => {
   return user;
 }
 
+export const updateUserReputation = async (user, points) => {
+  let conditions = {email: user.email};
+  let data = {reputation: user.reputation + points};
+  await userModels.updateUserByConditions(conditions, data);
+}
+
 // This is private function
 /**
  *
@@ -419,4 +425,3 @@ async function _createUserWithSocialAccount(email, googleId, facebookId, avatar_
 }
 
 const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
-

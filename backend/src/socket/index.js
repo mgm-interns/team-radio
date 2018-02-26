@@ -10,6 +10,11 @@ import * as CONSTANTS from '../const/constants';
 // Create web socket
 const io = SocketIO();
 
+// Create module events
+var events= require('events');
+var moduleEmitter = new events.EventEmitter();
+var moduleEvents = require('../events/index')(moduleEmitter);
+
 // Listening for Web socket events
 io.on('connection', socket => {
   eventHandlers.socketConnect(createEmitter(socket, io));
@@ -23,6 +28,7 @@ io.on('connection', socket => {
           action.payload.userId,
           action.payload.stationName,
           action.payload.isPrivate,
+          moduleEmitter,
         );
         break;
 
