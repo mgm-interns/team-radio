@@ -15,6 +15,7 @@ import { Field, reduxForm } from 'redux-form';
 import { getUser, addUserBySocialAccount } from 'Redux/api/user/user';
 import { NavBar, GoogleLogin, FacebookLogin, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
+import * as constant from '../../../Util/constants';
 import {
   saveAuthenticationState,
   loadAuthenticationState,
@@ -54,6 +55,7 @@ class Login extends Component {
     }
 
     if (isAuthenticated && token !== data.token) {
+      localStorage.setItem(constant.LOCAL_STORAGE_ANONYMOUS_STATIONS, '[]');
       this._showNotification('Login successfully!');
       await saveAuthenticationState(data);
       if (window.history.length > 2) {
@@ -272,7 +274,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onSubmit: data => dispatch(getUser(data)),
-  addUserBySocialAccount: data => dispatch(addUserBySocialAccount(data)),
+  addUserBySocialAccount: data => dispatch(addUserBySocialAccount({...data, localstations: localStorage.getItem(constant.LOCAL_STORAGE_ANONYMOUS_STATIONS)})),
 });
 
 export default compose(

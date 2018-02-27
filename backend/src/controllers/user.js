@@ -3,12 +3,9 @@ import userModels from '../models/user';
 import * as stationModels from '../models/station';
 import jwt from 'jsonwebtoken';
 import deleteDiacriticMarks from "khong-dau";
-import { ObjectId } from 'mongodb';
+import {ObjectId} from 'mongodb';
 import * as stationController from './station';
-import user from '../routes/user';
-import { throws } from 'assert';
-import { Error } from 'mongoose';
-// import * as stationModels from "../models/station";
+import {Error} from 'mongoose';
 
 export const ADD_FAVOURITE_SUCCESS = 1000;
 export const UN_FAVOURITE_SUCCESS = 1001;
@@ -50,7 +47,8 @@ export const getUserById = async (userId) => {
  * @param name
  * @returns {Promise<*>}
  */
-export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null, name) => {
+export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null, name,
+                                                  localStations = null) => {
   try {
     let user = facebookId ? await userModels.getUserByFacebookId(facebookId) : null;
     if (user) {
@@ -60,7 +58,12 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
     if (user) {
       await _linkSocicalAccountToExistingUser(user, email, googleId, facebookId, avatar_url, name);
     } else {
-      user = await _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name);
+        user = await _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name, localStations);
+        const userId = user._id;
+        const localStationsArray = localStations ? JSON.parse(localStations) : [];
+        for (let stationName of localStationsArray) {
+            await stationModels.updateOwner(stationName, userId);
+        }
     }
     return await userModels.getUserById(user.id);
   } catch (err) {
@@ -76,7 +79,7 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
  * @returns {Promise<*>}
  */
 
-export const createUser = async (email, password, name, username) => {
+export const createUser = async (email, password, name, username, localStationsString) => {
   try {
     let usernameAutoGenerate;
     let user = await new userModels({
@@ -86,6 +89,11 @@ export const createUser = async (email, password, name, username) => {
       favourited_songs: []
     });
 
+    const userId = user._id;
+    const stationNames = JSON.parse(localStationsString);
+    for(let stationName of stationNames) {
+         await stationModels.updateOwner(stationName, userId);
+    }
     const alreadyUser = await userModels.getUserByUsername(username);
     if (username && !alreadyUser) {
       usernameAutoGenerate = username
@@ -399,7 +407,7 @@ async function _linkSocicalAccountToExistingUser(user, email, googleId = null, f
     }
 }
 
-async function _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name) {
+async function _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name, localStations) {
     let user = await new userModels({
         email: email,
         google_id: googleId,
@@ -411,6 +419,7 @@ async function _createUserWithSocialAccount(email, googleId, facebookId, avatar_
     await user.save();
     const username = await _createUsername(name);
     await userModels.setUsername(email, username);
+
     if (avatar_url) {
         await userModels.setAvatarUrl(email, avatar_url);
         await _increaseReputation(email, 20)
