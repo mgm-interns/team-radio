@@ -419,7 +419,6 @@ async function _createUserWithSocialAccount(email, googleId, facebookId, avatar_
     await user.save();
     const username = await _createUsername(name);
     await userModels.setUsername(email, username);
-
     if (avatar_url) {
         await userModels.setAvatarUrl(email, avatar_url);
         await _increaseReputation(email, 20)
