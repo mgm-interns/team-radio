@@ -7,3 +7,5 @@ export default {
   HOST_NAME,
   USERNAME_REGEX,
 };
+
+export const LOCAL_STORAGE_ANONYMOUS_STATIONS = 'local-stations';

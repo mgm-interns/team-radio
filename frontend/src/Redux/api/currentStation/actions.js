@@ -34,6 +34,7 @@ export const addSong = ({
   creator,
   duration,
   songMessage,
+  localstations,
 }) => ({
   type: CLIENT_ADD_SONG,
   payload: {
@@ -45,6 +46,7 @@ export const addSong = ({
     creator,
     duration,
     songMessage,
+    localstations,
     is_played: false,
     up_vote: [],
     down_vote: [],

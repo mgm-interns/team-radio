@@ -217,6 +217,25 @@ module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) =
   }
 };
 
+/**
+ * Update the creator of station by station name
+ * @param stationName
+ * @param userId
+ */
+module.exports.updateStationOwner = (stationName, userId) => {
+  try {
+    let query = { station_name: stationName};
+    return Station.update(query, {
+      $set: {
+        owner_id: userId,
+      },
+    });
+  }
+  catch (err) {
+    console.log("Server error when update station's creator");
+  }
+}
+
 /******************** A SONG**************************/
 
 /**

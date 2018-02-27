@@ -22,28 +22,26 @@ export default async (
   thumbnail,
   duration,
   songMessage,
+  localstations,
 ) => {
   /**
    * Decline request if the user does not exist
    * Otherwise, allow to add song
    */
-  const user = await userController.getUserById(userId);
-  if (user) {
+  let user = await userController.getUserById(userId);
+  let creatorId = user ? userId : -1;
     _addSongProcess(
       emitter,
-      userId,
+      creatorId,
       stationId,
       songUrl,
       title,
       thumbnail,
       duration,
       songMessage,
+      localstations,
     );
-  } else {
-    emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
-      message: CONSTANTS.MESSAGE_LOGIN_REQUIRED,
-    });
-  }
+
 };
 
 const _addSongProcess = async (
@@ -55,7 +53,22 @@ const _addSongProcess = async (
   thumbnail,
   duration,
   songMessage,
+  localstations,
 ) => {
+    const localStationsArray = localstations ? JSON.parse(localstations) : [];
+    let isMyStation = false;
+    for (let stationName of localStationsArray) {
+        if(stationName === stationId) {
+            isMyStation = true;
+            break;
+        }
+    }
+    if (!isMyStation) {
+        emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
+            message: "Cannot add song to anonymous station that was not created by you",
+        });
+        return;
+    }
   let playlist;
 
   try {
@@ -71,6 +84,7 @@ const _addSongProcess = async (
       thumbnail,
       duration,
       songMessage,
+      localstations,
     );
     emitter.emit(EVENTS.SERVER_ADD_SONG_SUCCESS, {});
   } catch (err) {
