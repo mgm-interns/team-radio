@@ -3,12 +3,12 @@ import * as actionDefinitionController from '../controllers/actionDefinitionCont
 import * as userController from '../controllers/user';
 import config from '../config/index';
 
-export default (emitter,moduleEmitter)  => {
+export default (emitter, moduleEmitter)  => {
     StationWasCreated(emitter,moduleEmitter);
 };
 
 const StationWasCreated = (emitter,moduleEmitter) => {
-    moduleEmitter.on(config.events.STATION_WAS_CREATED, async (userId, actionKey) => {
+    moduleEmitter.on(config.events.SONG_WAS_ADDED, async (userId, actionKey) => {
         let action = await actionDefinitionController.getActionDefinitionByKey(actionKey);
         await scoreLogController.createScoreLog(userId, action.score, action.action_key);
         let user = await userController.getUserById(userId);
