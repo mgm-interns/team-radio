@@ -459,6 +459,7 @@ class AddLink extends Component {
               showProgressbar={false}
               muted={muted}
               playing={true}
+              enablePointerEvent={'all'}
             />
           </Grid>
           <Grid item sm={8} xs={12} className={classes.previewRightContainer}>

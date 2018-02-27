@@ -12,6 +12,7 @@ class TextView extends Component {
       label,
       type,
       placeholder,
+      autoCapitalize,
       classes,
       value,
       ...others
@@ -23,6 +24,7 @@ class TextView extends Component {
         label={label}
         type={type}
         placeholder={placeholder}
+        inputProps={{autoCapitalize: autoCapitalize}}
         error={!!(touched && error)}
         helperText={touched && error}
         {...input}
@@ -42,6 +44,7 @@ TextView.propTypes = {
   error: PropTypes.any,
   meta: PropTypes.any,
   border: PropTypes.bool,
+  autoCapitalize: PropTypes.string,
 };
 
 export default withStyles(styles)(TextView);
