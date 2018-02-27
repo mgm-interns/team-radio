@@ -39,6 +39,7 @@ import NowPlaying from './NowPlaying';
 import OnlineUsers from './OnlineUsers';
 import styles from './styles';
 import StationSharing from './Sharing';
+import { Util } from '../../Util/index'
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -50,8 +51,13 @@ class StationPage extends Component {
       tabValue: 0,
       isPassive: false,
       nowPlayingSong: null,
+      isMobileBrowser: Util.isMobileBrowser(),
       isEnabledVideo: true,
     };
+
+    if (this.state.isMobileBrowser) {
+      this.state.isEnabledVideo = false;
+    }
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
     this._onLightClick = this._onLightClick.bind(this);
@@ -305,7 +311,7 @@ class StationPage extends Component {
       passive,
       disableSwitcher,
     } = this.props;
-    const { muted, nowPlayingSong, isEnabledVideo } = this.state;
+    const { muted, nowPlayingSong, isEnabledVideo, isMobileBrowser } = this.state;
 
     return [
       passive && (
@@ -378,12 +384,15 @@ class StationPage extends Component {
                           <LightBulbIcon />
                         </IconButton>
                     )}
-                    <IconButton
+                    {isMobileBrowser ? null : (
+                      <IconButton
                         color={isEnabledVideo ? 'primary' : 'default'}
                         onClick={this._toggleShowingVideoPlayer}
-                    >
+                        >
                         <MdMusicVideo />
-                    </IconButton>
+                      </IconButton>
+                    )}
+
                     {passive ? null : <StationSharing />}
                   </div>
                 </Grid>
