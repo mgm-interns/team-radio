@@ -109,6 +109,7 @@ class NowPlaying extends Component {
           receivedAt={nowPlaying.receivedAt}
           showProgressbar
           muted={muted}
+          enablePointerEvent={'none'}
           ref={ref => {
             this.playerRef = ref;
           }}

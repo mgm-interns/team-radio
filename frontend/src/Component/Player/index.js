@@ -82,6 +82,7 @@ class Player extends PureComponent {
       playing,
       showProgressbar,
       url,
+      enablePointerEvent,
       ...othersProps
     } = this.props;
     const { played, buffer } = this.state;
@@ -99,7 +100,7 @@ class Player extends PureComponent {
         onPause={this._onPause}
         onProgress={this._onProgress}
         youtubeConfig={{ playerVars: { disablekb: 1 } }}
-        style={{ pointerEvents: 'none' }}
+        style={{ pointerEvents: enablePointerEvent }}
         {...othersProps}
       />,
       showProgressbar &&
