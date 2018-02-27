@@ -6,6 +6,7 @@ import * as onlineManager from './managers/onlineUserManager';
 import * as players from '../players';
 import * as EVENTS from '../const/actions';
 import * as CONSTANTS from '../const/constants';
+import event from '../events';
 
 // Create web socket
 const io = SocketIO();
@@ -17,8 +18,7 @@ var moduleEmitter = new events.EventEmitter();
 // Listening for Web socket events
 io.on('connection', socket => {
   eventHandlers.socketConnect(createEmitter(socket, io));
-  var moduleEvents = require('../events/index')(createEmitter(socket, io), moduleEmitter);
-
+  event.StationWasCreated(createEmitter(socket,io),moduleEmitter);
   // Listening for action request
   socket.on('action', action => {
     switch (action.type) {

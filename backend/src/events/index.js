@@ -1,3 +1,5 @@
-module.exports = function (emitter, moduleEmitter) {
-  require('./StationWasCreated')(emitter, moduleEmitter);
-}
+import StationWasCreated from './StationWasCreated'
+
+export default {
+  StationWasCreated
+};
