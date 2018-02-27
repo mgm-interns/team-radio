@@ -154,13 +154,12 @@ export const getStationsByUserId = async userId => {
  * @param {string} songUrl
  * @param {string} userId
  */
-export const addSong = async (stationId, songUrl, userId, title, thumbnail, duration, contentMessage) => {
+export const addSong = async (stationId, songUrl, userId, title, thumbnail, duration, contentMessage, localStations) => {
   let station;
-  if (!userId) {
-    throw new Error(`You need to login to use this feature.`);
-  }
+
   try {
     station = await stationModels.getStationById(stationId);
+
   } catch (err) {
     throw err;
   }
