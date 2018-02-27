@@ -3,7 +3,6 @@ import style from './style.css';
 import { loadStationPaging } from 'Redux/api/stations/actions';
 import { compose } from 'redux';
 import {connect} from "react-redux";
-import Scrollbar from 'react-scrollbar';
 
 class ArrowButton extends Component {
     constructor(props) {
@@ -14,11 +13,6 @@ class ArrowButton extends Component {
 
     loadStation() {
         this.props.onClick();
-        this.scrollRight();
-    }
-
-    scrollRight() {
-        this.props.scrollRight();
     }
 
     scrollLeft() {
@@ -39,19 +33,12 @@ class ArrowButton extends Component {
             </div>
         )
     }
-
 }
 
-const mapStateToProps = ({ api }) => {
-    return {
-        stationLoaded: api.stations.stationLoaded,
-    }
-};
-
 const mapDispatchToProps = dispatch => ({
-    onClick: async () => dispatch(await loadStationPaging()),
+    onClick: () => dispatch(loadStationPaging()),
 });
 
 export default compose(
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(null, mapDispatchToProps)
 )(ArrowButton);
