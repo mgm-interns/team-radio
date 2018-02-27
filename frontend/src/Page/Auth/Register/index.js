@@ -20,6 +20,7 @@ import { Field, reduxForm } from 'redux-form';
 import { NavBar, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
 import { trimText } from 'Transformer/transformText';
+import * as constant from '../../../Util/constants';
 
 import {
   saveAuthenticationState,
@@ -68,7 +69,7 @@ class Register extends Component {
 
     if (isAuthenticated && token !== data.token) {
       this._showNotification('Register successfully!');
-
+      localStorage.setItem(constant.LOCAL_STORAGE_ANONYMOUS_STATIONS, '[]');
       await saveAuthenticationState(data);
       if (window.history.length > 2) {
         this.props.history.go(-1);
@@ -242,15 +243,18 @@ Register.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: ({ name, username, email, password }) =>
-    dispatch(
-      addUser({
-        name: trimText(name),
-        username: trimText(username),
-        email: trimText(email),
-        password: trimText(password),
-      }),
-    ),
+    onSubmit: ({name, username, email, password}) => {
+        let stationLocalToken = localStorage.getItem(constant.LOCAL_STORAGE_ANONYMOUS_STATIONS);
+        dispatch(
+            addUser({
+                name: trimText(name),
+                username: trimText(username),
+                email: trimText(email),
+                password: trimText(password),
+                localstations: trimText(stationLocalToken),
+            }),
+        );
+    }
 });
 
 const mapStateToProps = state => ({

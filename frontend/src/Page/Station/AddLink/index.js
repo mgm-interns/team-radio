@@ -335,13 +335,6 @@ class AddLink extends Component {
       notification,
     } = this.props;
 
-    // Show warning message if not authenticated
-    if (!userId) {
-      notification.app.warning({
-        message: 'You need to login to use this feature.',
-      });
-      return;
-    }
 
     // If authenticated
     setPreviewVideo();
