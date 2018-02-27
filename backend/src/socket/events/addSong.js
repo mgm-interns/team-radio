@@ -27,11 +27,11 @@ export default async (
    * Decline request if the user does not exist
    * Otherwise, allow to add song
    */
-  const user = await userController.getUserById(userId);
-  if (user) {
+  let user = await userController.getUserById(userId);
+  let creatorId = user ? userId : -1;
     _addSongProcess(
       emitter,
-      userId,
+      creatorId,
       stationId,
       songUrl,
       title,
@@ -39,11 +39,7 @@ export default async (
       duration,
       songMessage,
     );
-  } else {
-    emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
-      message: CONSTANTS.MESSAGE_LOGIN_REQUIRED,
-    });
-  }
+
 };
 
 const _addSongProcess = async (
