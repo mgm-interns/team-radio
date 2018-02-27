@@ -55,6 +55,7 @@ const stationSchema = mongoose.Schema({
       ],
       default: []
     },
+  anonymous_client_token: { type: String, require: false, default: ''},
   created_date: { type: Number, default: new Date().getTime(), },
 });
 
@@ -149,6 +150,11 @@ module.exports.getStationByName = stationNameToFind => {
     .exec();
 };
 
+module.exports.getStationByAnonymousClientToken = anonymousClientToken => {
+  return Station.find({ anonymous_client_token: anonymousClientToken, is_delete: false })
+      .exec();
+}
+
 /**
  * Get station by id
  *
@@ -216,6 +222,20 @@ module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) =
     console.log('Err updateTimeStartingOfStation models : ' + err);
   }
 };
+
+module.exports.updateStationOwner = (stationId, userId) => {
+  try {
+    let query = { station_id: stationId };
+    return Station.update(query, {
+      $set: {
+        owner_id: userId
+      }
+    });
+  } catch (err) {
+    console.log('Err - update station owner : ' + err);
+  }
+
+}
 
 /******************** A SONG**************************/
 

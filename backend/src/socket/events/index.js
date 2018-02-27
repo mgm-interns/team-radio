@@ -14,6 +14,7 @@ import redirectStation from './redirectStation';
 export default {
   socketConnect,
   createStation,
+  updateStationOwner,
   joinStation,
   leaveStation,
   addSong,
