@@ -13,8 +13,6 @@ import * as EVENTS from "../const/actions";
 
 const POINTS_FOR_FIRST_SONG = 2;
 const POINTS_FOR_NEXT_SONG = 1;
-
-var loadedStations = CONSTANTS.STATION_LOADING_AS_DEFAULT;
 const MINIMUM_DURATION = 60;
 /**
  *
