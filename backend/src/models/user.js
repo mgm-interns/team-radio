@@ -214,10 +214,7 @@ module.exports.setTokenResetPassword = async (userId, token) =>
 module.exports.getUserByResetToken = async token =>
   user.findOne({ token_reset_password: token }, { password: 0 });
 
-module.exports.updateUserByConditions = async (conditions, data) => {
-  user.update(conditions, data, function (error) {
-    if (error) {
-      throw new Error(error);
-    }
-  });
+module.exports.updateUserById = async (id, data) => {
+  let updatedModel = {new: true};
+  return user.findByIdAndUpdate(id, data, updatedModel);
 }

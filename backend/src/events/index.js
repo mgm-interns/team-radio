@@ -1,3 +1,3 @@
-module.exports = function (emitter) {
-  require('./StationWasCreated')(emitter);
+module.exports = function (emitter, moduleEmitter) {
+  require('./StationWasCreated')(emitter, moduleEmitter);
 }

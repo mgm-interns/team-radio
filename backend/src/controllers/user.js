@@ -346,9 +346,8 @@ export const getallstation = async () => {
 }
 
 export const updateUserReputation = async (user, points) => {
-  let conditions = {email: user.email};
   let data = {reputation: user.reputation + points};
-  await userModels.updateUserByConditions(conditions, data);
+  return await userModels.updateUserById(user.id, data);
 }
 
 // This is private function

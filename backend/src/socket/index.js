@@ -13,11 +13,11 @@ const io = SocketIO();
 // Create module events
 var events= require('events');
 var moduleEmitter = new events.EventEmitter();
-var moduleEvents = require('../events/index')(moduleEmitter);
 
 // Listening for Web socket events
 io.on('connection', socket => {
   eventHandlers.socketConnect(createEmitter(socket, io));
+  var moduleEvents = require('../events/index')(createEmitter(socket, io), moduleEmitter);
 
   // Listening for action request
   socket.on('action', action => {

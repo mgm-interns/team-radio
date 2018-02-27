@@ -1,5 +1,6 @@
 var events = {};
 
 events.STATION_WAS_CREATED = 'STATION_WAS_CREATED';
+events.SET_USER_INFORMATION_SUCCESS = 'SET_USER_INFORMATION_SUCCESS';
 
 module.exports = events;
