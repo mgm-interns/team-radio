@@ -16,6 +16,7 @@ io.on('connection', socket => {
 
   // Listening for action request
   socket.on('action', action => {
+
     switch (action.type) {
       case EVENTS.CLIENT_CREATE_STATION:
         eventHandlers.createStation(
@@ -40,6 +41,7 @@ io.on('connection', socket => {
         break;
 
       case EVENTS.CLIENT_ADD_SONG:
+        console.log("Payload is: ", action.payload);
         eventHandlers.addSong(
           createEmitter(socket, io),
           action.payload.userId,
@@ -49,6 +51,7 @@ io.on('connection', socket => {
           action.payload.thumbnail,
           action.payload.duration,
           action.payload.songMessage,
+          action.payload.localstations,
         );
         break;
 

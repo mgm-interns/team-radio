@@ -24,6 +24,7 @@ export default router => {
           req.body.password,
           req.body.name,
           req.body.username,
+          req.body.localstations,
         );
 
         const payload = {
@@ -98,6 +99,7 @@ export default router => {
         req.body.facebookId,
         req.body.avatar_url,
         req.body.name,
+        req.body.localstations
       );
       const payload = {
         email: user.email,
