@@ -9,6 +9,7 @@ const inputForm = {
       validate: [required],
       props: {
         placeholder: 'Email or Username',
+        autoCapitalize: 'off',
       },
     },
   },
