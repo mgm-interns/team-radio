@@ -38,8 +38,6 @@ class ArrowButton extends Component {
                 </nav>
                 <Scrollbar
                 speed={1.6}
-                //level={scrollbarInstanceLevel}
-                //className={classes.container}
                 contentClassName='StationList-content-141'
                 swapWheelAxes={true}
                 smoothScrolling

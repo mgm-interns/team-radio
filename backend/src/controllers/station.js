@@ -265,14 +265,16 @@ export const getAllAvailableStations = async () => {
 };
 
 /**
- * Nguyen Anh Quoc
+ * Get stations for paging or get stations was loaded by typeLoad
+ *
+ * @param {typeLoad} type of loading station request
  */
 export const loadStation = async (typeLoad) => {
     try {
         var stations;
         if (typeLoad === EVENTS.CLIENT_LOAD_STATION_PAGING) {
             stations = await stationModels.loadStationPaging(loadedStations, CONSTANTS.STATION_LOADING_LIMIT);
-            loadedStations += 7;
+            loadedStations += CONSTANTS.STATION_LOADING_LIMIT;
         } else {
             stations = await stationModels.getLoadedStation(loadedStations);
         }
