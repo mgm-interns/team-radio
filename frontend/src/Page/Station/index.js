@@ -6,6 +6,7 @@ import LightBulbIcon from 'react-icons/lib/fa/lightbulb-o';
 import VolumeUpIcon from 'react-icons/lib/md/volume-up';
 import VolumeOffIcon from 'react-icons/lib/md/volume-off';
 import MdMusicVideo from 'react-icons/lib/md/music-video';
+import FaQrcode from 'react-icons/lib/fa/qrcode';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
@@ -40,6 +41,7 @@ import OnlineUsers from './OnlineUsers';
 import styles from './styles';
 import StationSharing from './Sharing';
 import { Util } from '../../Util/index'
+import { QRCode } from 'Component';
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -53,6 +55,7 @@ class StationPage extends Component {
       nowPlayingSong: null,
       isMobileBrowser: Util.isMobileBrowser(),
       isEnabledVideo: true,
+      isShowingQRCode: false,
     };
 
     if (this.state.isMobileBrowser) {
@@ -66,6 +69,7 @@ class StationPage extends Component {
     this._checkValidStation = this._checkValidStation.bind(this);
     this._getFilteredPlaylist = this._getFilteredPlaylist.bind(this);
     this._toggleShowingVideoPlayer = this._toggleShowingVideoPlayer.bind(this);
+    this._toggleShowingQRCode = this._toggleShowingQRCode.bind(this);
   }
 
   componentWillMount() {
@@ -200,6 +204,12 @@ class StationPage extends Component {
     );
   }
 
+  _toggleShowingQRCode() {
+    this.setState(
+      { isShowingQRCode: !this.state.isShowingQRCode }
+    );
+  }
+
   _handleTabChange(e, value) {
     this.setState({ tabValue: value });
   }
@@ -276,7 +286,7 @@ class StationPage extends Component {
       passive,
       disableSwitcher,
     } = this.props;
-    const { muted, nowPlayingSong, isEnabledVideo, isMobileBrowser } = this.state;
+    const { muted, nowPlayingSong, isEnabledVideo, isMobileBrowser, isShowingQRCode } = this.state;
 
     return [
       passive && (
@@ -296,6 +306,11 @@ class StationPage extends Component {
             <StationSwitcher disable={disableSwitcher} />
           </div>
         </Grid>
+        {!isShowingQRCode ? null : (
+          <Grid item xs={12} className={classes.container}>
+            <div className={classes.qrCodeContainer}><QRCode text={window.location.href}/></div>
+          </Grid>
+        )}
         <Grid item xs={12} className={classes.container}>
           <Grid container>
             <Grid
@@ -353,11 +368,19 @@ class StationPage extends Component {
                       <IconButton
                         color={isEnabledVideo ? 'primary' : 'default'}
                         onClick={this._toggleShowingVideoPlayer}
-                        >
+                      >
                         <MdMusicVideo />
                       </IconButton>
                     )}
 
+                    {passive ? null : (
+                      <IconButton
+                          color={isShowingQRCode ? 'primary' : 'default'}
+                          onClick={this._toggleShowingQRCode}
+                      >
+                        <FaQrcode />
+                      </IconButton>
+                    )}
                     {passive ? null : <StationSharing />}
                   </div>
                 </Grid>
