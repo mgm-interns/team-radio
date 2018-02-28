@@ -44,6 +44,10 @@ class Backdrop extends Component {
 
     // Redirect to the created station page
     if (station && station.station_id) {
+        const localStationsToken = localStorage.getItem(constants.LOCAL_STORAGE_ANONYMOUS_STATIONS);
+        let localStationsArray = localStationsToken ?  JSON.parse(localStationsToken) : [];
+        localStationsArray.push(station.station_id);
+        localStorage.setItem(constants.LOCAL_STORAGE_ANONYMOUS_STATIONS, JSON.stringify(localStationsArray));
       history.replace(`/station/${station.station_id}`);
     }
   }
@@ -149,10 +153,6 @@ const mapStateToProps = ({ api: { stations, user } }) => ({
 
 const mapDispatchToProps = dispatch => ({
   createStation: ({ stationName, userId, isPrivate }) => {
-    const localStationsToken = localStorage.getItem(constants.LOCAL_STORAGE_ANONYMOUS_STATIONS);
-    let localStationsArray = localStationsToken ?  JSON.parse(localStationsToken) : [];
-    localStationsArray.push(stationName);
-    localStorage.setItem(constants.LOCAL_STORAGE_ANONYMOUS_STATIONS, JSON.stringify(localStationsArray));
     dispatch(createStation({ stationName, userId, isPrivate }));
   },
 });
