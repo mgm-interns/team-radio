@@ -61,7 +61,7 @@ const stationSchema = mongoose.Schema({
 // Create text index for search perform
 stationSchema.index({ station_name: 'text', station_id: 'text' });
 
-var Station = (module.exports = mongoose.model('stations', stationSchema));
+const Station = (module.exports = mongoose.model('stations', stationSchema));
 
 searchController.attachStationData(Station);
 

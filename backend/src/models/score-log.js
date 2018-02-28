@@ -43,7 +43,7 @@ module.exports.createScoreLog = async (userId, score, actionKey, description) =>
     let des = {
         station_id: null,
         song_url: null,
-        user_id: null
+        song_owner: null
     };
     return ScoreLog.create(
         {

@@ -12,6 +12,7 @@ import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
 import * as CONSTANTS from '../../const/constants';
 import * as players from '../../players';
+import config from "../../config";
 
 export default async (
   emitter,
@@ -22,6 +23,7 @@ export default async (
   thumbnail,
   duration,
   songMessage,
+  moduleEmitter
 ) => {
   /**
    * Decline request if the user does not exist
@@ -38,6 +40,7 @@ export default async (
       thumbnail,
       duration,
       songMessage,
+      moduleEmitter
     );
   } else {
     emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
@@ -55,6 +58,7 @@ const _addSongProcess = async (
   thumbnail,
   duration,
   songMessage,
+  moduleEmitter
 ) => {
   let playlist;
 
@@ -71,8 +75,10 @@ const _addSongProcess = async (
       thumbnail,
       duration,
       songMessage,
+
     );
     emitter.emit(EVENTS.SERVER_ADD_SONG_SUCCESS, {});
+    playlist && moduleEmitter.emit(config.events.SONG_WAS_ADDED, userId, config.action.ACTION_DEFINITIONS.ADD_SONG_STATION,stationId,songUrl);
   } catch (err) {
     emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
       message: err.message,

@@ -1,5 +1,5 @@
-import StationWasCreated from './StationWasCreated'
+import ScoreLogEvents from "./ScoreLogEvents";
 
 export default {
-  StationWasCreated
+    ScoreLogEvents
 };

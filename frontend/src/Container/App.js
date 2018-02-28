@@ -8,11 +8,13 @@ import { verifyToken } from 'Redux/api/user/user';
 import { removeAuthenticationState } from 'Configuration';
 import Router from './Router';
 import styles from './styles';
+import {sendUserId} from "../Redux/api/user/user";
 
 class App extends Component {
-  componentWillMount() {
-    this.props.getAuth({ token: localStorage.getItem('token') });
-  }
+    componentWillMount() {
+        this.props.getAuth({token: localStorage.getItem('token')});
+        this.props.sendUserId(localStorage.getItem('userId'));
+    }
 
   componentWillReceiveProps(nextProps) {
     const { error } = nextProps.user;
@@ -43,9 +45,12 @@ App.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getAuth: token => {
-    dispatch(verifyToken(token));
-  },
+    getAuth: token => {
+        dispatch(verifyToken(token));
+    },
+    sendUserId: (userId) => {
+        dispatch(sendUserId(userId))
+    }
 });
 
 const mapStateToProps = state => ({
