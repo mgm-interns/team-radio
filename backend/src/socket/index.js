@@ -122,7 +122,6 @@ io.on('connection', socket => {
                 break;
 
             case EVENTS.CLIENT_SEND_USERID:
-                console.log("&&&&&&&&&&&&&",action.payload.userId);
                 if(action && action.payload && action.payload.userId)
                     socket.join(action.payload.userId);
                 break;
