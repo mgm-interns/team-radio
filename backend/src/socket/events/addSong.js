@@ -57,7 +57,7 @@ const _addSongProcess = async (
 ) => {
     const localStationsArray = localstations ? JSON.parse(localstations) : [];
     let isMyStation = false;
-    if (!userId) {
+    if (!userId || userId == -1) {
         for (let tempStationId of localStationsArray) {
             if (tempStationId === stationId) {
                 isMyStation = true;
