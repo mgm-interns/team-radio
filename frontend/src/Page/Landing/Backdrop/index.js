@@ -48,7 +48,7 @@ class Backdrop extends Component {
         let localStationsArray = localStationsToken ?  JSON.parse(localStationsToken) : [];
         localStationsArray.push(station.station_id);
         localStorage.setItem(constants.LOCAL_STORAGE_ANONYMOUS_STATIONS, JSON.stringify(localStationsArray));
-      history.replace(`/station/${station.station_id}`);
+        history.replace(`/station/${station.station_id}`);
     }
   }
 
