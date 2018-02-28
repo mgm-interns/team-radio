@@ -3,14 +3,13 @@ import * as actionDefinitionController from '../controllers/actionDefinitionCont
 import * as userController from '../controllers/user';
 import config from '../config/index';
 import * as stationModels from '../models/station';
-import * as EVENTS from "../const/actions";
 
 export default (emitter, moduleEmitter) => {
-    StationWasCreated(emitter, moduleEmitter);
-    SongWasAdded(emitter, moduleEmitter);
+    stationWasCreated(emitter, moduleEmitter);
+    songWasAdded(emitter, moduleEmitter);
 };
 
-const StationWasCreated = (emitter, moduleEmitter) => {
+const stationWasCreated = (emitter, moduleEmitter) => {
     moduleEmitter.on(config.events.STATION_WAS_CREATED, async (userId, actionKey) => {
         let action = await actionDefinitionController.getActionDefinitionByKey(actionKey);
         await scoreLogController.createScoreLog(userId, action.score, action.action_key);
@@ -23,7 +22,7 @@ const StationWasCreated = (emitter, moduleEmitter) => {
     });
 };
 
-const SongWasAdded = (emitter, moduleEmitter) => {
+const songWasAdded = (emitter, moduleEmitter) => {
     moduleEmitter.on(config.events.SONG_WAS_ADDED, async (userId, actionKey, stationId, songUrl) => {
 
         let score_description = {

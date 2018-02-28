@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import config from '../config/index';
+import {ObjectId} from "mongodb";
+
+const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
 
 const ScoreLogSchema = mongoose.Schema({
     user_id: {
@@ -68,4 +71,13 @@ const mapValueOfKeyInObject = (objA, objB) => {
             }
         });
     return objA;
+};
+
+module.exports.isUserJoinedStation = async (userId, stationId, actionKey) => {
+    console.log(stationId);
+    return ScoreLog.findOne({
+        user_id: _safeObjectId(userId),
+        action_key: actionKey,
+        "description.station_id": stationId
+    });
 };
