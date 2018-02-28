@@ -67,7 +67,6 @@ export default (state = INITIAL_STATE, action) => {
       };
     }
     case SERVER_LOAD_STATION_PAGING: {
-        state.stationLoaded = true;
         action.payload.stations = state.data.concat(action.payload.stations);
         return {
             ...state,

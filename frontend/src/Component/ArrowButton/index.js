@@ -36,16 +36,6 @@ class ArrowButton extends Component {
                         <span className="icon-wrap"></span>
                     </a>
                 </nav>
-                <Scrollbar
-                speed={1.6}
-                //level={scrollbarInstanceLevel}
-                //className={classes.container}
-                contentClassName='StationList-content-141'
-                swapWheelAxes={true}
-                smoothScrolling
-                stopScrollPropagation
-                ref={this.props.scrollbarRef}
-                ></Scrollbar>
             </div>
         )
     }
