@@ -57,17 +57,19 @@ const _addSongProcess = async (
 ) => {
     const localStationsArray = localstations ? JSON.parse(localstations) : [];
     let isMyStation = false;
-    for (let stationName of localStationsArray) {
-        if(stationName === stationId) {
-            isMyStation = true;
-            break;
+    if (!userId) {
+        for (let tempStationId of localStationsArray) {
+            if (tempStationId === stationId) {
+                isMyStation = true;
+                break;
+            }
         }
-    }
-    if (!isMyStation) {
-        emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
-            message: "Cannot add song to anonymous station that was not created by you",
-        });
-        return;
+        if (!isMyStation) {
+            emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
+                message: "Cannot add song to anonymous station that was not created by you",
+            });
+            return;
+        }
     }
   let playlist;
 
