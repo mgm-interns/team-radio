@@ -116,6 +116,13 @@ io.on('connection', socket => {
         );
         break;
 
+      case EVENTS.CLIENT_LOAD_STATION_PAGING:
+          eventHandlers.loadStationPaging(
+              createEmitter(socket, io),
+              EVENTS.CLIENT_LOAD_STATION_PAGING
+          );
+          break;
+
       default:
         eventManager.stationEvents(io, socket, action);
         eventManager.songEvents(io, socket, action);

@@ -10,6 +10,7 @@ import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
 import { StationList } from 'Component';
 import styles from './styles';
+import ArrowButton from 'Component/ArrowButton'
 
 /* eslint-disable no-shadow */
 class StationSwitcher extends Component {
@@ -76,11 +77,20 @@ class StationSwitcher extends Component {
     return filteredStations;
   }
 
+  scrollLeft() {
+      this.scrollbarRef.scrollLeft();
+  }
+
+  scrollRight() {
+      this.scrollbarRef.scrollRight();
+  }
+
   render() {
     const { stations, classes, disable } = this.props;
 
     return (
       <div className={classes.container}>
+        <ArrowButton scrollLeft={this.scrollLeft.bind(this)} scrollRight={this.scrollRight.bind(this)} />
         <StationList
           stations={this._filterStations()}
           enableWavingIcon

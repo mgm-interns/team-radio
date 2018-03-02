@@ -1,22 +1,20 @@
 /* eslint-disable */
 import { ObjectId } from 'mongodb';
 import deleteDiacriticMarks from 'khong-dau';
-import getSongDetails from './song';
 import * as players from '../players';
 import * as stationModels from '../models/station';
-import * as userControllers from '../controllers/user';
-import * as userModels from '../models/user';
 import { Error } from 'mongoose';
 import slice from 'lodash/slice';
 import uniqBy from 'lodash/uniqBy';
 import orderBy from 'lodash/orderBy';
 import filter from 'lodash/filter';
-import station from '../routes/station';
-import user from '../routes/user';
+import * as CONSTANTS from '../const/constants';
+import * as EVENTS from "../const/actions";
 
-const MAX_SONG_UNREGISTED_USER_CAN_ADD = 3;
 const POINTS_FOR_FIRST_SONG = 2;
 const POINTS_FOR_NEXT_SONG = 1;
+
+var loadedStations = CONSTANTS.STATION_LOADING_AS_DEFAULT;
 const MINIMUM_DURATION = 60;
 /**
  *
@@ -251,19 +249,43 @@ export const setPlayedSongs = async (stationId, songIds, isSkipped = false) => {
  * of all station
  */
 export const getAllAvailableStations = async () => {
-  try {
-    const stations = await stationModels.getAllAvailableStations();
-    let player;
-    // Can't use forEach because can't use await..
-    for (let i = 0; i < stations.length; i++) {
-      stations[i] = stations[i].toObject();
-      player = await players.getPlayer(stations[i].station_id);
-      stations[i].thumbnail = player.getNowPlaying().thumbnail;
+    try {
+        const stations = await stationModels.getAllAvailableStations();
+        let player;
+        // Can't use forEach because can't use await..
+        for (let i = 0; i < stations.length; i++) {
+            stations[i] = stations[i].toObject();
+            player = await players.getPlayer(stations[i].station_id);
+            stations[i].thumbnail = player.getNowPlaying().thumbnail;
+        }
+        return stations;
+    } catch (err) {
+        throw err;
     }
-    return stations;
-  } catch (err) {
-    throw err;
-  }
+};
+
+/**
+ * Load station for paging
+ */
+export const loadStation = async (typeLoad) => {
+    try {
+        var stations;
+        if (typeLoad === EVENTS.CLIENT_LOAD_STATION_PAGING) {
+            stations = await stationModels.loadStationPaging(loadedStations, CONSTANTS.STATION_LOADING_LIMIT);
+            loadedStations += CONSTANTS.STATION_LOADING_LIMIT;
+        } else {
+            stations = await stationModels.getLoadedStation(loadedStations);
+        }
+        let player;
+        for (let i = 0; i < stations.length; i++) {
+            stations[i] = stations[i].toObject();
+            player = await players.getPlayer(stations[i].station_id);
+            stations[i].thumbnail = player.getNowPlaying().thumbnail;
+        }
+        return stations;
+    } catch (err) {
+        throw err;
+    }
 };
 
 /**

@@ -37,7 +37,7 @@ export const attachWebSocket = _io => {
 };
 
 export const checkUpdatePopularStations = async () => {
-  stations = await stationController.getAllAvailableStations();
+  stations = await stationController.loadStation();
   const currentTime = Date.now();
 
   stations.forEach(station => {
