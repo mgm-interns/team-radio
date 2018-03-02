@@ -5,6 +5,7 @@ import {
   SERVER_STATION_CHANGE_ONLINE_USERS,
   SERVER_UPDATE_STATIONS,
   SERVER_CREATE_STATION_FAILURE,
+  SERVER_LOAD_STATION_PAGING,
 } from 'Redux/actions';
 
 const INITIAL_STATE = {
@@ -64,6 +65,13 @@ export default (state = INITIAL_STATE, action) => {
           return station;
         }),
       };
+    }
+    case SERVER_LOAD_STATION_PAGING: {
+        action.payload.stations = state.data.concat(action.payload.stations);
+        return {
+            ...state,
+            data: action.payload.stations,
+        };
     }
 
     default:
