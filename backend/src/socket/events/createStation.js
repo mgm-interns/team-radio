@@ -11,8 +11,9 @@ import * as stationController from '../../controllers/station';
 import * as switcher from '../../switcher';
 import * as players from '../../players';
 import * as EVENTS from '../../const/actions';
+import config from '../../config/index';
 
-export default async (emitter, userId, stationName, isPrivate) => {
+export default async (emitter, userId, stationName, isPrivate, moduleEmitter) => {
   let station;
 
   try {
@@ -28,6 +29,7 @@ export default async (emitter, userId, stationName, isPrivate) => {
     emitter.emit(EVENTS.SERVER_CREATE_STATION_SUCCESS, {
       station: station,
     });
+    moduleEmitter.emit(config.events.STATION_WAS_CREATED, userId, config.action.ACTION_DEFINITIONS.CREATE_STATION);
   } catch (err) {
     emitter.emit(EVENTS.SERVER_CREATE_STATION_FAILURE, {
       message: err.message,
