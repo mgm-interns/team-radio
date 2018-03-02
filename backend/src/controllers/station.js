@@ -525,7 +525,7 @@ export const joinStation = async (stationId, userId) => {
   userId = _safeObjectId(userId);
   await stationModels.joinStation(stationId, userId);
   // await stationModels.joinStation(stationId, userId);
-}
+};
 
 export const addCreatorPoints = async (stationId, songId) => {
   const song = (await stationModels.getAsongInStation(stationId, songId))[0];
