@@ -11,10 +11,12 @@ nav a {
 
 nav a.prev {
 	left: 0;
+	cursor: pointer;
 }
 
 nav a.next {
 	right: 0;
+	cursor: pointer;
 }
 
 /*--------------------*/
