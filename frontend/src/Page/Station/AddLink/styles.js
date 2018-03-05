@@ -91,7 +91,7 @@ export default theme => {
     content: {
       margin: 0,
       width: fullWidth,
-      minheight: 130,
+      minHeight: 230,
     },
     loadingContainer: {
       height: fullHeight,
@@ -99,7 +99,7 @@ export default theme => {
     },
     emptyCollection: {
       width: fullWidth,
-      minheight: 130,
+      height: 230,
       margin: 'auto',
     },
     emptyImg: {
