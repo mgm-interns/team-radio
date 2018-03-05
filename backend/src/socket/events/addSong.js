@@ -12,7 +12,7 @@ import * as userController from '../../controllers/user';
 import * as EVENTS from '../../const/actions';
 import * as CONSTANTS from '../../const/constants';
 import * as players from '../../players';
-import config from "../../config";
+import config from '../../config';
 
 export default async (
   emitter,
@@ -24,27 +24,26 @@ export default async (
   duration,
   songMessage,
   localstations,
-  moduleEmitter
+  moduleEmitter,
 ) => {
   /**
    * Decline request if the user does not exist
    * Otherwise, allow to add song
    */
-  let user = await userController.getUserById(userId);
-  let creatorId = user ? userId : -1;
-    _addSongProcess(
-      emitter,
-      creatorId,
-      stationId,
-      songUrl,
-      title,
-      thumbnail,
-      duration,
-      songMessage,
-      localstations,
-        moduleEmitter
-    );
-
+  const user = await userController.getUserById(userId);
+  const creatorId = user ? userId : -1;
+  _addSongProcess(
+    emitter,
+    creatorId,
+    stationId,
+    songUrl,
+    title,
+    thumbnail,
+    duration,
+    songMessage,
+    localstations,
+    moduleEmitter,
+  );
 };
 
 const _addSongProcess = async (
@@ -57,24 +56,25 @@ const _addSongProcess = async (
   duration,
   songMessage,
   localstations,
-  moduleEmitter
+  moduleEmitter,
 ) => {
-    const localStationsArray = localstations ? JSON.parse(localstations) : [];
-    let isMyStation = false;
-    if (!userId || userId == -1) {
-        for (let tempStationId of localStationsArray) {
-            if (tempStationId === stationId) {
-                isMyStation = true;
-                break;
-            }
-        }
-        if (!isMyStation) {
-            emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
-                message: "Cannot add song to anonymous station that was not created by you",
-            });
-            return;
-        }
+  const localStationsArray = localstations ? JSON.parse(localstations) : [];
+  let isMyStation = false;
+  if (!userId || userId == -1) {
+    for (const tempStationId of localStationsArray) {
+      if (tempStationId === stationId) {
+        isMyStation = true;
+        break;
+      }
     }
+    if (!isMyStation) {
+      emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
+        message:
+          'Cannot add song to anonymous station that was not created by you',
+      });
+      return;
+    }
+  }
   let playlist;
 
   try {
@@ -90,10 +90,17 @@ const _addSongProcess = async (
       thumbnail,
       duration,
       songMessage,
-      localstations
+      localstations,
     );
     emitter.emit(EVENTS.SERVER_ADD_SONG_SUCCESS, {});
-    playlist && moduleEmitter.emit(config.events.SONG_WAS_ADDED, userId, config.action.ACTION_DEFINITIONS.ADD_SONG_STATION,stationId,songUrl);
+    playlist &&
+      moduleEmitter.emit(
+        config.events.SONG_WAS_ADDED,
+        userId,
+        config.action.ACTION_DEFINITIONS.ADD_SONG_STATION,
+        stationId,
+        songUrl,
+      );
   } catch (err) {
     emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
       message: err.message,

@@ -40,7 +40,7 @@ import NowPlaying from './NowPlaying';
 import OnlineUsers from './OnlineUsers';
 import styles from './styles';
 import StationSharing from './Sharing';
-import { Util } from '../../Util/index'
+import { Util } from '../../Util/index';
 import { QRCode } from 'Component';
 
 /* eslint-disable no-shadow */
@@ -112,6 +112,37 @@ class StationPage extends Component {
     this.setState({
       muted: muteNowPlaying,
     });
+
+    // Auto re-add a random song from history when there is no song on the playlist
+    // const {
+    //   currentStation: { playlist, history, station },
+    //   userId,
+    // } = this.props;
+
+    // const nextPlaylist = nextProps.currentStation.playlist;
+    // const nextStation = nextProps.currentStation.station;
+
+    // if (playlist.length > 0 && nextPlaylist.length === 0) {
+    //   // check if user stays in the same station
+    //   if (station && station.station_id === nextStation.station_id) {
+    //     const { match: { params: { stationId } } } = this.props;
+    //     const randomIndex = Math.floor(
+    //       Math.random() * Math.floor(history.length),
+    //     );
+    //     const song = history.length ? history[randomIndex] : playlist[0];
+    //     const { url, title, thumbnail, creator, duration } = song;
+    //     this.props.addSong({
+    //       songUrl: url,
+    //       title,
+    //       thumbnail,
+    //       stationId,
+    //       userId,
+    //       creator,
+    //       duration,
+    //       replay: true,
+    //     });
+    //   }
+    // }
   }
 
   _getFilteredPlaylist() {
@@ -199,15 +230,11 @@ class StationPage extends Component {
   }
 
   _toggleShowingVideoPlayer() {
-    this.setState(
-      { isEnabledVideo: !this.state.isEnabledVideo }
-    );
+    this.setState({ isEnabledVideo: !this.state.isEnabledVideo });
   }
 
   _toggleShowingQRCode() {
-    this.setState(
-      { isShowingQRCode: !this.state.isShowingQRCode }
-    );
+    this.setState({ isShowingQRCode: !this.state.isShowingQRCode });
   }
 
   _handleTabChange(e, value) {
@@ -286,7 +313,13 @@ class StationPage extends Component {
       passive,
       disableSwitcher,
     } = this.props;
-    const { muted, nowPlayingSong, isEnabledVideo, isMobileBrowser, isShowingQRCode } = this.state;
+    const {
+      muted,
+      nowPlayingSong,
+      isEnabledVideo,
+      isMobileBrowser,
+      isShowingQRCode,
+    } = this.state;
 
     return [
       passive && (
@@ -308,7 +341,9 @@ class StationPage extends Component {
         </Grid>
         {!isShowingQRCode ? null : (
           <Grid item xs={12} className={classes.container}>
-            <div className={classes.qrCodeContainer}><QRCode text={window.location.href}/></div>
+            <div className={classes.qrCodeContainer}>
+              <QRCode text={window.location.href} />
+            </div>
           </Grid>
         )}
         <Grid item xs={12} className={classes.container}>
@@ -357,12 +392,12 @@ class StationPage extends Component {
                       </IconButton>
                     )}
                     {!isEnabledVideo ? null : (
-                        <IconButton
-                            color={passive ? 'primary' : 'default'}
-                            onClick={this._onLightClick}
-                        >
-                          <LightBulbIcon />
-                        </IconButton>
+                      <IconButton
+                        color={passive ? 'primary' : 'default'}
+                        onClick={this._onLightClick}
+                      >
+                        <LightBulbIcon />
+                      </IconButton>
                     )}
                     {isMobileBrowser ? null : (
                       <IconButton
@@ -375,8 +410,8 @@ class StationPage extends Component {
 
                     {passive ? null : (
                       <IconButton
-                          color={isShowingQRCode ? 'primary' : 'default'}
-                          onClick={this._toggleShowingQRCode}
+                        color={isShowingQRCode ? 'primary' : 'default'}
+                        onClick={this._toggleShowingQRCode}
                       >
                         <FaQrcode />
                       </IconButton>
@@ -387,8 +422,8 @@ class StationPage extends Component {
                 {isEnabledVideo ? (
                   <NowPlaying
                     className={classNames([classes.content], {
-                        [classes.emptyNowPlaying]: !playlist,
-                        [classes.nowPlayingPassive]: passive,
+                      [classes.emptyNowPlaying]: !playlist,
+                      [classes.nowPlayingPassive]: passive,
                     })}
                     autoPlay={true}
                     muted={muted}
@@ -441,7 +476,7 @@ StationPage.propTypes = {
   disableSwitcher: PropTypes.bool,
   disableStationsSwitcher: PropTypes.func,
   enableStationsSwitcher: PropTypes.func,
-  addSong: PropTypes.func
+  addSong: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -452,7 +487,7 @@ const mapStateToProps = ({ api, page }) => ({
   userId: api.user.data.userId,
   passive: page.station.passive,
   favourite: api.favouriteSongs,
-  disableSwitcher: page.station.disableSwitcher
+  disableSwitcher: page.station.disableSwitcher,
 });
 
 const mapDispatchToProps = dispatch => ({

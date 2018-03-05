@@ -3,11 +3,14 @@ import * as stationController from './controllers/station';
 import * as EVENTS from './const/actions';
 import * as CONSTANTS from './const/constants';
 import * as switcher from './switcher';
+import { countOnlineOfStation } from './socket/managers/onlineUserManager';
+import config from './config';
 
 const _players = [];
 const TIME_BUFFER = 5000;
 const PERCENT_SKIP_SONG = 50;
 let io = null;
+let songEmitter = null;
 
 class Player {
   userIds = [];
@@ -268,6 +271,18 @@ class Player {
     );
     // Reset nowPlaying when the station is done
     if (sortedPlaylist.length === 0) {
+      const numberOfUserOnline = await countOnlineOfStation(this.stationId);
+      if (numberOfUserOnline > 0) {
+        const randomIndex = Math.floor(
+          Math.random() * Math.floor(playlist.length),
+        );
+        const song = playlist[randomIndex];
+        songEmitter.emit(config.events.AUTOREPLAY_REQUEST, {
+          ...song,
+          stationId: this.stationId,
+        });
+      }
+
       this._startSong();
       return;
     }
@@ -370,4 +385,8 @@ export const getPlayingStationIds = () => {
     if (player.getNowPlaying().song_id) playingStationIds.push(stationId);
   });
   return playingStationIds;
+};
+
+export const attachSongEmitter = _songEmitter => {
+  songEmitter = _songEmitter;
 };
