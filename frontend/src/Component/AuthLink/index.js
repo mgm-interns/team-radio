@@ -118,6 +118,9 @@ class AuthLink extends Component {
         )}
         {user.isAuthenticated && (
           <div className={classes.menuItem}>
+              <div>
+                  <span className={classes.displayName}>Reputation: {user.data.reputation || 0}</span>
+              </div>
             <Link
               to={`/profile/${user.data.username}`}
               className={classes.menuItem}

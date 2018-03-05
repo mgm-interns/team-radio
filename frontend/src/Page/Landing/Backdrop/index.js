@@ -17,6 +17,7 @@ import { createStation } from 'Redux/api/stations/actions';
 
 import fixture from 'Fixture/landing';
 import styles from './styles';
+import * as constants from '../../../Util/constants';
 
 /* eslint-disable no-shadow */
 class Backdrop extends Component {
@@ -43,7 +44,11 @@ class Backdrop extends Component {
 
     // Redirect to the created station page
     if (station && station.station_id) {
-      history.replace(`/station/${station.station_id}`);
+        const localStationsToken = localStorage.getItem(constants.LOCAL_STORAGE_ANONYMOUS_STATIONS);
+        let localStationsArray = localStationsToken ?  JSON.parse(localStationsToken) : [];
+        localStationsArray.push(station.station_id);
+        localStorage.setItem(constants.LOCAL_STORAGE_ANONYMOUS_STATIONS, JSON.stringify(localStationsArray));
+        history.replace(`/station/${station.station_id}`);
     }
   }
 
@@ -147,8 +152,9 @@ const mapStateToProps = ({ api: { stations, user } }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  createStation: ({ stationName, userId, isPrivate }) =>
-    dispatch(createStation({ stationName, userId, isPrivate })),
+  createStation: ({ stationName, userId, isPrivate }) => {
+    dispatch(createStation({ stationName, userId, isPrivate }));
+  },
 });
 
 export default compose(

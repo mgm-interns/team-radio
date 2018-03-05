@@ -10,12 +10,15 @@ import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
 import { StationList } from 'Component';
 import styles from './styles';
+import ArrowButton from 'Component/ArrowButton'
 
 /* eslint-disable no-shadow */
 class StationSwitcher extends Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      stationLength: 0, //Number of displayed stations
+    };
     this._goToStationPage = this._goToStationPage.bind(this);
     this._filterStations = this._filterStations.bind(this);
   }
@@ -76,11 +79,28 @@ class StationSwitcher extends Component {
     return filteredStations;
   }
 
+  scrollLeft() {
+      this.scrollbarRef.scrollLeft();
+  }
+
+  componentWillReceiveProps(nextProps) {
+      //Save new length of stations to compare with old length at componentDidUpdate
+      this.state = {stationLength : nextProps.stations.length};
+  }
+
+  componentDidUpdate(prevProps) {
+      //Scroll to right if length of stations was changed (user load more stations)
+      if (this.state.stationLength > prevProps.stations.length) {
+          this.scrollbarRef.scrollXTo(1000000);
+      }
+  }
+
   render() {
     const { stations, classes, disable } = this.props;
 
     return (
       <div className={classes.container}>
+        <ArrowButton scrollLeft={this.scrollLeft.bind(this)} />
         <StationList
           stations={this._filterStations()}
           enableWavingIcon

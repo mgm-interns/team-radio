@@ -6,14 +6,39 @@ import * as onlineManager from './managers/onlineUserManager';
 import * as players from '../players';
 import * as EVENTS from '../const/actions';
 import * as CONSTANTS from '../const/constants';
+import event from '../events';
+import SongEmitter from '../events/SongEmitter';
+import config from '../config';
 
 // Create web socket
 const io = SocketIO();
 
+// Create module events
+const events = require('events');
+
 // Listening for Web socket events
 io.on('connection', socket => {
+  const moduleEmitter = new events.EventEmitter();
   eventHandlers.socketConnect(createEmitter(socket, io));
+  event.ScoreLogEvents(createEmitter(socket, io), moduleEmitter);
 
+  const songEmitter = new SongEmitter();
+  players.attachSongEmitter(songEmitter);
+
+  songEmitter.on(config.events.AUTOREPLAY_REQUEST, song => {
+    eventHandlers.addSong(
+      createEmitter(socket, io),
+      song.creator._id,
+      song.stationId,
+      song.url,
+      song.title,
+      song.thumbnail,
+      song.duration,
+      null,
+      null,
+      moduleEmitter,
+    );
+  });
   // Listening for action request
   socket.on('action', action => {
     switch (action.type) {
@@ -23,6 +48,7 @@ io.on('connection', socket => {
           action.payload.userId,
           action.payload.stationName,
           action.payload.isPrivate,
+          moduleEmitter,
         );
         break;
 
@@ -49,6 +75,8 @@ io.on('connection', socket => {
           action.payload.thumbnail,
           action.payload.duration,
           action.payload.songMessage,
+          action.payload.localstations,
+          moduleEmitter,
         );
         break;
 
@@ -112,6 +140,17 @@ io.on('connection', socket => {
           createEmitter(socket, io),
           action.payload.query,
         );
+        break;
+
+      case EVENTS.CLIENT_LOAD_STATION_PAGING:
+        eventHandlers.loadStationPaging(
+          createEmitter(socket, io),
+          EVENTS.CLIENT_LOAD_STATION_PAGING,
+        );
+        break;
+      case EVENTS.CLIENT_SEND_USERID:
+        if (action && action.payload && action.payload.userId)
+          socket.join(action.payload.userId);
         break;
 
       default:

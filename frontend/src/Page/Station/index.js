@@ -5,6 +5,8 @@ import { compose } from 'redux';
 import LightBulbIcon from 'react-icons/lib/fa/lightbulb-o';
 import VolumeUpIcon from 'react-icons/lib/md/volume-up';
 import VolumeOffIcon from 'react-icons/lib/md/volume-off';
+import MdMusicVideo from 'react-icons/lib/md/music-video';
+import FaQrcode from 'react-icons/lib/fa/qrcode';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
@@ -20,6 +22,7 @@ import {
   joinStation,
   redirectStation,
   leaveStation,
+  addSong,
 } from 'Redux/api/currentStation/actions';
 import { getFavouriteSongs } from 'Redux/api/favouriteSongs/actions';
 import {
@@ -28,6 +31,7 @@ import {
   disableStationsSwitcher,
   enableStationsSwitcher,
 } from 'Redux/page/station/actions';
+
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
@@ -36,6 +40,8 @@ import NowPlaying from './NowPlaying';
 import OnlineUsers from './OnlineUsers';
 import styles from './styles';
 import StationSharing from './Sharing';
+import { Util } from '../../Util/index';
+import { QRCode } from 'Component';
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -47,7 +53,14 @@ class StationPage extends Component {
       tabValue: 0,
       isPassive: false,
       nowPlayingSong: null,
+      isMobileBrowser: Util.isMobileBrowser(),
+      isEnabledVideo: true,
+      isShowingQRCode: false,
     };
+
+    if (this.state.isMobileBrowser) {
+      this.state.isEnabledVideo = false;
+    }
 
     this._onVolumeClick = this._onVolumeClick.bind(this);
     this._onLightClick = this._onLightClick.bind(this);
@@ -55,6 +68,8 @@ class StationPage extends Component {
     this._handleTabChange = this._handleTabChange.bind(this);
     this._checkValidStation = this._checkValidStation.bind(this);
     this._getFilteredPlaylist = this._getFilteredPlaylist.bind(this);
+    this._toggleShowingVideoPlayer = this._toggleShowingVideoPlayer.bind(this);
+    this._toggleShowingQRCode = this._toggleShowingQRCode.bind(this);
   }
 
   componentWillMount() {
@@ -97,6 +112,37 @@ class StationPage extends Component {
     this.setState({
       muted: muteNowPlaying,
     });
+
+    // Auto re-add a random song from history when there is no song on the playlist
+    // const {
+    //   currentStation: { playlist, history, station },
+    //   userId,
+    // } = this.props;
+
+    // const nextPlaylist = nextProps.currentStation.playlist;
+    // const nextStation = nextProps.currentStation.station;
+
+    // if (playlist.length > 0 && nextPlaylist.length === 0) {
+    //   // check if user stays in the same station
+    //   if (station && station.station_id === nextStation.station_id) {
+    //     const { match: { params: { stationId } } } = this.props;
+    //     const randomIndex = Math.floor(
+    //       Math.random() * Math.floor(history.length),
+    //     );
+    //     const song = history.length ? history[randomIndex] : playlist[0];
+    //     const { url, title, thumbnail, creator, duration } = song;
+    //     this.props.addSong({
+    //       songUrl: url,
+    //       title,
+    //       thumbnail,
+    //       stationId,
+    //       userId,
+    //       creator,
+    //       duration,
+    //       replay: true,
+    //     });
+    //   }
+    // }
   }
 
   _getFilteredPlaylist() {
@@ -183,6 +229,14 @@ class StationPage extends Component {
     this._getFilteredPlaylist();
   }
 
+  _toggleShowingVideoPlayer() {
+    this.setState({ isEnabledVideo: !this.state.isEnabledVideo });
+  }
+
+  _toggleShowingQRCode() {
+    this.setState({ isShowingQRCode: !this.state.isShowingQRCode });
+  }
+
   _handleTabChange(e, value) {
     this.setState({ tabValue: value });
   }
@@ -259,7 +313,13 @@ class StationPage extends Component {
       passive,
       disableSwitcher,
     } = this.props;
-    const { muted, nowPlayingSong } = this.state;
+    const {
+      muted,
+      nowPlayingSong,
+      isEnabledVideo,
+      isMobileBrowser,
+      isShowingQRCode,
+    } = this.state;
 
     return [
       passive && (
@@ -279,6 +339,13 @@ class StationPage extends Component {
             <StationSwitcher disable={disableSwitcher} />
           </div>
         </Grid>
+        {!isShowingQRCode ? null : (
+          <Grid item xs={12} className={classes.container}>
+            <div className={classes.qrCodeContainer}>
+              <QRCode text={window.location.href} />
+            </div>
+          </Grid>
+        )}
         <Grid item xs={12} className={classes.container}>
           <Grid container>
             <Grid
@@ -314,7 +381,7 @@ class StationPage extends Component {
                     )}
                   </div>
                   <div className={classes.nowPlayingActions}>
-                    {!nowPlaying.url ? null : (
+                    {!nowPlaying.url || !isEnabledVideo ? null : (
                       <IconButton
                         onClick={this._onVolumeClick}
                         className={classNames({
@@ -324,23 +391,45 @@ class StationPage extends Component {
                         {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
                       </IconButton>
                     )}
-                    <IconButton
-                      color={passive ? 'primary' : 'default'}
-                      onClick={this._onLightClick}
-                    >
-                      <LightBulbIcon />
-                    </IconButton>
+                    {!isEnabledVideo ? null : (
+                      <IconButton
+                        color={passive ? 'primary' : 'default'}
+                        onClick={this._onLightClick}
+                      >
+                        <LightBulbIcon />
+                      </IconButton>
+                    )}
+                    {isMobileBrowser ? null : (
+                      <IconButton
+                        color={isEnabledVideo ? 'primary' : 'default'}
+                        onClick={this._toggleShowingVideoPlayer}
+                      >
+                        <MdMusicVideo />
+                      </IconButton>
+                    )}
+
+                    {passive ? null : (
+                      <IconButton
+                        color={isShowingQRCode ? 'primary' : 'default'}
+                        onClick={this._toggleShowingQRCode}
+                      >
+                        <FaQrcode />
+                      </IconButton>
+                    )}
                     {passive ? null : <StationSharing />}
                   </div>
                 </Grid>
-                <NowPlaying
-                  className={classNames([classes.content], {
-                    [classes.emptyNowPlaying]: !playlist,
-                    [classes.nowPlayingPassive]: passive,
-                  })}
-                  autoPlay={true}
-                  muted={muted}
-                />
+                {isEnabledVideo ? (
+                  <NowPlaying
+                    className={classNames([classes.content], {
+                      [classes.emptyNowPlaying]: !playlist,
+                      [classes.nowPlayingPassive]: passive,
+                    })}
+                    autoPlay={true}
+                    muted={muted}
+                    playlistLength={playlist.length}
+                  />
+                ) : null}
                 {nowPlayingSong && passive ? (
                   <div className={classes.nowPlayingInfo}>
                     <p>{nowPlayingSong.title}</p>
@@ -387,6 +476,7 @@ StationPage.propTypes = {
   disableSwitcher: PropTypes.bool,
   disableStationsSwitcher: PropTypes.func,
   enableStationsSwitcher: PropTypes.func,
+  addSong: PropTypes.func,
 };
 
 const mapStateToProps = ({ api, page }) => ({
@@ -410,6 +500,7 @@ const mapDispatchToProps = dispatch => ({
   getFavouriteSongs: userId => dispatch(getFavouriteSongs({ userId })),
   disableStationsSwitcher: () => dispatch(disableStationsSwitcher()),
   enableStationsSwitcher: () => dispatch(enableStationsSwitcher()),
+  addSong: option => dispatch(addSong(option)),
 });
 
 export default compose(

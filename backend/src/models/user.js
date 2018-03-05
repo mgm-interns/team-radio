@@ -2,6 +2,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
 import { ObjectId } from 'mongodb';
+import { Error } from 'mongoose';
 
 const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
 
@@ -212,3 +213,8 @@ module.exports.setTokenResetPassword = async (userId, token) =>
 
 module.exports.getUserByResetToken = async token =>
   user.findOne({ token_reset_password: token }, { password: 0 });
+
+module.exports.updateUserById = async (id, data) => {
+  let updatedModel = {new: true};
+  return user.findByIdAndUpdate(id, data, updatedModel);
+}
