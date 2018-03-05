@@ -35,6 +35,7 @@ export const addSong = ({
   duration,
   songMessage,
   localstations,
+  replay,
 }) => ({
   type: CLIENT_ADD_SONG,
   payload: {
@@ -50,6 +51,7 @@ export const addSong = ({
     is_played: false,
     up_vote: [],
     down_vote: [],
+    replay,
   },
 });
 
