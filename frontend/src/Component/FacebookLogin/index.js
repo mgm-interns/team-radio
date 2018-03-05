@@ -104,7 +104,7 @@ class FacebookLogin extends Component {
       { locale: this.props.language, fields: this.props.fields },
       me => {
         Object.assign(me, authResponse);
-
+        const coverUrl = me.cover ? me.cover.source : "";
         // handle data response
         const res = {};
         res.authResponse = {
@@ -117,7 +117,7 @@ class FacebookLogin extends Component {
           avatar_url: me.picture.data.url,
           email: me.email,
           name: me.name,
-          cover_url: me.cover.source,
+          cover_url: coverUrl,
           gender: me.gender,
         };
 
