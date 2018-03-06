@@ -9,8 +9,8 @@ export default ({ breakpoints, spacing }) => ({
     minHeight: 110,
     [breakpoints.up('md')]: {
       minHeight: 200,
-      paddingLeft: spacing.doubleBaseMargin,
-      paddingRight: spacing.doubleBaseMargin,
+      paddingLeft: spacing.baseMargin,
+      paddingRight: spacing.baseMargin,
     },
   },
   stationWrapper: {
