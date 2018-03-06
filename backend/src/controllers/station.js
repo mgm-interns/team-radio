@@ -9,7 +9,7 @@ import uniqBy from 'lodash/uniqBy';
 import orderBy from 'lodash/orderBy';
 import filter from 'lodash/filter';
 import * as CONSTANTS from '../const/constants';
-import * as EVENTS from "../const/actions";
+import * as EVENTS from '../const/actions';
 
 const POINTS_FOR_FIRST_SONG = 2;
 const POINTS_FOR_NEXT_SONG = 1;
@@ -39,8 +39,7 @@ export const addStation = async (stationName, userId, isPrivate) => {
           station_id: stationId,
           playlist: [],
           is_private: isPrivate,
-          owner_id: _safeObjectId(userId),
-
+          owner_id: userId ? _safeObjectId(userId) : null,
         });
         return currentStation;
       }
@@ -103,7 +102,7 @@ export const deleteStation = async (stationId, userId) => {
  */
 export const getStation = async stationId => {
   if (!stationId) {
-    throw new Error(`Station id ${stationId} is not undefined!`)
+    throw new Error(`Station id ${stationId} is not undefined!`);
   }
 
   const stationOfId = await stationModels.getStationById(stationId);
@@ -125,9 +124,10 @@ export const getStation = async stationId => {
  * @param {string} userId
  */
 export const getStationsByUserId = async userId => {
-
   try {
-    const stations = await stationModels.getStationsByUserId(_safeObjectId(userId));
+    const stations = await stationModels.getStationsByUserId(
+      _safeObjectId(userId),
+    );
     let player;
     // Can't use forEach because can't use await..
     for (let i = 0; i < stations.length; i++) {
@@ -150,12 +150,20 @@ export const getStationsByUserId = async userId => {
  * @param {string} songUrl
  * @param {string} userId
  */
-export const addSong = async (stationId, songUrl, userId, title, thumbnail, duration, contentMessage, localStations) => {
+export const addSong = async (
+  stationId,
+  songUrl,
+  userId,
+  title,
+  thumbnail,
+  duration,
+  contentMessage,
+  localStations,
+) => {
   let station;
 
   try {
     station = await stationModels.getStationById(stationId);
-
   } catch (err) {
     throw err;
   }
@@ -180,7 +188,7 @@ export const addSong = async (stationId, songUrl, userId, title, thumbnail, dura
       created_date: new Date().getTime(),
       message: {
         content: contentMessage,
-      }
+      },
     };
     await stationModels.addSong(stationId, song);
     const playlist = await getAvailableListSong(stationId);
@@ -247,19 +255,19 @@ export const setPlayedSongs = async (stationId, songIds, isSkipped = false) => {
  * of all station
  */
 export const getAllAvailableStations = async () => {
-    try {
-        const stations = await stationModels.getAllAvailableStations();
-        let player;
-        // Can't use forEach because can't use await..
-        for (let i = 0; i < stations.length; i++) {
-            stations[i] = stations[i].toObject();
-            player = await players.getPlayer(stations[i].station_id);
-            stations[i].thumbnail = player.getNowPlaying().thumbnail;
-        }
-        return stations;
-    } catch (err) {
-        throw err;
+  try {
+    const stations = await stationModels.getAllAvailableStations();
+    let player;
+    // Can't use forEach because can't use await..
+    for (let i = 0; i < stations.length; i++) {
+      stations[i] = stations[i].toObject();
+      player = await players.getPlayer(stations[i].station_id);
+      stations[i].thumbnail = player.getNowPlaying().thumbnail;
     }
+    return stations;
+  } catch (err) {
+    throw err;
+  }
 };
 
 /**
@@ -520,12 +528,11 @@ export const addCreatorPoints = async (stationId, songId) => {
     return stationModels.getAllStationScores(stationId);
   }
   return null;
-}
+};
 
 export const getStationScores = async stationId => {
   return stationModels.getAllStationScores(stationId);
-}
-
+};
 
 // Covert string to ObjectId
 const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
