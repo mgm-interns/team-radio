@@ -54,6 +54,7 @@ const stationSchema = mongoose.Schema({
       default: []
     },
   created_date: { type: Number, default: new Date().getTime(), },
+  skip_by_station_owner: { type: Boolean, default: false }, // Skip rule per station
   chat:
     {
       type: [
