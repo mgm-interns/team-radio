@@ -1,10 +1,10 @@
 nav a {
 	position: absolute;
-	top: 50%;
+	top: 42%;
 	display: block;
 	outline: none;
 	text-align: left;
-	z-index: 1000;
+	z-index: 1;
 	-webkit-transform: translateY(-50%);
 	transform: translateY(-50%);
 }
@@ -24,7 +24,7 @@ nav a.next {
 /*--------------------*/
 
 .nav-circlepop a {
-	margin: 0 30px;
+	margin: 0 0px;
 	width: 50px;
 	height: 50px;
 }
