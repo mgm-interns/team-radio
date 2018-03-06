@@ -8,10 +8,14 @@ import {
   SERVER_LOAD_STATION_PAGING,
 } from 'Redux/actions';
 
+export const STATION_LOADING_LIMIT = 7;
+export const STATION_LOADING_AS_DEFAULT = 8;
+
 const INITIAL_STATE = {
   station: null,
   data: [],
   message: '',
+  loadedStation: STATION_LOADING_AS_DEFAULT,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -67,7 +71,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     }
     case SERVER_LOAD_STATION_PAGING: {
-        action.payload.stations = state.data.concat(action.payload.stations);
+        state.loadedStation += STATION_LOADING_LIMIT;
         return {
             ...state,
             data: action.payload.stations,

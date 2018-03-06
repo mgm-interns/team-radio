@@ -145,7 +145,6 @@ io.on('connection', socket => {
       case EVENTS.CLIENT_LOAD_STATION_PAGING:
         eventHandlers.loadStationPaging(
           createEmitter(socket, io),
-          EVENTS.CLIENT_LOAD_STATION_PAGING,
         );
         break;
       case EVENTS.CLIENT_SEND_USERID:

@@ -263,30 +263,6 @@ export const getAllAvailableStations = async () => {
 };
 
 /**
- * Load station for paging
- */
-export const loadStation = async (typeLoad) => {
-    try {
-        var stations;
-        if (typeLoad === EVENTS.CLIENT_LOAD_STATION_PAGING) {
-            stations = await stationModels.loadStationPaging(loadedStations, CONSTANTS.STATION_LOADING_LIMIT);
-            loadedStations += CONSTANTS.STATION_LOADING_LIMIT;
-        } else {
-            stations = await stationModels.getLoadedStation(loadedStations);
-        }
-        let player;
-        for (let i = 0; i < stations.length; i++) {
-            stations[i] = stations[i].toObject();
-            player = await players.getPlayer(stations[i].station_id);
-            stations[i].thumbnail = player.getNowPlaying().thumbnail;
-        }
-        return stations;
-    } catch (err) {
-        throw err;
-    }
-};
-
-/**
  * The function get all info of all station
  */
 export const getAllStationDetails = async () => {

@@ -112,25 +112,6 @@ module.exports.getAllAvailableStations = (limit) => {
 };
 
 /**
- * Load more station for paging station
- *
- * @param {loadedStation} stations was loaded
- * @param {limit} limit of stations for a request
- */
-module.exports.loadStationPaging = (loadedStation, limit) => {
-    return Station.find({ is_private: false, is_delete: false }, { station_name: 1, created_date: 1, station_id: 1, _id: 0 }).skip(loadedStation).limit(limit);
-};
-
-/**
- * Get station was loaded
- *
- * @param {loadedStation} stations was loaded
- */
-module.exports.getLoadedStation = (loadedStation) => {
-    return Station.find({ is_private: false, is_delete: false }, { station_name: 1, created_date: 1, station_id: 1, _id: 0 }).limit(loadedStation);
-};
-
-/**
  * Get all info station
  *
  * @param {number} limit
