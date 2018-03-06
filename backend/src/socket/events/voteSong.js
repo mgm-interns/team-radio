@@ -28,7 +28,7 @@ const _upVoteSong = async (emitter, userId, stationId, songId) => {
     const playlist = await stationController.upVote(stationId, songId, userId);
 
     // Skip song decision when vote change
-    skipDecider(stationId);
+    skipDecider(userId, stationId);
 
     // Emit result
     emitter.emit(EVENTS.SERVER_UPVOTE_SONG_SUCCESS, {});
@@ -58,7 +58,7 @@ const _downVoteSong = async (emitter, userId, stationId, songId) => {
       await stationController.downVote(stationId, songId, userId);
 
     // Skip song decision when vote change
-    skipDecider(stationId);
+    skipDecider(userId, stationId);
 
     // Emit result
     emitter.emit(EVENTS.SERVER_DOWNVOTE_SONG_SUCCESS, {});

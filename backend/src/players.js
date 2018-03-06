@@ -30,13 +30,17 @@ class Player {
     this.stationId = station.station_id;
     this.updatePlaylist(station);
   }
+
   updateOnlineUsers = async userIds => {
     const preSkippedSongs = new Set(this.skippedSongs);
     // Save the user ids
     this.userIds = userIds;
+
+    // Get list of songs not played yet
     const playlist = await stationController.getAvailableListSong(
       this.stationId,
     );
+
     // Check songs will be skipped
     playlist.forEach(song => {
       let points = 0;
@@ -54,11 +58,27 @@ class Player {
         this.removeSkippedSong(song.song_id);
       }
     });
+
     // compare current skipped and preSkippedSongs
     if (!_.isEqual(this.skippedSongs, preSkippedSongs)) {
       this._emitSkippedSongs();
     }
   };
+
+  skipSongByStationOwner = async ownerId => {
+    // Get list of songs not played yet
+    const playlist = await stationController.getAvailableListSong(
+        this.stationId,
+    );
+
+    // Check songs will be skipped
+    playlist.forEach(song => {
+      if (_.indexOf(song.down_vote, ownerId) >= 0) {
+        this.addSkippedSong(song.song_id);
+      }
+    });
+  };
+
   addSkippedSong = songId => {
     if (this.skippedSongs.has(songId)) {
       return;
@@ -125,6 +145,7 @@ class Player {
       playlist: playlist,
     });
   };
+
   _emitHistory = async () => {
     const history = await stationController.getListSongHistory(
       this.stationId,
@@ -150,18 +171,21 @@ class Player {
       payload: payload,
     });
   };
+
   _emitThumbnail = () => {
     this._emitAll(EVENTS.SERVER_CHANGE_STATION_THUMBNAIL, {
       station_id: this.stationId,
       thumbnail: this.nowPlaying.thumbnail,
     });
   };
+
   _emitAll = (eventName, payload) => {
     io.emit('action', {
       type: eventName,
       payload: payload,
     });
   };
+
   _emitSkippedSong = delay => {
     // Take here to current station working
     this._emit(EVENTS.SERVER_SKIP_SONG, {
@@ -172,9 +196,11 @@ class Player {
       now_playing: this.getNowPlaying(),
     });
   };
+
   _emitStationScores = stationScores => {
     this._emit(EVENTS.SERVER_UPDATE_STATION_SCORE, stationScores);
   };
+
   _resetNowPlaying = () => {
     this.nowPlaying = {
       song_id: 0,
@@ -184,6 +210,7 @@ class Player {
       message: {},
     };
   };
+
   _setNowPlaying = (song, starting_time) => {
     this.nowPlaying.song_id = song.song_id;
     this.nowPlaying.url = song.url;
@@ -191,6 +218,7 @@ class Player {
     this.nowPlaying.starting_time = starting_time;
     this.nowPlaying.message = song.message;
   };
+
   // TODO: check change state of the station to update available stations
   _startSong = async (song, starting_time) => {
     try {
