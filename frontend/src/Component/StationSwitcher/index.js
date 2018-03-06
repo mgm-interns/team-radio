@@ -17,7 +17,7 @@ class StationSwitcher extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stationLength: 0, //Number of displayed stations
+      loadedStation: 0, //Number of displayed stations
     };
     this._goToStationPage = this._goToStationPage.bind(this);
     this._filterStations = this._filterStations.bind(this);
@@ -52,8 +52,7 @@ class StationSwitcher extends Component {
   }
 
   _filterStations() {
-    const { stations = [], currentStation } = this.props;
-
+    const { stations = [], currentStation, loadedStation } = this.props;
     /**
      * Set sleepy thumbnail if there is no thumbnail in station
      * Then remove current station from the list
@@ -69,14 +68,14 @@ class StationSwitcher extends Component {
           (currentStation.station && currentStation.station.station_id) !==
           station.station_id,
       );
-
+    var renderStation = filteredStations.slice(0, loadedStation);
     /**
      * Ordered stations
      * - Current station always be on top
      * - higher online users higher position
      * - Active station
      */
-    return filteredStations;
+    return renderStation;
   }
 
   scrollLeft() {
@@ -85,12 +84,12 @@ class StationSwitcher extends Component {
 
   componentWillReceiveProps(nextProps) {
       //Save new length of stations to compare with old length at componentDidUpdate
-      this.state = {stationLength : nextProps.stations.length};
+      this.state = {loadedStation : nextProps.loadedStation};
   }
 
   componentDidUpdate(prevProps) {
       //Scroll to right if length of stations was changed (user load more stations)
-      if (this.state.stationLength > prevProps.stations.length) {
+      if (this.state.loadedStation > prevProps.loadedStation) {
           this.scrollbarRef.scrollXTo(1000000);
       }
   }
@@ -136,6 +135,7 @@ const mapStateToProps = ({ api }) => ({
   stations: api.stations.data,
   currentStation: api.currentStation,
   userId: api.user.data.userId,
+  loadedStation: api.stations.loadedStation,
 });
 
 const mapDispatchToProps = dispatch => ({

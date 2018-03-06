@@ -13,8 +13,6 @@ import * as EVENTS from "../const/actions";
 
 const POINTS_FOR_FIRST_SONG = 2;
 const POINTS_FOR_NEXT_SONG = 1;
-
-var loadedStations = CONSTANTS.STATION_LOADING_AS_DEFAULT;
 const MINIMUM_DURATION = 60;
 /**
  *
@@ -253,30 +251,6 @@ export const getAllAvailableStations = async () => {
         const stations = await stationModels.getAllAvailableStations();
         let player;
         // Can't use forEach because can't use await..
-        for (let i = 0; i < stations.length; i++) {
-            stations[i] = stations[i].toObject();
-            player = await players.getPlayer(stations[i].station_id);
-            stations[i].thumbnail = player.getNowPlaying().thumbnail;
-        }
-        return stations;
-    } catch (err) {
-        throw err;
-    }
-};
-
-/**
- * Load station for paging
- */
-export const loadStation = async (typeLoad) => {
-    try {
-        var stations;
-        if (typeLoad === EVENTS.CLIENT_LOAD_STATION_PAGING) {
-            stations = await stationModels.loadStationPaging(loadedStations, CONSTANTS.STATION_LOADING_LIMIT);
-            loadedStations += CONSTANTS.STATION_LOADING_LIMIT;
-        } else {
-            stations = await stationModels.getLoadedStation(loadedStations);
-        }
-        let player;
         for (let i = 0; i < stations.length; i++) {
             stations[i] = stations[i].toObject();
             player = await players.getPlayer(stations[i].station_id);
