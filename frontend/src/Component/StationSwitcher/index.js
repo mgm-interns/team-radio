@@ -57,8 +57,7 @@ class StationSwitcher extends Component {
      * Set sleepy thumbnail if there is no thumbnail in station
      * Then remove current station from the list
      */
-    var renderStation = stations.slice(0, loadedStation);
-    const filteredStations = renderStation
+    const filteredStations = stations
       .map(station => ({
         ...station,
         thumbnail: station.thumbnail || Images.stationDefault,
@@ -69,13 +68,14 @@ class StationSwitcher extends Component {
           (currentStation.station && currentStation.station.station_id) !==
           station.station_id,
       );
+    var renderStation = filteredStations.slice(0, loadedStation);
     /**
      * Ordered stations
      * - Current station always be on top
      * - higher online users higher position
      * - Active station
      */
-    return filteredStations;
+    return renderStation;
   }
 
   scrollLeft() {

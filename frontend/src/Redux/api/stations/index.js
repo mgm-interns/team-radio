@@ -9,7 +9,7 @@ import {
 } from 'Redux/actions';
 
 export const STATION_LOADING_LIMIT = 7;
-export const STATION_LOADING_AS_DEFAULT = 8;
+export const STATION_LOADING_AS_DEFAULT = 7;
 
 const INITIAL_STATE = {
   station: null,
