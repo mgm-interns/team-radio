@@ -61,8 +61,8 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
         user = await _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name, localStations);
         const userId = user._id;
         const localStationsArray = localStations ? JSON.parse(localStations) : [];
-        for (let stationName of localStationsArray) {
-            await stationModels.updateStationOwner(stationName, userId);
+        for (let stationId of localStationsArray) {
+            await stationModels.updateStationOwner(stationId, userId);
         }
     }
     return await userModels.getUserById(user.id);
@@ -90,9 +90,9 @@ export const createUser = async (email, password, name, username, localStationsS
     });
 
     const userId = user._id;
-    const stationNames = JSON.parse(localStationsString);
-    for(let stationName of stationNames) {
-         await stationModels.updateStationOwner(stationName, userId);
+    const stationIds = JSON.parse(localStationsString);
+    for(let stationId of stationIds) {
+         await stationModels.updateStationOwner(stationId, userId);
     }
     const alreadyUser = await userModels.getUserByUsername(username);
     if (username && !alreadyUser) {
