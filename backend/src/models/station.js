@@ -218,13 +218,13 @@ module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) =
 };
 
 /**
- * Update the creator of station by station name
- * @param stationName
+ * Update the creator of station by station Id
+ * @param stationId
  * @param userId
  */
-module.exports.updateStationOwner = (stationName, userId) => {
+module.exports.updateStationOwner = (stationId, userId) => {
   try {
-    let query = { station_name: stationName};
+    let query = { station_id: stationId};
     return Station.update(query, {
       $set: {
         owner_id: userId,
