@@ -246,7 +246,24 @@ module.exports.updateStationOwner = (stationId, userId) => {
   catch (err) {
     console.log("Server error when update station's creator");
   }
-}
+};
+
+/**
+ * Use to change skip rule of station
+ * @param {string} stationId
+ * @param {boolean} skipRule
+ */
+module.exports.changeSkipRuleSetting = (stationId, skipByOwner) => {
+    try {
+        let conditions = { station_id: stationId };
+        let updates = { $set: { skip_by_station_owner: skipByOwner }, };
+        Station.update(conditions, updates);
+    }
+    catch (err) {
+        console.log('Error when update skip rule setting!' + err.message);
+        throw err;
+    }
+};
 
 /******************** A SONG**************************/
 

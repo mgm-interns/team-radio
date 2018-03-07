@@ -1,4 +1,5 @@
 import searchController from '../controllers/search';
+import * as stationController from '../controllers/station';
 import * as CONSTANTS from '../const/constants';
 import station from '../../test/test';
 
@@ -64,6 +65,22 @@ export default router => {
   });
   router.put('/stations/getStationsByUserId/get', (req, res) => {
     station.getStationsByUserId(req, res);
+  });
+
+  router.put('/stations/settings/update-skip-rule', async (req, res) => {
+    const stationId = req.body.stationId;
+    const userId = req.body.userId;
+    const skipByOwner = req.body.skipByOwner;
+
+    try {
+        await stationController.changeSkipSetting(stationId, userId, skipByOwner);
+        res.status(200).json({ message: 'Saved your setting!' });
+    } catch (err) {
+      console.log('Error when change settings: ' + err.message)
+      res
+        .status(400)
+        .json({ message: 'Something went wrong!' });
+    }
   });
 
   router.get('/search/:query', async (req, res) => {
