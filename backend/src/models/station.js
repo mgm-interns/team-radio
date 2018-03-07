@@ -255,9 +255,9 @@ module.exports.updateStationOwner = (stationId, userId) => {
  */
 module.exports.changeSkipRuleSetting = (stationId, skipByOwner) => {
     try {
-        let conditions = { station_id: stationId };
-        let updates = { $set: { skip_by_station_owner: skipByOwner }, };
-        Station.update(conditions, updates);
+        let query = { station_id: stationId };
+        let updates = { $set: { skip_by_station_owner: skipByOwner } };
+        Station.update(query, updates).exec();
     }
     catch (err) {
         console.log('Error when update skip rule setting!' + err.message);
