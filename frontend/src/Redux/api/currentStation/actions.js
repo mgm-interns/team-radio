@@ -5,6 +5,7 @@ import {
   CLIENT_DOWNVOTE_SONG,
   CLIENT_LEAVE_STATION,
   CLIENT_REDIRECT_STATION,
+  CLIENT_ADD_STATION_CHAT,
 } from 'Redux/actions';
 
 const DEFAULT_USER_ID = '0';
@@ -72,3 +73,26 @@ export const downVoteSong = ({
   type: CLIENT_DOWNVOTE_SONG,
   payload: { userId, stationId: stationId.toString(), songId },
 });
+
+export const addStationChat = ({
+  userId = DEFAULT_USER_ID,
+  stationId,
+  message,
+}) => ({
+  type: CLIENT_ADD_STATION_CHAT,
+  payload: { userId, stationId, message },
+});
+
+/**
+ * Dispatch an add chat action
+ * TODO: @pvtri96 Please remove it after chat feature get done!
+ * @returns {*}
+ */
+window.demoChat = (message = 'Hi! I am Tri!') =>
+  window.store.dispatch(
+    addStationChat({
+      stationId: window.store.getState().api.currentStation.station.station_id,
+      userId: window.store.getState().api.user.data.userId,
+      message,
+    }),
+  );
