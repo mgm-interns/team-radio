@@ -56,6 +56,7 @@ class StationPage extends Component {
       isMobileBrowser: Util.isMobileBrowser(),
       isEnabledVideo: true,
       isShowingQRCode: false,
+      isOnLight: true,
     };
 
     if (this.state.isMobileBrowser) {
@@ -213,7 +214,10 @@ class StationPage extends Component {
     const { passiveUserRequest, currentStation: { nowPlaying } } = this.props;
 
     this.setState(
-      { isPassive: !nowPlaying.url ? false : !this.state.isPassive },
+      {
+        isPassive: !nowPlaying.url ? false : !this.state.isPassive,
+        isOnLight: !this.state.isOnLight,
+      },
       () => {
         passiveUserRequest(this.state.isPassive);
         if (this.state.isPassive) {
@@ -399,7 +403,8 @@ class StationPage extends Component {
                         <LightBulbIcon />
                       </IconButton>
                     )}
-                    {isMobileBrowser ? null : (
+
+                    {!this.state.isOnLight || isMobileBrowser ? null : (
                       <IconButton
                         color={isEnabledVideo ? 'primary' : 'default'}
                         onClick={this._toggleShowingVideoPlayer}
