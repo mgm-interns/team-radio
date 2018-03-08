@@ -583,3 +583,11 @@ function _isStringOfArray(str, array) {
   }
   return false;
 }
+
+export const getChatInStation = stationId => {
+  return stationModels.getAllChatInStation(stationId);
+};
+
+export const addChatInStation = (stationId, { userId, message }) => {
+  return stationModels.addChatMessage(stationId, { userId, message })
+};

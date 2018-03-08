@@ -24,6 +24,9 @@ import {
   SERVER_FAVOURITE_SONG_FAILURE,
   CLIENT_REDIRECT_STATION,
   SERVER_UPDATE_STATION_SCORE,
+  SERVER_UPDATE_STATION_CHAT,
+  SERVER_CHANGE_STATION_CHAT,
+  SERVER_ADD_STATION_CHAT_SUCCESS,
 } from 'Redux/actions';
 
 const INITIAL_STATE = {
@@ -46,6 +49,7 @@ const INITIAL_STATE = {
     failed: false,
     loggedInStation: null,
   },
+  chat: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -288,6 +292,31 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         stationScores: action.payload,
       };
+    case SERVER_UPDATE_STATION_CHAT:
+      return {
+        ...state,
+        chat: action.payload,
+      };
+    case SERVER_CHANGE_STATION_CHAT:
+      return {
+        ...state,
+        chat: [
+          ...state.chat,
+          // Append latest chat content to bottom
+          ...action.payload,
+        ],
+      };
+    case SERVER_ADD_STATION_CHAT_SUCCESS: {
+      return {
+        ...state,
+        chat: [
+          ...state.chat,
+          // Append new chat content to bottom
+          action.payload,
+        ],
+      };
+    }
+
     default:
       return state;
   }

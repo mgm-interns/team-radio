@@ -17,7 +17,13 @@ import withRouter from 'react-router-dom/withRouter';
 import classNames from 'classnames';
 import fixture from 'Fixture/landing';
 import { transformNumber } from 'Transformer';
-import { StationSwitcher, NavBar, Footer, TabContainer } from 'Component';
+import {
+  StationSwitcher,
+  NavBar,
+  Footer,
+  TabContainer,
+  QRCode,
+} from 'Component';
 import {
   joinStation,
   redirectStation,
@@ -31,17 +37,16 @@ import {
   disableStationsSwitcher,
   enableStationsSwitcher,
 } from 'Redux/page/station/actions';
-
 import AddLink from './AddLink';
 import Playlist from './Playlist';
 import History from './History';
 import Favourites from './Favourites';
 import NowPlaying from './NowPlaying';
 import OnlineUsers from './OnlineUsers';
-import styles from './styles';
 import StationSharing from './Sharing';
+import Chatbox from './Chatbox';
+import styles from './styles';
 import { Util } from '../../Util/index';
-import { QRCode } from 'Component';
 
 /* eslint-disable no-shadow */
 class StationPage extends Component {
@@ -339,9 +344,15 @@ class StationPage extends Component {
         className={classes.containerWrapper}
       >
         <Grid item xs={12} className={classes.switcherContainer}>
-          <div className={classes.switcherContent}>
-            <StationSwitcher disable={disableSwitcher} />
-          </div>
+          <Grid
+            container
+            justify={'center'}
+            className={classes.switcherContent}
+          >
+            <Grid item xs={12} xl={8}>
+              <StationSwitcher disable={disableSwitcher} />
+            </Grid>
+          </Grid>
         </Grid>
         {!isShowingQRCode ? null : (
           <Grid item xs={12} className={classes.container}>
@@ -350,13 +361,14 @@ class StationPage extends Component {
             </div>
           </Grid>
         )}
-        <Grid item xs={12} className={classes.container}>
-          <Grid container>
+        <Grid item md={12} xs={12}>
+          <Grid container justify={'center'}>
             <Grid
               item
               xs={12}
               md={7}
-              lg={8}
+              lg={6}
+              xl={4}
               className={passive ? classes.playerContainer : null}
             >
               <Grid
@@ -447,12 +459,20 @@ class StationPage extends Component {
                 ) : null}
               </Grid>
             </Grid>
-            <Grid item xs={12} md={5} lg={4}>
+            <Grid item xs={12} md={5} lg={3} xl={2}>
               {this._renderTabs()}
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={7} lg={3} xl={2}>
+              <Chatbox />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container justify={'center'}>
+            <Grid item xs={12} lg={9} xl={6}>
               <AddLink />
             </Grid>
+            <Grid item xs={12} lg={3} xl={2} />
           </Grid>
         </Grid>
       </Grid>,

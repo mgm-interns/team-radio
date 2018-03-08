@@ -139,4 +139,8 @@ const _join = async (emitter, socket, userId, station) => {
   } catch (err) {
     console.log('update station scores error: ' + err.message);
   }
+
+  // Update station chat
+  const stationChats = await stationController.getChatInStation(stationId);
+  emitter.emit(EVENTS.SERVER_UPDATE_STATION_CHAT, stationChats);
 };

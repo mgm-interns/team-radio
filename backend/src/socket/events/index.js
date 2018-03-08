@@ -11,6 +11,7 @@ import getFavouriteSongs from './getFavouriteSongs';
 import searchStation from './searchStation';
 import redirectStation from './redirectStation';
 import loadStationPaging from './loadStationPaging';
+import addStationChat from './addStationChat';
 
 export default {
   socketConnect,
@@ -26,4 +27,5 @@ export default {
   searchStation,
   loadStationPaging,
   redirectStation,
+  addStationChat,
 };

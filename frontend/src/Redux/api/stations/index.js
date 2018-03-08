@@ -2,14 +2,13 @@ import {
   CLIENT_CREATE_STATION,
   SERVER_CHANGE_STATION_THUMBNAIL,
   SERVER_CREATE_STATION_SUCCESS,
-  SERVER_STATION_CHANGE_ONLINE_USERS,
   SERVER_UPDATE_STATIONS,
   SERVER_CREATE_STATION_FAILURE,
   SERVER_LOAD_STATION_PAGING,
 } from 'Redux/actions';
 
-export const STATION_LOADING_LIMIT = 7;
-export const STATION_LOADING_AS_DEFAULT = 7;
+export const STATION_LOADING_LIMIT = 10;
+export const STATION_LOADING_AS_DEFAULT = 10;
 
 const INITIAL_STATE = {
   station: null,
@@ -71,11 +70,12 @@ export default (state = INITIAL_STATE, action) => {
       };
     }
     case SERVER_LOAD_STATION_PAGING: {
-        state.loadedStation += STATION_LOADING_LIMIT;
-        return {
-            ...state,
-            data: action.payload.stations,
-        };
+      const loadedStation = state.loadedStation + STATION_LOADING_LIMIT;
+      return {
+        ...state,
+        loadedStation,
+        data: action.payload.stations,
+      };
     }
 
     default:

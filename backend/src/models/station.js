@@ -2,7 +2,6 @@
 import _ from 'lodash';
 import mongoose, { Error } from 'mongoose';
 import * as searchController from '../controllers/search';
-import { type } from 'os';
 
 const stationSchema = mongoose.Schema({
   station_name: { type: String, require: true },
@@ -38,7 +37,6 @@ const stationSchema = mongoose.Schema({
               type: [
                 { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
               ]
-
             }
           }
         },
@@ -56,6 +54,19 @@ const stationSchema = mongoose.Schema({
       default: []
     },
   created_date: { type: Number, default: new Date().getTime(), },
+  chat:
+    {
+      type: [
+        {
+          sender: {
+            type: mongoose.Schema.Types.ObjectId, ref: 'users',
+          },
+          message: { type: mongoose.Schema.Types.String, require: true, },
+          created_date: { type: Number, default: new Date().getTime(), },
+        }
+      ],
+      default: []
+    }
 });
 
 // Create text index for search perform
@@ -419,7 +430,7 @@ module.exports.getAllStationScores = async (stationId) => {
   if (station){
     return station.user_points;
   }
-  throw new Error('The station do not exist');  
+  throw new Error('The station do not exist');
 }
 // module.exports.getListSongHistory = async stationId => {
 //   // TODO :
@@ -434,3 +445,36 @@ module.exports.getAllStationScores = async (stationId) => {
 //   return station[0].playlist;
 // }
 
+/**
+ *
+ * @param stationId
+ * @returns {Promise<chat|{type, default}>}
+ */
+module.exports.getAllChatInStation = async stationId => {
+  const station = await Station
+    .findOne({ station_id: stationId })
+    .populate('chat.sender', { _id: 1, name: 1, avatar_url: 1, username: 1 });
+
+  if (station){
+    return station.chat;
+  }
+  throw new Error('The station do not exist');
+};
+
+/**
+ *
+ * @param stationId
+ * @param user_id
+ * @param message
+ * @returns {Promise<*>}
+ */
+module.exports.addChatMessage = async (stationId, { userId, message }) => {
+  const station = await Station.findOne({ station_id: stationId});
+
+  if (station){
+    return Station.update({ station_id: stationId }, {
+      $push: { chat: { sender: userId,  message } }
+    });
+  }
+  throw new Error('The station do not exist');
+};

@@ -32,10 +32,6 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
   switcherContent: {
     width: spacing.fullWidth,
     margin: 'auto',
-    [breakpoints.up('lg')]: {
-      minWidth: 1024,
-      maxWidth: 1280,
-    },
   },
   playerContainer: {
     transition: 'all 0.3s linear',
@@ -55,8 +51,8 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     textAlign: 'center',
     '& > img': {
       minWidth: '200px',
-      width: '30%'
-    }
+      width: '30%',
+    },
   },
   content: {
     position: 'relative',

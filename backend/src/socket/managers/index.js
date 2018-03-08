@@ -1,6 +1,6 @@
 import stationEvents from './stationEvents';
 import songEvents from './songEvents';
-import chatEvents from './chatEvents';
+import chatEvents from './stationChatManager';
 
 export default {
   stationEvents,

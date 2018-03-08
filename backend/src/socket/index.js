@@ -150,6 +150,10 @@ io.on('connection', socket => {
           socket.join(action.payload.userId);
         break;
 
+      case EVENTS.CLIENT_ADD_STATION_CHAT:
+        eventHandlers.addStationChat(createEmitter(socket, io), action.payload);
+        break;
+
       default:
         eventManager.stationEvents(io, socket, action);
         eventManager.songEvents(io, socket, action);
