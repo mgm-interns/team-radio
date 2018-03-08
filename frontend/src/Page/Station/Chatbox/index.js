@@ -11,6 +11,7 @@ import IconButton from 'material-ui/IconButton';
 import List, { ListItem } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
 import { addStationChat } from 'Redux/api/currentStation/actions';
+import { withNotification } from 'Component/Notification';
 import styles from './styles';
 
 class ChatBox extends Component {
@@ -32,7 +33,7 @@ class ChatBox extends Component {
 
     return (
       <List component={'div'} disablePadding className={classes.chatList}>
-        {chatContent.map(({ sender, message }, index) => (
+        {chatContent.map(({ sender = {}, message }, index) => (
           <ListItem
             key={index}
             className={classNames(
@@ -77,16 +78,23 @@ class ChatBox extends Component {
   /* eslint-disable no-shadow */
   _handleSendMessage() {
     const {
+      notification,
       user: { userId },
       station: { station_id },
       addStationChat,
     } = this.props;
     const { message } = this.state;
 
-    addStationChat({ userId, stationId: station_id, message });
+    if (userId) {
+      addStationChat({ userId, stationId: station_id, message });
 
-    // Reset message
-    this.setState({ message: '' });
+      // Reset message
+      this.setState({ message: '' });
+    } else {
+      notification.app.warning({
+        message: 'You need to login to use this feature.',
+      });
+    }
   }
 
   _handleKeyDown(e) {
@@ -137,6 +145,7 @@ class ChatBox extends Component {
 
 ChatBox.propTypes = {
   classes: PropTypes.object,
+  notification: PropTypes.object,
   chatContent: PropTypes.array,
   user: PropTypes.object,
   station: PropTypes.object,
@@ -156,5 +165,6 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   withStyles(styles),
+  withNotification,
   connect(mapStateToProps, mapDispatchToProps),
 )(ChatBox);
