@@ -235,11 +235,14 @@ class Player {
           this.isSkipped,
         );
         this.isSkipped = false;
-        const stationScores = await stationController.addCreatorPoints(
-          this.stationId,
-          this.nowPlaying.song_id,
-        );
-        this._emitStationScores(stationScores);
+        const station = await stationController.getStation(this.stationId);
+        if(station.owner_id) {
+            const stationScores = await stationController.addCreatorPoints(
+                this.stationId,
+                this.nowPlaying.song_id,
+            );
+            this._emitStationScores(stationScores);
+        }
         this._setPlayableSong();
       }
     }, timeout);
@@ -277,10 +280,12 @@ class Player {
           Math.random() * Math.floor(playlist.length),
         );
         const song = playlist[randomIndex];
-        songEmitter.emit(config.events.AUTOREPLAY_REQUEST, {
-          ...song,
-          stationId: this.stationId,
-        });
+        if(song.creator) {
+            songEmitter.emit(config.events.AUTOREPLAY_REQUEST, {
+                ...song,
+                stationId: this.stationId,
+            });
+        }
       }
 
       this._startSong();
