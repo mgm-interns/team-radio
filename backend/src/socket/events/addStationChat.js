@@ -4,26 +4,22 @@ import * as EVENTS from '../../const/actions';
 
 export default async (emitter, { stationId, userId, message }) => {
   try {
-    const {
-      name: userName,
-      avatar_url: userAvatar,
-    } = await userController.getUserById(userId);
-
-    const chat = {
+    await stationController.addChatInStation(stationId, {
       stationId,
       userId,
-      userName,
-      userAvatar,
       message,
+    });
+
+    const response = {
+      message,
+      sender: normalizeUser(await userController.getUserById(userId)),
     };
 
-    await stationController.addChatInStation(stationId, chat);
-
     // Emit success event to sender
-    emitter.emit(EVENTS.SERVER_ADD_STATION_CHAT_SUCCESS, chat);
+    emitter.emit(EVENTS.SERVER_ADD_STATION_CHAT_SUCCESS, response);
     // Emit to other people in station
     emitter.broadcastToStation(stationId, EVENTS.SERVER_CHANGE_STATION_CHAT, [
-      chat,
+      response,
     ]);
   } catch (error) {
     // Emit failure event to sender if there is any exceptions
@@ -32,3 +28,10 @@ export default async (emitter, { stationId, userId, message }) => {
     });
   }
 };
+
+const normalizeUser = user => ({
+  _id: user._id,
+  username: user.username,
+  avatar_url: user.avatar_url,
+  name: user.name,
+});

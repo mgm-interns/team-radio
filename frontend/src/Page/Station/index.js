@@ -344,9 +344,15 @@ class StationPage extends Component {
         className={classes.containerWrapper}
       >
         <Grid item xs={12} className={classes.switcherContainer}>
-          <div className={classes.switcherContent}>
-            <StationSwitcher disable={disableSwitcher} />
-          </div>
+          <Grid
+            container
+            justify={'center'}
+            className={classes.switcherContent}
+          >
+            <Grid item xs={12} xl={8}>
+              <StationSwitcher disable={disableSwitcher} />
+            </Grid>
+          </Grid>
         </Grid>
         {!isShowingQRCode ? null : (
           <Grid item xs={12} className={classes.container}>
@@ -361,7 +367,7 @@ class StationPage extends Component {
               item
               xs={12}
               md={7}
-              lg={5}
+              lg={6}
               xl={4}
               className={passive ? classes.playerContainer : null}
             >
@@ -456,13 +462,18 @@ class StationPage extends Component {
             <Grid item xs={12} md={5} lg={3} xl={2}>
               {this._renderTabs()}
             </Grid>
-            <Grid item md={7} xs={12} lg={3}>
+            <Grid item xs={12} md={7} lg={3} xl={2}>
               <Chatbox />
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <AddLink />
+          <Grid container justify={'center'}>
+            <Grid item xs={12} lg={9} xl={6}>
+              <AddLink />
+            </Grid>
+            <Grid item xs={12} lg={3} xl={2} />
+          </Grid>
         </Grid>
       </Grid>,
       <Footer key={3} />,

@@ -302,18 +302,19 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         chat: [
           ...state.chat,
-          // Append new chat content to bottom
+          // Append latest chat content to bottom
           ...action.payload,
         ],
       };
     case SERVER_ADD_STATION_CHAT_SUCCESS: {
+      console.log(state.chat);
       console.log(action.payload);
       return {
         ...state,
         chat: [
           ...state.chat,
           // Append new chat content to bottom
-          ...action.payload,
+          action.payload,
         ],
       };
     }

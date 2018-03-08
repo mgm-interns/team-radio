@@ -3,53 +3,17 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     margin: 0,
     width: '100%',
     height: '100%',
-  },
-
-  chatboxHeader: {
-    padding: '0 !important',
-  },
-
-  chatboxNavbar: {
-    background: 'rgb(224, 106, 78)',
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: 8,
-    color: 'white',
-  },
-
-  chatboxTitleContainer: {
-    display: 'flex',
-  },
-
-  chatboxTitle: {
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-
-  stationName: {
-    fontStyle: 'italic',
-  },
-
-  collapseContainer: {
-    width: '100%',
-  },
-
-  collapseDownBtn: {
-    width: 20,
-    height: 20,
-    marginLeft: 10,
-    color: 'white',
+    paddingBottom: spacing.doubleBaseMargin,
   },
 
   chatboxBody: {
     height: '100%',
-    background: '#fff9f9',
     position: 'relative',
-    padding: '0 !important',
+    padding: `${spacing.baseMargin}px 0 !important`,
+    backgroundColor: 'rgba(0,0,0,0.0225)',
   },
 
   messageInputContainer: {
-    background: '#fff9f9',
     position: 'absolute',
     bottom: 0,
     width: '100%',
@@ -71,6 +35,10 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     alignItems: 'center',
   },
 
+  messageListItem: {
+    padding: `${spacing.smallMargin}px ${spacing.baseMargin}px`,
+  },
+
   messageContainer: {
     display: 'flex',
     marginLeft: 16,
@@ -87,20 +55,21 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     fontSize: 12,
     opacity: 0.4,
     fontWeight: 'bold',
-    marginLeft: 8,
+    marginLeft: spacing.baseMargin,
   },
 
   messages: {
-    borderRadius: 8,
-    padding: '8px 16px',
+    border: '1px solid #eee',
+    borderRadius: spacing.baseMargin,
+    padding: `${spacing.baseMargin}px ${spacing.doubleBaseMargin}px`,
     fontSize: 14,
   },
 
   otherMessagesBackground: {
-    background: '#f4d0d0',
+    background: 'rgba(255,255,255,1)',
   },
 
   currentUserMessageBackground: {
-    background: '#ffe8e8',
+    background: 'rgba(255,255,255,0.6)',
   },
 });

@@ -13,45 +13,6 @@ import TextField from 'material-ui/TextField';
 import { addStationChat } from 'Redux/api/currentStation/actions';
 import styles from './styles';
 
-const USERS_LIST = [
-  {
-    id: 0,
-    name: 'Tri Pham',
-    avatar:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_gSZKracW2_TX-TV9e2xX2T2FR3vGjEVu743qyvyFy2TIRRg',
-    isOnline: true,
-    message: 'Have a nice weekend, everybody',
-    isCurrentUser: false,
-  },
-  {
-    id: 1,
-    name: 'Khanh Ly',
-    avatar:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_gSZKracW2_TX-TV9e2xX2T2FR3vGjEVu743qyvyFy2TIRRg',
-    isOnline: true,
-    message: 'What a life!',
-    isCurrentUser: false,
-  },
-  {
-    id: 2,
-    name: 'Dung Le',
-    avatar:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_gSZKracW2_TX-TV9e2xX2T2FR3vGjEVu743qyvyFy2TIRRg',
-    isOnline: true,
-    message: "Hi everyone, I'm a newbiew",
-    isCurrentUser: true,
-  },
-  {
-    id: 3,
-    name: 'Nhac Nguyen',
-    avatar:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_gSZKracW2_TX-TV9e2xX2T2FR3vGjEVu743qyvyFy2TIRRg',
-    isOnline: true,
-    message: "Let's discuss about our teambuilding",
-    isCurrentUser: false,
-  },
-];
-
 class ChatBox extends Component {
   constructor(props) {
     super(props);
@@ -73,11 +34,12 @@ class ChatBox extends Component {
         {chatContent.map(({ sender, message }, index) => (
           <ListItem
             key={index}
-            className={
+            className={classNames(
+              classes.messageListItem,
               sender._id === user.userId
                 ? classes.currentUser
-                : classes.otherUsers
-            }
+                : classes.otherUsers,
+            )}
           >
             {sender._id !== user.userId ? (
               <Avatar
