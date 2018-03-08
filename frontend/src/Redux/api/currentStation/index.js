@@ -307,8 +307,6 @@ export default (state = INITIAL_STATE, action) => {
         ],
       };
     case SERVER_ADD_STATION_CHAT_SUCCESS: {
-      console.log(state.chat);
-      console.log(action.payload);
       return {
         ...state,
         chat: [

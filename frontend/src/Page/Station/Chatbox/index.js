@@ -24,13 +24,14 @@ class ChatBox extends Component {
     this._renderMessages = this._renderMessages.bind(this);
     this._onChange = this._onChange.bind(this);
     this._handleSendMessage = this._handleSendMessage.bind(this);
+    this._handleKeyDown = this._handleKeyDown.bind(this);
   }
 
   _renderMessages() {
     const { classes, chatContent, user } = this.props;
 
     return (
-      <List component={'div'} disablePadding>
+      <List component={'div'} disablePadding className={classes.chatList}>
         {chatContent.map(({ sender, message }, index) => (
           <ListItem
             key={index}
@@ -83,6 +84,16 @@ class ChatBox extends Component {
     const { message } = this.state;
 
     addStationChat({ userId, stationId: station_id, message });
+
+    // Reset message
+    this.setState({ message: '' });
+  }
+
+  _handleKeyDown(e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      this._handleSendMessage();
+    }
   }
 
   render() {
@@ -91,23 +102,31 @@ class ChatBox extends Component {
     return (
       <Grid container className={classes.chatboxContainer}>
         <Grid item xs={12} className={classes.chatboxBody}>
-          <div>{this._renderMessages()}</div>
-          <Grid container className={classes.messageInputContainer}>
-            <Grid item xs={10} className={classes.inputStyle}>
-              <TextField
-                id={'message'}
-                name={'message'}
-                placeholder={'Type a message here'}
-                fullWidth
-                multiline
-                className={classes.messageTextField}
-                onChange={this._onChange}
-              />
+          <Grid container>
+            <Grid item xs={12}>
+              {this._renderMessages()}
             </Grid>
-            <Grid item xs={2} className={classes.inputActionsContainer}>
-              <IconButton onClick={this._handleSendMessage}>
-                <MdSend />
-              </IconButton>
+            <Grid item xs={12}>
+              <Grid container className={classes.messageInputContainer}>
+                <Grid item xs={10} className={classes.inputStyle}>
+                  <TextField
+                    id={'message'}
+                    name={'message'}
+                    placeholder={'Type a message here'}
+                    fullWidth
+                    multiline
+                    className={classes.messageTextField}
+                    value={this.state.message}
+                    onChange={this._onChange}
+                    onKeyDown={this._handleKeyDown}
+                  />
+                </Grid>
+                <Grid item xs={2} className={classes.inputActionsContainer}>
+                  <IconButton onClick={this._handleSendMessage}>
+                    <MdSend />
+                  </IconButton>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

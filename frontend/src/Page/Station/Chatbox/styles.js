@@ -1,4 +1,4 @@
-export default ({ breakpoints, palette, spacing, typography }) => ({
+export default ({ breakpoints, spacing }) => ({
   chatboxContainer: {
     margin: 0,
     width: '100%',
@@ -11,6 +11,14 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     position: 'relative',
     padding: `${spacing.baseMargin}px 0 !important`,
     backgroundColor: 'rgba(0,0,0,0.0225)',
+  },
+
+  chatList: {
+    overflowY: 'auto',
+    height: 200,
+    [breakpoints.up('md')]: {
+      height: 575,
+    },
   },
 
   messageInputContainer: {
