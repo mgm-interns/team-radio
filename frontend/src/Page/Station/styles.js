@@ -55,8 +55,8 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     textAlign: 'center',
     '& > img': {
       minWidth: '200px',
-      width: '30%'
-    }
+      width: '30%',
+    },
   },
   content: {
     position: 'relative',

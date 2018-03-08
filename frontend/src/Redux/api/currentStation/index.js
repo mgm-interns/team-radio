@@ -26,6 +26,7 @@ import {
   SERVER_UPDATE_STATION_SCORE,
   SERVER_UPDATE_STATION_CHAT,
   SERVER_CHANGE_STATION_CHAT,
+  SERVER_ADD_STATION_CHAT_SUCCESS,
 } from 'Redux/actions';
 
 const INITIAL_STATE = {
@@ -305,6 +306,18 @@ export default (state = INITIAL_STATE, action) => {
           ...action.payload,
         ],
       };
+    case SERVER_ADD_STATION_CHAT_SUCCESS: {
+      console.log(action.payload);
+      return {
+        ...state,
+        chat: [
+          ...state.chat,
+          // Append new chat content to bottom
+          ...action.payload,
+        ],
+      };
+    }
+
     default:
       return state;
   }

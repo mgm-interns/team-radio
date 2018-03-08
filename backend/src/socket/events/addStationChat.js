@@ -20,14 +20,14 @@ export default async (emitter, { stationId, userId, message }) => {
     await stationController.addChatInStation(stationId, chat);
 
     // Emit success event to sender
-    emitter.emit(EVENTS.CLIENT_ADD_STATION_SUCCESS, chat);
+    emitter.emit(EVENTS.SERVER_ADD_STATION_CHAT_SUCCESS, chat);
     // Emit to other people in station
     emitter.broadcastToStation(stationId, EVENTS.SERVER_CHANGE_STATION_CHAT, [
       chat,
     ]);
   } catch (error) {
     // Emit failure event to sender if there is any exceptions
-    emitter.emit(EVENTS.CLIENT_ADD_STATION_FAILURE, {
+    emitter.emit(EVENTS.SERVER_ADD_STATION_CHAT_FAILURE, {
       message: error,
     });
   }
