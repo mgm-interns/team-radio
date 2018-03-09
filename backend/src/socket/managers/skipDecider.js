@@ -7,7 +7,7 @@ export default async (userId, stationId,) => {
   const station = await stationController.getStation(stationId);
 
   if (station.skip_by_station_owner) {
-    if (userId === station.owner_id) {
+    if (userId == station.owner_id) {
       _skipByStationOwner(userId, stationId);
     }
   } else {

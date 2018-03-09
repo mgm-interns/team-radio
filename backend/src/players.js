@@ -73,10 +73,26 @@ class Player {
 
     // Check songs will be skipped
     playlist.forEach(song => {
-      if (_.indexOf(song.down_vote, ownerId) >= 0) {
+
+      let skip = false;
+
+      song.down_vote.forEach(userId => {
+        if (userId == ownerId) {
+          skip = true;
+          // break loop
+          return false;
+        }
+      });
+
+      if (skip) {
         this.addSkippedSong(song.song_id);
+      } else {
+        this.removeSkippedSong(song.song_id);
       }
+
     });
+
+    this._emitSkippedSongs();
   };
 
   addSkippedSong = songId => {
