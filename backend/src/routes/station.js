@@ -68,9 +68,9 @@ export default router => {
   });
 
   router.put('/stations/settings/update-skip-rule', async (req, res) => {
-    const stationId = req.body.stationId;
-    const userId = req.body.userId;
-    const skipByOwner = req.body.skipByOwner;
+    const stationId = req.body.station_id;
+    const userId = req.body.user_id;
+    const skipByOwner = req.body.skip_by_station_owner;
 
     try {
         await stationController.changeSkipSetting(stationId, userId, skipByOwner);
