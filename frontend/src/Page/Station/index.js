@@ -462,7 +462,7 @@ class StationPage extends Component {
             <Grid item xs={12} md={5} lg={3} xl={2}>
               {this._renderTabs()}
             </Grid>
-            <Grid item xs={12} md={7} lg={3} xl={2}>
+            <Grid item xs={12} md={12} lg={3} xl={2}>
               <Chatbox />
             </Grid>
           </Grid>

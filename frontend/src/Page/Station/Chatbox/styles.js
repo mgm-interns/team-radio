@@ -10,12 +10,12 @@ export default ({ breakpoints, spacing }) => ({
     height: '100%',
     position: 'relative',
     padding: `${spacing.baseMargin}px 0 !important`,
-    backgroundColor: 'rgba(0,0,0,0.0225)',
+    backgroundColor: '#f9f4ef',
   },
 
   chatList: {
     overflowY: 'auto',
-    height: 200,
+    height: 500,
     [breakpoints.up('md')]: {
       height: 575,
     },
@@ -26,7 +26,7 @@ export default ({ breakpoints, spacing }) => ({
     bottom: 0,
     width: '100%',
     margin: 0,
-    borderTop: '1px solid rgb(224, 222, 222)',
+    background: '#fcf9f7',
   },
 
   inputStyle: {
@@ -44,12 +44,20 @@ export default ({ breakpoints, spacing }) => ({
   },
 
   messageListItem: {
+    display: 'flex',
     padding: `${spacing.smallMargin}px ${spacing.baseMargin}px`,
+  },
+
+  userAvatar: {
+    width: 40,
+    height: 40,
+    marginTop: 'auto',
+    cursor: 'pointer',
   },
 
   messageContainer: {
     display: 'flex',
-    marginLeft: 16,
+    marginLeft: spacing.baseMargin,
     flexDirection: 'column',
   },
 
@@ -71,6 +79,7 @@ export default ({ breakpoints, spacing }) => ({
     borderRadius: spacing.baseMargin,
     padding: `${spacing.baseMargin}px ${spacing.doubleBaseMargin}px`,
     fontSize: 14,
+    wordBreak: 'break-all',
   },
 
   otherMessagesBackground: {
@@ -78,6 +87,6 @@ export default ({ breakpoints, spacing }) => ({
   },
 
   currentUserMessageBackground: {
-    background: 'rgba(255,255,255,0.6)',
+    background: 'white',
   },
 });

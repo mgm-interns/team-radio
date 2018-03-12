@@ -8,11 +8,16 @@ import Grid from 'material-ui/Grid';
 import MdSend from 'react-icons/lib/md/send';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
-import List, { ListItem } from 'material-ui/List';
+import { Link } from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import { addStationChat } from 'Redux/api/currentStation/actions';
 import { withNotification } from 'Component/Notification';
+import trim from 'lodash/trim';
 import styles from './styles';
+
+const INPUT_ROWS = 1;
+const INPUT_MAX_ROWS = 5;
+const MESSAGE_MAX_LENGTH = 200;
 
 class ChatBox extends Component {
   constructor(props) {
@@ -23,18 +28,36 @@ class ChatBox extends Component {
     };
 
     this._renderMessages = this._renderMessages.bind(this);
-    this._onChange = this._onChange.bind(this);
     this._handleSendMessage = this._handleSendMessage.bind(this);
     this._handleKeyDown = this._handleKeyDown.bind(this);
+    this._handleOnChange = this._handleOnChange.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.chatContent !== nextProps.chatContent) {
+      setTimeout(() => {
+        this.scrollToBottom();
+      });
+    }
+  }
+
+  scrollToBottom() {
+    const el = this.el; // eslint-disable-line prefer-destructuring
+    el.scrollTop = el.scrollHeight;
   }
 
   _renderMessages() {
     const { classes, chatContent, user } = this.props;
 
     return (
-      <List component={'div'} disablePadding className={classes.chatList}>
+      <div
+        className={classes.chatList}
+        ref={el => {
+          this.el = el;
+        }}
+      >
         {chatContent.map(({ sender = {}, message }, index) => (
-          <ListItem
+          <div
             key={index}
             className={classNames(
               classes.messageListItem,
@@ -42,13 +65,19 @@ class ChatBox extends Component {
                 ? classes.currentUser
                 : classes.otherUsers,
             )}
+            style={{
+              marginBottom:
+                index === chatContent.length - 1 ? INPUT_MAX_ROWS * 10 : 0,
+            }}
           >
             {sender._id !== user.userId ? (
-              <Avatar
-                alt={sender.name}
-                src={sender.avatar_url}
-                className={classes.userAvatar}
-              />
+              <Link to={`/profile/${sender.username}`}>
+                <Avatar
+                  alt={sender.name}
+                  src={sender.avatar_url}
+                  className={classes.userAvatar}
+                />
+              </Link>
             ) : null}
             <div className={classes.messageContainer}>
               {sender._id !== user.userId ? (
@@ -64,36 +93,37 @@ class ChatBox extends Component {
                 {message}
               </p>
             </div>
-          </ListItem>
+          </div>
         ))}
-      </List>
+      </div>
     );
   }
 
-  _onChange(e) {
-    const result = e.target.value;
-    this.setState({ message: result });
-  }
-
-  /* eslint-disable no-shadow */
   _handleSendMessage() {
     const {
       notification,
       user: { userId },
       station: { station_id },
-      addStationChat,
+      addStationChat, // eslint-disable-line no-shadow
     } = this.props;
-    const { message } = this.state;
 
-    if (userId) {
-      addStationChat({ userId, stationId: station_id, message });
+    let { message } = this.state;
 
-      // Reset message
-      this.setState({ message: '' });
-    } else {
-      notification.app.warning({
-        message: 'You need to login to use this feature.',
-      });
+    // Trim message content to make sure there are no redundancy space characters
+    message = trim(message);
+
+    // Make sure that message is not empty
+    if (message) {
+      if (userId) {
+        addStationChat({ userId, stationId: station_id, message });
+
+        // Reset message
+        this.setState({ message: '' });
+      } else {
+        notification.app.warning({
+          message: 'You need to login to use this feature.',
+        });
+      }
     }
   }
 
@@ -102,6 +132,12 @@ class ChatBox extends Component {
       e.preventDefault();
       this._handleSendMessage();
     }
+  }
+
+  _handleOnChange(e) {
+    const message = `${e.target.value}`.substr(0, MESSAGE_MAX_LENGTH);
+
+    this.setState({ message });
   }
 
   render() {
@@ -123,10 +159,12 @@ class ChatBox extends Component {
                     placeholder={'Type a message here'}
                     fullWidth
                     multiline
+                    rows={INPUT_ROWS}
+                    rowsMax={INPUT_MAX_ROWS}
                     className={classes.messageTextField}
                     value={this.state.message}
-                    onChange={this._onChange}
                     onKeyDown={this._handleKeyDown}
+                    onChange={this._handleOnChange}
                   />
                 </Grid>
                 <Grid item xs={2} className={classes.inputActionsContainer}>
