@@ -33,12 +33,12 @@ class ChatBox extends Component {
     this._handleOnChange = this._handleOnChange.bind(this);
   }
 
-  componentDidMount() {
-    this.scrollToBottom();
-  }
-
-  componentDidUpdate() {
-    this.scrollToBottom();
+  componentWillReceiveProps(nextProps) {
+    if (this.props.chatContent !== nextProps.chatContent) {
+      setTimeout(() => {
+        this.scrollToBottom();
+      });
+    }
   }
 
   scrollToBottom() {
