@@ -5,7 +5,6 @@ import * as EVENTS from '../../const/actions';
 export default async (emitter, { stationId, userId, message }) => {
   try {
     await stationController.addChatInStation(stationId, {
-      stationId,
       userId,
       message,
     });
@@ -29,6 +28,12 @@ export default async (emitter, { stationId, userId, message }) => {
   }
 };
 
+/**
+ * Make sure that the response only include necessary information
+ *
+ * @param user
+ * @returns {{_id: *, username: *, avatar_url: *, name: *}}
+ */
 const normalizeUser = user => ({
   _id: user._id,
   username: user.username,

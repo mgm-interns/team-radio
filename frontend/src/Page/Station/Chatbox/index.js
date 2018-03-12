@@ -12,7 +12,10 @@ import List, { ListItem } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
 import { addStationChat } from 'Redux/api/currentStation/actions';
 import { withNotification } from 'Component/Notification';
+import trim from 'lodash/trim';
 import styles from './styles';
+
+const MESSAGE_MAX_LENGTH = 200;
 
 class ChatBox extends Component {
   constructor(props) {
@@ -23,9 +26,9 @@ class ChatBox extends Component {
     };
 
     this._renderMessages = this._renderMessages.bind(this);
-    this._onChange = this._onChange.bind(this);
     this._handleSendMessage = this._handleSendMessage.bind(this);
     this._handleKeyDown = this._handleKeyDown.bind(this);
+    this._handleOnChange = this._handleOnChange.bind(this);
   }
 
   _renderMessages() {
@@ -70,30 +73,31 @@ class ChatBox extends Component {
     );
   }
 
-  _onChange(e) {
-    const result = e.target.value;
-    this.setState({ message: result });
-  }
-
-  /* eslint-disable no-shadow */
   _handleSendMessage() {
     const {
       notification,
       user: { userId },
       station: { station_id },
-      addStationChat,
+      addStationChat, // eslint-disable-line no-shadow
     } = this.props;
-    const { message } = this.state;
 
-    if (userId) {
-      addStationChat({ userId, stationId: station_id, message });
+    let { message } = this.state;
 
-      // Reset message
-      this.setState({ message: '' });
-    } else {
-      notification.app.warning({
-        message: 'You need to login to use this feature.',
-      });
+    // Trim message content to make sure there are no redundancy space characters
+    message = trim(message);
+
+    // Make sure that message is not empty
+    if (message) {
+      if (userId) {
+        addStationChat({ userId, stationId: station_id, message });
+
+        // Reset message
+        this.setState({ message: '' });
+      } else {
+        notification.app.warning({
+          message: 'You need to login to use this feature.',
+        });
+      }
     }
   }
 
@@ -102,6 +106,12 @@ class ChatBox extends Component {
       e.preventDefault();
       this._handleSendMessage();
     }
+  }
+
+  _handleOnChange(e) {
+    const message = `${e.target.value}`.substr(0, MESSAGE_MAX_LENGTH);
+
+    this.setState({ message });
   }
 
   render() {
@@ -125,8 +135,8 @@ class ChatBox extends Component {
                     multiline
                     className={classes.messageTextField}
                     value={this.state.message}
-                    onChange={this._onChange}
                     onKeyDown={this._handleKeyDown}
+                    onChange={this._handleOnChange}
                   />
                 </Grid>
                 <Grid item xs={2} className={classes.inputActionsContainer}>
