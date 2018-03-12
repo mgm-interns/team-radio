@@ -10,7 +10,7 @@ export default ({ breakpoints, spacing }) => ({
     height: '100%',
     position: 'relative',
     padding: `${spacing.baseMargin}px 0 !important`,
-    backgroundColor: '#efe9e2',
+    backgroundColor: '#f9f4ef',
   },
 
   chatList: {
@@ -79,6 +79,6 @@ export default ({ breakpoints, spacing }) => ({
   },
 
   currentUserMessageBackground: {
-    background: 'rgba(255,255,255,0.6)',
+    background: 'white',
   },
 });

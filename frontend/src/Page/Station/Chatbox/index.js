@@ -33,13 +33,31 @@ class ChatBox extends Component {
     this._handleOnChange = this._handleOnChange.bind(this);
   }
 
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    const el = this.el; // eslint-disable-line prefer-destructuring
+    el.scrollTop = el.scrollHeight;
+  }
+
   _renderMessages() {
     const { classes, chatContent, user } = this.props;
 
     return (
-      <List component={'div'} disablePadding className={classes.chatList}>
+      <div
+        className={classes.chatList}
+        ref={el => {
+          this.el = el;
+        }}
+      >
         {chatContent.map(({ sender = {}, message }, index) => (
-          <ListItem
+          <div
             key={index}
             className={classNames(
               classes.messageListItem,
@@ -73,9 +91,9 @@ class ChatBox extends Component {
                 {message}
               </p>
             </div>
-          </ListItem>
+          </div>
         ))}
-      </List>
+      </div>
     );
   }
 
