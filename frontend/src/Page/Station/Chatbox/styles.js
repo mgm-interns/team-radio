@@ -44,12 +44,20 @@ export default ({ breakpoints, spacing }) => ({
   },
 
   messageListItem: {
+    display: 'flex',
     padding: `${spacing.smallMargin}px ${spacing.baseMargin}px`,
+  },
+
+  userAvatar: {
+    width: 40,
+    height: 40,
+    marginTop: 'auto',
+    cursor: 'pointer',
   },
 
   messageContainer: {
     display: 'flex',
-    marginLeft: 16,
+    marginLeft: spacing.baseMargin,
     flexDirection: 'column',
   },
 

@@ -8,7 +8,7 @@ import Grid from 'material-ui/Grid';
 import MdSend from 'react-icons/lib/md/send';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
-import List, { ListItem } from 'material-ui/List';
+import { Link } from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import { addStationChat } from 'Redux/api/currentStation/actions';
 import { withNotification } from 'Component/Notification';
@@ -67,15 +67,17 @@ class ChatBox extends Component {
             )}
             style={{
               marginBottom:
-                index === chatContent.length - 1 ? INPUT_MAX_ROWS * 15 : 0,
+                index === chatContent.length - 1 ? INPUT_MAX_ROWS * 10 : 0,
             }}
           >
             {sender._id !== user.userId ? (
-              <Avatar
-                alt={sender.name}
-                src={sender.avatar_url}
-                className={classes.userAvatar}
-              />
+              <Link to={`/profile/${sender.username}`}>
+                <Avatar
+                  alt={sender.name}
+                  src={sender.avatar_url}
+                  className={classes.userAvatar}
+                />
+              </Link>
             ) : null}
             <div className={classes.messageContainer}>
               {sender._id !== user.userId ? (
