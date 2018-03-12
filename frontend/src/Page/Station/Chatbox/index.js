@@ -15,6 +15,8 @@ import { withNotification } from 'Component/Notification';
 import trim from 'lodash/trim';
 import styles from './styles';
 
+const INPUT_ROWS = 1;
+const INPUT_MAX_ROWS = 5;
 const MESSAGE_MAX_LENGTH = 200;
 
 class ChatBox extends Component {
@@ -45,6 +47,10 @@ class ChatBox extends Component {
                 ? classes.currentUser
                 : classes.otherUsers,
             )}
+            style={{
+              marginBottom:
+                index === chatContent.length - 1 ? INPUT_MAX_ROWS * 15 : 0,
+            }}
           >
             {sender._id !== user.userId ? (
               <Avatar
@@ -133,6 +139,8 @@ class ChatBox extends Component {
                     placeholder={'Type a message here'}
                     fullWidth
                     multiline
+                    rows={INPUT_ROWS}
+                    rowsMax={INPUT_MAX_ROWS}
                     className={classes.messageTextField}
                     value={this.state.message}
                     onKeyDown={this._handleKeyDown}

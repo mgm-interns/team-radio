@@ -10,12 +10,12 @@ export default ({ breakpoints, spacing }) => ({
     height: '100%',
     position: 'relative',
     padding: `${spacing.baseMargin}px 0 !important`,
-    backgroundColor: 'rgba(0,0,0,0.0225)',
+    backgroundColor: '#efe9e2',
   },
 
   chatList: {
     overflowY: 'auto',
-    height: 200,
+    height: 500,
     [breakpoints.up('md')]: {
       height: 575,
     },
@@ -26,7 +26,7 @@ export default ({ breakpoints, spacing }) => ({
     bottom: 0,
     width: '100%',
     margin: 0,
-    borderTop: '1px solid rgb(224, 222, 222)',
+    background: '#fcf9f7',
   },
 
   inputStyle: {
@@ -71,6 +71,7 @@ export default ({ breakpoints, spacing }) => ({
     borderRadius: spacing.baseMargin,
     padding: `${spacing.baseMargin}px ${spacing.doubleBaseMargin}px`,
     fontSize: 14,
+    wordBreak: 'break-all',
   },
 
   otherMessagesBackground: {
