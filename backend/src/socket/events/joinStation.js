@@ -55,7 +55,7 @@ const _joinStationProcess = async (emitter, socket, userId, station) => {
     _join(emitter, socket, userId, station);
 
     // Skip song decision when online user change
-    skipDecider(stationId);
+    skipDecider(userId, stationId);
 
     // Send join notification
     if (user) {

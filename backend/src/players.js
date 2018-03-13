@@ -59,10 +59,7 @@ class Player {
       }
     });
 
-    // compare current skipped and preSkippedSongs
-    if (!_.isEqual(this.skippedSongs, preSkippedSongs)) {
-      this._emitSkippedSongs();
-    }
+    this._emitSkippedSongs();
   };
 
   skipSongByStationOwner = async ownerId => {
@@ -77,10 +74,8 @@ class Player {
       let skip = false;
 
       song.down_vote.forEach(userId => {
-        if (userId == ownerId) {
+        if (JSON.stringify(userId) == JSON.stringify(ownerId)) {
           skip = true;
-          // break loop
-          return false;
         }
       });
 
@@ -89,7 +84,6 @@ class Player {
       } else {
         this.removeSkippedSong(song.song_id);
       }
-
     });
 
     this._emitSkippedSongs();
