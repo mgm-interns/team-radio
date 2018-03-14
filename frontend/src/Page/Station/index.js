@@ -46,6 +46,7 @@ import OnlineUsers from './OnlineUsers';
 import StationSharing from './Sharing';
 import Chatbox from './Chatbox';
 import styles from './styles';
+import StationSkipRule from './SkipRule';
 import { Util } from '../../Util/index';
 
 /* eslint-disable no-shadow */
@@ -321,6 +322,7 @@ class StationPage extends Component {
       currentStation: { station, nowPlaying, playlist, joined },
       passive,
       disableSwitcher,
+      userId,
     } = this.props;
     const {
       muted,
@@ -329,7 +331,7 @@ class StationPage extends Component {
       isMobileBrowser,
       isShowingQRCode,
     } = this.state;
-
+    const isOwnerStation = (station && (userId === station.owner_id))  ? true : false
     return [
       passive && (
         <div key={0} className={classes.passiveContainer}>
@@ -434,6 +436,7 @@ class StationPage extends Component {
                       </IconButton>
                     )}
                     {passive ? null : <StationSharing />}
+                    {((!passive && isOwnerStation) === true ) ? <StationSkipRule /> : null}
                   </div>
                 </Grid>
                 {isEnabledVideo ? (

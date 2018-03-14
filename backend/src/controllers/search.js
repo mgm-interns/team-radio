@@ -28,6 +28,7 @@ export default (query, limit) =>
         is_private: 1,
         owner_id: 1,
         is_delete: 1,
+        skip_by_station_owner: 1,
       }) // What fields will be select
       .limit(limit)
       .exec((err, result) => {

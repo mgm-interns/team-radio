@@ -50,6 +50,7 @@ const INITIAL_STATE = {
     loggedInStation: null,
   },
   chat: [],
+  skip_by_station_owner: false,
 };
 
 export default (state = INITIAL_STATE, action) => {

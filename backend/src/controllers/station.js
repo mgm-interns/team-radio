@@ -8,8 +8,7 @@ import slice from 'lodash/slice';
 import uniqBy from 'lodash/uniqBy';
 import orderBy from 'lodash/orderBy';
 import filter from 'lodash/filter';
-import * as CONSTANTS from '../const/constants';
-import * as EVENTS from '../const/actions';
+import skipDecider from "../socket/managers/skipDecider";
 
 const POINTS_FOR_FIRST_SONG = 2;
 const POINTS_FOR_NEXT_SONG = 1;
@@ -79,6 +78,23 @@ export const setIsPrivateOfStation = async (stationId, userId, value) => {
   }
 };
 
+export const changeSkipSetting = async (stationId, userId, skipByOwner) => {
+    let station;
+    try {
+      station = await getStation(stationId);
+    } catch (err) {
+      throw err;
+    }
+
+    if (userId == station.owner_id) {
+      await stationModels.changeSkipRuleSetting(stationId, skipByOwner);
+    } else {
+      throw new Error('You are not owner!');
+    }
+
+    skipDecider(userId, stationId);
+};
+
 /**
  *
  * @param {string} stationId
@@ -102,12 +118,12 @@ export const deleteStation = async (stationId, userId) => {
  */
 export const getStation = async stationId => {
   if (!stationId) {
-    throw new Error(`Station id ${stationId} is not undefined!`);
+    throw new Error(`Station ${stationId} is undefined!`);
   }
 
   const stationOfId = await stationModels.getStationById(stationId);
   if (!stationOfId) {
-    throw new Error(`Station id ${stationId} is not exist!`);
+    throw new Error(`Station ${stationId} is not exist!`);
   } else {
     return stationOfId.toObject();
   }
