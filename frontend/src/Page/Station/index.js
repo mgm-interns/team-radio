@@ -331,8 +331,7 @@ class StationPage extends Component {
       isMobileBrowser,
       isShowingQRCode,
     } = this.state;
-    // const isOwnerStation = (station && (userId === station.owner_id))  ? true : false
-     const isOwnerStation = false
+      const isOwnerStation = false;
     return [
       passive && (
         <div key={0} className={classes.passiveContainer}>
@@ -428,14 +427,6 @@ class StationPage extends Component {
                       </IconButton>
                     )}
 
-                    {passive ? null : (
-                      <IconButton
-                        color={isShowingQRCode ? 'primary' : 'default'}
-                        onClick={this._toggleShowingQRCode}
-                      >
-                        <FaQrcode />
-                      </IconButton>
-                    )}
                     {passive ? null : <StationSharing />}
                     {((!passive && isOwnerStation) === true ) ? <StationSkipRule /> : null}
                   </div>
