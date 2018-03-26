@@ -331,7 +331,8 @@ class StationPage extends Component {
       isMobileBrowser,
       isShowingQRCode,
     } = this.state;
-    const isOwnerStation = (station && (userId === station.owner_id))  ? true : false
+    // const isOwnerStation = (station && (userId === station.owner_id))  ? true : false
+     const isOwnerStation = false
     return [
       passive && (
         <div key={0} className={classes.passiveContainer}>
