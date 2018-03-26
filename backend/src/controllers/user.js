@@ -48,7 +48,7 @@ export const getUserById = async (userId) => {
  * @returns {Promise<*>}
  */
 export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null, name,
-                                                  localStations = null) => {
+                                                  localStations = '[]') => {
   try {
     let user = facebookId ? await userModels.getUserByFacebookId(facebookId) : null;
     if (user) {
@@ -90,7 +90,7 @@ export const createUser = async (email, password, name, username, localStationsS
     });
 
     const userId = user._id;
-    const stationIds = JSON.parse(localStationsString);
+    const stationIds = localStationsString && localStationsString !== "" ? JSON.parse(localStationsString) : [];
     for(let stationId of stationIds) {
          await stationModels.updateStationOwner(stationId, userId);
     }
