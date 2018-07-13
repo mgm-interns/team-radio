@@ -74,6 +74,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setAvatar({ userId, avatar_url })),
 });
 
-export default compose(connect(undefined, mapDispatchToProps))(
-  withStyles(styles)(UserAvatar),
-);
+export default compose(
+  connect(
+    undefined,
+    mapDispatchToProps,
+  ),
+)(withStyles(styles)(UserAvatar));

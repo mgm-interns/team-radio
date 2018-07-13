@@ -2,10 +2,10 @@
 import userModels from '../models/user';
 import * as stationModels from '../models/station';
 import jwt from 'jsonwebtoken';
-import deleteDiacriticMarks from "khong-dau";
-import {ObjectId} from 'mongodb';
+import deleteDiacriticMarks from 'khong-dau';
+import { ObjectId } from 'mongodb';
 import * as stationController from './station';
-import {Error} from 'mongoose';
+import { Error } from 'mongoose';
 
 export const ADD_FAVOURITE_SUCCESS = 1000;
 export const UN_FAVOURITE_SUCCESS = 1001;
@@ -30,7 +30,7 @@ export const isExistUserHandler = async email => {
  * @param userId
  * @returns {Promise<*>}
  */
-export const getUserById = async (userId) => {
+export const getUserById = async userId => {
   try {
     return await userModels.getUserById(userId);
   } catch (err) {
@@ -47,23 +47,45 @@ export const getUserById = async (userId) => {
  * @param name
  * @returns {Promise<*>}
  */
-export const createUserWithSocialAccount = async (email, googleId = null, facebookId = null, avatar_url = null, name,
-                                                  localStations = '[]') => {
+export const createUserWithSocialAccount = async (
+  email,
+  googleId = null,
+  facebookId = null,
+  avatar_url = null,
+  name,
+  localStations = '[]',
+) => {
   try {
-    let user = facebookId ? await userModels.getUserByFacebookId(facebookId) : null;
+    let user = facebookId
+      ? await userModels.getUserByFacebookId(facebookId)
+      : null;
     if (user) {
-        return user;
+      return user;
     }
     user = email ? await userModels.getUserByEmail(email) : null;
     if (user) {
-      await _linkSocicalAccountToExistingUser(user, email, googleId, facebookId, avatar_url, name);
+      await _linkSocicalAccountToExistingUser(
+        user,
+        email,
+        googleId,
+        facebookId,
+        avatar_url,
+        name,
+      );
     } else {
-        user = await _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name, localStations);
-        const userId = user._id;
-        const localStationsArray = localStations ? JSON.parse(localStations) : [];
-        for (let stationId of localStationsArray) {
-            await stationModels.updateStationOwner(stationId, userId);
-        }
+      user = await _createUserWithSocialAccount(
+        email,
+        googleId,
+        facebookId,
+        avatar_url,
+        name,
+        localStations,
+      );
+      const userId = user._id;
+      const localStationsArray = localStations ? JSON.parse(localStations) : [];
+      for (let stationId of localStationsArray) {
+        await stationModels.updateStationOwner(stationId, userId);
+      }
     }
     return await userModels.getUserById(user.id);
   } catch (err) {
@@ -79,24 +101,33 @@ export const createUserWithSocialAccount = async (email, googleId = null, facebo
  * @returns {Promise<*>}
  */
 
-export const createUser = async (email, password, name, username, localStationsString) => {
+export const createUser = async (
+  email,
+  password,
+  name,
+  username,
+  localStationsString,
+) => {
   try {
     let usernameAutoGenerate;
     let user = await new userModels({
       email: email,
       name: name,
       is_password: true,
-      favourited_songs: []
+      favourited_songs: [],
     });
 
     const userId = user._id;
-    const stationIds = localStationsString && localStationsString !== "" ? JSON.parse(localStationsString) : [];
-    for(let stationId of stationIds) {
-         await stationModels.updateStationOwner(stationId, userId);
+    const stationIds =
+      localStationsString && localStationsString !== ''
+        ? JSON.parse(localStationsString)
+        : [];
+    for (let stationId of stationIds) {
+      await stationModels.updateStationOwner(stationId, userId);
     }
     const alreadyUser = await userModels.getUserByUsername(username);
     if (username && !alreadyUser) {
-      usernameAutoGenerate = username
+      usernameAutoGenerate = username;
     } else {
       usernameAutoGenerate = await _createUsername(name);
     }
@@ -113,15 +144,15 @@ export const createUser = async (email, password, name, username, localStationsS
   }
 };
 
-export const isExistUsername = async (username) => {
+export const isExistUsername = async username => {
   try {
     const user = await userModels.getUserByUsername(username);
     if (user) return true;
-    return false
+    return false;
   } catch (err) {
-    throw err
+    throw err;
   }
-}
+};
 /**
  *
  * @param username
@@ -143,8 +174,7 @@ export const getUserProfile = async username => {
 export const setAvatar = async (userId, avatar_url) => {
   try {
     const user = await userModels.getUserById(userId);
-    if (!user.avatar_url)
-      await _increaseReputation(user.email, 20)
+    if (!user.avatar_url) await _increaseReputation(user.email, 20);
     await userModels.setAvatar(userId, avatar_url);
     return await userModels.getUserById(userId);
   } catch (err) {
@@ -205,9 +235,18 @@ export const setPassword = async (email, password) => {
  * @param country
  * @returns {Promise<*>}
  */
-export const setUserInformation = async (userId, name, firstname, lastname, bio, city, country) => {
+export const setUserInformation = async (
+  userId,
+  name,
+  firstname,
+  lastname,
+  bio,
+  city,
+  country,
+) => {
   try {
-    let data = {}, point = 0;
+    let data = {},
+      point = 0;
     const user = await userModels.getUserById(userId);
     if (name) data.name = name;
     if (firstname) data.firstname = firstname;
@@ -216,14 +255,14 @@ export const setUserInformation = async (userId, name, firstname, lastname, bio,
     if (city) data.city = city;
     if (bio) data.bio = bio;
 
-    if (firstname && user.firstname === "") point += 2;
-    if (lastname && user.lastname === "") point += 2;
-    if (country && user.country === "") point += 2;
-    if (city && user.city === "") point += 2;
-    if (bio && user.bio === "") point += 2;
+    if (firstname && user.firstname === '') point += 2;
+    if (lastname && user.lastname === '') point += 2;
+    if (country && user.country === '') point += 2;
+    if (city && user.city === '') point += 2;
+    if (bio && user.bio === '') point += 2;
 
     await userModels.setUserInformation(userId, data);
-    await _increaseReputation(user.email, point)
+    await _increaseReputation(user.email, point);
     return await userModels.getUserById(userId);
   } catch (err) {
     throw err;
@@ -263,13 +302,21 @@ export const isVerifidedToken = async (userId, token, superSecret) => {
  * Case 2 : Unfavourite on profile   return UN_FAVOURITE_SUCCESS_PROFILE
  *
  */
-export const addFavouriteSong = async (songId, userId, songUrl, stationId = null) => {
+export const addFavouriteSong = async (
+  songId,
+  userId,
+  songUrl,
+  stationId = null,
+) => {
   try {
-    const songFavourited = await userModels.getSongInFavouriteds(userId, songUrl);
+    const songFavourited = await userModels.getSongInFavouriteds(
+      userId,
+      songUrl,
+    );
     if (songFavourited.length === 0) {
       const songInStation = (await stationModels.getAsongInStation(
         stationId,
-        songId
+        songId,
       ))[0];
       await userModels.addFavouritedSongs(userId, songInStation);
       return ADD_FAVOURITE_SUCCESS;
@@ -280,12 +327,11 @@ export const addFavouriteSong = async (songId, userId, songUrl, stationId = null
       } else {
         return UN_FAVOURITE_SUCCESS_PROFILE;
       }
-
     }
   } catch (error) {
     throw error;
   }
-}
+};
 /**
  *
  * @param userId
@@ -294,14 +340,11 @@ export const addFavouriteSong = async (songId, userId, songUrl, stationId = null
  */
 export const updateHistory = async (userId, station_id) => {
   try {
-    const option = { history: 1, _id: 0 }
-    const user = await userModels.getUserById(userId, option)
-    const station = await stationModels.getStationById(station_id)
+    const option = { history: 1, _id: 0 };
+    const user = await userModels.getUserById(userId, option);
+    const station = await stationModels.getStationById(station_id);
 
-    let history = user.history
-
-
-
+    let history = user.history;
 
     // let history = user.history
     // if (history.length && (history.indexOf(_safeObjectId(station_id)) !== -1))
@@ -310,9 +353,9 @@ export const updateHistory = async (userId, station_id) => {
     // await userModels.updateHistory(userId, history)
     // history = await userModels.getUserById(userId, option)
   } catch (err) {
-    throw err
+    throw err;
   }
-}
+};
 /**
  *
  * @param userId
@@ -327,36 +370,38 @@ export const getHistory = async (userId, limited) => {
     let historyDetail = [];
 
     forEach(station_id in history);
-    historyDetail.push(stationController.countSongAddByUserId(userId, station_id));
+    historyDetail.push(
+      stationController.countSongAddByUserId(userId, station_id),
+    );
 
-    return historyDetail
+    return historyDetail;
   } catch (err) {
-    throw err
+    throw err;
   }
-}
+};
 /**
  * The function get info favourited songs
  * @param {string} userId
  */
-export const getFavouritedSongs = async (userId) => {
+export const getFavouritedSongs = async userId => {
   try {
     const favouritedSongs = await userModels.getFavouritedSongs(userId);
     return favouritedSongs;
   } catch (error) {
     throw new Error("Can't get favourited songs");
   }
-}
+};
 
 export const getallstation = async () => {
   const user = stationModels.getAllAvailableStations();
 
   return user;
-}
+};
 
 export const updateUserReputation = async (user, points) => {
-  let data = {reputation: user.reputation + points};
+  let data = { reputation: user.reputation + points };
   return await userModels.updateUserById(user.id, data);
-}
+};
 
 // This is private function
 /**
@@ -368,7 +413,7 @@ export const updateUserReputation = async (user, points) => {
  */
 async function _increaseReputation(email, point) {
   const user = await userModels.getUserByEmail(email);
-  await userModels.updateReputation(email, user.reputation + point)
+  await userModels.updateReputation(email, user.reputation + point);
 }
 /**
  *
@@ -401,34 +446,46 @@ async function _createUsername(username) {
   return currentId;
 }
 
-async function _linkSocicalAccountToExistingUser(user, email, googleId = null, facebookId = null, avatar_url = null, name) {
-    if (googleId)
-        userModels.setGoogleId(email, googleId);
-    if (facebookId)
-        userModels.setFacebookId(email, facebookId);
-    if (avatar_url && !user.avatar_url) {
-        userModels.setAvatarUrl(email, avatar_url);
-        _increaseReputation(email, 20)
-    }
+async function _linkSocicalAccountToExistingUser(
+  user,
+  email,
+  googleId = null,
+  facebookId = null,
+  avatar_url = null,
+  name,
+) {
+  if (googleId) userModels.setGoogleId(email, googleId);
+  if (facebookId) userModels.setFacebookId(email, facebookId);
+  if (avatar_url && !user.avatar_url) {
+    userModels.setAvatarUrl(email, avatar_url);
+    _increaseReputation(email, 20);
+  }
 }
 
-async function _createUserWithSocialAccount(email, googleId, facebookId, avatar_url, name, localStations) {
-    let user = await new userModels({
-        email: email,
-        google_id: googleId,
-        facebook_id: facebookId,
-        name: name,
-        is_password: false,
-        favourited_songs: []
-    });
-    await user.save();
-    const username = await _createUsername(name);
-    await userModels.setUsername(email, username);
-    if (avatar_url) {
-        await userModels.setAvatarUrl(email, avatar_url);
-        await _increaseReputation(email, 20)
-    }
-    return user;
+async function _createUserWithSocialAccount(
+  email,
+  googleId,
+  facebookId,
+  avatar_url,
+  name,
+  localStations,
+) {
+  let user = await new userModels({
+    email: email,
+    google_id: googleId,
+    facebook_id: facebookId,
+    name: name,
+    is_password: false,
+    favourited_songs: [],
+  });
+  await user.save();
+  const username = await _createUsername(name);
+  await userModels.setUsername(email, username);
+  if (avatar_url) {
+    await userModels.setAvatarUrl(email, avatar_url);
+    await _increaseReputation(email, 20);
+  }
+  return user;
 }
 
 const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);

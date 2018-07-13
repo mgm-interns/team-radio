@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { StationItem } from 'Component';
 import Typography from 'material-ui/Typography';
-import Scrollbar from 'react-scrollbar';
 import classNames from 'classnames';
 import styles from './styles';
 
@@ -17,20 +16,12 @@ class StationList extends Component {
   }
 
   _renderLoading(message = '') {
-    const { classes, scrollbarInstanceLevel, scrollbarRef } = this.props;
+    const { classes, scrollbarRef } = this.props;
 
     return (
-      <Scrollbar
-        level={scrollbarInstanceLevel}
-        className={classNames([classes.container])}
-        contentClassName={classes.content}
-        swapWheelAxes={true}
-        smoothScrolling
-        stopScrollPropagation
-        ref={scrollbarRef}
-      >
+      <div className={classNames([classes.container])} ref={scrollbarRef}>
         <div className={classNames([classes.loadingContainer])}>
-          {[1, 2, 3, 4, 5, 6].map((item, index) => (
+          {Array.from({ length: 20 }).map((item, index) => (
             <div key={index} className={classes.stationWrapper}>
               <div
                 className={classNames([
@@ -56,12 +47,12 @@ class StationList extends Component {
             <Typography type={'subheading'}>{message}</Typography>
           </div>
         </div>
-      </Scrollbar>
+      </div>
     );
   }
 
   _renderEmptyComponent() {
-    const { classes, emptyMessage } = this.props;
+    const { emptyMessage } = this.props;
 
     return this._renderLoading(emptyMessage);
   }
@@ -73,18 +64,11 @@ class StationList extends Component {
       onItemClick,
       scrollbarRef,
       disableOnlineCount,
-      scrollbarInstanceLevel,
     } = this.props;
+    const list = stations.filter((item, index) => index < 20);
     return (
-      <Scrollbar
-        speed={1.6}
-        level={scrollbarInstanceLevel}
-        className={classes.container}
-        contentClassName={classes.content}
-        smoothScrolling
-        ref={scrollbarRef}
-      >
-        {stations.map((station, index) => (
+      <div className={classes.container} ref={scrollbarRef}>
+        {list.map((station, index) => (
           <StationItem
             key={index}
             {...station}
@@ -93,7 +77,7 @@ class StationList extends Component {
             onClick={onItemClick}
           />
         ))}
-      </Scrollbar>
+      </div>
     );
   }
 

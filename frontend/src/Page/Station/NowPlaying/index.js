@@ -146,6 +146,7 @@ const mapStateToProps = ({ api: { currentStation } }) => ({
   nowPlaying: currentStation.nowPlaying,
 });
 
-export default compose(connect(mapStateToProps), withStyles(styles))(
-  NowPlaying,
-);
+export default compose(
+  connect(mapStateToProps),
+  withStyles(styles),
+)(NowPlaying);

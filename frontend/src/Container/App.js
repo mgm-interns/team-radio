@@ -8,19 +8,21 @@ import { verifyToken } from 'Redux/api/user/user';
 import { removeAuthenticationState } from 'Configuration';
 import Router from './Router';
 import styles from './styles';
-import {sendUserId} from "../Redux/api/user/user";
+import { sendUserId } from '../Redux/api/user/user';
 
 class App extends Component {
-    componentWillMount() {
-        this.props.getAuth({token: localStorage.getItem('token')});
-        this.props.sendUserId(localStorage.getItem('userId'));
-    }
+  componentWillMount() {
+    this.props.getAuth({ token: localStorage.getItem('token') });
+    this.props.sendUserId(localStorage.getItem('userId'));
+  }
 
   componentWillReceiveProps(nextProps) {
     const { error } = nextProps.user;
 
     if (error) {
-      const { response: { tokenError } } = error;
+      const {
+        response: { tokenError },
+      } = error;
       if (tokenError) {
         removeAuthenticationState();
       }
@@ -45,12 +47,12 @@ App.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-    getAuth: token => {
-        dispatch(verifyToken(token));
-    },
-    sendUserId: (userId) => {
-        dispatch(sendUserId(userId))
-    }
+  getAuth: token => {
+    dispatch(verifyToken(token));
+  },
+  sendUserId: userId => {
+    dispatch(sendUserId(userId));
+  },
 });
 
 const mapStateToProps = state => ({
@@ -58,6 +60,9 @@ const mapStateToProps = state => ({
 });
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withStyles(styles),
 )(App);

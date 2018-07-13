@@ -93,15 +93,15 @@ const _addSongProcess = async (
       localstations,
     );
     emitter.emit(EVENTS.SERVER_ADD_SONG_SUCCESS, {});
-      if (playlist && userId && userId !== -1) {
-          moduleEmitter.emit(
-              config.events.SONG_WAS_ADDED,
-              userId,
-              config.action.ACTION_DEFINITIONS.ADD_SONG_STATION,
-              stationId,
-              songUrl,
-          );
-      }
+    if (playlist && userId && userId !== -1) {
+      moduleEmitter.emit(
+        config.events.SONG_WAS_ADDED,
+        userId,
+        config.action.ACTION_DEFINITIONS.ADD_SONG_STATION,
+        stationId,
+        songUrl,
+      );
+    }
   } catch (err) {
     emitter.emit(EVENTS.SERVER_ADD_SONG_FAILURE, {
       message: err.message,

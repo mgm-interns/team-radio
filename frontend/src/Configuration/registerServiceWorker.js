@@ -9,7 +9,7 @@
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
 
-import {appNotificationInstance} from "Component/Notification/AppNotification";
+import { appNotificationInstance } from 'Component/Notification/AppNotification';
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -62,11 +62,12 @@ function registerValidSW(swUrl) {
                 // available; please refresh." message in your web app.
                 console.log('New content is available; please refresh.');
                 appNotificationInstance.warning({
-                  message: 'Our application has released new updates. Please refresh the page to update the latest version.',
+                  message:
+                    'Our application has released new updates. Please refresh the page to update the latest version.',
                   dismissible: false,
                   autoDismiss: 0,
-                  position: 'br'
-                })
+                  position: 'br',
+                });
               } else {
                 // At this point, everything has been precached.
                 // It's the perfect time to display a

@@ -100,7 +100,10 @@ const mapStateToProps = ({ api }) => ({
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, undefined),
+  connect(
+    mapStateToProps,
+    undefined,
+  ),
   withRouter,
   withNotification,
 )(SwitcherItem);

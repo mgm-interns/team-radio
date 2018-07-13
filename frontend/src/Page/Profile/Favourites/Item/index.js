@@ -172,4 +172,7 @@ FavoriteItem.propTypes = {
   key: PropTypes.number,
 };
 
-export default compose(withStyles(styles), withNotification)(FavoriteItem);
+export default compose(
+  withStyles(styles),
+  withNotification,
+)(FavoriteItem);

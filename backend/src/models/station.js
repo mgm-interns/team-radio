@@ -7,67 +7,63 @@ const stationSchema = mongoose.Schema({
   station_name: { type: String, require: true },
   station_id: { type: String, require: true },
   is_private: { type: Boolean, default: false },
-  owner_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users', default: null, },
-  starting_time: { type: Number, default: 0, },
+  owner_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
+    default: null,
+  },
+  starting_time: { type: Number, default: 0 },
   is_delete: { type: Boolean, default: false },
-  playlist:
-    {
-      type: [
-        {
-          song_id: { type: Number, require: true, },
-          is_played: { type: Boolean, },
-          is_skipped: { type: Boolean, default: false},
-          url: { type: String, required: true, },
-          title: { type: String, },
-          thumbnail: { type: String, },
-          duration: { type: Number, min: 0, },
-          creator: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-          created_date: { type: Number, default: true, },
-          up_vote: [
-            { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
-          ],
-          down_vote: [
-            { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
-          ],
-          message: {
-            content: {
-              type: String
-            },
-            receivers: {
-              type: [
-                { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
-              ]
-            }
-          }
-        },
-      ],
-      default: []
-    },
-  user_points:
-    {
-      type: [
-        {
-          user_id: { type: mongoose.Schema.Types.ObjectId, require: true, },
-          points: { type: Number, require: true, default: 0, },
-        },
-      ],
-      default: []
-    },
-  created_date: { type: Number, default: new Date().getTime(), },
-  skip_by_station_owner: { type: Boolean, default: false }, // Skip rule per station
-  chat:
-    {
-      type: [
-        {
-          sender: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'users',
+  playlist: {
+    type: [
+      {
+        song_id: { type: Number, require: true },
+        is_played: { type: Boolean },
+        is_skipped: { type: Boolean, default: false },
+        url: { type: String, required: true },
+        title: { type: String },
+        thumbnail: { type: String },
+        duration: { type: Number, min: 0 },
+        creator: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+        created_date: { type: Number, default: true },
+        up_vote: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
+        down_vote: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
+        message: {
+          content: {
+            type: String,
           },
-          message: { type: mongoose.Schema.Types.String, require: true, },
-          created_date: { type: Number, default: new Date().getTime(), },
-        }
-      ],
-      default: []
-    }
+          receivers: {
+            type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
+          },
+        },
+      },
+    ],
+    default: [],
+  },
+  user_points: {
+    type: [
+      {
+        user_id: { type: mongoose.Schema.Types.ObjectId, require: true },
+        points: { type: Number, require: true, default: 0 },
+      },
+    ],
+    default: [],
+  },
+  created_date: { type: Number, default: new Date().getTime() },
+  skip_by_station_owner: { type: Boolean, default: false }, // Skip rule per station
+  chat: {
+    type: [
+      {
+        sender: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'users',
+        },
+        message: { type: mongoose.Schema.Types.String, require: true },
+        created_date: { type: Number, default: new Date().getTime() },
+      },
+    ],
+    default: [],
+  },
 });
 
 // Create text index for search perform
@@ -97,7 +93,7 @@ module.exports.addStation = station => {
  *
  * @param {string} stationId
  */
-module.exports.deleteStation = (stationId) => {
+module.exports.deleteStation = stationId => {
   try {
     let query = { station_id: stationId };
     return Station.update(query, {
@@ -119,8 +115,11 @@ module.exports.deleteStation = (stationId) => {
  *
  * @param {number} limit
  */
-module.exports.getAllAvailableStations = (limit) => {
-  return Station.find({ is_private: false, is_delete: false }, { station_name: 1, created_date: 1, station_id: 1, _id: 0 }).limit(limit);
+module.exports.getAllAvailableStations = limit => {
+  return Station.find(
+    { is_private: false, is_delete: false },
+    { station_name: 1, created_date: 1, station_id: 1, _id: 0 },
+  ).limit(limit);
 };
 
 /**
@@ -130,7 +129,12 @@ module.exports.getAllAvailableStations = (limit) => {
  */
 module.exports.getStationDetails = limit => {
   return Station.find({ is_delete: false })
-    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1, username: 1 })
+    .populate('playlist.creator', {
+      _id: 1,
+      name: 1,
+      avatar_url: 1,
+      username: 1,
+    })
     .limit(limit)
     .exec();
 };
@@ -145,7 +149,10 @@ module.exports.getStationDetails = limit => {
  * @param {number} limit
  */
 module.exports.getAllStationLimitInfor = limit => {
-  return Station.find({ is_delete: false }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 })
+  return Station.find(
+    { is_delete: false },
+    { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 },
+  )
     .limit(limit)
     .exec();
 };
@@ -157,7 +164,12 @@ module.exports.getAllStationLimitInfor = limit => {
  */
 module.exports.getStationByName = stationNameToFind => {
   return Station.findOne({ station_name: stationNameToFind, is_delete: false })
-    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1, username: 1 })
+    .populate('playlist.creator', {
+      _id: 1,
+      name: 1,
+      avatar_url: 1,
+      username: 1,
+    })
     .exec();
 };
 
@@ -168,7 +180,12 @@ module.exports.getStationByName = stationNameToFind => {
  */
 module.exports.getStationById = idToFind => {
   return Station.findOne({ station_id: idToFind, is_delete: false })
-    .populate('playlist.creator', { id: 1, name: 1, avatar_url: 1, username: 1 })
+    .populate('playlist.creator', {
+      id: 1,
+      name: 1,
+      avatar_url: 1,
+      username: 1,
+    })
     .exec();
 };
 
@@ -183,9 +200,11 @@ module.exports.getStationById = idToFind => {
  * @param {string} userId
  */
 module.exports.getStationsByUserId = userId => {
-  return Station.find({ owner_id: userId, is_delete: false }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1, });
+  return Station.find(
+    { owner_id: userId, is_delete: false },
+    { station_id: 1, created_date: 1, station_name: 1, owner_id: 1 },
+  );
 };
-
 
 /**
  * The function update a field starting_time in db
@@ -216,7 +235,11 @@ module.exports.updateTimeStartingOfStation = (stationId, valueNeedUpdate) => {
  * @param {string} userId
  * @param {boolean} valueNeedUpdate
  */
-module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) => {
+module.exports.updateIsPrivateOfStation = (
+  stationId,
+  userId,
+  valueNeedUpdate,
+) => {
   try {
     let query = { station_id: stationId, owner_id: userId, is_delete: false };
     return Station.update(query, {
@@ -236,14 +259,13 @@ module.exports.updateIsPrivateOfStation = (stationId, userId, valueNeedUpdate) =
  */
 module.exports.updateStationOwner = (stationId, userId) => {
   try {
-    let query = { station_id: stationId};
+    let query = { station_id: stationId };
     return Station.update(query, {
       $set: {
         owner_id: userId,
       },
     });
-  }
-  catch (err) {
+  } catch (err) {
     console.log("Server error when update station's creator");
   }
 };
@@ -254,15 +276,14 @@ module.exports.updateStationOwner = (stationId, userId) => {
  * @param {boolean} skipRule
  */
 module.exports.changeSkipRuleSetting = (stationId, skipByOwner) => {
-    try {
-        let query = { station_id: stationId };
-        let updates = { $set: { skip_by_station_owner: skipByOwner } };
-        Station.update(query, updates).exec();
-    }
-    catch (err) {
-        console.log('Error when update skip rule setting!' + err.message);
-        throw err;
-    }
+  try {
+    let query = { station_id: stationId };
+    let updates = { $set: { skip_by_station_owner: skipByOwner } };
+    Station.update(query, updates).exec();
+  } catch (err) {
+    console.log('Error when update skip rule setting!' + err.message);
+    throw err;
+  }
 };
 
 /******************** A SONG**************************/
@@ -291,7 +312,7 @@ module.exports.addSong = (stationId, song) => {
 module.exports.getAsongInStation = async (stationId, songId) => {
   let query = {
     station_id: stationId,
-    is_delete: false
+    is_delete: false,
   };
   return (await Station.findOne(query, {
     playlist: {
@@ -333,10 +354,14 @@ module.exports.updateValueOfDownvote = (stationId, songId, valueNeedUpdate) => {
 module.exports.updateVotes = (stationId, songId, newUpVotes, newDownVotes) => {
   return Station.update(
     { station_id: stationId, 'playlist.song_id': songId },
-    { $set: { 'playlist.$.up_vote': newUpVotes, 'playlist.$.down_vote': newDownVotes } },
+    {
+      $set: {
+        'playlist.$.up_vote': newUpVotes,
+        'playlist.$.down_vote': newDownVotes,
+      },
+    },
   );
 };
-
 
 /*********************** Playlist (songs) ********************/
 
@@ -363,8 +388,15 @@ module.exports.updatePlaylistOfStation = (stationId, valueNeedUpdate) => {
  */
 module.exports.getPlaylistOfStation = async (stationId, limit) => {
   let query = { station_id: stationId, is_delete: false };
-  const station = await Station.findOne(query, { playlist: true, _id: false })
-    .populate('playlist.creator', { _id: 1, name: 1, avatar_url: 1, username: 1 })
+  const station = await Station.findOne(query, {
+    playlist: true,
+    _id: false,
+  }).populate('playlist.creator', {
+    _id: 1,
+    name: 1,
+    avatar_url: 1,
+    username: 1,
+  });
 
   return station.playlist;
 };
@@ -373,15 +405,24 @@ module.exports.getPlaylistOfStation = async (stationId, limit) => {
  *
  * @param {string} userId
  */
-module.exports.getStationHasSongUserAdded = async (userId) => {
-  let stations = await Station.find({
-    playlist: {
-      $elemMatch: {
-        creator: userId
-      }
+module.exports.getStationHasSongUserAdded = async userId => {
+  let stations = await Station.find(
+    {
+      playlist: {
+        $elemMatch: {
+          creator: userId,
+        },
+      },
+      is_delete: false,
     },
-    is_delete: false
-  }, { station_id: 1, created_date: 1, station_name: 1, owner_id: 1, playlist: 1 });
+    {
+      station_id: 1,
+      created_date: 1,
+      station_name: 1,
+      owner_id: 1,
+      playlist: 1,
+    },
+  );
   const usreStations = [];
   stations.forEach(station => {
     station = station.toObject();
@@ -390,8 +431,7 @@ module.exports.getStationHasSongUserAdded = async (userId) => {
     usreStations.push(station);
   });
   return usreStations;
-}
-
+};
 
 module.exports.joinStation = async (stationId, userId) => {
   const station = await module.exports.getStationById(stationId);
@@ -401,36 +441,44 @@ module.exports.joinStation = async (stationId, userId) => {
       return;
     }
   }
-  return Station.update({ station_id: stationId, is_delete: false }, {
-    $addToSet: {
-      user_points: { user_id: userId, points: 0 },
-    }
-  });
-}
+  return Station.update(
+    { station_id: stationId, is_delete: false },
+    {
+      $addToSet: {
+        user_points: { user_id: userId, points: 0 },
+      },
+    },
+  );
+};
 
-module.exports.increaseUserPoints = async (stationId, userId, increasingPoints) => {
-  if (!userId)
-    throw new Error(`Can't increase points for ${userId}`);
+module.exports.increaseUserPoints = async (
+  stationId,
+  userId,
+  increasingPoints,
+) => {
+  if (!userId) throw new Error(`Can't increase points for ${userId}`);
   try {
     const station = await module.exports.getStationById(stationId);
     const user_points = station.user_points;
     for (let i = 0; i < user_points.length; i++) {
       if (user_points[i].user_id.equals(userId)) {
         user_points[i].points += increasingPoints;
-        if (user_points[i].points < 0)
-          user_points[i].points = 0;
+        if (user_points[i].points < 0) user_points[i].points = 0;
         break;
       }
     }
-    return Station.update({ station_id: stationId, is_delete: false }, {
-      $set: {
-        user_points: user_points,
-      }
-    });
+    return Station.update(
+      { station_id: stationId, is_delete: false },
+      {
+        $set: {
+          user_points: user_points,
+        },
+      },
+    );
   } catch (err) {
     throw err;
   }
-}
+};
 
 module.exports.isFirstAddedSong = async (stationId, songId, songUrl) => {
   let playlist = await module.exports.getPlaylistOfStation(stationId);
@@ -441,15 +489,15 @@ module.exports.isFirstAddedSong = async (stationId, songId, songUrl) => {
     }
   }
   throw new Error('The song do not exist');
-}
+};
 
-module.exports.getAllStationScores = async (stationId) => {
-  const station = await Station.findOne({ station_id: stationId});
-  if (station){
+module.exports.getAllStationScores = async stationId => {
+  const station = await Station.findOne({ station_id: stationId });
+  if (station) {
     return station.user_points;
   }
   throw new Error('The station do not exist');
-}
+};
 // module.exports.getListSongHistory = async stationId => {
 //   // TODO :
 //   const station = await Station.aggregate(
@@ -469,11 +517,12 @@ module.exports.getAllStationScores = async (stationId) => {
  * @returns {Promise<chat|{type, default}>}
  */
 module.exports.getAllChatInStation = async stationId => {
-  const station = await Station
-    .findOne({ station_id: stationId })
-    .populate('chat.sender', { _id: 1, name: 1, avatar_url: 1, username: 1 });
+  const station = await Station.findOne({ station_id: stationId }).populate(
+    'chat.sender',
+    { _id: 1, name: 1, avatar_url: 1, username: 1 },
+  );
 
-  if (station){
+  if (station) {
     return station.chat;
   }
   throw new Error('The station do not exist');
@@ -487,12 +536,15 @@ module.exports.getAllChatInStation = async stationId => {
  * @returns {Promise<*>}
  */
 module.exports.addChatMessage = async (stationId, { userId, message }) => {
-  const station = await Station.findOne({ station_id: stationId});
+  const station = await Station.findOne({ station_id: stationId });
 
-  if (station){
-    return Station.update({ station_id: stationId }, {
-      $push: { chat: { sender: userId,  message } }
-    });
+  if (station) {
+    return Station.update(
+      { station_id: stationId },
+      {
+        $push: { chat: { sender: userId, message } },
+      },
+    );
   }
   throw new Error('The station do not exist');
 };

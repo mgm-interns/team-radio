@@ -85,7 +85,12 @@ class StationPage extends Component {
   }
 
   componentWillUnmount() {
-    const { match: { params: { stationId } }, userId } = this.props;
+    const {
+      match: {
+        params: { stationId },
+      },
+      userId,
+    } = this.props;
     this.props.leaveStation({ stationId, userId });
   }
 
@@ -102,7 +107,10 @@ class StationPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { muteNowPlaying, currentStation: { nowPlaying } } = nextProps;
+    const {
+      muteNowPlaying,
+      currentStation: { nowPlaying },
+    } = nextProps;
 
     this._checkValidStation(nextProps);
 
@@ -153,7 +161,9 @@ class StationPage extends Component {
   }
 
   _getFilteredPlaylist() {
-    const { currentStation: { playlist, nowPlaying } } = this.props;
+    const {
+      currentStation: { playlist, nowPlaying },
+    } = this.props;
     let nowPlayingSong = null;
 
     playlist.filter(item => {
@@ -170,7 +180,9 @@ class StationPage extends Component {
   _checkValidStation(props) {
     // Get station id from react-router
     const {
-      match: { params: { stationId } },
+      match: {
+        params: { stationId },
+      },
       history,
       userId,
       currentStation: { joined },
@@ -217,7 +229,10 @@ class StationPage extends Component {
   }
 
   _onLightClick() {
-    const { passiveUserRequest, currentStation: { nowPlaying } } = this.props;
+    const {
+      passiveUserRequest,
+      currentStation: { nowPlaying },
+    } = this.props;
 
     this.setState(
       {
@@ -331,7 +346,7 @@ class StationPage extends Component {
       isMobileBrowser,
       isShowingQRCode,
     } = this.state;
-      const isOwnerStation = false;
+    const isOwnerStation = station && userId === station.owner_id;
     return [
       passive && (
         <div key={0} className={classes.passiveContainer}>
@@ -351,7 +366,7 @@ class StationPage extends Component {
             justify={'center'}
             className={classes.switcherContent}
           >
-            <Grid item xs={12} xl={8}>
+            <Grid item xs={12} xl={8} style={{ padding: 0 }}>
               <StationSwitcher disable={disableSwitcher} />
             </Grid>
           </Grid>
@@ -427,8 +442,18 @@ class StationPage extends Component {
                       </IconButton>
                     )}
 
+                    {passive ? null : (
+                      <IconButton
+                        color={isShowingQRCode ? 'primary' : 'default'}
+                        onClick={this._toggleShowingQRCode}
+                      >
+                        <FaQrcode />
+                      </IconButton>
+                    )}
                     {passive ? null : <StationSharing />}
-                    {((!passive && isOwnerStation) === true ) ? <StationSkipRule /> : null}
+                    {(!passive && isOwnerStation) === true ? (
+                      <StationSkipRule />
+                    ) : null}
                   </div>
                 </Grid>
                 {isEnabledVideo ? (
@@ -525,6 +550,9 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withRouter,
 )(StationPage);

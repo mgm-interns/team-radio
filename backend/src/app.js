@@ -37,12 +37,18 @@ db.on('disconnected', function() {
   console.log('MongoDB disconnected! - Reconnect the database after 3s...');
   // Reconnect the database after 3s
   setTimeout(() => {
-    mongoose.connect(mongodbConnectionString, {
-      server: { auto_reconnect: true },
-    });
+    mongoose.connect(
+      mongodbConnectionString,
+      {
+        server: { auto_reconnect: true },
+      },
+    );
   }, 3000);
 });
-mongoose.connect(mongodbConnectionString, { server: { auto_reconnect: true } });
+mongoose.connect(
+  mongodbConnectionString,
+  { server: { auto_reconnect: true } },
+);
 
 const app = express();
 app.set('superSecret', 'iloveteamradio');

@@ -35,7 +35,9 @@ class Password extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { user: { error } } = nextProps;
+    const {
+      user: { error },
+    } = nextProps;
     if (error !== null) {
       this.setState({
         formErrors: error.response.message,
@@ -175,7 +177,10 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withRouter,
   reduxForm({
     form: 'editProfilePasswordForm',

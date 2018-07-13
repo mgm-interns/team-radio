@@ -271,12 +271,12 @@ const userReducer = (state = INITIAL_STATE, action) => {
         },
       };
 
-      case 'SET_USER_SCORE_SUCCESS':
-          return {
-              ...state,
-              data: action.payload,
-              loading: false,
-          };
+    case 'SET_USER_SCORE_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
     default:
       return state;
   }

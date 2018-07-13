@@ -16,7 +16,6 @@ import GoogleIcon from 'react-icons/lib/fa/google-plus-square';
 import TwitterIcon from 'react-icons/lib/fa/twitter-square';
 import CopyIcon from 'react-icons/lib/go/clippy';
 import { withNotification } from 'Component/Notification';
-import { withScrollbarInstances } from 'Component/Scrollbar';
 import classNames from 'classnames';
 import styles from './styles';
 
@@ -237,5 +236,4 @@ export default compose(
   withStyles(styles),
   connect(mapStateToProps),
   withNotification,
-  withScrollbarInstances,
 )(StationSharing);

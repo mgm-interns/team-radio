@@ -54,8 +54,11 @@ const _downVoteSong = async (emitter, userId, stationId, songId) => {
   try {
     // This statement will throw an Error if downVote not successful
     // eslint-disable-next-line
-    const playlist =
-      await stationController.downVote(stationId, songId, userId);
+    const playlist = await stationController.downVote(
+      stationId,
+      songId,
+      userId,
+    );
 
     // Skip song decision when vote change
     skipDecider(userId, stationId);

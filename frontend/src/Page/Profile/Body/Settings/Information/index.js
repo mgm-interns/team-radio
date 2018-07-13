@@ -39,7 +39,9 @@ class Information extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { user: { error, data } } = nextProps;
+    const {
+      user: { error, data },
+    } = nextProps;
     const currentUser = this.props.user.data;
 
     if (error !== null) {
@@ -193,7 +195,10 @@ Information.propTypes = {
 export default compose(
   withStyles(styles),
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   reduxForm({
     form: 'editProfileInformationForm',
     enableReinitialize: true,

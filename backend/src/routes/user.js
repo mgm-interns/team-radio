@@ -99,7 +99,7 @@ export default router => {
         req.body.facebookId,
         req.body.avatar_url,
         req.body.name,
-        req.body.localstations
+        req.body.localstations,
       );
       const payload = {
         email: user.email,

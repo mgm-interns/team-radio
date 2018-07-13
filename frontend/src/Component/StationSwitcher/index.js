@@ -10,22 +10,21 @@ import Images from 'Theme/Images';
 import { withNotification } from 'Component/Notification';
 import { StationList } from 'Component';
 import styles from './styles';
-import ArrowButton from 'Component/ArrowButton'
 
 /* eslint-disable no-shadow */
 class StationSwitcher extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loadedStation: 0, //Number of displayed stations
-    };
+
     this._goToStationPage = this._goToStationPage.bind(this);
     this._filterStations = this._filterStations.bind(this);
   }
 
   _goToStationPage(station) {
     const {
-      match: { params: { stationId } },
+      match: {
+        params: { stationId },
+      },
       history,
       joinStationRequest,
       // leaveStationRequest,
@@ -44,7 +43,8 @@ class StationSwitcher extends Component {
       joinStationRequest({ userId, stationId: station.station_id });
       setPreviewVideo();
       // Scroll to left after switch successful
-      this.scrollbarRef.scrollLeft();
+      console.log(this.scrollbarRef);
+      this.scrollbarRef.scroll({ left: 0, behavior: 'smooth' });
     }
     notification.app.success({
       message: `Switched to station ${station.station_name}`,
@@ -52,7 +52,8 @@ class StationSwitcher extends Component {
   }
 
   _filterStations() {
-    const { stations = [], currentStation, loadedStation } = this.props;
+    const { stations = [], currentStation } = this.props;
+
     /**
      * Set sleepy thumbnail if there is no thumbnail in station
      * Then remove current station from the list
@@ -68,30 +69,14 @@ class StationSwitcher extends Component {
           (currentStation.station && currentStation.station.station_id) !==
           station.station_id,
       );
-    var renderStation = filteredStations.slice(0, loadedStation);
+
     /**
      * Ordered stations
      * - Current station always be on top
      * - higher online users higher position
      * - Active station
      */
-    return renderStation;
-  }
-
-  scrollLeft() {
-      this.scrollbarRef.scrollLeft();
-  }
-
-  componentWillReceiveProps(nextProps) {
-      //Save new length of stations to compare with old length at componentDidUpdate
-      this.state = {loadedStation : nextProps.loadedStation};
-  }
-
-  componentDidUpdate(prevProps) {
-      //Scroll to right if length of stations was changed (user load more stations)
-      if (this.state.loadedStation > prevProps.loadedStation) {
-          this.scrollbarRef.scrollXTo(1000000);
-      }
+    return filteredStations;
   }
 
   render() {
@@ -99,7 +84,6 @@ class StationSwitcher extends Component {
 
     return (
       <div className={classes.container}>
-        <ArrowButton scrollLeft={this.scrollLeft.bind(this)} />
         <StationList
           stations={this._filterStations()}
           enableWavingIcon
@@ -135,7 +119,6 @@ const mapStateToProps = ({ api }) => ({
   stations: api.stations.data,
   currentStation: api.currentStation,
   userId: api.user.data.userId,
-  loadedStation: api.stations.loadedStation,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -146,7 +129,10 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withRouter,
   withNotification,
 )(StationSwitcher);

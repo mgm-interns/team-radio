@@ -1,5 +1,5 @@
 import HttpRequest from 'Util/redux/HttpRequest';
-import {CLIENT_SEND_USERID} from '../../actions';
+import { CLIENT_SEND_USERID } from '../../actions';
 
 const ENDPOINT = process.env.REACT_APP_SERVER_END_POINT;
 
@@ -52,9 +52,9 @@ const resetPasswordRequest = new HttpRequest({
   },
 });
 
-export const sendUserId = (userId) => ({
-    type: CLIENT_SEND_USERID,
-    payload: {userId},
+export const sendUserId = userId => ({
+  type: CLIENT_SEND_USERID,
+  payload: { userId },
 });
 
 export const getUser = getUserRequest.getAction();

@@ -44,11 +44,18 @@ class Backdrop extends Component {
 
     // Redirect to the created station page
     if (station && station.station_id) {
-        const localStationsToken = localStorage.getItem(constants.LOCAL_STORAGE_ANONYMOUS_STATIONS);
-        let localStationsArray = localStationsToken ?  JSON.parse(localStationsToken) : [];
-        localStationsArray.push(station.station_id);
-        localStorage.setItem(constants.LOCAL_STORAGE_ANONYMOUS_STATIONS, JSON.stringify(localStationsArray));
-        history.replace(`/station/${station.station_id}`);
+      const localStationsToken = localStorage.getItem(
+        constants.LOCAL_STORAGE_ANONYMOUS_STATIONS,
+      );
+      let localStationsArray = localStationsToken
+        ? JSON.parse(localStationsToken)
+        : [];
+      localStationsArray.push(station.station_id);
+      localStorage.setItem(
+        constants.LOCAL_STORAGE_ANONYMOUS_STATIONS,
+        JSON.stringify(localStationsArray),
+      );
+      history.replace(`/station/${station.station_id}`);
     }
   }
 
@@ -160,5 +167,8 @@ const mapDispatchToProps = dispatch => ({
 export default compose(
   withRouter,
   withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
 )(Backdrop);

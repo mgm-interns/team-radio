@@ -42,8 +42,10 @@ const _joinStationProcess = async (emitter, socket, userId, station) => {
   socket.userId = user ? userId : undefined;
 
   // eslint-disable-next-line
-  const alreadyInRoom =
-    await onlineManager.userAlreadyInRoom(stationId, userId);
+  const alreadyInRoom = await onlineManager.userAlreadyInRoom(
+    stationId,
+    userId,
+  );
 
   /**
    * This conditional check if user already in station:
@@ -123,8 +125,10 @@ const _join = async (emitter, socket, userId, station) => {
 
   // Update history
   // eslint-disable-next-line
-  const history =
-    await stationController.getListSongHistory(stationId, CONSTANTS.HISTORY_LIMIT);
+  const history = await stationController.getListSongHistory(
+    stationId,
+    CONSTANTS.HISTORY_LIMIT,
+  );
   emitter.emit(EVENTS.SERVER_UPDATE_HISTORY, {
     history: history,
   });

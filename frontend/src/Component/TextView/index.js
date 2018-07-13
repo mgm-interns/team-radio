@@ -24,7 +24,7 @@ class TextView extends Component {
         label={label}
         type={type}
         placeholder={placeholder}
-        inputProps={{autoCapitalize: autoCapitalize}}
+        inputProps={{ autoCapitalize: autoCapitalize }}
         error={!!(touched && error)}
         helperText={touched && error}
         {...input}

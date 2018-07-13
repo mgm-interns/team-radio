@@ -44,8 +44,7 @@ export const getAllStationsSocketIn = socket =>
 // Get list of all socketId in station
 export const getListSocketIdInStation = async stationId =>
   new Promise(resolve => {
-    io
-      .of('/')
+    io.of('/')
       .in(stationId)
       .clients((error, clients) => {
         if (error) return resolve([]);

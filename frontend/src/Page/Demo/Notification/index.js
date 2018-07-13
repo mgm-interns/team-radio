@@ -22,7 +22,9 @@ class NotificationDemo extends Component {
   }
 
   async callAppNotificationSuccess() {
-    const { notification: { app } } = this.props;
+    const {
+      notification: { app },
+    } = this.props;
     // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -36,7 +38,9 @@ class NotificationDemo extends Component {
   }
 
   async callAppNotificationInfo() {
-    const { notification: { app } } = this.props;
+    const {
+      notification: { app },
+    } = this.props;
     // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -50,7 +54,9 @@ class NotificationDemo extends Component {
   }
 
   async callAppNotificationWarning() {
-    const { notification: { app } } = this.props;
+    const {
+      notification: { app },
+    } = this.props;
     // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -64,7 +70,9 @@ class NotificationDemo extends Component {
   }
 
   async callAppNotificationError() {
-    const { notification: { app } } = this.props;
+    const {
+      notification: { app },
+    } = this.props;
     // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -78,7 +86,9 @@ class NotificationDemo extends Component {
   }
 
   async callAppNotification() {
-    const { notification: { app } } = this.props;
+    const {
+      notification: { app },
+    } = this.props;
     // let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -100,7 +110,9 @@ class NotificationDemo extends Component {
   }
 
   async callBrowserNotification() {
-    const { notification: { browser } } = this.props;
+    const {
+      notification: { browser },
+    } = this.props;
     let count = 0;
     const duration = 2000;
     // // Call notification 3 times
@@ -118,7 +130,9 @@ class NotificationDemo extends Component {
   }
 
   async callBothNotification() {
-    const { notification: { app, browser } } = this.props;
+    const {
+      notification: { app, browser },
+    } = this.props;
     let count = 0;
     const duration = 2000;
     // // Call notification 3 times

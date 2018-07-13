@@ -31,7 +31,9 @@ class FavouriteVideo extends Component {
     const {
       notification,
       addSong,
-      match: { params: { stationId } },
+      match: {
+        params: { stationId },
+      },
       user: { userId, username, name, avatar_url },
       url,
       title,
@@ -119,6 +121,9 @@ const mapDispatchToProps = dispatch => ({
 export default compose(
   withStyles(styles),
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withNotification,
 )(FavouriteVideo);

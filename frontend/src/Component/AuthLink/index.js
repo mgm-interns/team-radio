@@ -118,9 +118,11 @@ class AuthLink extends Component {
         )}
         {user.isAuthenticated && (
           <div className={classes.menuItem}>
-              <div>
-                  <span className={classes.displayName}>Reputation: {user.data.reputation || 0}</span>
-              </div>
+            <div>
+              <span className={classes.displayName}>
+                Reputation: {user.data.reputation || 0}
+              </span>
+            </div>
             <Link
               to={`/profile/${user.data.username}`}
               className={classes.menuItem}
@@ -191,7 +193,10 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withNotification,
   withRouter,
 )(withStyles(styles)(AuthLink));

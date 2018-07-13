@@ -50,7 +50,12 @@ class PlaylistItem extends Component {
   }
 
   componentDidMount() {
-    const { up_vote, down_vote, favourite: { favourite }, url } = this.props;
+    const {
+      up_vote,
+      down_vote,
+      favourite: { favourite },
+      url,
+    } = this.props;
     this.setState({
       isUpVote: PlaylistItem.isUpVote(this.props),
       isDownVote: PlaylistItem.isDownVote(this.props),
@@ -101,7 +106,9 @@ class PlaylistItem extends Component {
       song_id,
       creator,
       userId,
-      match: { params: { stationId } },
+      match: {
+        params: { stationId },
+      },
       isAuthenticated,
       notification,
     } = this.props;
@@ -134,7 +141,9 @@ class PlaylistItem extends Component {
       downVoteSong,
       song_id,
       userId,
-      match: { params: { stationId } },
+      match: {
+        params: { stationId },
+      },
       isAuthenticated,
       notification,
     } = this.props;
@@ -179,7 +188,7 @@ class PlaylistItem extends Component {
       return 100;
     }
     // Default case
-    return upVotes / (upVotes + downVotes) * 100;
+    return (upVotes / (upVotes + downVotes)) * 100;
   }
 
   _onCreatorIconClicked(event) {
@@ -409,7 +418,10 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withStyles(styles),
   withRouter,
   withNotification,

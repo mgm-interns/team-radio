@@ -8,7 +8,7 @@ import slice from 'lodash/slice';
 import uniqBy from 'lodash/uniqBy';
 import orderBy from 'lodash/orderBy';
 import filter from 'lodash/filter';
-import skipDecider from "../socket/managers/skipDecider";
+import skipDecider from '../socket/managers/skipDecider';
 
 const POINTS_FOR_FIRST_SONG = 2;
 const POINTS_FOR_NEXT_SONG = 1;
@@ -79,20 +79,20 @@ export const setIsPrivateOfStation = async (stationId, userId, value) => {
 };
 
 export const changeSkipSetting = async (stationId, userId, skipByOwner) => {
-    let station;
-    try {
-      station = await getStation(stationId);
-    } catch (err) {
-      throw err;
-    }
+  let station;
+  try {
+    station = await getStation(stationId);
+  } catch (err) {
+    throw err;
+  }
 
-    if (userId == station.owner_id) {
-      await stationModels.changeSkipRuleSetting(stationId, skipByOwner);
-    } else {
-      throw new Error('You are not owner!');
-    }
+  if (userId == station.owner_id) {
+    await stationModels.changeSkipRuleSetting(stationId, skipByOwner);
+  } else {
+    throw new Error('You are not owner!');
+  }
 
-    skipDecider(userId, stationId);
+  skipDecider(userId, stationId);
 };
 
 /**
@@ -605,5 +605,5 @@ export const getChatInStation = stationId => {
 };
 
 export const addChatInStation = (stationId, { userId, message }) => {
-  return stationModels.addChatMessage(stationId, { userId, message })
+  return stationModels.addChatMessage(stationId, { userId, message });
 };
