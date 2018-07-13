@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Package management log
+package-lock.json
+
+# Enviroment
+.env
+
+# Editor
+.vscode/
+.editorconfig
+.DS_Store
+dist/
+
+# Intellij
+*.iml
+.idea/
