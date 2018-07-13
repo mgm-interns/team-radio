@@ -95,7 +95,7 @@ module.exports.getUserById = async (userId, option) => {
 };
 
 module.exports.getUserByFacebookId = async facebookId =>
-    user.findOne({ facebook_id: facebookId }, { password: 0 });
+  user.findOne({ facebook_id: facebookId }, { password: 0 });
 
 module.exports.setFacebookId = async (email, facebookId) =>
   user.update({ email: email }, { facebook_id: facebookId }, { multi: true });
@@ -215,6 +215,6 @@ module.exports.getUserByResetToken = async token =>
   user.findOne({ token_reset_password: token }, { password: 0 });
 
 module.exports.updateUserById = async (id, data) => {
-  let updatedModel = {new: true};
+  let updatedModel = { new: true };
   return user.findByIdAndUpdate(id, data, updatedModel);
-}
+};

@@ -99,39 +99,37 @@ class AddLink extends Component {
   }
 
   async _getVideoInfo(id) {
-    const { data: { items } } = await axios.get(
-      `${process.env.REACT_APP_YOUTUBE_API_URL}/videos`,
-      {
-        params: {
-          key: process.env.REACT_APP_YOUTUBE_API_KEY,
-          part: 'id,snippet,contentDetails,status',
-          id,
-        },
+    const {
+      data: { items },
+    } = await axios.get(`${process.env.REACT_APP_YOUTUBE_API_URL}/videos`, {
+      params: {
+        key: process.env.REACT_APP_YOUTUBE_API_KEY,
+        part: 'id,snippet,contentDetails,status',
+        id,
       },
-    );
+    });
     return items;
   }
 
   /* Get search results */
   async _getSearchResults(value) {
-    const { data: { items } } = await axios.get(
-      `${process.env.REACT_APP_YOUTUBE_API_URL}/search`,
-      {
-        params: {
-          key: process.env.REACT_APP_YOUTUBE_API_KEY,
-          q: value,
-          part: 'snippet',
-          safeSearch: 'strict',
-          // regionCode: 'VN', //	STAMEQ
-          type: 'video',
-          videoEmbeddable: 'true',
-          // videoSyndicated: 'true',
-          maxResults: 5,
-          videoDefinition: 'any',
-          relevanceLanguage: 'en',
-        },
+    const {
+      data: { items },
+    } = await axios.get(`${process.env.REACT_APP_YOUTUBE_API_URL}/search`, {
+      params: {
+        key: process.env.REACT_APP_YOUTUBE_API_KEY,
+        q: value,
+        part: 'snippet',
+        safeSearch: 'strict',
+        // regionCode: 'VN', //	STAMEQ
+        type: 'video',
+        videoEmbeddable: 'true',
+        // videoSyndicated: 'true',
+        maxResults: 5,
+        videoDefinition: 'any',
+        relevanceLanguage: 'en',
       },
-    );
+    });
 
     // Get all video ids from search results that used to get info of those (contains more params like containDetails, status,...)
     let videoIds = '';
@@ -330,11 +328,12 @@ class AddLink extends Component {
       muteVideoRequest,
       muteNowPlaying,
       userDid,
-      match: { params: { stationId } },
+      match: {
+        params: { stationId },
+      },
       user: { userId, username, name, avatar_url },
       notification,
     } = this.props;
-
 
     // If authenticated
     setPreviewVideo();
@@ -607,7 +606,10 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withRouter,
   withNotification,
 )(AddLink);

@@ -204,5 +204,8 @@ const mapDispatchToProps = dispatch => ({
 export default compose(
   withStyles(styles),
   withNotification,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
 )(ChatBox);

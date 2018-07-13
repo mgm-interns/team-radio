@@ -31,12 +31,19 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    const { match: { params } } = this.props;
+    const {
+      match: { params },
+    } = this.props;
     this.props.getVisitorByUsername(params.username);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { visitor, match: { params }, user, isOwner } = nextProps;
+    const {
+      visitor,
+      match: { params },
+      user,
+      isOwner,
+    } = nextProps;
     const authenticatedUser = this.props.user;
     const visitedUser = this.props.visitor;
 
@@ -152,7 +159,10 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withNotification,
   withRouter,
 )(Profile);

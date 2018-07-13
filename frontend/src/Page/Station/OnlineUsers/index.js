@@ -170,7 +170,10 @@ class OnlineUsers extends Component {
   }
 
   render() {
-    const { classes, currentStation: { online_count } } = this.props;
+    const {
+      classes,
+      currentStation: { online_count },
+    } = this.props;
     return [
       <div
         key={1}

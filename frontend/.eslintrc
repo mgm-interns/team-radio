@@ -4,13 +4,15 @@
   "rules": {
     "camelcase": ["off"],
     "react/display-name": ["off"],
+    "react/no-deprecated": ["off"],
     "class-methods-use-this": ["off"],
     "global-require": ["off"],
     "no-console": ["off"],
     "react/prop-types": ["warn"],
     "import/no-extraneous-dependencies": ["off"],
     "import/extensions": ["off"],
-    "import/no-unresolved": ["off"]
+    "import/no-unresolved": ["off"],
+    "linebreak-style": ["error", "unix"]
   },
   "env": {
     "browser": true

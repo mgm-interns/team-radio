@@ -74,5 +74,8 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   withNotification,
-  connect(undefined, mapDispatchToProps),
+  connect(
+    undefined,
+    mapDispatchToProps,
+  ),
 )(withStyles(styles)(CoverPhoto));

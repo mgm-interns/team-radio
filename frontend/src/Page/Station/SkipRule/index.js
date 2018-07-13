@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import withStyles from 'material-ui/styles/withStyles';
 import { withNotification } from 'Component/Notification';
-import { withScrollbarInstances } from 'Component/Scrollbar';
 import Tooltip from 'material-ui/Tooltip';
 import FaCog from 'react-icons/lib/fa/cog';
 import IconButton from 'material-ui/IconButton';
@@ -16,7 +15,6 @@ import Zoom from 'material-ui/transitions/Zoom';
 import { setSkipRule } from 'Redux/api/skipRule';
 import Card from 'material-ui/Card';
 import { FormControl, FormControlLabel } from 'material-ui/Form';
-import Collapse from 'material-ui/transitions/Collapse';
 import styles from './styles';
 
 class StationSkipRule extends Component {
@@ -154,7 +152,9 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withNotification,
-  withScrollbarInstances,
 )(StationSkipRule);

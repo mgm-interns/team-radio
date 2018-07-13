@@ -73,13 +73,11 @@ export default router => {
     const skipByOwner = req.body.skip_by_station_owner;
 
     try {
-        await stationController.changeSkipSetting(stationId, userId, skipByOwner);
-        res.status(200).json({ message: 'Saved your setting!' });
+      await stationController.changeSkipSetting(stationId, userId, skipByOwner);
+      res.status(200).json({ message: 'Saved your setting!' });
     } catch (err) {
-      console.log('Error when change settings: ' + err.message)
-      res
-        .status(400)
-        .json({ message: 'Something went wrong!' });
+      console.log('Error when change settings: ' + err.message);
+      res.status(400).json({ message: 'Something went wrong!' });
     }
   });
 

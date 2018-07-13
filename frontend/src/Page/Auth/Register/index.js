@@ -58,8 +58,14 @@ class Register extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
-    const { addUserResponse: { error, data, isAuthenticated } } = nextProps;
-    const { addUserResponse: { data: { token } } } = this.props;
+    const {
+      addUserResponse: { error, data, isAuthenticated },
+    } = nextProps;
+    const {
+      addUserResponse: {
+        data: { token },
+      },
+    } = this.props;
 
     if (error !== null) {
       this.setState({
@@ -243,18 +249,20 @@ Register.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-    onSubmit: ({name, username, email, password}) => {
-        let stationLocalToken = localStorage.getItem(constant.LOCAL_STORAGE_ANONYMOUS_STATIONS);
-        dispatch(
-            addUser({
-                name: trimText(name),
-                username: trimText(username),
-                email: trimText(email),
-                password: trimText(password),
-                localstations: trimText(stationLocalToken),
-            }),
-        );
-    }
+  onSubmit: ({ name, username, email, password }) => {
+    let stationLocalToken = localStorage.getItem(
+      constant.LOCAL_STORAGE_ANONYMOUS_STATIONS,
+    );
+    dispatch(
+      addUser({
+        name: trimText(name),
+        username: trimText(username),
+        email: trimText(email),
+        password: trimText(password),
+        localstations: trimText(stationLocalToken),
+      }),
+    );
+  },
 });
 
 const mapStateToProps = state => ({
@@ -262,7 +270,10 @@ const mapStateToProps = state => ({
 });
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   reduxForm({
     form: 'registerForm',
     validate: registerValidate,

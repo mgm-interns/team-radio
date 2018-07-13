@@ -30,7 +30,9 @@ class ForgotPassword extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { user: { error, data } } = nextProps;
+    const {
+      user: { error, data },
+    } = nextProps;
 
     if (error) {
       this.setState({
@@ -168,7 +170,10 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   reduxForm({
     form: 'forgotForm',
   }),

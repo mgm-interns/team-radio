@@ -43,8 +43,14 @@ class Login extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
-    const { getUserResponse: { error, data, isAuthenticated } } = nextProps;
-    const { getUserResponse: { data: { token } } } = this.props;
+    const {
+      getUserResponse: { error, data, isAuthenticated },
+    } = nextProps;
+    const {
+      getUserResponse: {
+        data: { token },
+      },
+    } = this.props;
 
     if (error) {
       this.setState({
@@ -274,11 +280,22 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onSubmit: data => dispatch(getUser(data)),
-  addUserBySocialAccount: data => dispatch(addUserBySocialAccount({...data, localstations: localStorage.getItem(constant.LOCAL_STORAGE_ANONYMOUS_STATIONS)})),
+  addUserBySocialAccount: data =>
+    dispatch(
+      addUserBySocialAccount({
+        ...data,
+        localstations: localStorage.getItem(
+          constant.LOCAL_STORAGE_ANONYMOUS_STATIONS,
+        ),
+      }),
+    ),
 });
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   reduxForm({
     form: 'loginForm',
   }),

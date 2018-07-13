@@ -93,7 +93,11 @@ class Header extends Component {
   }
 
   render() {
-    const { classes, loading, user: { cover_url } } = this.props;
+    const {
+      classes,
+      loading,
+      user: { cover_url },
+    } = this.props;
 
     if (loading) {
       return this._renderLoading();
@@ -128,4 +132,7 @@ Header.defaultProps = {
   loading: false,
 };
 
-export default compose(withStyles(styles), withNotification)(Header);
+export default compose(
+  withStyles(styles),
+  withNotification,
+)(Header);

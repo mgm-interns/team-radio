@@ -30,7 +30,9 @@ class ResetPassword extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { user: { error, data } } = nextProps;
+    const {
+      user: { error, data },
+    } = nextProps;
 
     if (error) {
       this.setState({
@@ -179,7 +181,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   reduxForm({
     form: 'forgotForm',
     validate: registerValidate,

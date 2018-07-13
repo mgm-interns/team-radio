@@ -65,12 +65,11 @@ class Player {
   skipSongByStationOwner = async ownerId => {
     // Get list of songs not played yet
     const playlist = await stationController.getAvailableListSong(
-        this.stationId,
+      this.stationId,
     );
 
     // Check songs will be skipped
     playlist.forEach(song => {
-
       let skip = false;
 
       song.down_vote.forEach(userId => {
@@ -274,12 +273,12 @@ class Player {
         );
         this.isSkipped = false;
         const station = await stationController.getStation(this.stationId);
-        if(station.owner_id) {
-            const stationScores = await stationController.addCreatorPoints(
-                this.stationId,
-                this.nowPlaying.song_id,
-            );
-            this._emitStationScores(stationScores);
+        if (station.owner_id) {
+          const stationScores = await stationController.addCreatorPoints(
+            this.stationId,
+            this.nowPlaying.song_id,
+          );
+          this._emitStationScores(stationScores);
         }
         this._setPlayableSong();
       }
@@ -318,11 +317,11 @@ class Player {
           Math.random() * Math.floor(playlist.length),
         );
         const song = playlist[randomIndex];
-        if(song.creator) {
-            songEmitter.emit(config.events.AUTOREPLAY_REQUEST, {
-                ...song,
-                stationId: this.stationId,
-            });
+        if (song.creator) {
+          songEmitter.emit(config.events.AUTOREPLAY_REQUEST, {
+            ...song,
+            stationId: this.stationId,
+          });
         }
       }
 

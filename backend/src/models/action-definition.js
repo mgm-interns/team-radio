@@ -10,31 +10,39 @@ const ActionDefinitionSchema = mongoose.Schema({
   },
   score: {
     type: Number,
-    default: 0
+    default: 0,
   },
   is_multiple: {
     type: Boolean,
-    default: false
+    default: false,
   },
 });
 
-var ActionDefinition = (module.exports = mongoose.model('ActionDefinition', ActionDefinitionSchema));
+var ActionDefinition = (module.exports = mongoose.model(
+  'ActionDefinition',
+  ActionDefinitionSchema,
+));
 
-module.exports.createActionDefinition = async (actionKey, score, isMultiple = false) => {
+module.exports.createActionDefinition = async (
+  actionKey,
+  score,
+  isMultiple = false,
+) => {
   return ActionDefinition.create(
     {
-      action_key : actionKey,
-      score : score,
-      is_multiple : isMultiple
-    }, function (error, data) {
+      action_key: actionKey,
+      score: score,
+      is_multiple: isMultiple,
+    },
+    function(error, data) {
       if (error) {
         console.log(error);
       }
       return data;
-    }
+    },
   );
 };
 
 module.exports.getActionDefinitionByKey = async actionKey => {
-  return ActionDefinition.findOne({ action_key: actionKey}).exec();
+  return ActionDefinition.findOne({ action_key: actionKey }).exec();
 };

@@ -32,7 +32,7 @@ const inputForm = {
       validate: [required],
       props: {
         placeholder: 'hello@example.com',
-        type: 'email'
+        type: 'email',
       },
     },
   },

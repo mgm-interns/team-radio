@@ -1,5 +1,5 @@
-import ScoreLogEvents from "./ScoreLogEvents";
+import ScoreLogEvents from './ScoreLogEvents';
 
 export default {
-    ScoreLogEvents
+  ScoreLogEvents,
 };

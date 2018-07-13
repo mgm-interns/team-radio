@@ -42,12 +42,22 @@ export default async (emitter, songId, userId, songUrl, stationId) => {
  * @param {String} songUrl Url of the song you want to mark as favourite
  */
 // eslint-disable-next-line
-const _addFavouriteSong = async (emitter, songId, userId, songUrl, stationId) => {
+const _addFavouriteSong = async (
+  emitter,
+  songId,
+  userId,
+  songUrl,
+  stationId,
+) => {
   let song = {};
 
   // eslint-disable-next-line
-  const status =
-    await userController.addFavouriteSong(songId, userId, songUrl, stationId);
+  const status = await userController.addFavouriteSong(
+    songId,
+    userId,
+    songUrl,
+    stationId,
+  );
 
   const listFavorited = await userController.getFavouritedSongs(userId);
 

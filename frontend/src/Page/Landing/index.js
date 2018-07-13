@@ -15,7 +15,9 @@ import Stations from './Stations';
 class Landing extends Component {
   componentWillReceiveProps(nextProps) {
     const { history } = this.props;
-    const { currentStation: { station } } = nextProps;
+    const {
+      currentStation: { station },
+    } = nextProps;
 
     const currentStationId =
       this.props.currentStation.station &&
@@ -49,6 +51,8 @@ const mapStateToProps = ({ api }) => ({
   currentStation: api.currentStation,
 });
 
-export default compose(connect(mapStateToProps), withRouter, withNotification)(
-  Landing,
-);
+export default compose(
+  connect(mapStateToProps),
+  withRouter,
+  withNotification,
+)(Landing);

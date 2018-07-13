@@ -5,7 +5,7 @@ import * as players from '../../players';
 export default async (userId, stationId) => {
   const station = await stationController.getStation(stationId);
   if (station.skip_by_station_owner) {
-      _skipByStationOwner(station.owner_id, stationId);
+    _skipByStationOwner(station.owner_id, stationId);
   } else {
     _skipByUsers(stationId);
   }
@@ -14,7 +14,7 @@ export default async (userId, stationId) => {
 const _skipByStationOwner = async (ownerId, stationId) => {
   const player = await players.getPlayer(stationId);
   player.skipSongByStationOwner(ownerId);
-}
+};
 
 const _skipByUsers = async stationId => {
   const player = await players.getPlayer(stationId);
@@ -22,5 +22,4 @@ const _skipByUsers = async stationId => {
 
   // Let player decide what song will be skipped
   player.updateOnlineUsers(listUserOnline);
-
-}
+};

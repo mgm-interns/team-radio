@@ -1,4 +1,7 @@
-import { CLIENT_CREATE_STATION, CLIENT_LOAD_STATION_PAGING } from 'Redux/actions';
+import {
+  CLIENT_CREATE_STATION,
+  CLIENT_LOAD_STATION_PAGING,
+} from 'Redux/actions';
 
 export const createStation = ({
   stationName,
@@ -10,7 +13,7 @@ export const createStation = ({
 });
 
 export const loadStationPaging = () => ({
-    type: CLIENT_LOAD_STATION_PAGING,
+  type: CLIENT_LOAD_STATION_PAGING,
 });
 
 export default {
