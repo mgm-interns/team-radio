@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import config from '../config/index';
 import { ObjectId } from 'mongodb';
+import config from '../config/index';
 
 const _safeObjectId = s => (ObjectId.isValid(s) ? new ObjectId(s) : null);
 
