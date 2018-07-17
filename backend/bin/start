@@ -14,6 +14,7 @@ require('babel-polyfill');
 const app = require('../src/app').default;
 const socket = require('../src/socket').default;
 const http = require('http');
+const { startWorker } = require('../src/worker');
 
 /**
  * Normalize a port into a number, string, or false.
@@ -93,5 +94,7 @@ server.on('listening', () => {
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
   console.log(`Listening on ${bind}`);
+
+  startWorker();
 });
 /* eslint-enable */

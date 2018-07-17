@@ -25,7 +25,7 @@ const stationSchema = mongoose.Schema({
         thumbnail: { type: String },
         duration: { type: Number, min: 0 },
         creator: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-        created_date: { type: Number, default: true },
+        created_date: { type: Number, default: new Date().getTime() },
         up_vote: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
         down_vote: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
         message: {
@@ -99,6 +99,7 @@ module.exports.deleteStation = stationId => {
     return Station.update(query, {
       $set: {
         is_delete: true,
+        should_be_delete: true,
       },
     });
   } catch (err) {

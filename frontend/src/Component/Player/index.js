@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import { LinearProgress } from 'material-ui/Progress';
 
-const ACCEPTABLE_DELAY = 1;
+const ACCEPTABLE_DELAY = process.env.REACT_APP_ACCEPTABLE_DELAY || 2; // seconds
 class Player extends PureComponent {
   constructor(props, context) {
     super(props, context);
