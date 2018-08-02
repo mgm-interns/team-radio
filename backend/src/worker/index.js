@@ -1,6 +1,7 @@
 import Worker, { normalizeDate } from '../models/worker';
 import { workerlog } from './logger';
 import { scanStations } from './stations';
+import { scanCommits } from './commits';
 
 export const startWorker = async () => {
   workerlog('stating worker');
@@ -12,9 +13,9 @@ export const startWorker = async () => {
     return null;
   }
 
-  const scanResult = await scanStations();
+  const [stationsResult] = await Promise.all([scanStations(), scanCommits()]);
 
-  const removedStations = scanResult.map(id => ({ station_id: id }));
+  const removedStations = stationsResult.map(id => ({ station_id: id }));
 
   workerlog(removedStations);
 

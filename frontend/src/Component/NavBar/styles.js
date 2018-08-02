@@ -41,9 +41,11 @@ export default ({ palette, breakpoints, spacing }) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  navItem: {
+  navItemWrapper: {
     textDecoration: 'none',
+  },
+  navItem: {
+    marginLeft: '16px',
     color: palette.white,
-    fontSize: '1rem',
   },
 });

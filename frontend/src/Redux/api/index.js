@@ -6,6 +6,7 @@ import user from './user';
 import visitor from './visitor';
 import skipRule from './skipRule';
 import favouriteSongs from './favouriteSongs';
+import commits from './commits';
 
 export default combineReducers({
   stations,
@@ -14,4 +15,5 @@ export default combineReducers({
   visitor,
   favouriteSongs,
   skipRule,
+  commits,
 });
