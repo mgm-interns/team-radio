@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Grid from 'material-ui/Grid';
 import Hidden from 'material-ui/Hidden';
+import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import HomeIcon from 'react-icons/lib/md/home';
 import fixture from 'Fixture/landing';
 import { compose } from 'redux';
-
-import styles from './styles';
+import WhatsNew from '../WhatsNew';
 import AuthLink from '../AuthLink';
+import styles from './styles';
 
 const MENUS = {
   home: {
@@ -92,10 +92,12 @@ class NavBar extends Component {
                       <Link
                         key={index}
                         to={MENUS[key].url}
-                        className={classes.navItem}
                         replace
+                        className={classes.navItemWrapper}
                       >
-                        {title}
+                        <Typography className={classes.navItem} type="body1">
+                          {title}
+                        </Typography>
                       </Link>
                     );
                   })}
@@ -106,6 +108,7 @@ class NavBar extends Component {
           <Grid item xs={8}>
             <Grid container className={classes.navContainer}>
               <Grid item className={classes.navWrapper}>
+                <WhatsNew />
                 <AuthLink dispatch={dispatch} />
               </Grid>
             </Grid>

@@ -56,7 +56,7 @@ class HttpRequest {
       case METHOD_GET:
         return param =>
           this._getDefaultAction({
-            endpoint: `${this.endpoint}/${param}`,
+            endpoint: `${this.endpoint}/${param || ''}`,
           });
       default:
         return payload =>

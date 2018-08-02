@@ -7,6 +7,7 @@ const handlers = [
   // Declare api handlers
   require('./user'),
   require('./station'),
+  require('./commits'),
 ];
 
 // Register handlers

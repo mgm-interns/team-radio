@@ -44,13 +44,16 @@ export default ({ palette, spacing }) => ({
     marginLeft: '16px',
     textDecoration: 'none',
     color: palette.white,
-    fontSize: '1rem',
+  },
+  userInfoContainer: {
+    cursor: 'pointer',
   },
   profileLink: {
     textDecoration: 'none',
     color: palette.black,
   },
   displayName: {
+    display: 'inline',
     color: palette.white,
     paddingLeft: spacing.doubleBaseMargin,
   },
