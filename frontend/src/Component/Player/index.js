@@ -13,6 +13,7 @@ class Player extends PureComponent {
       seektime: props.seektime,
       receivedAt: props.receivedAt,
       isPaused: false,
+      playedSeconds: 0,
     };
     this._onStart = this._onStart.bind(this);
     this._onPause = this._onPause.bind(this);
@@ -36,7 +37,11 @@ class Player extends PureComponent {
   }
 
   seekToTime({ seektime, receivedAt }) {
-    this.playerRef.seekTo(Player._getExactlySeektime({ seektime, receivedAt }));
+    const exactlyTime = Player._getExactlySeektime({ seektime, receivedAt });
+    const differentTime = Math.abs(exactlyTime - this.state.playedSeconds);
+    if (differentTime > ACCEPTABLE_DELAY) {
+      this.playerRef.seekTo(exactlyTime);
+    }
   }
 
   static _getExactlySeektime({ seektime, receivedAt }) {
@@ -51,6 +56,7 @@ class Player extends PureComponent {
 
   _onProgress({ played, loaded, playedSeconds }) {
     this.setState({
+      playedSeconds,
       played: played * 100,
       buffer: loaded * 100,
     });
