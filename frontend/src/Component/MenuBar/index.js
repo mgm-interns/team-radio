@@ -45,14 +45,15 @@ class MenuBar extends Component {
     if (!isElectronInstance()) return null;
 
     return (
-      <AppBar
-        className={classes.container}
-        onDoubleClick={this.handleMaximizeButton}
-      >
+      <AppBar className={classes.container}>
         <Toolbar className={classes.toolbar}>
           <Grid container className={classes.content}>
-            <Grid item xs={12}>
-              <Grid container justify="space-between">
+            <Grid item xs={12} className={classes.contentWrapper}>
+              <Grid container className={classes.contentContainer}>
+                <div
+                  className={classes.draggable}
+                  onDoubleClick={this.handleMaximizeButton}
+                />
                 <div className={classes.rightContainer}>
                   <IconButton
                     className={classes.actionButton}

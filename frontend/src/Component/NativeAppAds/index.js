@@ -49,7 +49,6 @@ class NativeAppAds extends Component {
             .
           </Typography>
         </div>
-        </div>
       </div>
     );
   }
