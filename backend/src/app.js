@@ -5,7 +5,8 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
 import path from 'path';
-const mongoose = require('mongoose');
+import compression from 'compression';
+import mongoose from 'mongoose';
 
 import Routes from './routes';
 import * as players from './players';
@@ -54,6 +55,7 @@ const app = express();
 app.set('superSecret', 'iloveteamradio');
 app.use(logger('dev'));
 app.use(bodyParser.json());
+app.use(compression());
 app.use(
   bodyParser.urlencoded({
     extended: false,

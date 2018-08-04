@@ -2,7 +2,7 @@ export default ({ palette, spacing }) => ({
   avatar: {
     width: 30,
     height: 30,
-    marginLeft: '16px',
+    marginLeft: spacing.doubleBaseMargin,
     borderRadius: '40px',
     cursor: 'pointer',
   },
@@ -40,9 +40,11 @@ export default ({ palette, spacing }) => ({
   dropdownIcon: {
     color: palette.white,
   },
-  navItem: {
-    marginLeft: '16px',
+  navLinkWrapper: {
     textDecoration: 'none',
+  },
+  navItem: {
+    marginLeft: spacing.doubleBaseMargin,
     color: palette.white,
   },
   userInfoContainer: {

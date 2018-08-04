@@ -1,6 +1,6 @@
 import Commit from '../models/commit';
 
-export const getRepositoryCommits = async (limit = 10) => {
+export const getRepositoryCommits = async (limit = 20) => {
   try {
     const commits = await Commit.find({
       'commit.verification.verified': false, // Ignore verified commit on Github

@@ -16,3 +16,4 @@ export { default as WavingAnimation } from './WavingAnimation';
 export { default as UserAvatar } from './UserAvatar';
 export { default as CoverPhoto } from './CoverPhoto';
 export { default as QRCode } from './QRCode';
+export { default as NativeAppAds } from './NativeAppAds';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import { Notification } from 'Component';
+import { Notification, NativeAppAds } from 'Component';
 import { compose } from 'redux';
 import { verifyToken } from 'Redux/api/user/user';
 import { removeAuthenticationState } from 'Configuration';
@@ -35,6 +35,7 @@ class App extends Component {
       <div className={classes.container}>
         <Router />
         <Notification.AppNotification />
+        <NativeAppAds />
       </div>
     );
   }

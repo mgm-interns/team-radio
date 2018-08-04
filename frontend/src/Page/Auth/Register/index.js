@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
@@ -13,22 +12,18 @@ import Icon from 'material-ui/Icon';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import { FormHelperText } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
-
 import { addUser } from 'Redux/api/user/user';
 import { Field, reduxForm } from 'redux-form';
-
 import { NavBar, TextView } from 'Component';
 import { withNotification } from 'Component/Notification';
+import DoneIcon from 'react-icons/lib/md/done';
 import { trimText } from 'Transformer/transformText';
-import * as constant from '../../../Util/constants';
-
 import {
   saveAuthenticationState,
   loadAuthenticationState,
 } from 'Configuration';
-
 import { registerValidate } from 'Util/validate';
-
+import * as constant from '../../../Util/constants';
 import fields from './fields';
 import styles from './styles';
 
@@ -113,7 +108,9 @@ class Register extends Component {
         <ul className={classes.listWrapper}>
           {this.state.benefits.map((benefit, index) => (
             <li key={index} className={classes.listItem}>
-              <Icon>done</Icon>
+              <Icon>
+                <DoneIcon />
+              </Icon>
               <span className={classes.listText}>{benefit}</span>
             </li>
           ))}
@@ -250,7 +247,7 @@ Register.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
   onSubmit: ({ name, username, email, password }) => {
-    let stationLocalToken = localStorage.getItem(
+    const stationLocalToken = localStorage.getItem(
       constant.LOCAL_STORAGE_ANONYMOUS_STATIONS,
     );
     dispatch(

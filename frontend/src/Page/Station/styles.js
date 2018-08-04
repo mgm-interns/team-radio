@@ -1,3 +1,5 @@
+import { isElectronInstance } from 'Util/electron';
+
 export default ({ breakpoints, palette, spacing, typography }) => ({
   logo: {
     height: 35,
@@ -25,7 +27,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
   switcherContainer: {
     margin: 'auto',
     padding: '0 !important',
-    marginTop: 56,
+    marginTop: 56 + (isElectronInstance() ? 36 : 0),
     background: palette.lightGrey['500'],
     marginBottom: 20,
   },
