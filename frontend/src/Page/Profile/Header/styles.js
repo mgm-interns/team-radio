@@ -1,3 +1,5 @@
+import { isElectronInstance } from 'Util/electron';
+
 export default ({ breakpoints, palette, spacing }) => ({
   coverContainer: {
     margin: 'auto',
@@ -38,7 +40,7 @@ export default ({ breakpoints, palette, spacing }) => ({
     },
   },
   coverBackground: {
-    paddingTop: 56,
+    paddingTop: 56 + (isElectronInstance() ? 36 : 0),
     width: spacing.fullWidth,
     display: 'flex',
     alignItems: 'center',

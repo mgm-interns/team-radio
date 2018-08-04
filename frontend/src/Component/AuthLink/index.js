@@ -108,11 +108,11 @@ class AuthLink extends Component {
       <Fragment>
         {!user.isAuthenticated && (
           <Fragment>
-            <Link to="/auth/login" className={classes.navItem}>
-              Login
+            <Link to="/auth/login" className={classes.navLinkWrapper}>
+              <Typography className={classes.navItem}>Login</Typography>
             </Link>
-            <Link to="/auth/register" className={classes.navItem}>
-              Register
+            <Link to="/auth/register" className={classes.navLinkWrapper}>
+              <Typography className={classes.navItem}>Register</Typography>
             </Link>
           </Fragment>
         )}

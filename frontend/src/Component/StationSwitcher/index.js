@@ -43,7 +43,6 @@ class StationSwitcher extends Component {
       joinStationRequest({ userId, stationId: station.station_id });
       setPreviewVideo();
       // Scroll to left after switch successful
-      console.log(this.scrollbarRef);
       this.scrollbarRef.scroll({ left: 0, behavior: 'smooth' });
     }
     notification.app.success({

@@ -366,7 +366,7 @@ class StationPage extends Component {
             justify={'center'}
             className={classes.switcherContent}
           >
-            <Grid item xs={12} xl={8} style={{ padding: 0 }}>
+            <Grid item xs={12} style={{ padding: 0 }}>
               <StationSwitcher disable={disableSwitcher} />
             </Grid>
           </Grid>
@@ -385,7 +385,7 @@ class StationPage extends Component {
               xs={12}
               md={7}
               lg={6}
-              xl={4}
+              xl={6}
               className={passive ? classes.playerContainer : null}
             >
               <Grid
@@ -479,10 +479,10 @@ class StationPage extends Component {
                 ) : null}
               </Grid>
             </Grid>
-            <Grid item xs={12} md={5} lg={3} xl={2}>
+            <Grid item xs={12} md={5} lg={3} xl={3}>
               {this._renderTabs()}
             </Grid>
-            <Grid item xs={12} md={12} lg={3} xl={2}>
+            <Grid item xs={12} md={12} lg={3} xl={3}>
               <Chatbox />
             </Grid>
           </Grid>

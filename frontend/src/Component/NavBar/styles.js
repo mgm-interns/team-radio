@@ -1,18 +1,4 @@
 export default ({ palette, breakpoints, spacing }) => ({
-  container: {
-    margin: 0,
-    zIndex: '10',
-    width: spacing.fullWidth,
-    height: 60,
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    fontFamily: 'Lato',
-    transition: 'all 0.3s',
-    [breakpoints.down('md')]: {
-      background: 'rgba(0,0,0,0.2)',
-    },
-  },
   wrapper: {
     margin: 'auto',
     [breakpoints.up('lg')]: {
