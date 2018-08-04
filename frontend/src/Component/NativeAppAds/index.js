@@ -27,7 +27,6 @@ class NativeAppAds extends Component {
 
   renderMessage() {
     const { classes } = this.props;
-    if (isElectronInstance()) return null;
     return (
       <div className={classes.container}>
         <div className={classes.leftSection}>
@@ -50,12 +49,14 @@ class NativeAppAds extends Component {
             .
           </Typography>
         </div>
+        </div>
       </div>
     );
   }
 
   render() {
     const { classes } = this.props;
+    if (isElectronInstance()) return null;
     return (
       <Snackbar
         open={this.state.isOpen}
