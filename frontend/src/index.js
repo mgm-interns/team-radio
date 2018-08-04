@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { MuiThemeProvider } from 'material-ui/styles';
 import 'cropperjs/dist/cropper.css';
+import { isElectronInstance } from 'Util/electron';
 import HttpsRedirector from 'Container/HttpsRedirector';
 import RadioRedirector from 'Container/RadioRedirector';
 import { registerServiceWorker } from './Configuration';
@@ -19,5 +20,6 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 
-//
-registerServiceWorker();
+if (!isElectronInstance()) {
+  registerServiceWorker();
+}
