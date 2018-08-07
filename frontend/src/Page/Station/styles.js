@@ -108,7 +108,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     lineHeight: 1.8,
     marginTop: spacing.doubleBaseMargin,
   },
-  passiveStationMainColor: {
+  mutedVolumeInPassive: {
     color: palette.lightGrey.A700,
   },
   loadingTitle: {
@@ -127,5 +127,15 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     fontFamily: 'Lato',
     color: 'rgba(0,0,0,0.54)',
     textTransform: 'none',
+  },
+  chatContainer: {
+    position: 'fixed',
+    top: '50%',
+    right: 20,
+    width: '25%',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    bottom: spacing.baseMargin,
+    zIndex: 99,
   },
 });

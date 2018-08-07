@@ -6,7 +6,7 @@ import LightBulbIcon from 'react-icons/lib/fa/lightbulb-o';
 import VolumeUpIcon from 'react-icons/lib/md/volume-up';
 import VolumeOffIcon from 'react-icons/lib/md/volume-off';
 import MdMusicVideo from 'react-icons/lib/md/music-video';
-import FaQrcode from 'react-icons/lib/fa/qrcode';
+// import FaQrcode from 'react-icons/lib/fa/qrcode';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
@@ -61,8 +61,9 @@ class StationPage extends Component {
       nowPlayingSong: null,
       isMobileBrowser: Util.isMobileBrowser(),
       isEnabledVideo: true,
-      isShowingQRCode: false,
+      // isShowingQRCode: false,
       isOnLight: true,
+      toggleChatBox: false,
     };
 
     if (this.state.isMobileBrowser) {
@@ -76,7 +77,7 @@ class StationPage extends Component {
     this._checkValidStation = this._checkValidStation.bind(this);
     this._getFilteredPlaylist = this._getFilteredPlaylist.bind(this);
     this._toggleShowingVideoPlayer = this._toggleShowingVideoPlayer.bind(this);
-    this._toggleShowingQRCode = this._toggleShowingQRCode.bind(this);
+    // this._toggleShowingQRCode = this._toggleShowingQRCode.bind(this);
   }
 
   componentWillMount() {
@@ -258,9 +259,9 @@ class StationPage extends Component {
     this.setState({ isEnabledVideo: !this.state.isEnabledVideo });
   }
 
-  _toggleShowingQRCode() {
-    this.setState({ isShowingQRCode: !this.state.isShowingQRCode });
-  }
+  // _toggleShowingQRCode() {
+  //   this.setState({ isShowingQRCode: !this.state.isShowingQRCode });
+  // }
 
   _handleTabChange(e, value) {
     this.setState({ tabValue: value });
@@ -358,6 +359,7 @@ class StationPage extends Component {
         key={2}
         direction="row"
         container
+        justify={'center'}
         className={classes.containerWrapper}
       >
         <Grid item xs={12} className={classes.switcherContainer}>
@@ -366,26 +368,24 @@ class StationPage extends Component {
             justify={'center'}
             className={classes.switcherContent}
           >
-            <Grid item xs={12} style={{ padding: 0 }}>
+            <Grid item lg={10} md={12} xs={12} style={{ padding: 0 }}>
               <StationSwitcher disable={disableSwitcher} />
             </Grid>
           </Grid>
         </Grid>
-        {!isShowingQRCode ? null : (
-          <Grid item xs={12} className={classes.container}>
-            <div className={classes.qrCodeContainer}>
-              <QRCode text={window.location.href} />
-            </div>
-          </Grid>
-        )}
-        <Grid item md={12} xs={12}>
+        {/* {!isShowingQRCode ? null : ( */}
+        {/* <Grid item lg={10} md={12} xs={12} className={classes.container}> */}
+        {/* <div className={classes.qrCodeContainer}> */}
+        {/* <QRCode text={window.location.href} /> */}
+        {/* </div> */}
+        {/* </Grid> */}
+        {/* )} */}
+        <Grid item lg={10} md={12} xs={12}>
           <Grid container justify={'center'}>
             <Grid
               item
               xs={12}
-              md={7}
-              lg={6}
-              xl={6}
+              md={6}
               className={passive ? classes.playerContainer : null}
             >
               <Grid
@@ -416,9 +416,10 @@ class StationPage extends Component {
                   <div className={classes.nowPlayingActions}>
                     {!nowPlaying.url || !isEnabledVideo ? null : (
                       <IconButton
+                        color={muted ? 'default' : 'primary'}
                         onClick={this._onVolumeClick}
                         className={classNames({
-                          [classes.passiveStationMainColor]: passive,
+                          [classes.mutedVolumeInPassive]: passive && muted,
                         })}
                       >
                         {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
@@ -442,14 +443,14 @@ class StationPage extends Component {
                       </IconButton>
                     )}
 
-                    {passive ? null : (
-                      <IconButton
-                        color={isShowingQRCode ? 'primary' : 'default'}
-                        onClick={this._toggleShowingQRCode}
-                      >
-                        <FaQrcode />
-                      </IconButton>
-                    )}
+                    {/* {passive ? null : ( */}
+                    {/* <IconButton */}
+                    {/* color={isShowingQRCode ? 'primary' : 'default'} */}
+                    {/* onClick={this._toggleShowingQRCode} */}
+                    {/* > */}
+                    {/* <FaQrcode /> */}
+                    {/* </IconButton> */}
+                    {/* )} */}
                     {passive ? null : <StationSharing />}
                     {(!passive && isOwnerStation) === true ? (
                       <StationSkipRule />
@@ -457,15 +458,17 @@ class StationPage extends Component {
                   </div>
                 </Grid>
                 {isEnabledVideo ? (
-                  <NowPlaying
-                    className={classNames([classes.content], {
-                      [classes.emptyNowPlaying]: !playlist,
-                      [classes.nowPlayingPassive]: passive,
-                    })}
-                    autoPlay={true}
-                    muted={muted}
-                    playlistLength={playlist.length}
-                  />
+                  <Grid item xs={12}>
+                    <NowPlaying
+                      className={classNames([classes.content], {
+                        [classes.emptyNowPlaying]: !playlist,
+                        [classes.nowPlayingPassive]: passive,
+                      })}
+                      autoPlay={true}
+                      muted={muted}
+                      playlistLength={playlist.length}
+                    />
+                  </Grid>
                 ) : null}
                 {nowPlayingSong && passive ? (
                   <div className={classes.nowPlayingInfo}>
@@ -479,21 +482,16 @@ class StationPage extends Component {
                 ) : null}
               </Grid>
             </Grid>
-            <Grid item xs={12} md={5} lg={3} xl={3}>
+            <Grid item md={3} xs={12}>
               {this._renderTabs()}
             </Grid>
-            <Grid item xs={12} md={12} lg={3} xl={3}>
+            <Grid item md={3} xs={12}>
               <Chatbox />
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Grid container justify={'center'}>
-            <Grid item xs={12} lg={9} xl={6}>
-              <AddLink />
-            </Grid>
-            <Grid item xs={12} lg={3} xl={2} />
-          </Grid>
+        <Grid item lg={10} md={12} xs={12}>
+          <AddLink />
         </Grid>
       </Grid>,
       <Footer key={3} />,
