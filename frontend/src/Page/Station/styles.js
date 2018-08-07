@@ -108,7 +108,7 @@ export default ({ breakpoints, palette, spacing, typography }) => ({
     lineHeight: 1.8,
     marginTop: spacing.doubleBaseMargin,
   },
-  mutedVolumeInPassive: {
+  passiveStationMainColor: {
     color: palette.lightGrey.A700,
   },
   loadingTitle: {

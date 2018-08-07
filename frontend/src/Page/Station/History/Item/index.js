@@ -80,7 +80,7 @@ class HistoryItem extends Component {
           </Tooltip>
           <div className={classes.creator}>
             Added by
-            {creator === null ? (
+            {!creator ? (
               ' Unregistered User'
             ) : (
               <Tooltip placement={'bottom'} title={creator.name}>

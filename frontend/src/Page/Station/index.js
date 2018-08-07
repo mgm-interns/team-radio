@@ -115,11 +115,6 @@ class StationPage extends Component {
 
     this._checkValidStation(nextProps);
 
-    // Close passive screen if nowPlaying is finished
-    if (!nowPlaying.url) {
-      this.props.passiveUserRequest();
-    }
-
     // Update video's information when nowPlaying is changed
     if (this.state.isPassive && nowPlaying.url) {
       this._getFilteredPlaylist();
@@ -419,7 +414,7 @@ class StationPage extends Component {
                         color={muted ? 'default' : 'primary'}
                         onClick={this._onVolumeClick}
                         className={classNames({
-                          [classes.mutedVolumeInPassive]: passive && muted,
+                          [classes.passiveStationMainColor]: passive && muted,
                         })}
                       >
                         {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
