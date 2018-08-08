@@ -1,4 +1,4 @@
-export default ({ breakpoints, spacing }) => ({
+export default ({ breakpoints, spacing, palette }) => ({
   chatboxContainer: {
     margin: 0,
     width: '100%',
@@ -79,7 +79,7 @@ export default ({ breakpoints, spacing }) => ({
     borderRadius: spacing.baseMargin,
     padding: `${spacing.baseMargin}px ${spacing.doubleBaseMargin}px`,
     fontSize: 14,
-    wordBreak: 'break-all',
+    wordBreak: 'break-word',
   },
 
   otherMessagesBackground: {

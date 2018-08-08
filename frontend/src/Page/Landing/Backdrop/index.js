@@ -33,6 +33,7 @@ class Backdrop extends Component {
     this._handleStationNameChanged = this._handleStationNameChanged.bind(this);
     this._handleSwitchChange = this._handleSwitchChange.bind(this);
     this._submit = this._submit.bind(this);
+    this.onKeyDownPress = this.onKeyDownPress.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -47,7 +48,7 @@ class Backdrop extends Component {
       const localStationsToken = localStorage.getItem(
         constants.LOCAL_STORAGE_ANONYMOUS_STATIONS,
       );
-      let localStationsArray = localStationsToken
+      const localStationsArray = localStationsToken
         ? JSON.parse(localStationsToken)
         : [];
       localStationsArray.push(station.station_id);
