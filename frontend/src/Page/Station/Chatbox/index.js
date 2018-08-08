@@ -43,7 +43,9 @@ class ChatBox extends Component {
 
   scrollToBottom() {
     const el = this.el; // eslint-disable-line prefer-destructuring
-    el.scrollTop = el.scrollHeight;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
   }
 
   _renderMessages() {

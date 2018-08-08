@@ -36,10 +36,6 @@ class Backdrop extends Component {
     this.onKeyDownPress = this.onKeyDownPress.bind(this);
   }
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.onKeyDownPress);
-  }
-
   componentWillReceiveProps(nextProps) {
     const { history } = this.props;
     const { station, message } = nextProps;
@@ -61,17 +57,6 @@ class Backdrop extends Component {
         JSON.stringify(localStationsArray),
       );
       history.replace(`/station/${station.station_id}`);
-    }
-  }
-
-  componentWillUnmount() {
-    document.addEventListener('keydown', this.onKeyDownPress);
-  }
-
-  onKeyDownPress(e) {
-    if (e.keyCode === 13 || e.key === 'Enter') {
-      this._submit();
-      e.preventDefault();
     }
   }
 
