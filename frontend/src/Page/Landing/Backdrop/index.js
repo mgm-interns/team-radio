@@ -33,7 +33,6 @@ class Backdrop extends Component {
     this._handleStationNameChanged = this._handleStationNameChanged.bind(this);
     this._handleSwitchChange = this._handleSwitchChange.bind(this);
     this._submit = this._submit.bind(this);
-    this.onKeyDownPress = this.onKeyDownPress.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
