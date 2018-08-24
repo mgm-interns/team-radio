@@ -1,0 +1,30 @@
+{
+  "name": "team-radio",
+  "version": "1.0.0",
+  "description": "A playlist for teams that can be edited collaboratively by all users.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgm-interns/team-radio.git"
+  },
+  "keywords": [
+    "team-radio"
+  ],
+  "author": "@pvtri96",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mgm-interns/team-radio/issues"
+  },
+  "homepage": "https://github.com/mgm-interns/team-radio#readme",
+  "scripts": {
+    "start": "cd server && npm start",
+    "install:server": "cd server && npm install",
+    "build:server": "cd server && npm run build",
+    "build": "npm-run-all --parallel build:**",
+    "postinstall": "npm-run-all install:** build",
+    "clean": "rm -rf node_modules server/node_modules"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.3"
+  }
+}

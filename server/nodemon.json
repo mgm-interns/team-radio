@@ -1,0 +1,10 @@
+{
+    "verbose": true,
+    "restartable": "rs",
+    "watch": ["**/*.js"],
+    "ignore": [
+        "node_modules",
+        "src",
+        "lib"
+    ]
+}

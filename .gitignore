@@ -1,0 +1,17 @@
+# Dependencies
+node_modules
+
+# IDE
+.vscode
+.idea
+*.iml
+
+# Bundles
+dist
+lib
+
+# Log
+*.log
+
+# Environment
+.env
