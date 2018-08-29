@@ -1,0 +1,15 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+      "tslint:latest",
+      "tslint-react",
+      "tslint-config-airbnb",
+      "tslint-config-prettier"
+    ],
+    "jsRules": {},
+    "rules": {
+      // override tslint-react rules here
+      "jsx-wrap-multiline": false
+    },
+    "rulesDirectory": []
+}
