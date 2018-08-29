@@ -1,1 +1,1 @@
-export * from './StationSubscription';
+export * from './StationsManager';

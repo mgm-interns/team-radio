@@ -1,4 +1,4 @@
-import { IContext } from 'config';
+import { IAuthenticatedContext, IContext } from 'config';
 import { AuthToken, User } from 'entities';
 import { BadRequestException, ForbiddenException, UserNotFoundException } from 'exceptions';
 import { LoginInput, RegisterInput } from 'inputs';
@@ -18,16 +18,16 @@ export class AuthenticationResolver {
 
   @Authorized()
   @Query(returns => User)
-  async currentUser(@Ctx() context: IContext): Promise<User> {
+  public async currentUser(@Ctx() context: IAuthenticatedContext): Promise<User> {
     return context.user as User;
   }
 
   @Mutation(returns => AuthToken)
-  async login(
+  public async login(
     @Arg('credential', type => LoginInput) credential: LoginInput,
     @Ctx() context: IContext
   ): Promise<AuthToken> {
-    if (context.user) throw new BadRequestException('You has already logged in. Please logout first.');
+    if (context.user && context.user.isUser()) throw new BadRequestException('Already logged in. Please logout first.');
     if (credential.email && credential.username) throw new ForbiddenException('Only login with username OR email');
     if (!credential.email && !credential.username) throw new ForbiddenException('Username OR email is required');
 
@@ -42,8 +42,11 @@ export class AuthenticationResolver {
   }
 
   @Mutation(returns => User)
-  async register(@Arg('user', type => RegisterInput) input: RegisterInput, @Ctx() context: IContext): Promise<User> {
-    if (context.user) throw new BadRequestException('You has already logged in. Please logout first.');
+  public async register(
+    @Arg('user', type => RegisterInput) input: RegisterInput,
+    @Ctx() context: IContext
+  ): Promise<User> {
+    if (context.user && context.user.isUser()) throw new BadRequestException('Already logged in. Please logout first.');
     if (!input.email && !input.username) throw new ForbiddenException('Username OR email is required');
 
     const { username, email, password } = input;

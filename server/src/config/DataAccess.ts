@@ -3,35 +3,27 @@ import { User } from 'entities/user';
 import { Logger } from 'services/logger';
 import { Inject, Service } from 'typedi';
 import { Connection, ConnectionOptions, createConnection, EntitySchema, getConnectionOptions } from 'typeorm';
-import { UsersWorker } from 'workers';
 
 @Service()
 export class DataAccess {
   @Inject()
   private logger: Logger;
 
-  @Inject()
-  private usersWorker: UsersWorker;
+  private _connection: Connection;
 
-  private connection: Connection;
+  public get connection(): Connection {
+    return this._connection;
+  }
 
   public async connect() {
     try {
       const connectionOptions = await DataAccess.getConnectionOptions([User, Station]);
-      this.connection = await createConnection(connectionOptions);
+      this._connection = await createConnection(connectionOptions);
       return this.connection;
     } catch (e) {
       this.logger.error('Error while connecting to mongoDB', e);
       throw e;
     }
-  }
-
-  public async startWorkers() {
-    return Promise.all([
-      // start users worker, has to inject connection here
-      this.usersWorker.start(this.connection)
-      // Start other workers here
-    ]);
   }
 
   public static async getConnectionOptions(

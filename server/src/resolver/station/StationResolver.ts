@@ -1,60 +1,67 @@
-import { IAuthenticatedContext } from 'config';
+import { IAuthenticatedContext, IContext, IAnonymousContext } from 'config';
 import { Station } from 'entities';
-import { StationNotFoundException } from 'exceptions/station';
+import { BadRequestException, StationNotFoundException } from 'exceptions';
 import { StationRepository } from 'repositories';
 import { Logger } from 'services';
-import { Arg, Authorized, Ctx, Mutation, Publisher, PubSub, Query, Resolver, Root, Subscription } from 'type-graphql';
+import { RealTimeStation, StationsManager } from 'subscription';
+import { Arg, Ctx, Mutation, Publisher, PubSub, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { Inject } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { StationSubscription } from 'subscription';
 
 @Resolver(of => Station)
 export class StationResolver {
   @Inject()
   private logger: Logger;
 
+  @Inject()
+  private stationsManager: StationsManager;
+
   @InjectRepository(Station)
   private stationRepository: StationRepository;
 
   @Query(returns => [Station], { description: 'Query stations list.' })
-  async stations(): Promise<Station[]> {
+  public async stations(): Promise<Station[]> {
     return this.stationRepository.find({});
   }
 
   @Query(returns => Station, { description: 'Query stations by ObjectId.' })
-  async stationById(@Arg('id') id: string): Promise<Station> {
+  public async stationById(@Arg('id') id: string): Promise<Station> {
     return this.stationRepository.findById(id);
   }
 
   @Query(returns => Station, { description: 'Query stations by stationId.' })
-  async stationByStationId(@Arg('stationId') stationId: string): Promise<Station> {
+  public async stationByStationId(@Arg('stationId') stationId: string): Promise<Station> {
     const station = await this.stationRepository.findOne({ where: { stationId } });
     if (!station) throw new StationNotFoundException();
     return station;
   }
 
-  @Authorized()
-  @Subscription({ topics: 'STATIONS', name: 'stations' })
-  stationsSubscription(
-    @Root() { stationId }: StationsSubPayload,
-    @Ctx() context: IAuthenticatedContext
-  ): StationSubscription {
-    return {
-      stationId,
-      date: new Date().getTime(),
-      user: context.user
-    };
+  @Subscription(returns => [RealTimeStation], { topics: 'STATIONS', name: 'stations' })
+  public subscribeStations(@Root() subscriptionPayload: any, @Ctx() context: IAuthenticatedContext): RealTimeStation[] {
+    return this.stationsManager.orderedStations;
   }
 
   @Mutation()
-  joinStation(
-    @PubSub('STATIONS') publish: Publisher<StationsSubPayload>,
-    @Arg('stationId') stationId: string
+  public joinStation(
+    @PubSub('STATIONS') publish: Publisher<any>,
+    @Arg('stationId') stationId: string,
+    @Ctx() context: IAuthenticatedContext | IAnonymousContext
   ): boolean {
-    return publish({ stationId });
+    if (this.stationsManager.joinStation(stationId, context.user)) {
+      return publish({});
+    }
+    throw new BadRequestException('Can not join station');
   }
-}
 
-interface StationsSubPayload {
-  stationId: string;
+  @Mutation()
+  public leaveStation(
+    @PubSub('STATIONS') publish: Publisher<any>,
+    @Arg('stationId') stationId: string,
+    @Ctx() context: IAuthenticatedContext | IAnonymousContext
+  ): boolean {
+    if (this.stationsManager.leaveStation(stationId, context.user)) {
+      return publish({});
+    }
+    throw new BadRequestException('Can not leave station');
+  }
 }

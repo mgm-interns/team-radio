@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IdentifiableUser } from 'config';
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import * as Bcrypt from 'bcrypt-nodejs';
@@ -6,7 +7,7 @@ import { AuthToken } from '.';
 
 @ObjectType()
 @Entity({ name: 'users' })
-export class User {
+export class User implements IdentifiableUser {
   @Field(type => ID)
   @ObjectIdColumn()
   _id: ObjectID;
@@ -86,6 +87,14 @@ export class User {
   // @Field(type => [])
   // @Column()
   // history: [];
+
+  public isUser() {
+    return true;
+  }
+
+  public isAnonymous() {
+    return false;
+  }
 
   public generateUsernameFromEmail() {
     // Take all characters before @

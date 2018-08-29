@@ -1,5 +1,8 @@
+import * as Bcrypt from 'bcrypt-nodejs';
+import { User } from 'entities';
 import { Exception } from 'exceptions';
 import { GraphQLError } from 'graphql';
+import { PubSub } from 'graphql-subscriptions';
 import { ContextCallback } from 'graphql-yoga/dist/types';
 import { getStatusText, INTERNAL_SERVER_ERROR, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from 'http-status-codes';
 import { UserRepository } from 'repositories';
@@ -18,10 +21,13 @@ export class GraphQLManager {
   @InjectRepository()
   private userRepository: UserRepository;
 
+  public pubSub = new PubSub();
+
   public async getSchemas() {
     const schema = await buildSchema({
       authChecker: this.getAuthChecker(),
-      resolvers: [UserResolver, AuthenticationResolver, StationResolver]
+      resolvers: [UserResolver, AuthenticationResolver, StationResolver],
+      pubSub: this.pubSub
     });
 
     this.logger.info('Finish loading GraphQL schemas');
@@ -31,13 +37,14 @@ export class GraphQLManager {
 
   public getContextHandler(): ContextCallback {
     return async params => {
-      const context: Context = new Context(this.logger, this.userRepository);
+      const context = new Context(this.logger, this.userRepository);
       if (params.request) {
         const { request } = params;
         const token = request.get('authorization');
         const refreshToken = request.get('refreshToken');
         const byPassToken = request.get('byPassToken');
-        const tokens = { token, refreshToken, byPassToken };
+        const clientId = request.get('clientId') || GraphQLManager.generateUniqueSocketId();
+        const tokens = { token, refreshToken, byPassToken, clientId };
         this.logger.info('HTTP request info', tokens);
         await context.setUserFromTokens(tokens);
       }
@@ -45,6 +52,10 @@ export class GraphQLManager {
         const {
           connection: { context: tokens }
         } = params;
+        this.logger.info('Web socket connection info', tokens);
+        if (!tokens.clientId) {
+          tokens.clientId = GraphQLManager.generateUniqueSocketId();
+        }
         this.logger.info('Web socket connection info', tokens);
         await context.setUserFromTokens(tokens);
       }
@@ -57,7 +68,7 @@ export class GraphQLManager {
     return ({ context }, roles) => {
       if (roles.length === 0) {
         // if `@Authorized()`, check only is user exist
-        return !!context.user;
+        return !!(context.user && context.user instanceof User);
       }
       // there are some roles defined now
       if (!context.user) {
@@ -101,5 +112,10 @@ export class GraphQLManager {
       statusCodeText = getStatusText(UNAUTHORIZED);
     }
     return { statusCode, statusCodeText };
+  }
+
+  private static generateUniqueSocketId() {
+    const secret = `${Date.now()}${Math.random()}`;
+    return Bcrypt.hashSync(secret, Bcrypt.genSaltSync(1));
   }
 }

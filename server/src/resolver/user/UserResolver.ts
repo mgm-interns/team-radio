@@ -16,12 +16,12 @@ export class UserResolver {
 
   @Authorized()
   @Query(returns => [User], { description: 'Get all the users in system.' })
-  async users(): Promise<User[]> {
+  public async users(): Promise<User[]> {
     return this.userRepository.find({});
   }
 
   @Query(returns => User)
-  async user(@Arg('id') id: string): Promise<User> {
+  public async user(@Arg('id') id: string): Promise<User> {
     const user = await this.userRepository.findById(id);
     if (!user) throw new UserNotFoundException();
     return user;

@@ -1,10 +1,11 @@
 import { User } from 'entities';
 import { UserRepository } from 'repositories';
 import { Logger } from 'services';
-import { IContext } from '.';
+import { AnonymousUser } from 'subscription';
+import { IContext, Tokens } from '.';
 
 export class Context implements IContext {
-  public user: User | undefined;
+  public user: User | AnonymousUser | undefined;
 
   constructor(private logger: Logger, private userRepository: UserRepository) {}
 
@@ -14,7 +15,7 @@ export class Context implements IContext {
     };
   }
 
-  public async setUserFromTokens({ token, refreshToken, byPassToken }: Tokens = {}) {
+  public async setUserFromTokens({ token, refreshToken, byPassToken, clientId }: Tokens = {}) {
     if (process.env.NODE_ENV === 'development') {
       if (byPassToken) {
         this.logger.info(`Attempt to login with byPassToken`);
@@ -26,6 +27,10 @@ export class Context implements IContext {
     if (token) {
       this.logger.info('Request tokens', { token, refreshToken });
       this.user = await this.getUserFromAuthToken(token, refreshToken);
+      return;
+    }
+    if (clientId) {
+      this.user = new AnonymousUser(clientId);
     }
   }
 
@@ -73,10 +78,4 @@ export class Context implements IContext {
     this.logger.info(`Invalid byPassToken, logout`);
     return undefined;
   }
-}
-
-interface Tokens {
-  token?: string;
-  refreshToken?: string;
-  byPassToken?: string;
 }

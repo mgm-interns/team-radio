@@ -12,8 +12,18 @@ export class StationRepository extends Repository<Station> {
   private logger: Logger;
 
   public async findById(id: string): Promise<Station> {
-    const station = await this.findOne({ where: { id: new ObjectId(id) } });
+    const station = await this.findOne({ where: { _id: new ObjectId(id) } });
     if (!station) throw new StationNotFoundException();
     return station;
+  }
+
+  public async findByStationId(stationId: string): Promise<Station> {
+    const station = await this.findOne({ where: { stationId } });
+    if (!station) throw new StationNotFoundException();
+    return station;
+  }
+
+  public async findAvailableStations() {
+    return await this.find({});
   }
 }
