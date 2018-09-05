@@ -27,8 +27,11 @@ export async function bootstrap() {
   // Configure server options
   const serverOptions: Options = {
     port: parseInt(process.env.PORT as string, 10),
+    endpoint: '/api',
+    playground: '/api',
     formatError: graphQLManager.getErrorFormatter(),
     subscriptions: {
+      path: '/api',
       onConnect: subscriptionManager.getOnConnectingHandler(),
       onDisconnect: subscriptionManager.getOnDisconnectingHandler()
     }

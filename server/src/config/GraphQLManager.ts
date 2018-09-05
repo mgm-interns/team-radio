@@ -98,9 +98,12 @@ export class GraphQLManager {
     };
   }
 
-  private static getCustomErrorFields(originalError: Exception, error: { [key: string]: any }): { [key: string]: any } {
+  private static getCustomErrorFields(
+    originalError: Exception = new Exception(),
+    error: { [key: string]: any }
+  ): { [key: string]: any } {
     let statusCode = originalError.statusCode || INTERNAL_SERVER_ERROR;
-    let statusCodeText = originalError.statusCodeText || getStatusText(INTERNAL_SERVER_ERROR);
+    let statusCodeText = originalError.statusCodeText || getStatusText(statusCode);
     if (error.validationErrors) {
       statusCode = UNPROCESSABLE_ENTITY;
       statusCodeText = getStatusText(UNPROCESSABLE_ENTITY);

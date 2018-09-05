@@ -26,7 +26,8 @@
     "url": "https://github.com/mgm-interns/team-radio/issues"
   },
   "engines": {
-    "node": "10.x"
+    "node": "10.x",
+    "npm": "4.x"
   },
   "keywords": [
     "team-radio",

@@ -1,17 +1,18 @@
 import { User } from 'entities';
-import { UserNotFoundException } from 'exceptions/user';
-import { UserRepository } from 'repositories/user';
-import { Logger } from 'services/logger';
+import { UserNotFoundException } from 'exceptions';
+import { UserRepository } from 'repositories';
+import { Logger } from 'services';
 import { Arg, Authorized, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { BaseResolver } from '..';
 
 @Resolver(of => User)
-export class UserResolver {
+export class UserResolver extends BaseResolver {
   @Inject()
   private logger: Logger;
 
-  @InjectRepository(User)
+  @InjectRepository()
   private userRepository: UserRepository;
 
   @Authorized()
@@ -20,7 +21,7 @@ export class UserResolver {
     return this.userRepository.find({});
   }
 
-  @Query(returns => User)
+  @Query(returns => User, { description: 'Get user by id' })
   public async user(@Arg('id') id: string): Promise<User> {
     const user = await this.userRepository.findById(id);
     if (!user) throw new UserNotFoundException();

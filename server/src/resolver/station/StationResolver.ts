@@ -1,4 +1,4 @@
-import { IAuthenticatedContext, IContext, IAnonymousContext } from 'config';
+import { IAnonymousContext, IAuthenticatedContext } from 'config';
 import { Station } from 'entities';
 import { BadRequestException, StationNotFoundException } from 'exceptions';
 import { StationRepository } from 'repositories';
@@ -7,16 +7,17 @@ import { RealTimeStation, StationsManager } from 'subscription';
 import { Arg, Ctx, Mutation, Publisher, PubSub, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { Inject } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { BaseResolver } from '..';
 
 @Resolver(of => Station)
-export class StationResolver {
+export class StationResolver extends BaseResolver {
   @Inject()
   private logger: Logger;
 
   @Inject()
   private stationsManager: StationsManager;
 
-  @InjectRepository(Station)
+  @InjectRepository()
   private stationRepository: StationRepository;
 
   @Query(returns => [Station], { description: 'Query stations list.' })
@@ -24,7 +25,7 @@ export class StationResolver {
     return this.stationRepository.find({});
   }
 
-  @Query(returns => Station, { description: 'Query stations by ObjectId.' })
+  @Query(returns => Station, { description: 'Query stations by id.' })
   public async stationById(@Arg('id') id: string): Promise<Station> {
     return this.stationRepository.findById(id);
   }

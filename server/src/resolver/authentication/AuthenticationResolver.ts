@@ -7,13 +7,14 @@ import { Logger } from 'services';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { BaseResolver } from '..';
 
 @Resolver(of => User)
-export class AuthenticationResolver {
+export class AuthenticationResolver extends BaseResolver {
   @Inject()
   private logger: Logger;
 
-  @InjectRepository(User)
+  @InjectRepository()
   private userRepository: UserRepository;
 
   @Authorized()
@@ -33,9 +34,7 @@ export class AuthenticationResolver {
 
     const { email, username, password } = credential;
     const user = await this.userRepository.findByUsernameOrEmail({ username, email });
-    if (!user.isValidPassword(password)) {
-      throw new UserNotFoundException();
-    }
+    if (!user || !user.isValidPassword(password)) throw new UserNotFoundException();
     user.generateToken();
     const { authToken } = await this.userRepository.save(user);
     return authToken;
@@ -58,6 +57,9 @@ export class AuthenticationResolver {
     if (!username) {
       user.generateUsernameFromEmail();
     }
+    // Generate other information
+    user.reputation = 0;
+
     return this.userRepository.save(user);
   }
 }

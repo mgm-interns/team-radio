@@ -1,14 +1,11 @@
-import { IsArray, IsDate, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { BaseEntity } from '..';
 
 @ObjectType()
 @Entity({ name: 'stations' })
-export class Station {
-  @Field(type => ID)
-  @ObjectIdColumn()
-  _id: ObjectID;
-
+export class Station extends BaseEntity {
   @Field()
   @IsNotEmpty()
   @Column()

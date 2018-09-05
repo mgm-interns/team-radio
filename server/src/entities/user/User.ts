@@ -1,25 +1,18 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
-import { IdentifiableUser } from 'config';
-import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import * as Bcrypt from 'bcrypt-nodejs';
+import { IdentifiableUser } from 'config';
+import { Field, ObjectType } from 'type-graphql';
+import { Column, Entity } from 'typeorm';
 import { AuthToken } from '.';
+import { BaseEntity } from '..';
 
 @ObjectType()
 @Entity({ name: 'users' })
-export class User implements IdentifiableUser {
-  @Field(type => ID)
-  @ObjectIdColumn()
-  _id: ObjectID;
-
+export class User extends BaseEntity implements IdentifiableUser {
   @Field({ nullable: true })
-  @IsEmail()
-  @IsNotEmpty()
   @Column({ nullable: true, unique: true })
   email: string;
 
   @Field()
-  @IsNotEmpty()
   @Column({ unique: true })
   username: string;
 
