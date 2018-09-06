@@ -20,7 +20,8 @@ module.exports = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js', '.json', '.ts', '.tsx']
+    extensions: ['.js', '.json', '.ts', '.tsx'],
+    modules: [Path.resolve('node_modules'), Path.resolve('..', 'node_modules'), Path.resolve('src')]
   },
   module: {
     rules: [
