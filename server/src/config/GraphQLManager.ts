@@ -1,12 +1,12 @@
 import * as Bcrypt from 'bcrypt-nodejs';
 import { User } from 'entities';
-import { Exception } from 'exceptions';
+import { Exception, UnprocessedEntityException } from 'exceptions';
 import { GraphQLError } from 'graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { ContextCallback } from 'graphql-yoga/dist/types';
 import { getStatusText, INTERNAL_SERVER_ERROR, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from 'http-status-codes';
 import { UserRepository } from 'repositories';
-import { AuthenticationResolver, StationResolver, UserResolver } from 'resolver';
+import { AuthenticationResolver, StationCRUDResolver, StationResolver, UserCRUDResolver } from 'resolver';
 import { Logger } from 'services';
 import { AuthChecker, buildSchema, formatArgumentValidationError } from 'type-graphql';
 import { Inject, Service } from 'typedi';
@@ -26,7 +26,14 @@ export class GraphQLManager {
   public async getSchemas() {
     const schema = await buildSchema({
       authChecker: this.getAuthChecker(),
-      resolvers: [UserResolver, AuthenticationResolver, StationResolver],
+      resolvers: [
+        // User
+        UserCRUDResolver,
+        AuthenticationResolver,
+        // Station
+        StationCRUDResolver,
+        StationResolver
+      ],
       pubSub: this.pubSub
     });
 
@@ -40,7 +47,7 @@ export class GraphQLManager {
       const context = new Context(this.logger, this.userRepository);
       if (params.request) {
         const { request } = params;
-        const token = request.get('authorization');
+        const token = request.get('Authorization');
         const refreshToken = request.get('refreshToken');
         const byPassToken = request.get('byPassToken');
         const clientId = request.get('clientId') || GraphQLManager.generateUniqueSocketId();
@@ -91,10 +98,17 @@ export class GraphQLManager {
     return (error: GraphQLError) => {
       const originalError = error.originalError as Exception;
       const formattedError = formatArgumentValidationError(error);
-      return {
+      const result = {
         ...formattedError,
         ...GraphQLManager.getCustomErrorFields(originalError, formattedError)
       };
+      if (Array.isArray(result.validationErrors)) {
+        result.validationErrors = result.validationErrors.map(error => ({
+          ...error,
+          target: undefined
+        }));
+      }
+      return result;
     };
   }
 
@@ -104,9 +118,14 @@ export class GraphQLManager {
   ): { [key: string]: any } {
     let statusCode = originalError.statusCode || INTERNAL_SERVER_ERROR;
     let statusCodeText = originalError.statusCodeText || getStatusText(statusCode);
-    if (error.validationErrors) {
+    if (error.validationErrors || (originalError as UnprocessedEntityException).validationErrors) {
       statusCode = UNPROCESSABLE_ENTITY;
       statusCodeText = getStatusText(UNPROCESSABLE_ENTITY);
+      return {
+        validationErrors: error.validationErrors || (originalError as UnprocessedEntityException).validationErrors,
+        statusCode, // tslint:disable-line
+        statusCodeText // tslint:disable-line
+      };
     }
     // There is no other way other than hard code due to TypeGraphQL is hard code too
     // FIXME: Update when TypeGraphQL change the error message

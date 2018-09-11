@@ -69,7 +69,7 @@ export class Context implements IContext {
     if (tokenValidationRegex.test(byPassToken)) {
       this.logger.info(`Validation successful`);
       const [originalString, userId] = tokenValidationRegex.exec(byPassToken) as string[];
-      const user = await this.userRepository.findById(userId);
+      const user = await this.userRepository.findOne(userId);
       if (user) {
         this.logger.info(`"${user.username}" has a valid byPassToken, login`);
         return user;

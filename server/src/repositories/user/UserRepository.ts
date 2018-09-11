@@ -1,9 +1,9 @@
 import { User } from 'entities';
 import { UserNotFoundException } from 'exceptions';
-import { RegisterInput } from 'inputs/authentication';
 import { Logger } from 'services';
 import { Inject, Service } from 'typedi';
 import { EntityRepository } from 'typeorm';
+import { RegisterInput } from 'types';
 import { TokenHelper } from 'utils';
 import { BaseRepository } from '..';
 
@@ -40,7 +40,7 @@ export class UserRepository extends BaseRepository<User> {
     user.authToken.expiredAt = TokenHelper.generateExpiredTime();
     user.authToken.refreshTokenExpiredAt = TokenHelper.generateRefreshTokenExpiredTime();
 
-    return this.save(user);
+    return this.saveOrFail(user);
   }
 
   public createFromRegisterInput(input: RegisterInput): User {
@@ -51,8 +51,6 @@ export class UserRepository extends BaseRepository<User> {
     if (!username) {
       user.generateUsernameFromEmail();
     }
-    // Generate other information
-    user.reputation = 0;
     return user;
   }
 }

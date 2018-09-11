@@ -1,25 +1,29 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
-import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, MaxLength, MinLength, NotContains } from 'class-validator';
+import slugify from 'slugify';
+import { Field, ObjectType } from 'type-graphql';
+import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '..';
 
 @ObjectType()
 @Entity({ name: 'stations' })
 export class Station extends BaseEntity {
-  @Field()
+  @NotContains(' ')
   @IsNotEmpty()
+  @Field()
   @Column()
   stationId: string;
 
-  @Field()
   @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(32)
+  @Field()
   @Column()
   stationName: string;
 
-  @Field()
   @IsNumber()
+  @Field()
   @Column()
-  createdAt: number;
+  createdAt: number = new Date().getTime();
 
   // TODO: Deal with it
   // @Field(type => [])
@@ -33,21 +37,29 @@ export class Station extends BaseEntity {
   // @Column()
   // playlist: [];
 
-  @Field()
   @IsNumber()
-  @Column()
+  @IsOptional()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   startingTime: number;
 
-  @Field(type => ID)
-  @ObjectIdColumn()
-  ownerId: ObjectID;
-
   @Field()
   @Column()
-  isPrivate: boolean;
+  ownerId: string;
+
+  @IsBoolean()
+  @Field()
+  @Column()
+  isPrivate: boolean = false;
 
   // TODO: Deal with it
   // @Field(type => [])
   // @Column()
   // chat: [];
+
+  public generateStationId() {
+    this.stationId = slugify(this.stationName, {
+      lower: true
+    });
+  }
 }

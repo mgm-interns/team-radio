@@ -23,7 +23,7 @@ export class UsersWorker implements BaseWorker {
         if (!user.authToken || (user.authToken && (!user.authToken.token || !user.authToken.refreshToken))) {
           user.generateToken();
           this.logger.info('user', user);
-          this.userRepository.save(user);
+          this.userRepository.saveOrFail(user);
         }
       });
       this.logger.info('Update auth token for system users successful!');

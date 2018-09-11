@@ -6,5 +6,5 @@
         "src",
         "lib"
     ],
-    "watch": "dist/bundle.js"
+    "watch": "build/bundle.js"
 }

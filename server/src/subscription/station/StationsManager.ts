@@ -1,12 +1,15 @@
 import { User } from 'entities';
 import { StationNotFoundException, UnprocessedEntityException } from 'exceptions';
 import { StationRepository, UserRepository } from 'repositories';
-import { Service } from 'typedi';
+import { Logger } from 'services';
+import { Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { AnonymousUser, RealTimeStation } from '..';
 
 @Service()
 export class StationsManager {
+  @Inject()
+  private logger: Logger;
   @InjectRepository()
   private stationRepository: StationRepository;
   @InjectRepository()
@@ -26,6 +29,7 @@ export class StationsManager {
   public async initialize() {
     const stations = await this.stationRepository.findAvailableStations();
     this.list = stations.map(station => RealTimeStation.fromStation(station));
+    this.logger.info('Initialized real time stations manager service');
   }
 
   public joinStation(stationId: string, user: User | AnonymousUser): boolean {

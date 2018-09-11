@@ -1,0 +1,58 @@
+{
+  "name": "team-radio-admin",
+  "version": "1.0.0-SNAPSHOT",
+  "scripts": {
+    "start": "react-app-rewired start",
+    "dev": "npm start",
+    "build": "react-app-rewired build"
+  },
+  "dependencies": {
+    "@material-ui/core": "~1.4.0",
+    "@material-ui/icons": "^1.1.1",
+    "ajv": "^6.0.0",
+    "apollo-cache-inmemory": "^1.2.9",
+    "apollo-link-context": "^1.0.8",
+    "apollo-link-http": "^1.5.4",
+    "graphql": "^0.13.2",
+    "ra-data-graphql-simple": "~2.3.0",
+    "react": "~16.3.0",
+    "react-admin": "^2.3.0",
+    "react-dom": "~16.3.0",
+    "redux-form-validators": "^2.7.2",
+    "redux-saga": "^0.15.0"
+  },
+  "devDependencies": {
+    "@types/history": "^4.6.0",
+    "@types/react": "~16.3.0",
+    "@types/react-dom": "~16.0.7",
+    "@types/react-router": "^4.0.0",
+    "prettier": "^1.14.2",
+    "prettier-loader": "^2.1.1",
+    "react-app-rewire-hot-loader": "^1.0.1",
+    "react-app-rewire-typescript": "^2.0.2",
+    "react-app-rewired": "^1.6.2",
+    "react-hot-loader": "^4.3.6",
+    "react-scripts": "^1.1.4",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.0.3"
+  },
+  "keywords": [
+    "team-radio",
+    "team-radio-admin",
+    "react-admin",
+    "graphql"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgm-interns/team-radio.git"
+  },
+  "author": "@pvtri96",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mgm-interns/team-radio/issues"
+  },
+  "private": true
+}

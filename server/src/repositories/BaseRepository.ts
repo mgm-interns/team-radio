@@ -1,17 +1,17 @@
-import { ObjectId } from 'bson';
 import { BaseEntity } from 'entities';
-import { NotFoundException } from 'exceptions';
-import { EntityRepository, Repository } from 'typeorm';
+import { UnprocessedEntityException } from 'exceptions';
+import { EntityRepository, Repository, SaveOptions } from 'typeorm';
 
 @EntityRepository(BaseEntity)
-export class BaseRepository<Entity extends BaseEntity> extends Repository<Entity> {
+export abstract class BaseRepository<Entity extends BaseEntity> extends Repository<Entity> {
   public hasId(entity: Entity) {
     return !!entity._id;
   }
 
-  public async findById(id: string): Promise<Entity> {
-    const entity = await this.findOne({ where: { _id: new ObjectId(id) } });
-    if (!entity) throw new NotFoundException();
-    return entity;
+  // FIXME: check an issue with typescript
+  public async saveOrFail(entity: any, options?: SaveOptions): Promise<Entity> {
+    const errors = await entity.validate();
+    if (errors.length > 0) throw new UnprocessedEntityException('Can not save Entity', errors);
+    return this.save(entity, options);
   }
 }

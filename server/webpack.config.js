@@ -23,7 +23,7 @@ module.exports = (env = {}) => {
     },
     output: {
       filename: '[name].js',
-      path: Path.resolve(process.cwd(), 'dist'),
+      path: Path.resolve(process.cwd(), 'build'),
       libraryTarget: 'commonjs'
     },
     resolve: {

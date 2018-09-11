@@ -4,6 +4,8 @@ import { Logger } from 'services';
 import { StationsManager, SubscriptionManager } from 'subscription';
 import { Container } from 'typedi';
 import { sleep } from 'utils';
+import * as Express from 'express';
+import * as Path from 'path';
 import { WorkersManager } from 'workers';
 
 export async function bootstrap() {
@@ -52,4 +54,9 @@ export async function bootstrap() {
     .catch(error => {
       logger.error('Error while running the server', error);
     });
+
+  // Serve admin
+  server.express.use('/admin', Express.static(Path.resolve(process.cwd(), '..', 'admin', 'build')));
+
+  // Serve client
 }

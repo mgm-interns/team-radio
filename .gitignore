@@ -9,6 +9,7 @@ node_modules
 # Bundles
 dist
 lib
+build
 
 # Log
 *.log

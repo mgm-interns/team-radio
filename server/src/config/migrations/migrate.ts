@@ -7,8 +7,8 @@ import { load, MigrationSet } from './helper';
 
 const logger = Container.get(Logger);
 
-const STATE_STORE_PATH = Path.resolve(process.cwd(), 'dist', '.migrate');
-const MIGRATION_DIR = Path.resolve(process.cwd(), 'dist', 'migrations');
+const STATE_STORE_PATH = Path.resolve(process.cwd(), 'build', '.migrate');
+const MIGRATION_DIR = Path.resolve(process.cwd(), 'build', 'migrations');
 const MIGRATION_COLLECTION = 'migrations';
 
 const { argv } = require('yargs')

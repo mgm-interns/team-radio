@@ -1,22 +1,12 @@
 import { IAuthenticatedContext, IContext } from 'config';
 import { AuthToken, User } from 'entities';
 import { BadRequestException, ForbiddenException, UserNotFoundException } from 'exceptions';
-import { LoginInput, RegisterInput } from 'inputs';
-import { UserRepository } from 'repositories';
-import { Logger } from 'services';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { Inject } from 'typedi';
-import { InjectRepository } from 'typeorm-typedi-extensions';
-import { BaseResolver } from '..';
+import { LoginInput, RegisterInput } from 'types';
+import { BaseUserResolver } from '.';
 
 @Resolver(of => User)
-export class AuthenticationResolver extends BaseResolver {
-  @Inject()
-  private logger: Logger;
-
-  @InjectRepository()
-  private userRepository: UserRepository;
-
+export class AuthenticationResolver extends BaseUserResolver {
   @Authorized()
   @Query(returns => User)
   public async currentUser(@Ctx() context: IAuthenticatedContext): Promise<User> {
@@ -36,7 +26,7 @@ export class AuthenticationResolver extends BaseResolver {
     const user = await this.userRepository.findByUsernameOrEmail({ username, email });
     if (!user || !user.isValidPassword(password)) throw new UserNotFoundException();
     user.generateToken();
-    const { authToken } = await this.userRepository.save(user);
+    const { authToken } = await this.userRepository.saveOrFail(user);
     return authToken;
   }
 
@@ -57,9 +47,7 @@ export class AuthenticationResolver extends BaseResolver {
     if (!username) {
       user.generateUsernameFromEmail();
     }
-    // Generate other information
-    user.reputation = 0;
 
-    return this.userRepository.save(user);
+    return this.userRepository.saveOrFail(user);
   }
 }

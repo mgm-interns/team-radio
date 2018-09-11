@@ -9,6 +9,7 @@ export class Logger {
 
   constructor() {
     this.logger = Winston.createLogger({
+      level: process.env.LOG_LEVEL,
       transports: [
         new Winston.transports.Console(),
         new Winston.transports.File({

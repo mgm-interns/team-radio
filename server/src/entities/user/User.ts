@@ -1,4 +1,5 @@
 import * as Bcrypt from 'bcrypt-nodejs';
+import { IsEmail, IsNumber, IsUrl, MaxLength, MinLength, IsOptional } from 'class-validator';
 import { IdentifiableUser } from 'config';
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity } from 'typeorm';
@@ -8,57 +9,74 @@ import { BaseEntity } from '..';
 @ObjectType()
 @Entity({ name: 'users' })
 export class User extends BaseEntity implements IdentifiableUser {
+  @MinLength(6)
+  @MaxLength(64)
+  @IsEmail()
   @Field({ nullable: true })
   @Column({ nullable: true, unique: true })
   email: string;
 
+  @MinLength(6)
+  @MaxLength(32)
   @Field()
   @Column({ unique: true })
   username: string;
 
+  @MinLength(6)
   @Column()
   password: string;
 
-  @Field(type => AuthToken)
   @Column(type => AuthToken)
   authToken: AuthToken;
 
+  @IsOptional()
   @Field({ nullable: true })
   @Column()
   firstname: string;
 
+  @IsOptional()
   @Field({ nullable: true })
   @Column()
   lastname: string;
 
+  @IsOptional()
   @Field({ nullable: true })
   @Column({ nullable: true })
   country: string;
 
+  @IsOptional()
   @Field({ nullable: true })
   @Column({ nullable: true })
   city: string;
 
+  @IsOptional()
   @Field({ nullable: true })
   @Column({ nullable: true })
   bio: string;
 
+  @IsOptional()
+  @IsUrl()
   @Field({ nullable: true })
   @Column({ nullable: true })
   avatarUrl: string;
 
+  @IsOptional()
+  @IsUrl()
   @Field({ nullable: true })
   @Column({ nullable: true })
   coverUrl: string;
 
+  @IsNumber()
   @Field()
   @Column({ default: 0 })
-  reputation: number;
+  reputation: number = 0;
 
+  @IsOptional()
   @Field({ nullable: true })
   @Column({ nullable: true })
   facebookId: string;
 
+  @IsOptional()
   @Field({ nullable: true })
   @Column({ nullable: true })
   googleId: string;

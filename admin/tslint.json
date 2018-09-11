@@ -1,0 +1,23 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+      "tslint:latest",
+      "tslint-react",
+      "tslint-config-airbnb",
+      "tslint-config-prettier"
+    ],
+    "rules": {
+      // override tslint-react rules here
+      "no-console": false,
+      "no-namespace": false,
+      //
+      "variable-name": false,
+      "no-empty-interface": false,
+      "interface-name": false,
+      "object-literal-sort-keys": false,
+      "no-var-requires": false,
+      "no-implicit-dependencies": false,
+      "jsx-boolean-value": false,
+      "jsx-no-lambda": false
+    }
+}
