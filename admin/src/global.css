@@ -1,0 +1,8 @@
+.ra-field.ra-field-id > div,
+.ra-field.ra-field-upVotes > div,
+.ra-field.ra-field-downVotes > div,
+.ra-input.ra-input-upVotes > div,
+.ra-input.ra-input-downVotes > div
+{
+    width: 100%;
+}

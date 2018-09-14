@@ -61,7 +61,11 @@ async function postScript(set: MigrationSet) {
   logger.info('Start updating migration state.');
 
   const connection = await connect();
-  await connection.dropCollection(MIGRATION_COLLECTION);
+  try {
+    await connection.dropCollection(MIGRATION_COLLECTION);
+  } catch (e) {
+    logger.info('Collection not found, keep creating collection');
+  }
   await connection.createCollection(MIGRATION_COLLECTION);
 
   const state = await set.getStoreState();

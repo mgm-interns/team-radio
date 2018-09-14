@@ -30,15 +30,14 @@ export class CRUDService {
     return sortCondition;
   }
 
-  public parseTextSearchCondition(filter?: BaseFilter) {
-    this.logger.debug('Parse text search condition input', filter);
-    let textSearchCondition = { where: {} };
-    if (filter && filter.q) {
-      textSearchCondition = {
-        where: { $text: { $search: filter.q } }
-      };
+  public parseFilterCondition(filter?: BaseFilter) {
+    this.logger.debug('Parse filter condition input', filter);
+    const filterCondition = { where: {} };
+    if (filter) {
+      if (filter.q) filterCondition.where = { ...filterCondition.where, $text: { $search: filter.q } };
     }
-    return textSearchCondition;
+    this.logger.debug('Filter condition output', filterCondition);
+    return filterCondition;
   }
 
   public parseAllCondition(
@@ -51,7 +50,7 @@ export class CRUDService {
     return {
       ...this.parsePagination(page, perPage),
       ...this.parseSortCondition(sortField, sortOrder),
-      ...this.parseTextSearchCondition(filter)
+      ...this.parseFilterCondition(filter)
     };
   }
 }

@@ -1,4 +1,13 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, MaxLength, MinLength, NotContains } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  MaxLength,
+  MinLength,
+  NotContains
+} from 'class-validator';
 import slugify from 'slugify';
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity } from 'typeorm';
@@ -20,7 +29,6 @@ export class Station extends BaseEntity {
   @Column()
   stationName: string;
 
-  @IsNumber()
   @Field()
   @Column()
   createdAt: number = new Date().getTime();
@@ -30,12 +38,6 @@ export class Station extends BaseEntity {
   // @IsArray()
   // @Column()
   // userPoints: [];
-
-  // TODO: Deal with it
-  // @Field(type => [])
-  // @IsArray()
-  // @Column()
-  // playlist: [];
 
   @IsNumber()
   @IsOptional()

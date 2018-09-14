@@ -4,7 +4,6 @@ import { ForbiddenException, UnprocessedEntityException, UserNotFoundException }
 import { CRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
-import { Like } from 'typeorm';
 import { BaseFilter, ListMetaData } from 'types';
 import { BaseUserResolver } from '.';
 import { ICRUDResolver } from '..';

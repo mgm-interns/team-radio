@@ -1,6 +1,5 @@
-import { Station } from 'entities/station';
-import { User } from 'entities/user';
-import { Logger } from 'services/logger';
+import { Song, Station, User } from 'entities';
+import { Logger } from 'services';
 import { Inject, Service } from 'typedi';
 import { Connection, ConnectionOptions, createConnection, EntitySchema, getConnectionOptions } from 'typeorm';
 
@@ -17,7 +16,7 @@ export class DataAccess {
 
   public async connect() {
     try {
-      const connectionOptions = await DataAccess.getConnectionOptions([User, Station]);
+      const connectionOptions = await DataAccess.getConnectionOptions([User, Station, Song]);
       this._connection = await createConnection(connectionOptions);
       return this.connection;
     } catch (e) {

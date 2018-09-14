@@ -36,19 +36,21 @@ export const StationList = (props: any) => (
           secondaryText={(record: any) => record.stationId}
         />
       }
-      medium={
-        <Datagrid>
-          <TextField source="stationId" />
-          <TextField source="stationName" />
-          <ReferenceField label="Owner" source="ownerId" reference="users">
-            <TextField source="username" />
-          </ReferenceField>
-          <DateField source="createdAt" />
-          <DateField source="startingTime" showTime={true} />
-          <EditButton />
-          <ShowButton />
-        </Datagrid>
-      }
+      medium={<StationMediumDatagrid />}
     />
   </List>
+);
+
+export const StationMediumDatagrid = (props: any) => (
+  <Datagrid {...props}>
+    <TextField source="stationId" />
+    <TextField source="stationName" />
+    <ReferenceField label="Owner" source="ownerId" reference="users" linkType="show">
+      <TextField source="username" />
+    </ReferenceField>
+    <DateField source="createdAt" />
+    <DateField source="startingTime" showTime={true} />
+    <EditButton />
+    <ShowButton />
+  </Datagrid>
 );

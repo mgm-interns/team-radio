@@ -1,8 +1,8 @@
+import { Avatar } from '@material-ui/core';
 import { Group as UserIcon } from '@material-ui/icons';
 import * as React from 'react';
 
 const {
-  ImageField,
   Datagrid,
   EditButton,
   EmailField,
@@ -12,7 +12,8 @@ const {
   ShowButton,
   SimpleList,
   TextField,
-  TextInput
+  TextInput,
+  FunctionField
 } = require('react-admin');
 
 export const UserFilter = (props: any) => (
@@ -31,18 +32,27 @@ export const UserList = (props: any) => (
           secondaryText={(record: any) => `${record.username || record.email}`}
         />
       }
-      medium={
-        <Datagrid>
-          <TextField source="username" />
-          <EmailField source="email" />
-          <TextField source="firstname" />
-          <TextField source="lastname" />
-          <TextField source="reputation" />
-          <ImageField source="avatarUrl" title="username" />
-          <EditButton />
-          <ShowButton />
-        </Datagrid>
-      }
+      medium={<UserMediumDatagrid />}
     />
   </List>
+);
+
+export const UserMediumDatagrid = (props: any) => (
+  <Datagrid {...props}>
+    <FunctionField
+      label="Avatar"
+      render={(record: any) => (
+        <Avatar style={{ width: 40, height: 40, margin: 8 }}>
+          <img src={record.avatarUrl} style={{ width: '100%', height: '100%', display: 'block' }} />
+        </Avatar>
+      )}
+    />
+    <TextField source="username" />
+    <EmailField source="email" />
+    <TextField source="firstname" />
+    <TextField source="lastname" />
+    <TextField source="reputation" />
+    <EditButton />
+    <ShowButton />
+  </Datagrid>
 );

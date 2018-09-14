@@ -6,7 +6,15 @@ import { PubSub } from 'graphql-subscriptions';
 import { ContextCallback } from 'graphql-yoga/dist/types';
 import { getStatusText, INTERNAL_SERVER_ERROR, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from 'http-status-codes';
 import { UserRepository } from 'repositories';
-import { AuthenticationResolver, StationCRUDResolver, StationResolver, UserCRUDResolver } from 'resolver';
+import {
+  AuthenticationResolver,
+  HistorySongsCRUDResolver,
+  PlaylistSongsCRUDResolver,
+  SongCRUDResolver,
+  StationCRUDResolver,
+  StationResolver,
+  UserCRUDResolver
+} from 'resolver';
 import { Logger } from 'services';
 import { AuthChecker, buildSchema, formatArgumentValidationError } from 'type-graphql';
 import { Inject, Service } from 'typedi';
@@ -26,15 +34,19 @@ export class GraphQLManager {
   public async getSchemas() {
     const schema = await buildSchema({
       authChecker: this.getAuthChecker(),
+      pubSub: this.pubSub,
       resolvers: [
         // User
         UserCRUDResolver,
         AuthenticationResolver,
         // Station
         StationCRUDResolver,
-        StationResolver
-      ],
-      pubSub: this.pubSub
+        StationResolver,
+        // Song
+        SongCRUDResolver,
+        PlaylistSongsCRUDResolver,
+        HistorySongsCRUDResolver
+      ]
     });
 
     this.logger.info('Finish loading GraphQL schemas');

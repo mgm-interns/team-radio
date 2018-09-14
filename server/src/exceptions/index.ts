@@ -6,3 +6,4 @@ export * from './UnprocessedEntityException';
 export * from './MethodNotAllowedException';
 export * from './user';
 export * from './station';
+export * from './song';

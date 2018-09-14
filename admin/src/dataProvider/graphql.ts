@@ -31,6 +31,15 @@ export const buildGraphQLProvider = () => {
       case 'stations':
         return 'Station';
 
+      case 'songs':
+        return 'Song';
+
+      case 'playlistSongs':
+        return 'PlaylistSong';
+
+      case 'historySongs':
+        return 'HistorySong';
+
       default:
         throw new Error(`Unknown resource ${resource}`);
     }

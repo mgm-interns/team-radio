@@ -1,28 +1,34 @@
+import { ObjectID } from 'bson';
 import { Station } from 'entities';
 import { BadRequestException, StationNotFoundException } from 'exceptions';
+import { SongRepository } from 'repositories/song';
 import { CRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 import { ListMetaData, StationFilter } from 'types';
 import { BaseStationResolver } from '.';
 import { ICRUDResolver } from '..';
 
 @Resolver(of => Station)
 export class StationCRUDResolver extends BaseStationResolver implements ICRUDResolver<Station> {
+  @InjectRepository()
+  private songRepository: SongRepository;
+
   @Inject()
   private crudService: CRUDService;
 
-  @Query(returns => Station, { name: 'Station', description: 'Get user by id' })
+  @Query(returns => Station, { name: 'Station', description: 'Get station by id or stationId' })
   public async one(
     @Arg('id', { nullable: true }) id?: string,
     @Arg('stationId', { nullable: true }) stationId?: string
   ): Promise<Station> {
     if (id || stationId) {
-      let user;
-      if (id) user = await this.stationRepository.findOne(id);
-      if (stationId) user = await this.stationRepository.findByStationId(stationId);
-      if (!user) throw new StationNotFoundException();
-      return user;
+      let station;
+      if (id) station = await this.stationRepository.findOne(id);
+      if (stationId) station = await this.stationRepository.findByStationId(stationId);
+      if (!station) throw new StationNotFoundException();
+      return station;
     }
     throw new BadRequestException('You need to provide id OR stationId');
   }
@@ -39,13 +45,14 @@ export class StationCRUDResolver extends BaseStationResolver implements ICRUDRes
     if (filter && filter.ids) {
       return Promise.all(filter.ids.map(id => this.stationRepository.findOneOrFail(id)));
     }
-    if (filter && filter.ownerId) {
+    if (filter && (filter.ownerId || filter.owner)) {
+      const ownerId = filter.ownerId || (filter.owner && filter.owner.id);
       const condition = this.crudService.parseAllCondition(page, perPage, sortField, sortOrder, filter);
       return this.stationRepository.find({
         ...condition,
         where: {
           ...condition.where,
-          ownerId: filter.ownerId
+          ownerId: new ObjectID(ownerId)
         }
       });
     }
@@ -105,6 +112,7 @@ export class StationCRUDResolver extends BaseStationResolver implements ICRUDRes
   public async delete(@Arg('id') id: string): Promise<Station> {
     const station = await this.stationRepository.findOneOrFail(id);
     await this.stationRepository.remove(station);
+    await this.songRepository.delete({ stationId: id });
     return station;
   }
 }

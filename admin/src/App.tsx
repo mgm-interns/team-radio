@@ -1,10 +1,20 @@
 import { CircularProgress, Typography } from '@material-ui/core';
-import { Group as UserIcon, Radio as StationIcon } from '@material-ui/icons';
+import {
+  Group as UserIcon,
+  History as HistoryIcon,
+  QueueMusic as PlaylistIcon,
+  Radio as StationIcon,
+  VideoLibrary as SongIcon
+} from '@material-ui/icons';
 import { authProvider } from 'authProvider';
 import { Dashboard } from 'dashboard';
 import { buildGraphQLProvider } from 'dataProvider';
+import { Menu } from 'layout';
 import * as React from 'react';
 import {
+  SongEdit,
+  SongList,
+  SongShow,
   StationCreate,
   StationEdit,
   StationList,
@@ -15,7 +25,6 @@ import {
   UserShow
 } from 'resources';
 import { theme } from 'theme';
-
 const { Admin, Resource } = require('react-admin');
 
 export class App extends React.Component<App.Props, App.States> {
@@ -55,8 +64,9 @@ export class App extends React.Component<App.Props, App.States> {
       return this.renderLoading();
     }
     return (
-      <Admin theme={theme} dataProvider={dataProvider} authProvider={authProvider} dashboard={Dashboard}>
-        <Resource //
+      <Admin theme={theme} menu={Menu} dataProvider={dataProvider} authProvider={authProvider} dashboard={Dashboard}>
+        <Resource
+          //
           name="users"
           icon={UserIcon}
           list={UserList}
@@ -71,6 +81,30 @@ export class App extends React.Component<App.Props, App.States> {
           edit={StationEdit}
           create={StationCreate}
           show={StationShow}
+        />
+        <Resource
+          //
+          name="songs"
+          icon={SongIcon}
+          list={SongList}
+          edit={SongEdit}
+          show={SongShow}
+        />
+        <Resource
+          //
+          name="playlistSongs"
+          icon={PlaylistIcon}
+          list={SongList}
+          edit={SongEdit}
+          show={SongShow}
+        />
+        <Resource
+          //
+          name="historySongs"
+          icon={HistoryIcon}
+          list={SongList}
+          edit={SongEdit}
+          show={SongShow}
         />
       </Admin>
     );
