@@ -11,7 +11,6 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
     return HistorySong.fromSong(song);
   }
 
-  @Authorized()
   @Query(returns => [HistorySong], {
     name: 'allHistorySongs',
     description: "Get all the songs that's currently in history."
@@ -27,7 +26,6 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
     return songs.map(HistorySong.fromSong);
   }
 
-  @Authorized()
   @Query(returns => ListMetaData, {
     name: '_allHistorySongsMeta',
     description: "Get all the songs that's currently in history."

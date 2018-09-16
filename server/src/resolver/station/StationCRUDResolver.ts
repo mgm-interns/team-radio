@@ -33,7 +33,6 @@ export class StationCRUDResolver extends BaseStationResolver implements ICRUDRes
     throw new BadRequestException('You need to provide id OR stationId');
   }
 
-  @Authorized()
   @Query(returns => [Station], { name: 'allStations', description: 'Get all the stations in system.' })
   public async all(
     @Arg('page', type => Int, { nullable: true }) page?: number,
@@ -62,7 +61,6 @@ export class StationCRUDResolver extends BaseStationResolver implements ICRUDRes
   }
 
   // TODO: Solve .count function
-  @Authorized()
   @Query(returns => ListMetaData, { name: '_allStationsMeta', description: 'Get all the stations in system.' })
   public async meta(
     @Arg('page', type => Int, { nullable: true }) page?: number,

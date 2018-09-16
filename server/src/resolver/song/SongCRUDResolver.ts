@@ -24,7 +24,6 @@ export class SongCRUDResolver extends BaseSongResolver implements ICRUDResolver<
     throw new BadRequestException('You need to provide id');
   }
 
-  @Authorized()
   @Query(returns => [Song], { name: 'allSongs', description: 'Get all the songs in system.' })
   public async all(
     @Arg('page', type => Int, { nullable: true }) page?: number,
@@ -59,7 +58,6 @@ export class SongCRUDResolver extends BaseSongResolver implements ICRUDResolver<
   }
 
   // TODO: Solve .count function
-  @Authorized()
   @Query(returns => ListMetaData, { name: '_allSongsMeta', description: 'Get all the songs in system.' })
   public async meta(
     @Arg('page', type => Int, { nullable: true }) page?: number,

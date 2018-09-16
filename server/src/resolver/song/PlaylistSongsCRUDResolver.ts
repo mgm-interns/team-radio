@@ -11,7 +11,6 @@ export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
     return PlaylistSong.fromSong(song);
   }
 
-  @Authorized()
   @Query(returns => [PlaylistSong], {
     name: 'allPlaylistSongs',
     description: "Get all the songs that's currently in playlist."
@@ -27,7 +26,6 @@ export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
     return songs.map(PlaylistSong.fromSong);
   }
 
-  @Authorized()
   @Query(returns => ListMetaData, {
     name: '_allPlaylistSongsMeta',
     description: "Get all the songs that's currently in playlist."
