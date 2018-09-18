@@ -1,5 +1,6 @@
 import { Avatar } from '@material-ui/core';
 import { Group as UserIcon } from '@material-ui/icons';
+import { Authorization } from 'authProvider';
 import * as React from 'react';
 
 const {
@@ -52,7 +53,7 @@ export const UserMediumDatagrid = (props: any) => (
     <TextField source="firstname" />
     <TextField source="lastname" />
     <TextField source="reputation" />
-    <EditButton />
+    {Authorization.isAdmin(props.permissions) && <EditButton />}
     <ShowButton />
   </Datagrid>
 );

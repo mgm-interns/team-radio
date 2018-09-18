@@ -1,5 +1,5 @@
 import { ValidationError } from 'class-validator';
-import { User } from 'entities';
+import { User, UserRole } from 'entities';
 import { ForbiddenException, UnprocessedEntityException, UserNotFoundException } from 'exceptions';
 import { CRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
@@ -29,17 +29,12 @@ export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<
     @Arg('sortOrder', { nullable: true }) sortOrder?: string,
     @Arg('filter', type => BaseFilter, { nullable: true }) filter?: BaseFilter
   ): Promise<User[]> {
-    if (filter && filter.ids) {
-      return Promise.all(filter.ids.map(id => this.userRepository.findOneOrFail(id)));
-    }
-    return this.userRepository.find({
-      ...this.crudService.parseAllCondition(page, perPage, sortField, sortOrder, filter)
-    });
+    const [entities] = await this.findAllAndCount(page, perPage, sortField, sortOrder, filter);
+    return entities;
   }
 
-  // TODO: Solve .count function
   @Authorized()
-  @Query(returns => ListMetaData, { name: '_allUsersMeta', description: 'Get all the users in system.' })
+  @Query(returns => ListMetaData, { name: '_allUsersMeta', description: 'Get meta for all the users in system.' })
   public async meta(
     @Arg('page', type => Int, { nullable: true }) page?: number,
     @Arg('perPage', type => Int, { nullable: true }) perPage?: number,
@@ -47,13 +42,11 @@ export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<
     @Arg('sortOrder', { nullable: true }) sortOrder?: string,
     @Arg('filter', type => BaseFilter, { nullable: true }) filter?: BaseFilter
   ): Promise<ListMetaData> {
-    const [users, total] = await this.userRepository.findAndCount({
-      ...this.crudService.parseAllCondition(page, perPage, sortField, sortOrder, filter)
-    });
+    const [entities, total] = await this.findAllAndCount(page, perPage, sortField, sortOrder, filter);
     return new ListMetaData(total);
   }
 
-  @Authorized()
+  @Authorized([UserRole.ADMIN])
   @Mutation(returns => User, { name: 'createUser', description: 'Create a user in system.' })
   public async create(
     @Arg('password') password: string,
@@ -92,7 +85,7 @@ export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<
     return this.userRepository.saveOrFail(user);
   }
 
-  @Authorized()
+  @Authorized([UserRole.ADMIN])
   @Mutation(returns => User, { name: 'updateUser', description: 'Update a user in system.' })
   public async update(
     @Arg('id') id: string,
@@ -118,11 +111,28 @@ export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<
     return this.userRepository.saveOrFail(user);
   }
 
-  @Authorized()
+  @Authorized([UserRole.ADMIN])
   @Mutation(returns => User, { name: 'deleteUser', description: 'Delete a user in system.' })
   public async delete(@Arg('id') id: string): Promise<User> {
     const user = await this.userRepository.findOneOrFail(id);
     await this.userRepository.remove(user);
     return user;
+  }
+
+  private async findAllAndCount(
+    page?: number,
+    perPage?: number,
+    sortField?: string,
+    sortOrder?: string,
+    filter?: BaseFilter
+  ): Promise<[User[], number]> {
+    if (filter && filter.ids) {
+      const total = filter.ids.length;
+      const entities = await Promise.all(filter.ids.map(id => this.userRepository.findOneOrFail(id)));
+      return [entities, total];
+    }
+    return this.userRepository.findAndCount({
+      ...this.crudService.parseAllCondition(page, perPage, sortField, sortOrder, filter)
+    });
   }
 }

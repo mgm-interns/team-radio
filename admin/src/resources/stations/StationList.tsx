@@ -1,10 +1,14 @@
-import { Radio as StationIcon } from '@material-ui/icons';
+import { Create as CreateIcon, Radio as StationIcon } from '@material-ui/icons';
+import { Authorization } from 'authProvider';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
+const { Button } = require('@material-ui/core');
 const {
   Datagrid,
   DateField,
-  EditButton,
+  linkToRecord,
+  FunctionField,
   Filter,
   List,
   ReferenceField,
@@ -36,21 +40,32 @@ export const StationList = (props: any) => (
           secondaryText={(record: any) => record.stationId}
         />
       }
-      medium={<StationMediumDatagrid />}
+      medium={<StationMediumDatagrid permissions={props.permissions} />}
     />
   </List>
 );
 
-export const StationMediumDatagrid = (props: any) => (
-  <Datagrid {...props}>
-    <TextField source="stationId" />
-    <TextField source="stationName" />
-    <ReferenceField label="Owner" source="ownerId" reference="users" linkType="show">
-      <TextField source="username" />
-    </ReferenceField>
-    <DateField source="createdAt" />
-    <DateField source="startingTime" showTime={true} />
-    <EditButton />
-    <ShowButton />
-  </Datagrid>
-);
+export const StationMediumDatagrid = (props: Authorization.PermissionsProps & any) => {
+  return (
+    <Datagrid {...props}>
+      <TextField source="stationId" />
+      <TextField source="stationName" />
+      <ReferenceField label="Owner" source="ownerId" reference="users" linkType="show">
+        <TextField source="username" />
+      </ReferenceField>
+      <DateField source="createdAt" />
+      <DateField source="startingTime" showTime={true} />
+      <FunctionField
+        render={(record: any) =>
+          Authorization.isStationOwner(props.permissions, record.id) && (
+            <Button color="primary" component={Link} to={linkToRecord(props.basePath, record.id)}>
+              <CreateIcon style={{ marginRight: 4 }} />
+              Edit
+            </Button>
+          )
+        }
+      />
+      <ShowButton />
+    </Datagrid>
+  );
+};

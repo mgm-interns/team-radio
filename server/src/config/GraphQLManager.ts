@@ -1,11 +1,5 @@
 import * as Bcrypt from 'bcrypt-nodejs';
-import { User } from 'entities';
-import { Exception, UnprocessedEntityException } from 'exceptions';
-import { GraphQLError } from 'graphql';
-import { PubSub } from 'graphql-subscriptions';
-import { ContextCallback } from 'graphql-yoga/dist/types';
-import { getStatusText, INTERNAL_SERVER_ERROR, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from 'http-status-codes';
-import { UserRepository } from 'repositories';
+import { AuthChecker, buildSchema, formatArgumentValidationError } from 'type-graphql';
 import {
   AuthenticationResolver,
   HistorySongsCRUDResolver,
@@ -15,11 +9,18 @@ import {
   StationResolver,
   UserCRUDResolver
 } from 'resolver';
-import { Logger } from 'services';
-import { AuthChecker, buildSchema, formatArgumentValidationError } from 'type-graphql';
+import { Context, IContext } from '.';
+import { ContextCallback } from 'graphql-yoga/dist/types';
+import { Exception, UnauthorizedException, UnprocessedEntityException } from 'exceptions';
+import { getStatusText, INTERNAL_SERVER_ERROR, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from 'http-status-codes';
+import { GraphQLError } from 'graphql';
+import { IAuthenticatedContext } from './context';
 import { Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Context, IContext } from '.';
+import { Logger } from 'services';
+import { PubSub } from 'graphql-subscriptions';
+import { User, UserRole } from 'entities';
+import { UserRepository } from 'repositories';
 
 @Service()
 export class GraphQLManager {
@@ -83,26 +84,37 @@ export class GraphQLManager {
     };
   }
 
+  // TODO: Resolve permission for anonymous
+  // or else anonymous can't do anything under @Authorized
   private getAuthChecker(): AuthChecker<IContext> {
-    return ({ context }, roles) => {
-      if (roles.length === 0) {
-        // if `@Authorized()`, check only is user exist
-        return !!(context.user && context.user instanceof User);
-      }
+    return ({ context, args }, roles) => {
       // there are some roles defined now
       if (!context.user) {
         // and if no user, restrict access
         this.logger.info('User not exist in application context. Access denied!');
-        return false;
+        throw new UnauthorizedException('You are not logged in yet!');
       }
-      // TODO: User roles & permissions
-      // if (user.roles.some(role => roles.includes(role))) {
-      //   // grant access if the roles overlap
-      //   return true;
-      // }
-
+      if (roles.length === 0) {
+        // if roles doesn't provided, only check user existence in context
+        if (context.user.isUser()) {
+          return true;
+        }
+      }
+      if (context.user.isUser()) {
+        const authenticatedContext = context as IAuthenticatedContext;
+        if (roles.includes(UserRole.ADMIN) && authenticatedContext.user.isAdmin()) {
+          return true;
+        }
+        if (
+          roles.includes(UserRole.STATION_OWNER) &&
+          (authenticatedContext.user.isStationOwner(args['id']) ||
+            authenticatedContext.user.isStationOwner(args['stationId']))
+        ) {
+          return true;
+        }
+      }
       // no roles matched, restrict access
-      return false;
+      throw new UnauthorizedException("You don't have permission for this action");
     };
   }
 

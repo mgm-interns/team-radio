@@ -1,8 +1,8 @@
 import { IAuthenticatedContext, IContext } from 'config';
-import { AuthToken, User } from 'entities';
+import { User } from 'entities';
 import { BadRequestException, ForbiddenException, UserNotFoundException } from 'exceptions';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { LoginInput, RegisterInput } from 'types';
+import { LoginInput, RegisterInput, LoggedInUser } from 'types';
 import { BaseUserResolver } from '.';
 
 @Resolver(of => User)
@@ -13,11 +13,11 @@ export class AuthenticationResolver extends BaseUserResolver {
     return context.user as User;
   }
 
-  @Mutation(returns => AuthToken)
+  @Mutation(returns => LoggedInUser)
   public async login(
     @Arg('credential', type => LoginInput) credential: LoginInput,
     @Ctx() context: IContext
-  ): Promise<AuthToken> {
+  ): Promise<LoggedInUser> {
     if (context.user && context.user.isUser()) throw new BadRequestException('Already logged in. Please logout first.');
     if (credential.email && credential.username) throw new ForbiddenException('Only login with username OR email');
     if (!credential.email && !credential.username) throw new ForbiddenException('Username OR email is required');
@@ -26,8 +26,8 @@ export class AuthenticationResolver extends BaseUserResolver {
     const user = await this.userRepository.findByUsernameOrEmail({ username, email });
     if (!user || !user.isValidPassword(password)) throw new UserNotFoundException();
     user.generateToken();
-    const { authToken } = await this.userRepository.saveOrFail(user);
-    return authToken;
+    const loggedInUser = await this.userRepository.saveOrFail(user);
+    return LoggedInUser.fromUser(loggedInUser);
   }
 
   @Mutation(returns => User)

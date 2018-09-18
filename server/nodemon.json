@@ -3,8 +3,7 @@
     "restartable": "rs",
     "ignore": [
         "node_modules",
-        "src",
-        "lib"
+        "src"
     ],
     "watch": "build/bundle.js"
 }

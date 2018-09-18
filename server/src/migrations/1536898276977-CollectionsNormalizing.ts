@@ -23,4 +23,5 @@ export const down = async () => {
   const anonymousUser = await userCollection.findOne({ username: 'anonymous' });
   await stationCollection.updateMany({ ownerId: anonymousUser._id }, { $set: { ownerId: null } });
   await songCollection.updateMany({ creatorId: anonymousUser._id }, { $set: { creatorId: null } });
+  userCollection.remove(anonymousUser);
 };

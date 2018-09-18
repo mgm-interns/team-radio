@@ -1,5 +1,6 @@
 import { Typography } from '@material-ui/core';
 import { VideoLibrary as SongIcon } from '@material-ui/icons';
+import { Authorization } from 'authProvider';
 import * as React from 'react';
 
 const {
@@ -30,8 +31,8 @@ const SongFilter = (props: any) => (
 );
 
 export const SongList = (props: any) => (
-  <List {...props} filters={<SongFilter />} sort={{ field: 'createdAt', order: 'DESC' }}>
-    <Responsive small={<SongSmallDataGrid />} medium={<SongMediumDataGrid />} />
+  <List {...props} title={<div>List</div>} filters={<SongFilter />} sort={{ field: 'createdAt', order: 'DESC' }}>
+    <Responsive small={<SongSmallDataGrid />} medium={<SongMediumDataGrid permissions={props.permissions} />} />
   </List>
 );
 
@@ -44,7 +45,7 @@ export const SongSmallDataGrid = (props: any) => (
   />
 );
 
-export const SongMediumDataGrid = (props: any) => (
+export const SongMediumDataGrid = (props: Authorization.PermissionsProps) => (
   <Datagrid {...props}>
     <FunctionField
       label="Thumbnail"
@@ -82,7 +83,7 @@ export const SongMediumDataGrid = (props: any) => (
     />
     <DateField source="createdAt" showTime />
     <FunctionField label="duration" render={(record: any) => `${record.duration / 1000} seconds`} />
+    {Authorization.isAdmin(props.permissions) && <EditButton />}
     <ShowButton />
-    <EditButton />
   </Datagrid>
 );

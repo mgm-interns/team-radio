@@ -1,5 +1,6 @@
 import { Button, createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 import { History as HistoryIcon, QueueMusic as PlaylistIcon, VideoLibrary as SongIcon } from '@material-ui/icons';
+import { Authorization } from 'authProvider';
 import * as React from 'react';
 import { SongMediumDataGrid } from 'resources';
 import { StationTitle } from './StationTitle';
@@ -54,7 +55,7 @@ class BaseStationShow extends React.Component<BaseStationShow.Props> {
               )}
             />
             <ReferenceManyField label="" reference="songs" target="station">
-              <SongMediumDataGrid />
+              <SongMediumDataGrid permissions={this.props.permissions} />
             </ReferenceManyField>
           </Tab>
         </TabbedShowLayout>
@@ -75,7 +76,7 @@ const styles = ({ spacing }: Theme) =>
   });
 
 export namespace BaseStationShow {
-  export interface Props extends WithStyles<typeof styles> {}
+  export interface Props extends WithStyles<typeof styles>, Authorization.PermissionsProps {}
 }
 
 export const StationShow = withStyles(styles)(BaseStationShow);

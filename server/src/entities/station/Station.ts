@@ -1,17 +1,10 @@
-import {
-  IsArray,
-  IsBoolean,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  MaxLength,
-  MinLength,
-  NotContains
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, MaxLength, MinLength, NotContains } from 'class-validator';
+import { User } from 'entities';
 import slugify from 'slugify';
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ObjectID } from 'typeorm';
 import { BaseEntity } from '..';
+import { UserRole } from '../user';
 
 @ObjectType()
 @Entity({ name: 'stations' })
@@ -63,5 +56,21 @@ export class Station extends BaseEntity {
     this.stationId = slugify(this.stationName, {
       lower: true
     });
+  }
+
+  public isOwner(user: User) {
+    if (user.roles) {
+      const matchedRole = user.roles.find(
+        role =>
+          // The owner of stations
+          (role.role === UserRole.STATION_OWNER && role.isMatchedStationId(this._id)) ||
+          // System administrator is also the owner
+          role.role === UserRole.ADMIN
+      );
+      if (matchedRole) {
+        return true;
+      }
+    }
+    return false;
   }
 }

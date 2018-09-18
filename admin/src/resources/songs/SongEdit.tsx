@@ -10,7 +10,8 @@ const {
   LongTextInput,
   BooleanInput,
   ReferenceArrayInput,
-  SelectArrayInput
+  SelectArrayInput,
+  AutocompleteInput
 } = require('react-admin');
 
 export const SongEdit = (props: any) => (

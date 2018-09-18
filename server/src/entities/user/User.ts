@@ -2,9 +2,10 @@ import * as Bcrypt from 'bcrypt-nodejs';
 import { IsEmail, IsNumber, IsUrl, MaxLength, MinLength, IsOptional } from 'class-validator';
 import { IdentifiableUser } from 'config';
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity } from 'typeorm';
-import { AuthToken } from '.';
+import { Column, Entity, ObjectID } from 'typeorm';
+import { AuthToken, Role } from '.';
 import { BaseEntity } from '..';
+import { UserRole } from './Role';
 
 @ObjectType()
 @Entity({ name: 'users' })
@@ -99,6 +100,10 @@ export class User extends BaseEntity implements IdentifiableUser {
   // @Column()
   // history: [];
 
+  @Field(type => [Role], { nullable: true })
+  @Column(type => Role)
+  roles?: Role[];
+
   public isUser() {
     return true;
   }
@@ -141,6 +146,32 @@ export class User extends BaseEntity implements IdentifiableUser {
     if (refreshToken === this.authToken.refreshToken) {
       const now = new Date().getTime();
       if (now < this.authToken.refreshTokenExpiredAt) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public isAdmin() {
+    if (this.roles) {
+      const matchedRole = this.roles.find(role => role.role === UserRole.ADMIN);
+      if (matchedRole) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public isStationOwner(stationId: string) {
+    if (this.roles) {
+      const matchedRole = this.roles.find(
+        role =>
+          // The owner of stations
+          (role.role === UserRole.STATION_OWNER && role.isMatchedStationId(stationId)) ||
+          // System administrator is also the owner
+          role.role === UserRole.ADMIN
+      );
+      if (matchedRole) {
         return true;
       }
     }

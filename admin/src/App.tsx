@@ -6,7 +6,7 @@ import {
   Radio as StationIcon,
   VideoLibrary as SongIcon
 } from '@material-ui/icons';
-import { authProvider } from 'authProvider';
+import { Authorization, authProvider } from 'authProvider';
 import { Dashboard } from 'dashboard';
 import { buildGraphQLProvider } from 'dataProvider';
 import { Menu } from 'layout';
@@ -25,6 +25,7 @@ import {
   UserShow
 } from 'resources';
 import { theme } from 'theme';
+
 const { Admin, Resource } = require('react-admin');
 
 export class App extends React.Component<App.Props, App.States> {
@@ -65,47 +66,54 @@ export class App extends React.Component<App.Props, App.States> {
     }
     return (
       <Admin theme={theme} menu={Menu} dataProvider={dataProvider} authProvider={authProvider} dashboard={Dashboard}>
-        <Resource
-          //
-          name="users"
-          icon={UserIcon}
-          list={UserList}
-          edit={UserEdit}
-          create={UserCreate}
-          show={UserShow}
-        />
-        <Resource
-          name="stations"
-          icon={StationIcon}
-          list={StationList}
-          edit={StationEdit}
-          create={StationCreate}
-          show={StationShow}
-        />
-        <Resource
-          //
-          name="songs"
-          icon={SongIcon}
-          list={SongList}
-          edit={SongEdit}
-          show={SongShow}
-        />
-        <Resource
-          //
-          name="playlistSongs"
-          icon={PlaylistIcon}
-          list={SongList}
-          edit={SongEdit}
-          show={SongShow}
-        />
-        <Resource
-          //
-          name="historySongs"
-          icon={HistoryIcon}
-          list={SongList}
-          edit={SongEdit}
-          show={SongShow}
-        />
+        {(permissions: Authorization.Permissions) => [
+          <Resource
+            //
+            key="users"
+            name="users"
+            icon={UserIcon}
+            list={UserList}
+            edit={Authorization.isAdmin(permissions) ? UserEdit : null}
+            create={Authorization.isAdmin(permissions) ? UserCreate : null}
+            show={UserShow}
+          />,
+          <Resource
+            key="stations"
+            name="stations"
+            icon={StationIcon}
+            list={StationList}
+            edit={StationEdit}
+            create={StationCreate}
+            show={StationShow}
+          />,
+          <Resource
+            //
+            key="songs"
+            name="songs"
+            icon={SongIcon}
+            list={SongList}
+            edit={Authorization.isAdmin(permissions) ? SongEdit : null}
+            show={SongShow}
+          />,
+          <Resource
+            //
+            key="playlistSongs"
+            name="playlistSongs"
+            icon={PlaylistIcon}
+            list={SongList}
+            edit={Authorization.isAdmin(permissions) ? SongEdit : null}
+            show={SongShow}
+          />,
+          <Resource
+            //
+            key="historySongs"
+            name="historySongs"
+            icon={HistoryIcon}
+            list={SongList}
+            edit={Authorization.isAdmin(permissions) ? SongEdit : null}
+            show={SongShow}
+          />
+        ]}
       </Admin>
     );
   }

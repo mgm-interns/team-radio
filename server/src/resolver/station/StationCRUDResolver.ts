@@ -1,9 +1,10 @@
-import { ObjectID } from 'bson';
-import { Station } from 'entities';
-import { BadRequestException, StationNotFoundException } from 'exceptions';
-import { SongRepository } from 'repositories/song';
+import { ObjectId } from 'bson';
+import { IAuthenticatedContext } from 'config';
+import { Station, UserRole } from 'entities';
+import { BadRequestException, StationNotFoundException, UnauthorizedException } from 'exceptions';
+import { SongRepository } from 'repositories';
 import { CRUDService } from 'services';
-import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { ListMetaData, StationFilter } from 'types';
@@ -41,27 +42,11 @@ export class StationCRUDResolver extends BaseStationResolver implements ICRUDRes
     @Arg('sortOrder', { nullable: true }) sortOrder?: string,
     @Arg('filter', type => StationFilter, { nullable: true }) filter?: StationFilter
   ): Promise<Station[]> {
-    if (filter && filter.ids) {
-      return Promise.all(filter.ids.map(id => this.stationRepository.findOneOrFail(id)));
-    }
-    if (filter && (filter.ownerId || filter.owner)) {
-      const ownerId = filter.ownerId || (filter.owner && filter.owner.id);
-      const condition = this.crudService.parseAllCondition(page, perPage, sortField, sortOrder, filter);
-      return this.stationRepository.find({
-        ...condition,
-        where: {
-          ...condition.where,
-          ownerId: new ObjectID(ownerId)
-        }
-      });
-    }
-    return this.stationRepository.find({
-      ...this.crudService.parseAllCondition(page, perPage, sortField, sortOrder, filter)
-    });
+    const [entities] = await this.findAllAndCount(page, perPage, sortField, sortOrder, filter);
+    return entities;
   }
 
-  // TODO: Solve .count function
-  @Query(returns => ListMetaData, { name: '_allStationsMeta', description: 'Get all the stations in system.' })
+  @Query(returns => ListMetaData, { name: '_allStationsMeta', description: 'Get meta for all the stations in system.' })
   public async meta(
     @Arg('page', type => Int, { nullable: true }) page?: number,
     @Arg('perPage', type => Int, { nullable: true }) perPage?: number,
@@ -69,9 +54,7 @@ export class StationCRUDResolver extends BaseStationResolver implements ICRUDRes
     @Arg('sortOrder', { nullable: true }) sortOrder?: string,
     @Arg('filter', type => StationFilter, { nullable: true }) filter?: StationFilter
   ): Promise<ListMetaData> {
-    const [stations, total] = await this.stationRepository.findAndCount({
-      ...this.crudService.parseAllCondition(page, perPage, sortField, sortOrder, filter)
-    });
+    const [entities, total] = await this.findAllAndCount(page, perPage, sortField, sortOrder, filter);
     return new ListMetaData(total);
   }
 
@@ -89,7 +72,7 @@ export class StationCRUDResolver extends BaseStationResolver implements ICRUDRes
     return this.stationRepository.saveOrFail(station);
   }
 
-  @Authorized()
+  @Authorized([UserRole.STATION_OWNER])
   @Mutation(returns => Station, { name: 'updateStation', description: 'Update a station in system.' })
   public async update(
     @Arg('id') id: string,
@@ -105,12 +88,40 @@ export class StationCRUDResolver extends BaseStationResolver implements ICRUDRes
     return this.stationRepository.saveOrFail(station);
   }
 
-  @Authorized()
+  @Authorized([UserRole.STATION_OWNER])
   @Mutation(returns => Station, { name: 'deleteStation', description: 'Delete a station in system.' })
   public async delete(@Arg('id') id: string): Promise<Station> {
     const station = await this.stationRepository.findOneOrFail(id);
     await this.stationRepository.remove(station);
     await this.songRepository.delete({ stationId: id });
     return station;
+  }
+
+  private async findAllAndCount(
+    page?: number,
+    perPage?: number,
+    sortField?: string,
+    sortOrder?: string,
+    filter?: StationFilter
+  ): Promise<[Station[], number]> {
+    if (filter && filter.ids) {
+      const total = filter.ids.length;
+      const entities = await Promise.all(filter.ids.map(id => this.stationRepository.findOneOrFail(id)));
+      return [entities, total];
+    }
+    if (filter && (filter.ownerId || filter.owner)) {
+      const ownerId = filter.ownerId || (filter.owner && filter.owner.id);
+      const condition = this.crudService.parseAllCondition(page, perPage, sortField, sortOrder, filter);
+      return this.stationRepository.findAndCount({
+        ...condition,
+        where: {
+          ...condition.where,
+          ownerId: new ObjectId(ownerId)
+        }
+      });
+    }
+    return this.stationRepository.findAndCount({
+      ...this.crudService.parseAllCondition(page, perPage, sortField, sortOrder, filter)
+    });
   }
 }

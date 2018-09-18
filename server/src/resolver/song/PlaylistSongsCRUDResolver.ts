@@ -1,6 +1,6 @@
-import { PlaylistSong } from 'entities';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { ListMetaData, SongFilter } from 'types';
+import { PlaylistSong, UserRole } from 'entities';
 import { SongCRUDResolver } from '.';
 
 @Resolver(of => PlaylistSong)
@@ -28,7 +28,7 @@ export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
 
   @Query(returns => ListMetaData, {
     name: '_allPlaylistSongsMeta',
-    description: "Get all the songs that's currently in playlist."
+    description: "Get meta for all the songs that's currently in playlist."
   })
   public async meta(
     @Arg('page', type => Int, { nullable: true }) page?: number,
@@ -49,7 +49,7 @@ export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
     return super.create();
   }
 
-  @Authorized()
+  @Authorized([UserRole.STATION_OWNER])
   @Mutation(returns => PlaylistSong, {
     name: 'updatePlaylistSong',
     description: "Update a song that's currently in playlist."
@@ -83,7 +83,7 @@ export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
     return PlaylistSong.fromSong(song);
   }
 
-  @Authorized()
+  @Authorized([UserRole.STATION_OWNER])
   @Mutation(returns => PlaylistSong, {
     name: 'deletePlaylistSong',
     description: "Delete a song that's currently in playlist."

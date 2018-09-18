@@ -1,5 +1,5 @@
-import { HistorySong } from 'entities';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { HistorySong, UserRole } from 'entities';
 import { ListMetaData, SongFilter } from 'types';
 import { SongCRUDResolver } from '.';
 
@@ -28,7 +28,7 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
 
   @Query(returns => ListMetaData, {
     name: '_allHistorySongsMeta',
-    description: "Get all the songs that's currently in history."
+    description: "Get meta for all the songs that's currently in history."
   })
   public async meta(
     @Arg('page', type => Int, { nullable: true }) page?: number,
@@ -51,7 +51,7 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
     return HistorySong.fromSong(song);
   }
 
-  @Authorized()
+  @Authorized([UserRole.STATION_OWNER])
   @Mutation(returns => HistorySong, {
     name: 'updateHistorySong',
     description: "Update a song that's currently in history."
@@ -85,7 +85,7 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
     return HistorySong.fromSong(song);
   }
 
-  @Authorized()
+  @Authorized([UserRole.STATION_OWNER])
   @Mutation(returns => HistorySong, {
     name: 'deleteHistorySong',
     description: "Delete a song that's currently in history."
