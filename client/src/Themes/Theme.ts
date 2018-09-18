@@ -1,5 +1,6 @@
 import { createMuiTheme, Theme } from '@material-ui/core';
 import { CommonColors } from '@material-ui/core/colors/common';
+import { Palette } from '@material-ui/core/styles/createPalette';
 import { Spacing } from '@material-ui/core/styles/spacing';
 
 interface RadioSpacing extends Spacing {
@@ -9,13 +10,21 @@ interface RadioSpacing extends Spacing {
   hugeUnit: number;
 }
 
-interface RadioCommon extends CommonColors {
+interface RadioCommonColors extends CommonColors {
+  facebookButtonBG: string;
+  googleButtonBG: string;
+  facebookButtonHoverBG: string;
+  googleButtonHoverBG: string;
   transparent(a?: number): string;
+}
+
+interface RadioPalette extends Palette {
+  common: RadioCommonColors;
 }
 
 export interface RadioTheme extends Theme {
   spacing: RadioSpacing;
-  common: RadioCommon;
+  palette: RadioPalette;
 }
 
 export const theme = createMuiTheme({
@@ -62,7 +71,11 @@ export const theme = createMuiTheme({
     common: {
       black: '#000',
       white: '#fff',
-      transparent: (a: number = 0) => `rgba(0, 0, 0, ${a})`
+      transparent: (a: number = 0) => `rgba(0, 0, 0, ${a})`,
+      facebookButtonBG: '#4267b2',
+      facebookButtonHoverBG: 'rgba(66, 103, 178, 0.5)',
+      googleButtonBG: '#db4437',
+      googleButtonHoverBG: 'rgba(219, 68, 55, 0.5)'
     }
   },
   spacing: {

@@ -1,16 +1,22 @@
-import { Container, FullLayout } from 'Containers';
-import { Home } from 'Pages';
 import * as React from 'react';
+import { ApolloProvider } from 'react-apollo';
 import { render } from 'react-dom';
+import { AppRouter } from 'router';
+import ApolloClient from 'apollo-boost';
 
-render(
-  <Container>
-    <FullLayout>
-      <Home />
-    </FullLayout>
-  </Container>,
-  document.getElementById('root')
-);
+export const App = () => {
+  const client = new ApolloClient({
+    uri: 'http://localhost:8000/api'
+  });
+
+  return (
+    <ApolloProvider client={client}>
+      <AppRouter />
+    </ApolloProvider>
+  );
+};
+
+render(<App />, document.getElementById('root'));
 
 if ((module as any).hot) {
   (module as any).hot.accept();

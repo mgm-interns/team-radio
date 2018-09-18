@@ -4,7 +4,10 @@ import { RadioTheme } from 'Themes';
 export const styles = ({ palette, spacing }: RadioTheme) =>
   createStyles({
     container: {
-      background: 'transparent'
+      background: palette.common.transparent()
+    },
+    toolBarContainer: {
+      justifyContent: 'space-between'
     },
     containerLeft: {
       display: 'flex',
@@ -14,10 +17,6 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
       textAlign: 'end'
     },
     homeButton: {
-      marginLeft: spacing.mediumUnit,
-
-      '&:hover': {
-        cursor: 'pointer'
-      }
+      marginLeft: spacing.mediumUnit
     }
   });

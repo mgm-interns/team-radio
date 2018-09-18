@@ -6,9 +6,12 @@ import {
   Menu,
   MenuItem,
   Typography,
+  Button,
   withStyles,
   WithStyles
 } from '@material-ui/core';
+import { TextLink } from 'Components';
+import { Link } from 'react-router-dom';
 import { Identifiable, Styleable } from 'Common';
 import * as React from 'react';
 import { MdAccountCircle, MdMenu } from 'react-icons/md';
@@ -27,35 +30,46 @@ export class CoreHeader extends React.Component<Header.CoreProps, Header.States>
     const { classes } = this.props;
     return (
       <AppBar position={'fixed'} className={classes.container}>
-        <Toolbar color={'primary'}>
-          <Grid container>
-            <Grid item xs={12} md={9}>
-              <div className={classes.containerLeft}>
-                <IconButton color={'inherit'}>
-                  <MdMenu />
-                </IconButton>
-                <Typography variant={'title'} color={'inherit'} className={classes.homeButton}>
-                  Home
-                </Typography>
-              </div>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <div className={classes.containerRight}>
-                <IconButton color={'inherit'} onClick={this.openMenu}>
-                  <MdAccountCircle />
-                </IconButton>
-                <Menu
-                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  open={Boolean(this.state.anchorEl)}
-                  onClose={this.closeMenu}
-                >
-                  <MenuItem onClick={this.closeMenu}>Profile</MenuItem>
-                  <MenuItem onClick={this.closeMenu}>Logout</MenuItem>
-                </Menu>
-              </div>
-            </Grid>
-          </Grid>
+        <Toolbar color={'primary'} className={classes.toolBarContainer}>
+          <div className={classes.containerLeft}>
+            <TextLink
+              linkTo={'./'}
+              variant={'title'}
+              color={'inherit'}
+              children={'Home'}
+              className={classes.homeButton}
+            />
+            <TextLink
+              linkTo={'./station'}
+              variant={'title'}
+              color={'inherit'}
+              children={'Station'}
+              className={classes.homeButton}
+            />
+          </div>
+          <div className={classes.containerRight}>
+            <IconButton aira-owns={this.openMenu ? 'menu-appbar' : null} color={'inherit'} onClick={this.openMenu}>
+              <MdAccountCircle />
+            </IconButton>
+            <Menu
+              id={'menu-appbar'}
+              anchorEl={this.state.anchorEl}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.closeMenu}
+            >
+              <TextLink linkTo={'./profile'} variant={'title'} color={'inherit'} className={classes.homeButton}>
+                <MenuItem onClick={this.closeMenu}>Profile</MenuItem>
+              </TextLink>
+              <TextLink linkTo={'./login'} variant={'title'} color={'inherit'} className={classes.homeButton}>
+                <MenuItem onClick={this.closeMenu}>Login</MenuItem>
+              </TextLink>
+              <TextLink linkTo={'./register'} variant={'title'} color={'inherit'} className={classes.homeButton}>
+                <MenuItem onClick={this.closeMenu}>Register</MenuItem>
+              </TextLink>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
     );

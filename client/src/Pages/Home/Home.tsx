@@ -1,63 +1,63 @@
 import {
-  Typography,
-  withStyles,
-  WithStyles,
-  TextField,
   Button,
-  GridList,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia
+  FormControlLabel,
+  FormGroup,
+  Switch,
+  TextField,
+  Typography,
+  List,
+  ListItem,
+  WithStyles,
+  withStyles
 } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
-import { Station } from 'Models';
-import * as React from 'react';
-import { MdAddCircleOutline } from 'react-icons/md';
-import { styles } from './styles';
 import classnames from 'classnames';
-
-export const STATIONS: Station[] = [
-  {
-    info: {
-      name: 'ABC',
-      onlineNumber: 1
-    }
-  },
-  {
-    info: {
-      name: 'A12',
-      onlineNumber: 3
-    }
-  },
-  {
-    info: {
-      name: 'WFM',
-      onlineNumber: 0
-    }
-  },
-  {
-    info: {
-      name: 'mgm shop',
-      onlineNumber: 0
-    }
-  },
-  {
-    info: {
-      name: 'AGCS',
-      onlineNumber: 0
-    }
-  },
-  {
-    info: {
-      name: 'Bank',
-      onlineNumber: 0
-    }
-  }
-];
+import { Identifiable, Styleable } from 'Common';
+import { SimpleStation } from 'Components';
+import { AllStations } from 'RadioGraphql';
+import * as React from 'react';
+import { Query } from 'react-apollo';
+import { MdCreate } from 'react-icons/md';
+import { styles } from './styles';
 
 export class CoreHome extends React.Component<Home.CoreProps, Home.States> {
+  constructor(props: Home.CoreProps) {
+    super(props);
+
+    this.state = {
+      inputValue: '',
+      privateStation: false
+    };
+  }
+
+  onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const value = event.target.value;
+    this.setState({ inputValue: value });
+  };
+
+  onPrivateStationSwitch = (): void => {
+    this.setState({ privateStation: !this.state.privateStation });
+  };
+
+  getAllStations = (): React.ReactElement<{}> => {
+    const { classes } = this.props;
+    return (
+      <Query query={AllStations.getAllStationsQuery}>
+        {({ loading, error, data }) => {
+          if (loading) return 'Loading...';
+          if (error) return `Error: ${error.message}`;
+
+          return (
+            <div className={classes.stations}>
+              {data.allStations.map((station: AllStations.Station) => (
+                <SimpleStation key={station.stationId} station={station} />
+              ))}
+            </div>
+          );
+        }}
+      </Query>
+    );
+  };
+
   render(): React.ReactNode {
     const { classes } = this.props;
     return (
@@ -68,26 +68,28 @@ export class CoreHome extends React.Component<Home.CoreProps, Home.States> {
               className={classes.image}
               sizes="(max-width: 2520px) 100vw, 2520px"
               srcSet="
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_320.jpg 320w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_763.jpg 763w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_1101.jpg 1101w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_1364.jpg 1364w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_1566.jpg 1566w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_1776.jpg 1776w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_1960.jpg 1960w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_2119.jpg 2119w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_2273.jpg 2273w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_2420.jpg 2420w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_2490.jpg 2490w,
-              /images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_2520.jpg 2520w"
-              src="/images/90-s-cap-daylight-1350419_dbn83y_c_scale,w_2520.jpg"
+                /images/homepage_BG_d0mq87_c_scale,w_320.jpg 320w,
+                /images/homepage_BG_d0mq87_c_scale,w_707.jpg 707w,
+                /images/homepage_BG_d0mq87_c_scale,w_986.jpg 986w,
+                /images/homepage_BG_d0mq87_c_scale,w_1232.jpg 1232w,
+                /images/homepage_BG_d0mq87_c_scale,w_1435.jpg 1435w,
+                /images/homepage_BG_d0mq87_c_scale,w_1615.jpg 1615w,
+                /images/homepage_BG_d0mq87_c_scale,w_1786.jpg 1786w,
+                /images/homepage_BG_d0mq87_c_scale,w_1938.jpg 1938w,
+                /images/homepage_BG_d0mq87_c_scale,w_2076.jpg 2076w,
+                /images/homepage_BG_d0mq87_c_scale,w_2218.jpg 2218w,
+                /images/homepage_BG_d0mq87_c_scale,w_2344.jpg 2344w,
+                /images/homepage_BG_d0mq87_c_scale,w_2466.jpg 2466w,
+                /images/homepage_BG_d0mq87_c_scale,w_2497.jpg 2497w,
+                /images/homepage_BG_d0mq87_c_scale,w_2520.jpg 2520w"
+              src="/images/homepage_BG_d0mq87_c_scale,w_2520.jpg"
               alt=""
             />
           </picture>
         </div>
         <div className={classes.pageInfoContainer}>
           <div className={classes.homeBio}>
-            <Typography color={'inherit'} variant={'display4'}>
+            <Typography className={classes.logo} color={'inherit'} variant={'display4'}>
               Team Radio
             </Typography>
             <Typography color={'inherit'} variant={'display2'}>
@@ -95,26 +97,42 @@ export class CoreHome extends React.Component<Home.CoreProps, Home.States> {
             </Typography>
           </div>
           <div className={classes.stationCreator}>
-            <TextField label={'Your team station'} placeholder={'e.g. Awesome Radio'} margin={'normal'} fullWidth/>
-            <Button variant={'contained'} color={'primary'} fullWidth>
-              Create
+            <FormGroup row>
+              <TextField
+                label={'Your team station'}
+                placeholder={'e.g. Awesome Radio'}
+                margin={'normal'}
+                fullWidth
+                InputProps={{ className: classes.input }}
+                InputLabelProps={{ className: classes.inputLabel }}
+                onChange={this.onChange}
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={this.state.privateStation}
+                    onChange={this.onPrivateStationSwitch}
+                    color={'primary'}
+                  />
+                }
+                label={<Typography color={'primary'}>Private</Typography>}
+              />
+            </FormGroup>
+            <Button
+              className={classnames({ disabled: this.state.inputValue === '' })}
+              variant={'contained'}
+              color={'primary'}
+              fullWidth
+              disabled={this.state.inputValue === ''}
+            >
+              <MdCreate /> <span className={classes.createButtonLabel}>Create</span>
             </Button>
           </div>
         </div>
-        {/*<div className={classes.stationsList}>*/}
-        {/*{STATIONS.map(({ info }: Station) => {*/}
-        {/*return (*/}
-        {/*<div key={info.name} className={classes.stationContainer}>*/}
-        {/*<img src="/images/station_default_cover.png" alt={info.name} className={classes.stationImg} />*/}
-        {/*<div className={classes.onlineNumber}>*/}
-        {/*<MdAddCircleOutline />*/}
-        {/*<Typography variant={'caption'}>{info.onlineNumber} online</Typography>*/}
-        {/*</div>*/}
-        {/*<Typography variant={'subheading'}>{info.name}</Typography>*/}
-        {/*</div>*/}
-        {/*);*/}
-        {/*})}*/}
-        {/*</div>*/}
+        {this.getAllStations()}
+        <div>
+          Something
+        </div>
       </div>
     );
   }
@@ -125,5 +143,8 @@ export const Home = withStyles(styles)(CoreHome);
 export namespace Home {
   export interface CoreProps extends Props, WithStyles<typeof styles> {}
   export interface Props extends Identifiable, Styleable {}
-  export interface States {}
+  export interface States {
+    inputValue: string;
+    privateStation: boolean;
+  }
 }

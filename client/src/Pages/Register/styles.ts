@@ -21,16 +21,20 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
       transform: 'translate(-50%,-50%)',
       color: palette.common.white
     },
-    homeBio: {
+    cardContainer: {
+      background: palette.common.transparent(0.5)
+    },
+    cardHeaderTitle: {
+      marginBottom: spacing.mediumUnit,
       textAlign: 'center',
+      color: palette.common.white
+    },
+    textFieldsContainer: {
+      marginLeft: 12,
+      marginRight: 12
+    },
+    textField: {
       marginBottom: spacing.hugeUnit
-    },
-    logo: {
-      // fontFamily: 'Pacifico,sans-serif'
-    },
-    stationCreator: {
-      display: 'flex',
-      flexDirection: 'column'
     },
     input: {
       color: palette.common.white,
@@ -42,16 +46,8 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
     inputLabel: {
       color: palette.common.white
     },
-    disabled: {
-      color: palette.common.white
-    },
-    createButtonLabel: {
-      marginLeft: spacing.smallUnit
-    },
-    stations: {
-      overflowX: 'scroll',
-      overflowY: 'hidden',
-      whiteSpace: 'nowrap',
-      background: '#f4f0ea'
+    cardActions: {
+      display: 'flex',
+      flexDirection: 'column'
     }
   });
