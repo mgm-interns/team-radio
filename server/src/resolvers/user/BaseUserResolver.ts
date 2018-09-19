@@ -1,6 +1,6 @@
 import { User } from 'entities';
 import { UserRepository } from 'repositories';
-import { BaseResolver } from 'resolver';
+import { BaseResolver } from 'resolvers';
 import { Logger } from 'services';
 import { FieldResolver, Resolver, Root } from 'type-graphql';
 import { Inject } from 'typedi';

@@ -1,7 +1,14 @@
 import { Song, Station, User } from 'entities';
 import { Logger } from 'services';
 import { Inject, Service } from 'typedi';
-import { Connection, ConnectionOptions, createConnection, EntitySchema, getConnectionOptions } from 'typeorm';
+import {
+  Connection,
+  ConnectionOptions,
+  createConnection,
+  EntitySchema,
+  getConnectionOptions,
+  ObjectType
+} from 'typeorm';
 
 @Service()
 export class DataAccess {
@@ -12,6 +19,10 @@ export class DataAccess {
 
   public get connection(): Connection {
     return this._connection;
+  }
+
+  public getRepository<T>(customRepository: ObjectType<T>): T {
+    return this.connection.getCustomRepository(customRepository);
   }
 
   public async connect() {

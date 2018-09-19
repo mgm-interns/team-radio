@@ -26,7 +26,7 @@ import {
 } from 'resources';
 import { theme } from 'theme';
 
-const { Admin, Resource } = require('react-admin');
+const { Admin, Resource, NotFound } = require('react-admin');
 
 export class App extends React.Component<App.Props, App.States> {
   constructor(props: App.Props) {
@@ -72,9 +72,9 @@ export class App extends React.Component<App.Props, App.States> {
             key="users"
             name="users"
             icon={UserIcon}
-            list={UserList}
-            edit={Authorization.isAdmin(permissions) ? UserEdit : null}
-            create={Authorization.isAdmin(permissions) ? UserCreate : null}
+            list={Authorization.isAdmin(permissions) ? UserList : NotFound}
+            edit={Authorization.isAdmin(permissions) ? UserEdit : NotFound}
+            create={Authorization.isAdmin(permissions) ? UserCreate : NotFound}
             show={UserShow}
           />,
           <Resource
@@ -91,8 +91,8 @@ export class App extends React.Component<App.Props, App.States> {
             key="songs"
             name="songs"
             icon={SongIcon}
-            list={SongList}
-            edit={Authorization.isAdmin(permissions) ? SongEdit : null}
+            list={(props: any) => <SongList title="Songs" {...props} />}
+            edit={Authorization.isAdmin(permissions) ? SongEdit : NotFound}
             show={SongShow}
           />,
           <Resource
@@ -100,8 +100,8 @@ export class App extends React.Component<App.Props, App.States> {
             key="playlistSongs"
             name="playlistSongs"
             icon={PlaylistIcon}
-            list={SongList}
-            edit={Authorization.isAdmin(permissions) ? SongEdit : null}
+            list={(props: any) => <SongList title="Playlist" {...props} />}
+            edit={Authorization.isAdmin(permissions) ? SongEdit : NotFound}
             show={SongShow}
           />,
           <Resource
@@ -109,8 +109,8 @@ export class App extends React.Component<App.Props, App.States> {
             key="historySongs"
             name="historySongs"
             icon={HistoryIcon}
-            list={SongList}
-            edit={Authorization.isAdmin(permissions) ? SongEdit : null}
+            list={(props: any) => <SongList title="History" {...props} />}
+            edit={Authorization.isAdmin(permissions) ? SongEdit : NotFound}
             show={SongShow}
           />
         ]}

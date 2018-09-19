@@ -12,6 +12,7 @@ export const UserEdit = (props: any) => (
       <LongTextInput source="username" validate={[length({ min: 6, max: 32 })]} />
       <LongTextInput source="firstname" />
       <LongTextInput source="lastname" />
+      <LongTextInput source="name" />
       <LongTextInput source="city" />
       <LongTextInput source="country" />
       <LongTextInput source="avatarUrl" validate={[url()]} />

@@ -13,9 +13,7 @@ export class Role {
   @Column({ nullable: true })
   stationId?: string;
 
-  public isMatchedStationId(stationId: string | ObjectID) {
-    console.log('this.stationId', this.stationId);
-    console.log('stationId', stationId);
+  public isMatchedWithStationId(stationId: string | ObjectID) {
     if (this.stationId) {
       return new ObjectId(this.stationId).equals(stationId.toString());
     }

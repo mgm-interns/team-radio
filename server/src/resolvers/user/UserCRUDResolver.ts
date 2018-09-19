@@ -1,7 +1,5 @@
-import { ValidationError } from 'class-validator';
 import { User, UserRole } from 'entities';
-import { ForbiddenException, UnprocessedEntityException, UserNotFoundException } from 'exceptions';
-import { CRUDService } from 'services';
+import { UserCRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
 import { BaseFilter, ListMetaData } from 'types';
@@ -11,13 +9,11 @@ import { ICRUDResolver } from '..';
 @Resolver(of => User)
 export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<User> {
   @Inject()
-  private crudService: CRUDService;
+  private userCRUDService: UserCRUDService;
 
   @Query(returns => User, { name: 'User', description: 'Get user by id' })
   public async one(@Arg('id') id: string): Promise<User> {
-    const user = await this.userRepository.findOne(id);
-    if (!user) throw new UserNotFoundException();
-    return user;
+    return this.userCRUDService.findOne(id);
   }
 
   @Authorized()
@@ -29,7 +25,7 @@ export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<
     @Arg('sortOrder', { nullable: true }) sortOrder?: string,
     @Arg('filter', type => BaseFilter, { nullable: true }) filter?: BaseFilter
   ): Promise<User[]> {
-    const [entities] = await this.findAllAndCount(page, perPage, sortField, sortOrder, filter);
+    const [entities] = await this.userCRUDService.findAllAndCount(page, perPage, sortField, sortOrder, filter);
     return entities;
   }
 
@@ -42,7 +38,7 @@ export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<
     @Arg('sortOrder', { nullable: true }) sortOrder?: string,
     @Arg('filter', type => BaseFilter, { nullable: true }) filter?: BaseFilter
   ): Promise<ListMetaData> {
-    const [entities, total] = await this.findAllAndCount(page, perPage, sortField, sortOrder, filter);
+    const [entities, total] = await this.userCRUDService.findAllAndCount(page, perPage, sortField, sortOrder, filter);
     return new ListMetaData(total);
   }
 
@@ -54,35 +50,24 @@ export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<
     @Arg('email', { nullable: true }) email?: string,
     @Arg('firstname', { nullable: true }) firstname?: string,
     @Arg('lastname', { nullable: true }) lastname?: string,
+    @Arg('name', { nullable: true }) name?: string,
     @Arg('city', { nullable: true }) city?: string,
     @Arg('country', { nullable: true }) country?: string,
     @Arg('avatarUrl', { nullable: true }) avatarUrl?: string,
     @Arg('coverUrl', { nullable: true }) coverUrl?: string
   ): Promise<User> {
-    if (!email && !username) throw new ForbiddenException('Username OR email is required');
-
-    const existedUser = await this.userRepository.findByUsernameOrEmail({ email, username });
-    if (existedUser) throw new ForbiddenException('Username or Email has been taken.');
-
-    const user = this.userRepository.create({ email, firstname, lastname, city, country, avatarUrl, coverUrl });
-    if (password) {
-      if (password.length >= 6 && password.length <= 32) user.generatePassword(password);
-      else {
-        const error = new ValidationError();
-        error.property = 'password';
-        error.constraints = {
-          minLength: 'Password must be longer than 6 characters',
-          maxLength: 'Password must not be longer than 32 characters'
-        };
-        error.value = password;
-        error.children = [];
-        throw new UnprocessedEntityException('Can not save User', [error]);
-      }
-    }
-    if (username) user.username = username;
-    else user.generateUsernameFromEmail();
-
-    return this.userRepository.saveOrFail(user);
+    return this.userCRUDService.create(
+      password,
+      username,
+      email,
+      firstname,
+      lastname,
+      name,
+      city,
+      country,
+      avatarUrl,
+      coverUrl
+    );
   }
 
   @Authorized([UserRole.ADMIN])
@@ -93,46 +78,29 @@ export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<
     @Arg('email', { nullable: true }) email?: string,
     @Arg('firstname', { nullable: true }) firstname?: string,
     @Arg('lastname', { nullable: true }) lastname?: string,
+    @Arg('name', { nullable: true }) name?: string,
     @Arg('city', { nullable: true }) city?: string,
     @Arg('country', { nullable: true }) country?: string,
     @Arg('avatarUrl', { nullable: true }) avatarUrl?: string,
     @Arg('coverUrl', { nullable: true }) coverUrl?: string
   ): Promise<User> {
-    const user = await this.userRepository.findOneOrFail(id);
-    if (username) user.username = username;
-    if (email) user.email = email;
-    if (firstname) user.firstname = firstname;
-    if (lastname) user.lastname = lastname;
-    if (city) user.city = city;
-    if (country) user.country = country;
-    if (avatarUrl) user.avatarUrl = avatarUrl;
-    if (coverUrl) user.coverUrl = coverUrl;
-
-    return this.userRepository.saveOrFail(user);
+    return this.userCRUDService.update(
+      id,
+      username,
+      email,
+      firstname,
+      lastname,
+      name,
+      city,
+      country,
+      avatarUrl,
+      coverUrl
+    );
   }
 
   @Authorized([UserRole.ADMIN])
   @Mutation(returns => User, { name: 'deleteUser', description: 'Delete a user in system.' })
   public async delete(@Arg('id') id: string): Promise<User> {
-    const user = await this.userRepository.findOneOrFail(id);
-    await this.userRepository.remove(user);
-    return user;
-  }
-
-  private async findAllAndCount(
-    page?: number,
-    perPage?: number,
-    sortField?: string,
-    sortOrder?: string,
-    filter?: BaseFilter
-  ): Promise<[User[], number]> {
-    if (filter && filter.ids) {
-      const total = filter.ids.length;
-      const entities = await Promise.all(filter.ids.map(id => this.userRepository.findOneOrFail(id)));
-      return [entities, total];
-    }
-    return this.userRepository.findAndCount({
-      ...this.crudService.parseAllCondition(page, perPage, sortField, sortOrder, filter)
-    });
+    return this.userCRUDService.delete(id);
   }
 }

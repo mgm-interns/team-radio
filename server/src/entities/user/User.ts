@@ -1,11 +1,10 @@
 import * as Bcrypt from 'bcrypt-nodejs';
-import { IsEmail, IsNumber, IsUrl, MaxLength, MinLength, IsOptional } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsUrl, MaxLength, MinLength } from 'class-validator';
 import { IdentifiableUser } from 'config';
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity, ObjectID } from 'typeorm';
-import { AuthToken, Role } from '.';
+import { Column, Entity } from 'typeorm';
+import { AuthToken, Role, UserRole } from '.';
 import { BaseEntity } from '..';
-import { UserRole } from './Role';
 
 @ObjectType()
 @Entity({ name: 'users' })
@@ -39,6 +38,11 @@ export class User extends BaseEntity implements IdentifiableUser {
   @Field({ nullable: true })
   @Column()
   lastname: string;
+
+  @IsOptional()
+  @Field({ nullable: true })
+  @Column()
+  name: string;
 
   @IsOptional()
   @Field({ nullable: true })
@@ -167,7 +171,7 @@ export class User extends BaseEntity implements IdentifiableUser {
       const matchedRole = this.roles.find(
         role =>
           // The owner of stations
-          (role.role === UserRole.STATION_OWNER && role.isMatchedStationId(stationId)) ||
+          (role.role === UserRole.STATION_OWNER && role.isMatchedWithStationId(stationId)) ||
           // System administrator is also the owner
           role.role === UserRole.ADMIN
       );

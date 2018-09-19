@@ -29,7 +29,7 @@ export const UserList = (props: any) => (
       small={
         <SimpleList
           leftAvatar={(record: any) => (record.avatarUrl ? <img src={record.avatarUrl} /> : <UserIcon />)}
-          primaryText={(record: any) => `${record.firstname} ${record.lastname}`}
+          primaryText={(record: any) => record.name}
           secondaryText={(record: any) => `${record.username || record.email}`}
         />
       }
@@ -50,8 +50,7 @@ export const UserMediumDatagrid = (props: any) => (
     />
     <TextField source="username" />
     <EmailField source="email" />
-    <TextField source="firstname" />
-    <TextField source="lastname" />
+    <TextField source="name" />
     <TextField source="reputation" />
     {Authorization.isAdmin(props.permissions) && <EditButton />}
     <ShowButton />

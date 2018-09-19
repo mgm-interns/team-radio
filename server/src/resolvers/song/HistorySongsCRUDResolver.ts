@@ -2,13 +2,17 @@ import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { HistorySong, UserRole } from 'entities';
 import { ListMetaData, SongFilter } from 'types';
 import { SongCRUDResolver } from '.';
+import { Inject } from 'typedi';
+import { HistorySongCRUDService } from 'services';
 
 @Resolver(of => HistorySong)
 export class HistorySongsCRUDResolver extends SongCRUDResolver {
+  @Inject()
+  private historySongCRUDService: HistorySongCRUDService;
+
   @Query(returns => HistorySong, { name: 'HistorySong', description: "Get song that's currently in history by id." })
   public async one(@Arg('id', { nullable: true }) id?: string): Promise<HistorySong> {
-    const song = await super.one(id);
-    return HistorySong.fromSong(song);
+    return this.historySongCRUDService.findOne(id);
   }
 
   @Query(returns => [HistorySong], {
@@ -22,8 +26,8 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
     @Arg('sortOrder', { nullable: true }) sortOrder?: string,
     @Arg('filter', type => SongFilter, { nullable: true }) filter?: SongFilter
   ): Promise<HistorySong[]> {
-    const songs = await super.all(page, perPage, sortField, sortOrder, filter);
-    return songs.map(HistorySong.fromSong);
+    const [entities] = await this.historySongCRUDService.findAllAndCount(page, perPage, sortField, sortOrder, filter);
+    return entities;
   }
 
   @Query(returns => ListMetaData, {
@@ -37,7 +41,14 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
     @Arg('sortOrder', { nullable: true }) sortOrder?: string,
     @Arg('filter', type => SongFilter, { nullable: true }) filter?: SongFilter
   ): Promise<ListMetaData> {
-    return super.meta(page, perPage, sortField, sortOrder, filter);
+    const [entities, total] = await this.historySongCRUDService.findAllAndCount(
+      page,
+      perPage,
+      sortField,
+      sortOrder,
+      filter
+    );
+    return new ListMetaData(total);
   }
 
   @Authorized()
@@ -47,8 +58,7 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
     deprecationReason: 'It should not be here'
   })
   public async create(): Promise<HistorySong> {
-    const song = await super.create();
-    return HistorySong.fromSong(song);
+    return this.historySongCRUDService.create();
   }
 
   @Authorized([UserRole.STATION_OWNER])
@@ -69,7 +79,7 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
     @Arg('upVotes', type => [String], { nullable: true }) upVotes?: string[],
     @Arg('downVotes', type => [String], { nullable: true }) downVotes?: string[]
   ): Promise<HistorySong> {
-    const song = await super.update(
+    return this.historySongCRUDService.update(
       id,
       songId,
       title,
@@ -82,7 +92,6 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
       upVotes,
       downVotes
     );
-    return HistorySong.fromSong(song);
   }
 
   @Authorized([UserRole.STATION_OWNER])
@@ -91,8 +100,7 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
     description: "Delete a song that's currently in history."
   })
   public async delete(@Arg('id') id: string): Promise<HistorySong> {
-    const song = await super.delete(id);
-    return HistorySong.fromSong(song);
+    return this.historySongCRUDService.delete(id);
   }
 
   protected getDefaultFilter() {

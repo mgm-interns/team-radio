@@ -14,6 +14,7 @@ export const UserShow = (props: any) => (
         <EmailField source="email" />
         <TextField source="firstname" />
         <TextField source="lastname" />
+        <TextField source="name" />
         <TextField source="city" />
         <TextField source="country" />
         <TextField source="reputation" />

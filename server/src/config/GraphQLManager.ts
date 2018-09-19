@@ -8,7 +8,7 @@ import {
   StationCRUDResolver,
   StationResolver,
   UserCRUDResolver
-} from 'resolver';
+} from 'resolvers';
 import { Context, IContext } from '.';
 import { ContextCallback } from 'graphql-yoga/dist/types';
 import { Exception, UnauthorizedException, UnprocessedEntityException } from 'exceptions';

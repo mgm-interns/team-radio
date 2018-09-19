@@ -6,7 +6,7 @@ export class WorkersManager {
   @Inject()
   private usersWorker: UsersWorker;
 
-  async start() {
+  public async start() {
     return Promise.all([
       // start users worker, has to inject connection here
       this.usersWorker.start()

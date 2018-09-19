@@ -3,11 +3,11 @@ import { Inject, Service } from 'typedi';
 import { BaseFilter } from 'types';
 
 @Service()
-export class CRUDService {
+export class BaseCRUDService {
   @Inject()
   private logger: Logger;
 
-  public parsePagination(page: number = 0, perPage: number = 10) {
+  protected parsePagination(page: number = 0, perPage: number = 10) {
     this.logger.debug('Parse pagination input', { page, perPage });
     const skip = perPage * (page || 0 - 1);
     const pagination = {
@@ -18,7 +18,7 @@ export class CRUDService {
     return pagination;
   }
 
-  public parseSortCondition(sortField?: string, sortOrder?: string) {
+  protected parseSortCondition(sortField?: string, sortOrder?: string) {
     this.logger.debug('Parse sort condition input', { sortField, sortOrder });
     let sortCondition = {};
     if (sortField) {
@@ -30,7 +30,7 @@ export class CRUDService {
     return sortCondition;
   }
 
-  public parseFilterCondition(filter?: BaseFilter) {
+  protected parseFilterCondition(filter?: BaseFilter) {
     this.logger.debug('Parse filter condition input', filter);
     const filterCondition = { where: {} };
     if (filter) {
@@ -40,7 +40,7 @@ export class CRUDService {
     return filterCondition;
   }
 
-  public parseAllCondition(
+  protected parseAllCondition(
     page?: number,
     perPage?: number,
     sortField?: string,

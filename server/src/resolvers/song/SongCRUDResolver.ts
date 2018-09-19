@@ -1,35 +1,34 @@
+import { Song, UserRole } from 'entities';
+import { SongCRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { Inject } from 'typedi';
 import { ListMetaData, SongFilter } from 'types';
-import { PlaylistSong, UserRole } from 'entities';
-import { SongCRUDResolver } from '.';
+import { BaseSongResolver } from '.';
+import { ICRUDResolver } from '..';
 
-@Resolver(of => PlaylistSong)
-export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
-  @Query(returns => PlaylistSong, { name: 'PlaylistSong', description: "Get song that's currently in playlist by id." })
-  public async one(@Arg('id', { nullable: true }) id?: string): Promise<PlaylistSong> {
-    const song = await super.one(id);
-    return PlaylistSong.fromSong(song);
+@Resolver(of => Song)
+export class SongCRUDResolver extends BaseSongResolver implements ICRUDResolver<Song> {
+  @Inject()
+  private songCRUDService: SongCRUDService;
+
+  @Query(returns => Song, { name: 'Song', description: 'Get song by id' })
+  public async one(@Arg('id', { nullable: true }) id?: string): Promise<Song> {
+    return this.songCRUDService.findOne(id);
   }
 
-  @Query(returns => [PlaylistSong], {
-    name: 'allPlaylistSongs',
-    description: "Get all the songs that's currently in playlist."
-  })
+  @Query(returns => [Song], { name: 'allSongs', description: 'Get all the songs in system.' })
   public async all(
     @Arg('page', type => Int, { nullable: true }) page?: number,
     @Arg('perPage', type => Int, { nullable: true }) perPage?: number,
     @Arg('sortField', { nullable: true }) sortField?: string,
     @Arg('sortOrder', { nullable: true }) sortOrder?: string,
     @Arg('filter', type => SongFilter, { nullable: true }) filter?: SongFilter
-  ): Promise<PlaylistSong[]> {
-    const songs = await super.all(page, perPage, sortField, sortOrder, filter);
-    return songs.map(PlaylistSong.fromSong);
+  ): Promise<Song[]> {
+    const [entities] = await this.songCRUDService.findAllAndCount(page, perPage, sortField, sortOrder, filter);
+    return entities;
   }
 
-  @Query(returns => ListMetaData, {
-    name: '_allPlaylistSongsMeta',
-    description: "Get meta for all the songs that's currently in playlist."
-  })
+  @Query(returns => ListMetaData, { name: '_allSongsMeta', description: 'Get meta for all the songs in system.' })
   public async meta(
     @Arg('page', type => Int, { nullable: true }) page?: number,
     @Arg('perPage', type => Int, { nullable: true }) perPage?: number,
@@ -37,23 +36,18 @@ export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
     @Arg('sortOrder', { nullable: true }) sortOrder?: string,
     @Arg('filter', type => SongFilter, { nullable: true }) filter?: SongFilter
   ): Promise<ListMetaData> {
-    return super.meta(page, perPage, sortField, sortOrder, filter);
+    const [entities, total] = await this.songCRUDService.findAllAndCount(page, perPage, sortField, sortOrder, filter);
+    return new ListMetaData(total);
   }
 
   @Authorized()
-  @Mutation(returns => PlaylistSong, {
-    name: 'createPlaylistSong',
-    description: "Create a song that's currently in playlist."
-  })
-  public async create(): Promise<PlaylistSong> {
-    return super.create();
+  @Mutation(returns => Song, { name: 'createSong', description: 'Create a song in system.' })
+  public async create(): Promise<Song> {
+    return this.songCRUDService.create();
   }
 
   @Authorized([UserRole.STATION_OWNER])
-  @Mutation(returns => PlaylistSong, {
-    name: 'updatePlaylistSong',
-    description: "Update a song that's currently in playlist."
-  })
+  @Mutation(returns => Song, { name: 'updateSong', description: 'Update a song in system.' })
   public async update(
     @Arg('id') id: string,
     @Arg('songId', { nullable: true }) songId?: string,
@@ -66,8 +60,8 @@ export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
     @Arg('isPlayed', { nullable: true }) isPlayed?: boolean,
     @Arg('upVotes', type => [String], { nullable: true }) upVotes?: string[],
     @Arg('downVotes', type => [String], { nullable: true }) downVotes?: string[]
-  ): Promise<PlaylistSong> {
-    const song = await super.update(
+  ): Promise<Song> {
+    return this.songCRUDService.update(
       id,
       songId,
       title,
@@ -80,22 +74,11 @@ export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
       upVotes,
       downVotes
     );
-    return PlaylistSong.fromSong(song);
   }
 
   @Authorized([UserRole.STATION_OWNER])
-  @Mutation(returns => PlaylistSong, {
-    name: 'deletePlaylistSong',
-    description: "Delete a song that's currently in playlist."
-  })
-  public async delete(@Arg('id') id: string): Promise<PlaylistSong> {
-    const song = await super.delete(id);
-    return PlaylistSong.fromSong(song);
-  }
-
-  protected getDefaultFilter() {
-    return {
-      isPlayed: false
-    };
+  @Mutation(returns => Song, { name: 'deleteSong', description: 'Delete a song in system.' })
+  public async delete(@Arg('id') id: string): Promise<Song> {
+    return this.songCRUDService.delete(id);
   }
 }

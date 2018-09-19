@@ -15,7 +15,7 @@ export class UsersWorker implements BaseWorker {
   /**
    * Add a random auth token to user which has missing authToken field
    */
-  async start() {
+  public async start() {
     try {
       const users = await this.userRepository.find();
       users.forEach(user => {

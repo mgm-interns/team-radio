@@ -11,6 +11,7 @@ export const UserCreate = (props: any) => (
       <TextInput source="password" type="password" validate={[required(), length({ min: 6, max: 32 })]} />
       <LongTextInput source="firstname" />
       <LongTextInput source="lastname" />
+      <LongTextInput source="name" />
       <LongTextInput source="city" />
       <LongTextInput source="country" />
       <LongTextInput source="avatarUrl" validate={[url()]} />

@@ -31,7 +31,7 @@ const SongFilter = (props: any) => (
 );
 
 export const SongList = (props: any) => (
-  <List {...props} title={<div>List</div>} filters={<SongFilter />} sort={{ field: 'createdAt', order: 'DESC' }}>
+  <List {...props} filters={<SongFilter />} sort={{ field: 'createdAt', order: 'DESC' }}>
     <Responsive small={<SongSmallDataGrid />} medium={<SongMediumDataGrid permissions={props.permissions} />} />
   </List>
 );
