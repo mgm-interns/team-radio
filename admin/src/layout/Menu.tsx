@@ -2,16 +2,17 @@ import { Authorization } from 'authProvider';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-const { getResources, WithPermissions, MenuItemLink, Responsive } = require('react-admin');
+const { getResources, WithPermissions, MenuItemLink, DashboardMenuItem, Responsive } = require('react-admin');
 
-const CoreMenu = ({ resources, onMenuClick, logout }: any) => {
+const CoreMenu = ({ resources, onMenuClick, logout, hasDashboard }: any) => {
   return (
     <div>
+      {hasDashboard && <DashboardMenuItem onClick={onMenuClick} />}
       {resources.map((resource: any) => {
         return (
           <WithPermissions
             key={resource.name}
-            render={({ permissions }: { permissions: Authorization.Permissions }) => {
+            render={({ permissions }: Authorization.PermissionsProps) => {
               if (resource.name === 'users' && !Authorization.isAdmin(permissions)) return null;
               return (
                 <MenuItemLink

@@ -31,7 +31,7 @@ const StationFilter = (props: any) => (
 );
 
 export const StationList = (props: any) => (
-  <List {...props} filters={<StationFilter />}>
+  <List {...props} filters={<StationFilter />} sort={{ field: 'createdAt', order: 'ASC' }}>
     <Responsive
       small={
         <SimpleList
@@ -59,7 +59,7 @@ export const StationMediumDatagrid = (props: Authorization.PermissionsProps & an
         render={(record: any) =>
           Authorization.isStationOwner(props.permissions, record.id) && (
             <Button color="primary" component={Link} to={linkToRecord(props.basePath, record.id)}>
-              <CreateIcon style={{ marginRight: 4 }} />
+              <CreateIcon style={{ marginRight: 8 }} />
               Edit
             </Button>
           )
