@@ -100,9 +100,9 @@ export class User extends BaseEntity implements IdentifiableUser {
   // @Column()
   // history: [];
 
-  @Field(type => [Role], { nullable: true })
+  @Field(type => [Role])
   @Column(type => Role)
-  roles?: Role[];
+  roles: Role[];
 
   public isUser() {
     return true;
