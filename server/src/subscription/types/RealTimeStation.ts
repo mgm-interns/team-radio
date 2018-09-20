@@ -1,5 +1,5 @@
 import { Station, User } from 'entities';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType, Int } from 'type-graphql';
 import { AnonymousUser } from '.';
 
 @ObjectType()
@@ -10,7 +10,7 @@ export class RealTimeStation extends Station {
   @Field(type => [AnonymousUser], { nullable: true })
   onlineAnonymous: AnonymousUser[] = [];
 
-  @Field()
+  @Field(type => Int)
   public get onlineCount(): number {
     return this.onlineUsers.length + this.onlineAnonymous.length;
   }

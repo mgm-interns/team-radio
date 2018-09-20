@@ -1,5 +1,12 @@
 import * as Bcrypt from 'bcrypt-nodejs';
-import { AuthChecker, buildSchema, formatArgumentValidationError } from 'type-graphql';
+import * as ChildProcess from 'child_process';
+import { UserRole } from 'entities';
+import { Exception, UnauthorizedException, UnprocessedEntityException } from 'exceptions';
+import { GraphQLError } from 'graphql';
+import { PubSub } from 'graphql-subscriptions';
+import { ContextCallback } from 'graphql-yoga/dist/types';
+import { getStatusText, INTERNAL_SERVER_ERROR, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from 'http-status-codes';
+import { UserRepository } from 'repositories';
 import {
   AuthenticationResolver,
   HistorySongsCRUDResolver,
@@ -9,18 +16,12 @@ import {
   StationResolver,
   UserCRUDResolver
 } from 'resolvers';
-import { Context, IContext } from '.';
-import { ContextCallback } from 'graphql-yoga/dist/types';
-import { Exception, UnauthorizedException, UnprocessedEntityException } from 'exceptions';
-import { getStatusText, INTERNAL_SERVER_ERROR, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from 'http-status-codes';
-import { GraphQLError } from 'graphql';
-import { IAuthenticatedContext } from './context';
+import { Logger } from 'services';
+import { AuthChecker, buildSchema, formatArgumentValidationError } from 'type-graphql';
 import { Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Logger } from 'services';
-import { PubSub } from 'graphql-subscriptions';
-import { User, UserRole } from 'entities';
-import { UserRepository } from 'repositories';
+import { Context, IContext } from '.';
+import { IAuthenticatedContext } from './context';
 
 @Service()
 export class GraphQLManager {
@@ -32,7 +33,7 @@ export class GraphQLManager {
 
   public pubSub = new PubSub();
 
-  public async getSchemas() {
+  public async buildSchemas() {
     const schema = await buildSchema({
       authChecker: this.getAuthChecker(),
       pubSub: this.pubSub,
@@ -53,6 +54,16 @@ export class GraphQLManager {
     this.logger.info('Finish loading GraphQL schemas');
 
     return schema;
+  }
+
+  public async initializeGraphQLDocs(port: number, endpoint: string) {
+    return new Promise(resolve => {
+      const schemaUrl = `http://localhost:${port}${endpoint}`;
+      ChildProcess.exec(`npm run docs -- -e ${schemaUrl} -f`, () => {
+        this.logger.info('Compiled documentation for GrahpQL API');
+        resolve();
+      });
+    });
   }
 
   public getContextHandler(): ContextCallback {

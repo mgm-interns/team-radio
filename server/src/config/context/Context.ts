@@ -60,7 +60,7 @@ export class Context implements IContext {
   }
 
   /**
-   * Perform an quick & dirty login in to the system by proving correct token matcher that contains userId
+   * Perform an quick & dirty login by proving correct token matcher that contains userId
    * Best for development
    */
   private async getUserFromByPassToken(byPassToken: string) {

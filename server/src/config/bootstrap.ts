@@ -1,12 +1,14 @@
+import * as ChildProcess from 'child_process';
 import { DataAccess, GraphQLManager } from 'config';
+import * as Express from 'express';
 import { GraphQLServer, Options } from 'graphql-yoga';
+import * as Path from 'path';
 import { Logger } from 'services';
 import { StationsManager, SubscriptionManager } from 'subscription';
 import { Container } from 'typedi';
 import { sleep } from 'utils';
-import * as Express from 'express';
-import * as Path from 'path';
 import { WorkersManager } from 'workers';
+import * as rimraf from 'rimraf';
 
 export async function bootstrap() {
   // Retrieve logger instance
@@ -22,18 +24,20 @@ export async function bootstrap() {
 
   // Create GraphQL server
   const server = new GraphQLServer({
-    schema: await graphQLManager.getSchemas(),
+    schema: await graphQLManager.buildSchemas(),
     context: graphQLManager.getContextHandler()
   });
 
+  const port = parseInt(process.env.PORT as string, 10);
+  const apiEndpoint = '/api';
   // Configure server options
   const serverOptions: Options = {
-    port: parseInt(process.env.PORT as string, 10),
-    endpoint: '/api',
-    playground: '/api',
+    port,
+    endpoint: apiEndpoint,
+    playground: apiEndpoint,
     formatError: graphQLManager.getErrorFormatter(),
     subscriptions: {
-      path: '/api',
+      path: apiEndpoint,
       onConnect: subscriptionManager.getOnConnectingHandler(),
       onDisconnect: subscriptionManager.getOnDisconnectingHandler()
     }
@@ -45,8 +49,10 @@ export async function bootstrap() {
       logger.info(`Server is running, GraphQL Playground available at http://localhost:${port}${playground}`);
     })
     .then(async () => {
-      await Promise.all([Container.get(StationsManager).initialize()]);
-
+      await Promise.all([
+        Container.get(StationsManager).initialize(),
+        graphQLManager.initializeGraphQLDocs(port, apiEndpoint)
+      ]);
       // Postpone this task for 5 minutes, to reduce stress to server
       await sleep(1000 * 60 * 5);
       Container.get(WorkersManager).start();
@@ -54,6 +60,9 @@ export async function bootstrap() {
     .catch(error => {
       logger.error('Error while running the server', error);
     });
+
+  // Serve GraphQL documentation
+  server.express.use(`${apiEndpoint}/docs`, Express.static(Path.resolve(process.cwd(), 'build', 'docs')));
 
   // Serve admin
   server.express.use('/admin', Express.static(Path.resolve(process.cwd(), '..', 'admin', 'build')));

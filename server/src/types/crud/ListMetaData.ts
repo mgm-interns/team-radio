@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType, Int } from 'type-graphql';
 
 @ObjectType()
 export class ListMetaData {
@@ -6,6 +6,6 @@ export class ListMetaData {
     this.count = count;
   }
 
-  @Field()
+  @Field(type => Int)
   count: number;
 }

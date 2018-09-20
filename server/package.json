@@ -15,7 +15,8 @@
     "migrate:up": "node build/migrate up",
     "migrate:down": "node build/migrate down",
     "migrate:create": "migrate create --template-file .template/migration-template.ts",
-    "postmigrate:create": "cp -r migrations/* src/migrations && rm -rf migrations"
+    "postmigrate:create": "cp -r migrations/* src/migrations && rm -rf migrations",
+    "docs": "graphdoc"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -24,7 +25,7 @@
     "graphql-subscriptions": "^0.5.8",
     "graphql-yoga": "^1.16.2",
     "http-status-codes": "^1.3.0",
-    "mongodb": "^3.1.3",
+    "mongodb": "^3.1.6",
     "slugify": "^1.3.1",
     "type-graphql": "^0.13.1",
     "typedi": "^0.8.0",
@@ -33,8 +34,9 @@
     "winston": "^3.0.0"
   },
   "devDependencies": {
+    "@2fd/graphdoc": "^2.4.0",
     "@types/bcrypt-nodejs": "0.0.30",
-    "@types/mongodb": "^3.1.4",
+    "@types/mongodb": "^3.1.7",
     "@types/winston": "^2.4.4",
     "dotenv": "^5.0.1",
     "dotenv-webpack": "^1.5.7",
@@ -48,11 +50,11 @@
     "tslint-config-airbnb": "^5.10.0",
     "tslint-config-prettier": "^1.15.0",
     "typescript": "^3.0.3",
-    "webpack": "^4.17.1",
+    "webpack": "^4.19.1",
     "webpack-cli": "^3.1.0",
     "webpack-node-externals": "^1.7.2",
     "yargs": "^12.0.1"
-  },
+  },  
   "keywords": [
     "team-radio",
     "team-radio-server",
@@ -68,6 +70,10 @@
     "mongodb",
     "migration"
   ],
+  "graphdoc": {
+    "logo": "<a href='/' target='_blank' style='display:block'><img src='/admin/favicon.png' /><span style='margin-left: 1em'>Team radio GraphQL API</span></a>",
+    "output": "./build/docs"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mgm-interns/team-radio.git"
