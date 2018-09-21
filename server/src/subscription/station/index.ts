@@ -1,2 +1,2 @@
-export * from './StationsManager';
+export * from './RealTimeStationsManager';
 export * from './StationTopic';

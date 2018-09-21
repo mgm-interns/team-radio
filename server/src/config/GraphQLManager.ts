@@ -13,7 +13,7 @@ import {
   PlaylistSongsCRUDResolver,
   SongCRUDResolver,
   StationCRUDResolver,
-  StationResolver,
+  RealTimStationResolver,
   UserCRUDResolver
 } from 'resolvers';
 import { Logger } from 'services';
@@ -43,7 +43,7 @@ export class GraphQLManager {
         AuthenticationResolver,
         // Station
         StationCRUDResolver,
-        StationResolver,
+        RealTimStationResolver,
         // Song
         SongCRUDResolver,
         PlaylistSongsCRUDResolver,

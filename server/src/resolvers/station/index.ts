@@ -1,3 +1,3 @@
 export * from './BaseStationResolver';
 export * from './StationCRUDResolver';
-export * from './StationResolver';
+export * from './RealTimStationResolver';

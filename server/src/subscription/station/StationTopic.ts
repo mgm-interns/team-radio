@@ -3,7 +3,8 @@ import { User } from 'entities';
 
 export enum StationTopic {
   JOIN_STATION = 'JOIN_STATION',
-  LEAVE_STATION = 'LEAVE_STATION'
+  LEAVE_STATION = 'LEAVE_STATION',
+  ADD_SONG = 'ADD_SONG'
 }
 
 export interface JoinStationPayLoad {

@@ -1,22 +1,30 @@
 import { IAnonymousContext, IAuthenticatedContext } from 'config';
-import { Station } from 'entities';
 import { BadRequestException } from 'exceptions';
 import {
   JoinStationPayLoad,
   LeaveStationPayLoad,
   RealTimeStation,
+  RealTimeStationPlayer,
+  RealTimeStationsManager,
   RealTimeStationWithOnlineCount,
-  StationsManager,
   StationTopic
 } from 'subscription';
-import { Arg, Ctx, Mutation, Publisher, PubSub, Resolver, Root, Subscription, Query } from 'type-graphql';
+import { Arg, Ctx, Mutation, Publisher, PubSub, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { Inject } from 'typedi';
 import { BaseStationResolver } from '.';
 
-@Resolver(of => Station)
-export class StationResolver extends BaseStationResolver {
+@Resolver(of => RealTimeStation)
+export class RealTimStationResolver extends BaseStationResolver {
   @Inject()
-  private stationsManager: StationsManager;
+  private manager: RealTimeStationsManager;
+
+  @Query(returns => RealTimeStation, {
+    name: 'RealTimeStation',
+    description: 'Query station with online users count'
+  })
+  public one(@Arg('stationId') stationId: string): RealTimeStation {
+    return this.manager.findStation(stationId);
+  }
 
   @Query(returns => [RealTimeStationWithOnlineCount], {
     name: 'allRealTimeStations',
@@ -25,33 +33,42 @@ export class StationResolver extends BaseStationResolver {
       'combine with "subscribeStations" for fetching initial data then listening for changes.'
   })
   public all(): RealTimeStationWithOnlineCount[] {
-    return this.stationsManager.orderedStations.map(RealTimeStationWithOnlineCount.fromRealTimeStation);
+    return this.manager.orderedStations.map(RealTimeStationWithOnlineCount.fromRealTimeStation);
   }
 
   @Subscription(returns => RealTimeStationWithOnlineCount, {
     name: 'onStationsChanged',
     topics: [StationTopic.JOIN_STATION, StationTopic.LEAVE_STATION],
-    description: 'Subcribe for online users changes between stations.'
+    description: 'Subscribe for online users changes between stations.'
   })
   public subscribeStations(
     @Root() payload: JoinStationPayLoad | LeaveStationPayLoad,
     @Ctx() context: IAuthenticatedContext
   ): RealTimeStationWithOnlineCount {
-    return RealTimeStationWithOnlineCount.fromRealTimeStation(this.stationsManager.findStation(payload.stationId));
+    return RealTimeStationWithOnlineCount.fromRealTimeStation(this.manager.findStation(payload.stationId));
   }
 
   @Subscription(returns => RealTimeStation, {
     name: 'onStationChanged',
     topics: [StationTopic.JOIN_STATION, StationTopic.LEAVE_STATION],
-    description: 'Subcribe for online users changes between stations.',
+    description: 'Subscribe for online users changes between stations.',
     filter: ({ args, payload }) => payload.stationId === args.stationId
   })
-  public subscribeStation(
-    @Arg('stationId') stationId: string,
-    @Root() subscriptionPayload: JoinStationPayLoad | LeaveStationPayLoad,
-    @Ctx() context: IAuthenticatedContext
-  ): RealTimeStation {
-    return this.stationsManager.findStation(stationId);
+  public subscribeStation(@Arg('stationId') stationId: string): RealTimeStation {
+    return this.manager.findStation(stationId);
+  }
+
+  @Query(returns => RealTimeStationPlayer, { name: 'StationPlayer' })
+  public getPlayer(@Arg('stationId') stationId: string): RealTimeStationPlayer {
+    return this.manager.findStation(stationId).player;
+  }
+
+  @Subscription(returns => RealTimeStationPlayer, {
+    name: 'onStationPlayerChanged',
+    topics: [StationTopic.ADD_SONG] // TODO: Add other action
+  })
+  public subscribeStationPlayer(@Arg('stationId') stationId: string): RealTimeStationPlayer {
+    return this.manager.findStation(stationId).player;
   }
 
   @Mutation({ description: 'Join specific station, this action will leave all other stations before joining another.' })
@@ -62,14 +79,14 @@ export class StationResolver extends BaseStationResolver {
     @Ctx() context: IAuthenticatedContext | IAnonymousContext
   ): boolean {
     // Leave joined station
-    this.stationsManager.stations.forEach(station => {
+    this.manager.stations.forEach(station => {
       if (station.isExistedUser(context.user)) {
-        const result = this.stationsManager.leaveStation(station.stationId, context.user);
+        const result = this.manager.leaveStation(station.stationId, context.user);
         if (result) publishLeaveStation({ stationId: station.stationId, user: context.user });
       }
     });
     // Join station
-    if (this.stationsManager.joinStation(stationId, context.user)) {
+    if (this.manager.joinStation(stationId, context.user)) {
       return publishJoinStation({ stationId, user: context.user });
     }
     throw new BadRequestException('Can not join station');
@@ -81,7 +98,7 @@ export class StationResolver extends BaseStationResolver {
     @Arg('stationId') stationId: string,
     @Ctx() context: IAuthenticatedContext | IAnonymousContext
   ): boolean {
-    if (this.stationsManager.leaveStation(stationId, context.user)) {
+    if (this.manager.leaveStation(stationId, context.user)) {
       return publish({ stationId, user: context.user });
     }
     throw new BadRequestException('Can not leave station');

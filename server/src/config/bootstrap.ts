@@ -3,7 +3,7 @@ import * as Express from 'express';
 import { GraphQLServer, Options } from 'graphql-yoga';
 import * as Path from 'path';
 import { Logger } from 'services';
-import { StationsManager, SubscriptionManager } from 'subscription';
+import { RealTimeStationsManager, SubscriptionManager } from 'subscription';
 import { Container } from 'typedi';
 import { sleep } from 'utils';
 import { WorkersManager } from 'workers';
@@ -48,7 +48,7 @@ export async function bootstrap() {
     })
     .then(async () => {
       await Promise.all([
-        Container.get(StationsManager).initialize(),
+        Container.get(RealTimeStationsManager).initialize(),
         graphQLManager.initializeGraphQLDocs(port, apiEndpoint)
       ]);
       // Postpone this task for 5 minutes, to reduce stress to server
@@ -57,6 +57,7 @@ export async function bootstrap() {
     })
     .catch(error => {
       logger.error('Error while running the server', error);
+      console.error(error);
     });
 
   // Serve GraphQL documentation

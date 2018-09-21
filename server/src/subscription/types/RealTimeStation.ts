@@ -1,9 +1,14 @@
-import { Station, User } from 'entities';
+import { Station, User, PlaylistSong } from 'entities';
 import { ObjectType, Field, Int } from 'type-graphql';
-import { AnonymousUser } from '.';
+import { AnonymousUser, RealTimeStationPlayer } from '.';
 
 @ObjectType()
 export class RealTimeStation extends Station {
+  constructor() {
+    super();
+    this.player = new RealTimeStationPlayer();
+  }
+
   @Field(type => [User])
   onlineUsers: User[] = [];
 
@@ -14,6 +19,9 @@ export class RealTimeStation extends Station {
   public get onlineCount(): number {
     return this.onlineUsers.length + this.onlineAnonymous.length;
   }
+
+  player: RealTimeStationPlayer;
+
   public addOnlineUser(user: User): boolean {
     let userIndex = -1;
     for (let index = 0; index < this.onlineUsers.length; index += 1) {
@@ -24,6 +32,7 @@ export class RealTimeStation extends Station {
     }
     if (userIndex === -1) {
       this.onlineUsers.push(user);
+      this.onUserChanged();
       return true;
     }
     return false;
@@ -39,6 +48,7 @@ export class RealTimeStation extends Station {
     }
     if (removedIndex === -1) return false;
     this.onlineUsers.splice(removedIndex, 1);
+    this.onUserChanged();
     return true;
   }
 
@@ -52,6 +62,7 @@ export class RealTimeStation extends Station {
     }
     if (userIndex === -1) {
       this.onlineAnonymous.push(user);
+      this.onUserChanged();
       return true;
     }
     return false;
@@ -67,6 +78,7 @@ export class RealTimeStation extends Station {
     }
     if (removedIndex === -1) return false;
     this.onlineAnonymous.splice(removedIndex, 1);
+    this.onUserChanged();
     return true;
   }
 
@@ -76,14 +88,20 @@ export class RealTimeStation extends Station {
       : this.onlineAnonymous.some(({ clientId }) => clientId === user.clientId);
   }
 
-  public static fromStation(
+  public static async fromStation(
     station: Station,
+    playlist: PlaylistSong[],
     onlineUsers: User[] = [],
     onlineAnonymous: AnonymousUser[] = []
-  ): RealTimeStation {
+  ): Promise<RealTimeStation> {
     const realTimeStation = Object.assign(new RealTimeStation(), station);
     realTimeStation.onlineUsers = onlineUsers;
     realTimeStation.onlineAnonymous = onlineAnonymous;
+    realTimeStation.player.playlist = playlist;
     return realTimeStation;
+  }
+
+  protected onUserChanged() {
+    // TODO: Start player or do something in here
   }
 }

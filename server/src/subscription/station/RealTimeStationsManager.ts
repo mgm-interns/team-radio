@@ -1,13 +1,13 @@
-import { User } from 'entities';
+import { PlaylistSong, User } from 'entities';
 import { StationNotFoundException, UnprocessedEntityException } from 'exceptions';
-import { StationRepository, UserRepository } from 'repositories';
+import { SongRepository, StationRepository } from 'repositories';
 import { Logger } from 'services';
 import { Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { AnonymousUser, RealTimeStation } from '..';
 
 @Service()
-export class StationsManager {
+export class RealTimeStationsManager {
   @Inject()
   private logger: Logger;
 
@@ -15,9 +15,9 @@ export class StationsManager {
   private stationRepository: StationRepository;
 
   @InjectRepository()
-  private userRepository: UserRepository;
+  private songRepository: SongRepository;
 
-  private list: RealTimeStation[];
+  private list: RealTimeStation[] = [];
 
   public get stations() {
     return this.list;
@@ -36,7 +36,12 @@ export class StationsManager {
 
   public async initialize() {
     const stations = await this.stationRepository.findAvailableStations();
-    this.list = stations.map(station => RealTimeStation.fromStation(station));
+    this.list = await Promise.all(
+      stations.map(async station => {
+        const songs = await this.songRepository.find({ where: { isPlayed: false, stationId: station._id } });
+        return RealTimeStation.fromStation(station, songs.map(PlaylistSong.fromSong));
+      })
+    );
     this.logger.info('Initialized real time stations manager service');
   }
 
