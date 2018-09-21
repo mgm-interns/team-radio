@@ -24,7 +24,7 @@ export class Station extends BaseEntity {
 
   @Field()
   @Column()
-  createdAt: number = new Date().getTime();
+  createdAt: number = Date.now();
 
   // TODO: Deal with it
   // @Field(type => [])
@@ -53,9 +53,7 @@ export class Station extends BaseEntity {
   // chat: [];
 
   public generateStationId() {
-    this.stationId = slugify(this.stationName, {
-      lower: true
-    });
+    this.stationId = slugify(this.stationName, { lower: true });
   }
 
   public isOwner(user: User) {

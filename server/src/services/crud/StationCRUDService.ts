@@ -3,7 +3,7 @@ import { StationRepository, SongRepository } from 'repositories';
 import { DataAccess } from 'config';
 import { BaseCRUDService } from '.';
 import { Station } from 'entities';
-import { StationNotFoundException, BadRequestException } from 'exceptions';
+import { StationNotFoundException, BadRequestException, UnprocessedEntityException } from 'exceptions';
 import { StationFilter } from 'types';
 import { ObjectId } from 'bson';
 
@@ -51,6 +51,9 @@ export class StationCRUDService extends BaseCRUDService {
   public async create(stationName: string, ownerId: string, stationId?: string): Promise<Station> {
     const station = this.stationRepository.create({ stationName, ownerId, stationId });
     if (!stationId) station.generateStationId();
+    if (this.stationRepository.findOne({ stationId: station.stationId })) {
+      throw new UnprocessedEntityException('Station ID has been taken.');
+    }
     return this.stationRepository.saveOrFail(station);
   }
 

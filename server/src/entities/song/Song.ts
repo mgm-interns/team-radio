@@ -42,7 +42,7 @@ export class Song extends BaseEntity {
 
   @Field()
   @Column()
-  createdAt: number = new Date().getTime();
+  createdAt: number = Date.now();
 
   @Column()
   @Field(type => [String])

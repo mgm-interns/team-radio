@@ -9,6 +9,9 @@ class StationFilterInput {
 
 @InputType()
 export class SongFilter extends BaseFilter {
+  @Field(type => [String], { nullable: true })
+  songIds?: string[];
+
   @Field(type => StationFilterInput, { nullable: true })
   station?: StationFilterInput;
 

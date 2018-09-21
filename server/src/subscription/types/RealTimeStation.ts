@@ -1,5 +1,5 @@
 import { Station, User } from 'entities';
-import { Field, ObjectType, Int } from 'type-graphql';
+import { ObjectType, Field, Int } from 'type-graphql';
 import { AnonymousUser } from '.';
 
 @ObjectType()
@@ -7,14 +7,13 @@ export class RealTimeStation extends Station {
   @Field(type => [User])
   onlineUsers: User[] = [];
 
-  @Field(type => [AnonymousUser], { nullable: true })
+  @Field(type => [AnonymousUser])
   onlineAnonymous: AnonymousUser[] = [];
 
   @Field(type => Int)
   public get onlineCount(): number {
     return this.onlineUsers.length + this.onlineAnonymous.length;
   }
-
   public addOnlineUser(user: User): boolean {
     let userIndex = -1;
     for (let index = 0; index < this.onlineUsers.length; index += 1) {
@@ -69,6 +68,12 @@ export class RealTimeStation extends Station {
     if (removedIndex === -1) return false;
     this.onlineAnonymous.splice(removedIndex, 1);
     return true;
+  }
+
+  public isExistedUser(user: User | AnonymousUser) {
+    return user instanceof User
+      ? this.onlineUsers.some(({ username }) => username === user.username)
+      : this.onlineAnonymous.some(({ clientId }) => clientId === user.clientId);
   }
 
   public static fromStation(

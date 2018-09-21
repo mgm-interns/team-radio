@@ -1,4 +1,3 @@
-import * as ChildProcess from 'child_process';
 import { DataAccess, GraphQLManager } from 'config';
 import * as Express from 'express';
 import { GraphQLServer, Options } from 'graphql-yoga';
@@ -8,7 +7,6 @@ import { StationsManager, SubscriptionManager } from 'subscription';
 import { Container } from 'typedi';
 import { sleep } from 'utils';
 import { WorkersManager } from 'workers';
-import * as rimraf from 'rimraf';
 
 export async function bootstrap() {
   // Retrieve logger instance
@@ -68,4 +66,8 @@ export async function bootstrap() {
   server.express.use('/admin', Express.static(Path.resolve(process.cwd(), '..', 'admin', 'build')));
 
   // Serve client
+
+  server.express.use('*', (req, res) => {
+    res.redirect('/admin');
+  });
 }

@@ -10,8 +10,10 @@ import { AnonymousUser, RealTimeStation } from '..';
 export class StationsManager {
   @Inject()
   private logger: Logger;
+
   @InjectRepository()
   private stationRepository: StationRepository;
+
   @InjectRepository()
   private userRepository: UserRepository;
 
@@ -26,6 +28,12 @@ export class StationsManager {
     return this.list.sort((s1, s2) => s2.onlineCount - s1.onlineCount);
   }
 
+  public findStation(stationId: string): RealTimeStation {
+    const station = this.list.find(station => station.stationId === stationId);
+    if (!station) throw new StationNotFoundException();
+    return station;
+  }
+
   public async initialize() {
     const stations = await this.stationRepository.findAvailableStations();
     this.list = stations.map(station => RealTimeStation.fromStation(station));
@@ -33,7 +41,6 @@ export class StationsManager {
   }
 
   public joinStation(stationId: string, user: User | AnonymousUser): boolean {
-    this.leaveAllStation(user);
     const station = this.list.find(station => station.stationId === stationId);
     if (!station) throw new StationNotFoundException();
     if (user instanceof User) {
@@ -53,16 +60,5 @@ export class StationsManager {
       if (station.removeAnonymousUser(user)) return true;
     }
     throw new UnprocessedEntityException('Can not find user in station');
-  }
-
-  public leaveAllStation(user: User | AnonymousUser): boolean {
-    this.list.forEach(station => {
-      if (user instanceof User) {
-        station.removeOnlineUser(user);
-      } else {
-        station.removeAnonymousUser(user);
-      }
-    });
-    return true;
   }
 }

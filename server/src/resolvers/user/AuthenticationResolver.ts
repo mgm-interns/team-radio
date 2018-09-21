@@ -2,18 +2,20 @@ import { IAuthenticatedContext, IContext } from 'config';
 import { User } from 'entities';
 import { BadRequestException, ForbiddenException, UserNotFoundException } from 'exceptions';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { LoginInput, RegisterInput, LoggedInUser } from 'types';
+import { ChangePasswordInput, LoggedInUser, LoginInput, RegisterInput } from 'types';
 import { BaseUserResolver } from '.';
 
 @Resolver(of => User)
 export class AuthenticationResolver extends BaseUserResolver {
   @Authorized()
-  @Query(returns => User)
+  @Query(returns => User, { description: 'Get current user in current context which is based on AuthToken' })
   public async currentUser(@Ctx() context: IAuthenticatedContext): Promise<User> {
     return context.user as User;
   }
 
-  @Mutation(returns => LoggedInUser)
+  @Mutation(returns => LoggedInUser, {
+    description: 'Login with username/email and password, it will return a token that may use for other requests.'
+  })
   public async login(
     @Arg('credential', type => LoginInput) credential: LoginInput,
     @Ctx() context: IContext
@@ -30,7 +32,7 @@ export class AuthenticationResolver extends BaseUserResolver {
     return LoggedInUser.fromUser(loggedInUser);
   }
 
-  @Mutation(returns => User)
+  @Mutation(returns => User, { description: 'Register a new user.' })
   public async register(
     @Arg('user', type => RegisterInput) input: RegisterInput,
     @Ctx() context: IContext
@@ -48,6 +50,22 @@ export class AuthenticationResolver extends BaseUserResolver {
       user.generateUsernameFromEmail();
     }
 
+    return this.userRepository.saveOrFail(user);
+  }
+
+  @Authorized()
+  @Mutation(returns => User, {
+    description:
+      "Change user's password. After updating, all tokens will expired, user needs to re-generate token after changing password."
+  })
+  public async changePassword(
+    @Arg('input', type => ChangePasswordInput) input: ChangePasswordInput,
+    @Ctx() context: IAuthenticatedContext
+  ): Promise<User> {
+    const user = context.user;
+    user.generatePassword(input.password);
+    user.authToken.expiredAt = Date.now();
+    user.authToken.refreshTokenExpiredAt = Date.now();
     return this.userRepository.saveOrFail(user);
   }
 }

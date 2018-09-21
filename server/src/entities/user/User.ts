@@ -138,7 +138,7 @@ export class User extends BaseEntity implements IdentifiableUser {
 
   public isValidToken(token: string = this.authToken.token) {
     if (token === this.authToken.token) {
-      const now = new Date().getTime();
+      const now = Date.now();
       if (now < this.authToken.expiredAt) {
         return true;
       }
@@ -148,7 +148,7 @@ export class User extends BaseEntity implements IdentifiableUser {
 
   public isValidRefreshToken(refreshToken: string = this.authToken.refreshToken) {
     if (refreshToken === this.authToken.refreshToken) {
-      const now = new Date().getTime();
+      const now = Date.now();
       if (now < this.authToken.refreshTokenExpiredAt) {
         return true;
       }
