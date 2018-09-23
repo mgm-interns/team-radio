@@ -1,9 +1,9 @@
 import { Container, Identifiable, Styleable } from 'Common';
-import { Header, Footer } from 'Components';
+import { Footer, Header } from 'Components';
 import React from 'react';
 
 export class CoreFullLayout extends React.Component<FullLayout.CoreProps, FullLayout.States> {
-  render() {
+  public render() {
     return (
       <React.Fragment>
         <Header />

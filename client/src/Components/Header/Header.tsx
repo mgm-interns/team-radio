@@ -1,24 +1,12 @@
-import {
-  Grid,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Menu,
-  MenuItem,
-  Typography,
-  Button,
-  withStyles,
-  WithStyles
-} from '@material-ui/core';
-import { TextLink } from 'Components';
-import { Link } from 'react-router-dom';
+import { AppBar, IconButton, Menu, MenuItem, Toolbar, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
+import { TextLink } from 'Components';
 import * as React from 'react';
-import { MdAccountCircle, MdMenu } from 'react-icons/md';
+import { MdAccountCircle } from 'react-icons/md';
 import { styles } from './styles';
 
-export class CoreHeader extends React.Component<Header.CoreProps, Header.States> {
-  constructor(props: Header.CoreProps) {
+class CoreHeader extends React.Component<CoreHeader.Props, CoreHeader.States> {
+  constructor(props: CoreHeader.Props) {
     super(props);
 
     this.state = {
@@ -26,7 +14,7 @@ export class CoreHeader extends React.Component<Header.CoreProps, Header.States>
     };
   }
 
-  render(): React.ReactNode {
+  public render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <AppBar position={'fixed'} className={classes.container}>
@@ -37,13 +25,6 @@ export class CoreHeader extends React.Component<Header.CoreProps, Header.States>
               variant={'title'}
               color={'inherit'}
               children={'Home'}
-              className={classes.homeButton}
-            />
-            <TextLink
-              linkTo={'./station'}
-              variant={'title'}
-              color={'inherit'}
-              children={'Station'}
               className={classes.homeButton}
             />
           </div>
@@ -88,10 +69,14 @@ export class CoreHeader extends React.Component<Header.CoreProps, Header.States>
   };
 }
 
-export const Header = withStyles(styles)(CoreHeader);
+namespace CoreHeader {
+  export interface Props extends Header.Props, WithStyles<typeof styles> {}
+  export interface States extends Header.States {}
+}
+
+export const Header: React.ComponentType<Header.Props> = withStyles(styles)(CoreHeader);
 
 export namespace Header {
-  export interface CoreProps extends Props, WithStyles<typeof styles> {}
   export interface Props extends Identifiable, Styleable {}
   export interface States {
     anchorEl: HTMLElement;

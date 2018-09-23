@@ -50,8 +50,8 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
     },
     stations: {
       overflowX: 'scroll',
+      background: '#f4f0ea',
       overflowY: 'hidden',
-      whiteSpace: 'nowrap',
-      background: '#f4f0ea'
+      whiteSpace: 'nowrap'
     }
   });

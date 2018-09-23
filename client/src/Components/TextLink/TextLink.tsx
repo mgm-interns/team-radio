@@ -1,10 +1,10 @@
 import { Typography, withStyles, WithStyles } from '@material-ui/core';
 import { Container, Identifiable, Styleable } from 'Common';
-import { Link } from 'react-router-dom';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { styles } from './styles';
 
-export function CoreTextLink(props: Link.CoreProps): React.ReactElement<Link.CoreProps> {
+function CoreTextLink(props: CoreTextLink.Props): React.ReactElement<CoreTextLink.Props> {
   const className = [props.classes.textLink, props.className].join(' ').trim();
   return (
     <Link to={props.linkTo} id={props.id} className={className} style={props.style}>
@@ -15,10 +15,13 @@ export function CoreTextLink(props: Link.CoreProps): React.ReactElement<Link.Cor
   );
 }
 
-export const TextLink = withStyles(styles)(CoreTextLink);
+namespace CoreTextLink {
+  export interface Props extends TextLink.Props, WithStyles<typeof styles> {}
+}
 
-export namespace Link {
-  export interface CoreProps extends Props, WithStyles<typeof styles> {}
+export const TextLink: React.ComponentType<TextLink.Props> = withStyles(styles)(CoreTextLink);
+
+export namespace TextLink {
   export interface Props extends Identifiable, Styleable, Container {
     linkTo: string;
     variant?: TextStyle;

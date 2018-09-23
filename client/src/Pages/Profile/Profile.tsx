@@ -3,16 +3,19 @@ import { Identifiable, Styleable } from 'Common';
 import * as React from 'react';
 import { styles } from './styles';
 
-export class CoreProfile extends React.Component<Profile.CoreProps, Profile.States> {
-  render(): React.ReactNode {
+class CoreProfile extends React.Component<CoreProfile.Props> {
+  public render(): React.ReactNode {
     return <div>Profile here</div>;
   }
 }
 
-export const Profile = withStyles(styles)(CoreProfile);
+namespace CoreProfile {
+  export interface Props extends Profile.Props, WithStyles<typeof styles> {}
+}
+
+export const Profile: React.ComponentType<Profile.Props> = withStyles(styles)(CoreProfile);
 
 export namespace Profile {
-  export interface CoreProps extends Props, WithStyles<typeof styles> {}
   export interface Props extends Identifiable, Styleable {}
   export interface States {}
 }

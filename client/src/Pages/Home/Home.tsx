@@ -5,8 +5,6 @@ import {
   Switch,
   TextField,
   Typography,
-  List,
-  ListItem,
   WithStyles,
   withStyles
 } from '@material-ui/core';
@@ -19,8 +17,8 @@ import { Query } from 'react-apollo';
 import { MdCreate } from 'react-icons/md';
 import { styles } from './styles';
 
-export class CoreHome extends React.Component<Home.CoreProps, Home.States> {
-  constructor(props: Home.CoreProps) {
+class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
+  constructor(props: CoreHome.Props) {
     super(props);
 
     this.state = {
@@ -29,36 +27,7 @@ export class CoreHome extends React.Component<Home.CoreProps, Home.States> {
     };
   }
 
-  onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const value = event.target.value;
-    this.setState({ inputValue: value });
-  };
-
-  onPrivateStationSwitch = (): void => {
-    this.setState({ privateStation: !this.state.privateStation });
-  };
-
-  getAllStations = (): React.ReactElement<{}> => {
-    const { classes } = this.props;
-    return (
-      <Query query={AllStations.getAllStationsQuery}>
-        {({ loading, error, data }) => {
-          if (loading) return 'Loading...';
-          if (error) return `Error: ${error.message}`;
-
-          return (
-            <div className={classes.stations}>
-              {data.allStations.map((station: AllStations.Station) => (
-                <SimpleStation key={station.stationId} station={station} />
-              ))}
-            </div>
-          );
-        }}
-      </Query>
-    );
-  };
-
-  render(): React.ReactNode {
+  public render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.container}>
@@ -130,18 +99,49 @@ export class CoreHome extends React.Component<Home.CoreProps, Home.States> {
           </div>
         </div>
         {this.getAllStations()}
-        <div>
-          Something
-        </div>
+        <div>Something</div>
       </div>
     );
   }
+
+  private onPrivateStationSwitch = (): void => {
+    this.setState({ privateStation: !this.state.privateStation });
+  };
+
+  private getAllStations = (): React.ReactElement<{}> => {
+    const { classes } = this.props;
+    return (
+      <Query query={AllStations.getAllStationsQuery}>
+        {({ loading, error, data }) => {
+          if (loading) return 'Loading...';
+          if (error) return `Error: ${error.message}`;
+
+          return (
+            <div className={classes.stations}>
+              {data.allStations.map((station: AllStations.Station) => (
+                <SimpleStation key={station.stationId} station={station} />
+              ))}
+            </div>
+          );
+        }}
+      </Query>
+    );
+  };
+
+  private onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const value = event.target.value;
+    this.setState({ inputValue: value });
+  };
 }
 
-export const Home = withStyles(styles)(CoreHome);
+namespace CoreHome {
+  export interface Props extends Home.Props, WithStyles<typeof styles> {}
+  export interface States extends Home.States {}
+}
+
+export const Home: React.ComponentType<Home.Props> = withStyles(styles)(CoreHome);
 
 export namespace Home {
-  export interface CoreProps extends Props, WithStyles<typeof styles> {}
   export interface Props extends Identifiable, Styleable {}
   export interface States {
     inputValue: string;

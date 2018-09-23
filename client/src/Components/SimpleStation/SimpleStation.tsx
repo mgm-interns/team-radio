@@ -1,17 +1,16 @@
 import { Typography, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
-import { TextLink } from 'Components';
 import { AllStations } from 'RadioGraphql';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { styles } from './styles';
 
-export class CoreSimpleStation extends React.Component<SimpleStation.CoreProps, SimpleStation.States> {
-  constructor(props: SimpleStation.CoreProps) {
+class CoreSimpleStation extends React.Component<CoreSimpleStation.Props, SimpleStation.States> {
+  constructor(props: CoreSimpleStation.Props) {
     super(props);
   }
 
-  render(): React.ReactNode {
+  public render(): React.ReactNode {
     const { classes, station } = this.props;
     const className = [classes.stationContainer, this.props.className].join(' ').trim();
     return (
@@ -32,10 +31,13 @@ export class CoreSimpleStation extends React.Component<SimpleStation.CoreProps, 
   }
 }
 
-export const SimpleStation = withStyles(styles)(CoreSimpleStation);
+namespace CoreSimpleStation {
+  export interface Props extends SimpleStation.Props, WithStyles<typeof styles> {}
+}
+
+export const SimpleStation: React.ComponentType<SimpleStation.Props> = withStyles(styles)(CoreSimpleStation);
 
 export namespace SimpleStation {
-  export interface CoreProps extends Props, WithStyles<typeof styles> {}
   export interface Props extends Identifiable, Styleable {
     station: AllStations.Station;
   }

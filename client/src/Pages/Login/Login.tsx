@@ -1,13 +1,13 @@
 import {
-  Typography,
-  withStyles,
-  WithStyles,
-  TextField,
   Button,
   Card,
   CardActions,
   CardContent,
-  Icon
+  Icon,
+  TextField,
+  Typography,
+  withStyles,
+  WithStyles
 } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
 import { TextLink } from 'Components';
@@ -15,8 +15,8 @@ import * as React from 'react';
 import { FaFacebookF, FaGooglePlusG } from 'react-icons/fa';
 import { styles } from './styles';
 
-export class CoreLogin extends React.Component<Login.CoreProps, Login.States> {
-  render(): React.ReactNode {
+class CoreLogin extends React.Component<CoreLogin.Props> {
+  public render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.container}>
@@ -86,12 +86,9 @@ export class CoreLogin extends React.Component<Login.CoreProps, Login.States> {
                 <Button color={'primary'} variant={'contained'} fullWidth>
                   Login
                 </Button>
-                <TextLink
-                  linkTo={'./'}
-                  color={'primary'}
-                  children={'Forgot your password'}
-                  className={classes.textLink}
-                />
+                <TextLink linkTo={'./'} color={'primary'} className={classes.textLink}>
+                  Forgot your password
+                </TextLink>
                 <TextLink linkTo={'./'} color={'primary'} children={'Create an account'} className={classes.textLink} />
               </CardActions>
             </CardContent>
@@ -102,10 +99,13 @@ export class CoreLogin extends React.Component<Login.CoreProps, Login.States> {
   }
 }
 
-export const Login = withStyles(styles)(CoreLogin);
+namespace CoreLogin {
+  export interface Props extends Login.Props, WithStyles<typeof styles> {}
+}
+
+export const Login: React.ComponentType<Login.Props> = withStyles(styles)(CoreLogin);
 
 export namespace Login {
-  export interface CoreProps extends Props, WithStyles<typeof styles> {}
   export interface Props extends Identifiable, Styleable {}
   export interface States {}
 }

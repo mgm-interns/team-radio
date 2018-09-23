@@ -3,7 +3,7 @@ import * as React from 'react';
 import { theme } from 'Themes';
 
 export class Container extends React.Component<Container.Props> {
-  render(): React.ReactNode {
+  public render(): React.ReactNode {
     return (
       <MuiThemeProvider theme={theme}>
         <CssBaseline />

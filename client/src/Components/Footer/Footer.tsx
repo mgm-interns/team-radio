@@ -3,8 +3,8 @@ import { Identifiable, Styleable } from 'Common';
 import * as React from 'react';
 import { styles } from './styles';
 
-export class CoreFooter extends React.Component<Footer.CoreProps, Footer.States> {
-  render(): React.ReactNode {
+class CoreFooter extends React.Component<CoreFooter.Props, Footer.States> {
+  public render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.container}>
@@ -16,10 +16,13 @@ export class CoreFooter extends React.Component<Footer.CoreProps, Footer.States>
   }
 }
 
-export const Footer = withStyles(styles)(CoreFooter);
+namespace CoreFooter {
+  export interface Props extends Footer.Props, WithStyles<typeof styles> {}
+}
+
+export const Footer: React.ComponentType<Footer.Props> = withStyles(styles)(CoreFooter);
 
 export namespace Footer {
-  export interface CoreProps extends Props, WithStyles<typeof styles> {}
   export interface Props extends Identifiable, Styleable {}
   export interface States {}
 }

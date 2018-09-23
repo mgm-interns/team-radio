@@ -1,19 +1,19 @@
 import {
-  Typography,
-  withStyles,
-  WithStyles,
-  TextField,
   Button,
   Card,
   CardActions,
   CardContent,
+  TextField,
+  Typography,
+  withStyles,
+  WithStyles
 } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
 import * as React from 'react';
 import { styles } from './styles';
 
-export class CoreRegister extends React.Component<Register.CoreProps, Register.States> {
-  render(): React.ReactNode {
+class CoreRegister extends React.Component<CoreRegister.Props> {
+  public render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.container}>
@@ -95,10 +95,13 @@ export class CoreRegister extends React.Component<Register.CoreProps, Register.S
   }
 }
 
-export const Register = withStyles(styles)(CoreRegister);
+namespace CoreRegister {
+  export interface Props extends Register.Props, WithStyles<typeof styles> {}
+}
+
+export const Register: React.ComponentType<Register.Props> = withStyles(styles)(CoreRegister);
 
 export namespace Register {
-  export interface CoreProps extends Props, WithStyles<typeof styles> {}
   export interface Props extends Identifiable, Styleable {}
   export interface States {}
 }

@@ -1,7 +1,7 @@
 import { Container, FullLayout } from 'Containers';
-import { Station, Home, Profile, Login, Register } from 'Pages';
+import { Home, Login, Profile, Register, Station } from 'Pages';
 import * as React from 'react';
-import { Route, HashRouter, Switch } from 'react-router-dom';
+import { HashRouter, Route, Switch } from 'react-router-dom';
 
 export const AppRouter = () => {
   return (

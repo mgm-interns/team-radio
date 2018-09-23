@@ -1,10 +1,10 @@
+import ApolloClient from 'apollo-boost';
 import * as React from 'react';
 import { ApolloProvider } from 'react-apollo';
 import { render } from 'react-dom';
 import { AppRouter } from 'router';
-import ApolloClient from 'apollo-boost';
 
-export const App = () => {
+export const Index = () => {
   const client = new ApolloClient({
     uri: 'http://localhost:8000/api'
   });
@@ -16,7 +16,7 @@ export const App = () => {
   );
 };
 
-render(<App />, document.getElementById('root'));
+render(<Index />, document.getElementById('root'));
 
 if ((module as any).hot) {
   (module as any).hot.accept();
