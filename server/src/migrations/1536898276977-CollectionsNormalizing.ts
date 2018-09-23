@@ -11,8 +11,8 @@ export const up = async () => {
     email: 'anonymous.radio@gmail.com',
     password: Bcrypt.hashSync('123456', Bcrypt.genSaltSync(8))
   });
-  await stationCollection.updateMany({ ownerId: null }, { $set: { ownerId: anonymousUser.insertedId } });
-  await songCollection.updateMany({ creatorId: null }, { $set: { creatorId: anonymousUser.insertedId } });
+  await stationCollection.updateMany({ ownerId: null }, { $set: { ownerId: anonymousUser.insertedId.toString() } });
+  await songCollection.updateMany({ creatorId: null }, { $set: { creatorId: anonymousUser.insertedId.toString() } });
 };
 
 export const down = async () => {
@@ -23,5 +23,5 @@ export const down = async () => {
   const anonymousUser = await userCollection.findOne({ username: 'anonymous' });
   await stationCollection.updateMany({ ownerId: anonymousUser._id }, { $set: { ownerId: null } });
   await songCollection.updateMany({ creatorId: anonymousUser._id }, { $set: { creatorId: null } });
-  userCollection.deleteOne(anonymousUser);
+  await userCollection.deleteOne(anonymousUser);
 };

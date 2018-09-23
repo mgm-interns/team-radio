@@ -6,7 +6,7 @@ export const up = async () => {
   const userCollection = db.collection('users');
   const password = Bcrypt.hashSync('123456', Bcrypt.genSaltSync(8));
   const roles = [{ role: 'admin' }];
-  userCollection.updateMany(
+  await userCollection.updateMany(
     { email: { $in: ['pvtri96@gmail.com', 'dungle1811@gmail.com'] } },
     { $set: { password, roles } }
   );

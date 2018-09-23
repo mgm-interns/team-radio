@@ -67,8 +67,5 @@ export async function bootstrap() {
   server.express.use('/admin', Express.static(Path.resolve(process.cwd(), '..', 'admin', 'build')));
 
   // Serve client
-
-  server.express.use('*', (req, res) => {
-    res.redirect('/admin');
-  });
+  server.express.use('/', Express.static(Path.resolve(process.cwd(), '..', 'client', 'build')));
 }

@@ -1,5 +1,5 @@
 import { User } from 'entities';
-import { AnonymousUser } from 'subscription';
+import { AnonymousUser, RealTimeStation } from 'subscription';
 
 export interface IdentifiableUser {
   isUser(): boolean;
@@ -8,6 +8,7 @@ export interface IdentifiableUser {
 
 export interface IContext {
   user: User | AnonymousUser | undefined;
+  currentStation: RealTimeStation | undefined;
 
   setUserFromTokens(tokens: Tokens): void;
   toObject(): object;

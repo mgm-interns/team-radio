@@ -33,7 +33,7 @@ export const UserList = (props: any) => (
           secondaryText={(record: any) => `${record.username || record.email}`}
         />
       }
-      medium={<UserMediumDatagrid />}
+      medium={<UserMediumDatagrid permissions={props.permissions} />}
     />
   </List>
 );

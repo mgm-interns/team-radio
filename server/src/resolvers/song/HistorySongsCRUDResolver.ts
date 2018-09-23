@@ -1,9 +1,10 @@
-import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { HistorySong, UserRole } from 'entities';
+import { MethodNotAllowedException } from 'exceptions';
+import { HistorySongCRUDService } from 'services';
+import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { Inject } from 'typedi';
 import { ListMetaData, SongFilter } from 'types';
 import { SongCRUDResolver } from '.';
-import { Inject } from 'typedi';
-import { HistorySongCRUDService } from 'services';
 
 @Resolver(of => HistorySong)
 export class HistorySongsCRUDResolver extends SongCRUDResolver {
@@ -58,7 +59,7 @@ export class HistorySongsCRUDResolver extends SongCRUDResolver {
     deprecationReason: 'It should not be here'
   })
   public async create(): Promise<HistorySong> {
-    return this.historySongCRUDService.create();
+    throw new MethodNotAllowedException();
   }
 
   @Authorized([UserRole.STATION_OWNER])

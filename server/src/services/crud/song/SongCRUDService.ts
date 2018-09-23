@@ -1,14 +1,17 @@
-import { ObjectId } from 'bson';
 import { DataAccess } from 'config';
 import { Song } from 'entities';
+import { BadRequestException, MethodNotAllowedException, SongNotFoundException } from 'exceptions';
 import { SongRepository } from 'repositories';
-import { Container, Service } from 'typedi';
+import { YoutubeService } from 'services';
+import { Container, Inject, Service } from 'typedi';
 import { SongFilter } from 'types';
 import { BaseCRUDService } from '..';
-import { SongNotFoundException, BadRequestException, MethodNotAllowedException } from 'exceptions';
 
 @Service()
 export class SongCRUDService extends BaseCRUDService {
+  @Inject()
+  private youtubeService: YoutubeService;
+
   public async findOne(id?: string): Promise<Song> {
     if (id) {
       let song;
@@ -39,7 +42,7 @@ export class SongCRUDService extends BaseCRUDService {
         where: {
           ...condition.where,
           ...this.getDefaultFilter(),
-          stationId: new ObjectId(stationId)
+          stationId
         }
       });
     }
@@ -53,8 +56,19 @@ export class SongCRUDService extends BaseCRUDService {
     });
   }
 
-  public async create(): Promise<Song> {
-    throw new MethodNotAllowedException();
+  public async create(url: string, stationId: string, creatorId: string): Promise<Song> {
+    if (!url) throw new MethodNotAllowedException();
+    const video = await this.youtubeService.getVideoDetail(url);
+    const song = this.songRepository.create({
+      url,
+      songId: video.id,
+      duration: this.youtubeService.parseDuration(video.contentDetails.duration),
+      title: video.snippet.title,
+      thumbnail: video.snippet.thumbnails && video.snippet.thumbnails.default && video.snippet.thumbnails.default.url
+    });
+    song.stationId = stationId;
+    song.creatorId = creatorId;
+    return this.songRepository.save(song);
   }
 
   public async update(

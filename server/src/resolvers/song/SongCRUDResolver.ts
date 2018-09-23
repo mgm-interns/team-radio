@@ -1,4 +1,5 @@
 import { Song, UserRole } from 'entities';
+import { MethodNotAllowedException } from 'exceptions';
 import { SongCRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
@@ -43,7 +44,7 @@ export class SongCRUDResolver extends BaseSongResolver implements ICRUDResolver<
   @Authorized()
   @Mutation(returns => Song, { name: 'createSong', description: 'Create a song in system.' })
   public async create(): Promise<Song> {
-    return this.songCRUDService.create();
+    throw new MethodNotAllowedException();
   }
 
   @Authorized([UserRole.STATION_OWNER])

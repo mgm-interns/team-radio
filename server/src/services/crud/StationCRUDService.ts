@@ -39,7 +39,7 @@ export class StationCRUDService extends BaseCRUDService {
         ...condition,
         where: {
           ...condition.where,
-          ownerId: new ObjectId(ownerId)
+          ownerId
         }
       });
     }

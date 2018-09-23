@@ -1,4 +1,5 @@
 import * as Connection from 'config/migrations/connection';
+import { ObjectId } from 'bson';
 
 export const up = async () => {
   const db = await Connection.getDB();
@@ -8,13 +9,15 @@ export const up = async () => {
   await Promise.all(
     stations.map(async station => {
       const playlist = station.playlist.map((song: any) => {
-        song['stationId'] = station._id;
+        song['stationId'] = station._id.toString();
         renameProperty(song, 'song_id', 'songId');
         renameProperty(song, 'created_date', 'createdAt');
         renameProperty(song, 'is_played', 'isPlayed');
         renameProperty(song, 'up_vote', 'upVotes');
         renameProperty(song, 'down_vote', 'downVotes');
         renameProperty(song, 'creator', 'creatorId');
+        song['creatorId'] = song.creatorId && song.creatorId.toString();
+
         return song;
       });
 
@@ -40,6 +43,7 @@ export const down = async () => {
           renameProperty(song, 'isPlayed', 'is_played');
           renameProperty(song, 'upVotes', 'up_vote');
           renameProperty(song, 'downVotes', 'down_vote');
+          song['creatorId'] = song.creatorId && new ObjectId(song.creatorId);
           renameProperty(song, 'creatorId', 'creator');
           return song;
         })

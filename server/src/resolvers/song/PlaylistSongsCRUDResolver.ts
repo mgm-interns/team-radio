@@ -1,9 +1,10 @@
-import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
-import { ListMetaData, SongFilter } from 'types';
 import { PlaylistSong, UserRole } from 'entities';
-import { SongCRUDResolver } from '.';
-import { Inject } from 'typedi';
+import { MethodNotAllowedException } from 'exceptions';
 import { PlaylistSongCRUDService } from 'services';
+import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { Inject } from 'typedi';
+import { ListMetaData, SongFilter } from 'types';
+import { SongCRUDResolver } from '.';
 
 @Resolver(of => PlaylistSong)
 export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
@@ -57,7 +58,7 @@ export class PlaylistSongsCRUDResolver extends SongCRUDResolver {
     description: "Create a song that's currently in playlist."
   })
   public async create(): Promise<PlaylistSong> {
-    return this.playlistSongCRUDService.create();
+    throw new MethodNotAllowedException();
   }
 
   @Authorized([UserRole.STATION_OWNER])

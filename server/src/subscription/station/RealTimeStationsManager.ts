@@ -38,7 +38,7 @@ export class RealTimeStationsManager {
     const stations = await this.stationRepository.findAvailableStations();
     this.list = await Promise.all(
       stations.map(async station => {
-        const songs = await this.songRepository.find({ where: { isPlayed: false, stationId: station._id } });
+        const songs = await this.songRepository.find({ where: { isPlayed: false, stationId: station.id } });
         return RealTimeStation.fromStation(station, songs.map(PlaylistSong.fromSong));
       })
     );

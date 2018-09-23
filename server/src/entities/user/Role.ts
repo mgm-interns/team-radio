@@ -15,7 +15,8 @@ export class Role {
 
   public isMatchedWithStationId(stationId: string | ObjectID) {
     if (this.stationId) {
-      return new ObjectId(this.stationId).equals(stationId.toString());
+      const normalizedId = stationId instanceof ObjectID ? stationId.toString() : stationId;
+      return this.stationId === normalizedId;
     }
     return false;
   }

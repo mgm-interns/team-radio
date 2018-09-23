@@ -61,7 +61,7 @@ export class Station extends BaseEntity {
       const matchedRole = user.roles.find(
         role =>
           // The owner of stations
-          (role.role === UserRole.STATION_OWNER && role.isMatchedWithStationId(this._id)) ||
+          (role.role === UserRole.STATION_OWNER && role.isMatchedWithStationId(this.id)) ||
           // System administrator is also the owner
           role.role === UserRole.ADMIN
       );

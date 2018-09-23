@@ -1,17 +1,20 @@
 import { User } from 'entities';
 import { UserRepository } from 'repositories';
 import { Logger } from 'services';
-import { AnonymousUser } from 'subscription';
+import { AnonymousUser, RealTimeStation, RealTimeStationsManager } from 'subscription';
+import { Container } from 'typedi';
 import { IContext, Tokens } from '.';
 
 export class Context implements IContext {
   public user: User | AnonymousUser | undefined;
+  public currentStation: RealTimeStation | undefined;
 
   constructor(private logger: Logger, private userRepository: UserRepository) {}
 
   public toObject() {
     return {
-      user: this.user
+      user: this.user,
+      currentStation: this.currentStation
     };
   }
 
@@ -21,16 +24,21 @@ export class Context implements IContext {
         this.logger.info(`Attempt to login with byPassToken`);
         this.user = await this.getUserFromByPassToken(byPassToken);
         // if byPassToken does not work, give it another try with authToken
-        if (this.user) return;
+        if (this.user) {
+          this.setCurrentStation(this.user as User);
+          return;
+        }
       }
     }
     if (token) {
       this.logger.info('Request tokens', { token, refreshToken });
       this.user = await this.getUserFromAuthToken(token, refreshToken);
+      this.setCurrentStation(this.user as User);
       return;
     }
     if (clientId) {
       this.user = new AnonymousUser(clientId);
+      this.setCurrentStation(this.user as AnonymousUser);
     }
   }
 
@@ -38,7 +46,7 @@ export class Context implements IContext {
    * Perform an normal JWT with token and refreshToken to authenticate user
    * Best for production
    */
-  private async getUserFromAuthToken(token: string, refreshToken?: string) {
+  protected async getUserFromAuthToken(token: string, refreshToken?: string) {
     const user = await this.userRepository.findByAuthToken(token);
     // return user not found
     if (!user) return undefined;
@@ -63,7 +71,7 @@ export class Context implements IContext {
    * Perform an quick & dirty login by proving correct token matcher that contains userId
    * Best for development
    */
-  private async getUserFromByPassToken(byPassToken: string) {
+  protected async getUserFromByPassToken(byPassToken: string) {
     const tokenValidationRegex = /^Teamradio (.*)/;
     this.logger.info(`Start validating byPassToken`);
     if (tokenValidationRegex.test(byPassToken)) {
@@ -77,5 +85,14 @@ export class Context implements IContext {
     }
     this.logger.info(`Invalid byPassToken, logout`);
     return undefined;
+  }
+
+  protected async setCurrentStation(user: User | AnonymousUser) {
+    const manager = Container.has(RealTimeStationsManager) && Container.get(RealTimeStationsManager);
+    if (manager) {
+      this.currentStation = manager.stations.find(station => station.isExistedUser(user));
+    } else {
+      console.log('could not locate manager');
+    }
   }
 }

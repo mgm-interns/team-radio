@@ -5,6 +5,7 @@
   ],
   "rules": {
     "no-unused-variable": true,
-    "variable-name": false
+    "variable-name": false,
+    "import-name": false
   }
 }

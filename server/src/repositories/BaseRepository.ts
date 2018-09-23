@@ -5,7 +5,7 @@ import { EntityRepository, Repository, SaveOptions } from 'typeorm';
 @EntityRepository(BaseEntity)
 export abstract class BaseRepository<Entity extends BaseEntity> extends Repository<Entity> {
   public hasId(entity: Entity) {
-    return !!entity._id;
+    return !!entity.id;
   }
 
   // FIXME: check an issue with typescript
