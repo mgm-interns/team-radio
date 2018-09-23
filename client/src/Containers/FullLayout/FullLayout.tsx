@@ -2,7 +2,7 @@ import { Container, Identifiable, Styleable } from 'Common';
 import { Footer, Header } from 'Components';
 import React from 'react';
 
-export class CoreFullLayout extends React.Component<FullLayout.CoreProps, FullLayout.States> {
+class CoreFullLayout extends React.Component<CoreFullLayout.Props> {
   public render() {
     return (
       <React.Fragment>
@@ -14,12 +14,13 @@ export class CoreFullLayout extends React.Component<FullLayout.CoreProps, FullLa
   }
 }
 
+namespace CoreFullLayout {
+  export interface Props extends FullLayout.Props {}
+}
+
 export const FullLayout: React.ComponentType<FullLayout.Props> = CoreFullLayout;
 
 export namespace FullLayout {
-  export interface CoreProps extends Props {}
-
   export interface Props extends Styleable, Identifiable, Container {}
-
   export interface States {}
 }

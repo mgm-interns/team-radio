@@ -17,7 +17,7 @@ class CoreHeader extends React.Component<CoreHeader.Props, CoreHeader.States> {
   public render(): React.ReactNode {
     const { classes } = this.props;
     return (
-      <AppBar position={'fixed'} className={classes.container}>
+      <AppBar position={'static'} className={classes.container}>
         <Toolbar color={'primary'} className={classes.toolBarContainer}>
           <div className={classes.containerLeft}>
             <TextLink
