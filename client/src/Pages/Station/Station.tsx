@@ -1,6 +1,6 @@
-import { Grid, Tab, Tabs, withStyles, WithStyles } from '@material-ui/core';
+import { Card, Drawer, Grid, Tab, Tabs, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
-import { SimpleStation } from 'Components';
+import { HorizontalStation } from 'Components';
 import { AllStations } from 'RadioGraphql';
 import * as React from 'react';
 import { Query } from 'react-apollo';
@@ -15,35 +15,40 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
     };
   }
   public render(): React.ReactNode {
+    const { classes } = this.props;
     const { tabValue } = this.state;
     return (
-      <Grid container>
-        <Grid item xs={2}>
+      <div className={classes.root}>
+        <Drawer variant="permanent" classes={{ paper: classes.drawerPaper }}>
           {this.getAllStations()}
+        </Drawer>
+        <Grid container spacing={16} className={classes.container}>
+          <Grid item xs={9}>
+            <Card>
+              <Tabs
+                value={tabValue}
+                onChange={this.handleTabChange}
+                indicatorColor={'primary'}
+                textColor={'primary'}
+                scrollable
+                scrollButtons={'auto'}
+              >
+                <Tab label={'Player'} />
+                <Tab label={'Playlist'} />
+                <Tab label={'History'} />
+                <Tab label={'Favorite'} />
+              </Tabs>
+              {tabValue === 0 && this.TabContainer('Player here')}
+              {tabValue === 1 && this.TabContainer('Playlist here')}
+              {tabValue === 2 && this.TabContainer('History here')}
+              {tabValue === 3 && this.TabContainer('Favorite here')}
+            </Card>
+          </Grid>
+          <Grid item xs={3}>
+            <Card>Chat here</Card>
+          </Grid>
         </Grid>
-        <Grid item xs={7}>
-          <Tabs
-            value={tabValue}
-            onChange={this.handleTabChange}
-            indicatorColor={'primary'}
-            textColor={'primary'}
-            scrollable
-            scrollButtons={'auto'}
-          >
-            <Tab label={'Player'} />
-            <Tab label={'Playlist'} />
-            <Tab label={'History'} />
-            <Tab label={'Favorite'} />
-          </Tabs>
-          {tabValue === 0 && this.TabContainer('Player here')}
-          {tabValue === 1 && this.TabContainer('Playlist here')}
-          {tabValue === 2 && this.TabContainer('History here')}
-          {tabValue === 3 && this.TabContainer('Favorite here')}
-        </Grid>
-        <Grid item xs={3}>
-          Chat here
-        </Grid>
-      </Grid>
+      </div>
     );
   }
 
@@ -59,7 +64,7 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
           if (error) return `Error: ${error.message}`;
 
           return data.allStations.map((station: AllStations.Station) => (
-            <SimpleStation key={station.stationId} station={station} />
+            <HorizontalStation key={station.stationId} station={station} />
           ));
         }}
       </Query>

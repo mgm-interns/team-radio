@@ -1,10 +1,11 @@
 import { createStyles } from '@material-ui/core';
 import { RadioTheme } from 'Themes';
 
-export const styles = ({ palette, spacing }: RadioTheme) =>
+export const styles = ({ palette, spacing, zIndex }: RadioTheme) =>
   createStyles({
     container: {
-      background: palette.common.transparent()
+      background: palette.primary.main,
+      zIndex: zIndex.drawer + 1
     },
     toolBarContainer: {
       justifyContent: 'space-between'

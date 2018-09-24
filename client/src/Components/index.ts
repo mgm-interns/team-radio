@@ -3,3 +3,4 @@ export * from './Footer';
 export * from './Picture';
 export * from './TextLink';
 export * from './SimpleStation';
+export * from './HorizontalStation';
