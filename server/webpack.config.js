@@ -28,7 +28,10 @@ module.exports = (env = {}) => {
     },
     resolve: {
       extensions: ['.ts'],
-      modules: [Path.resolve('node_modules'), Path.resolve('..', 'node_modules'), Path.resolve('src')]
+      modules: [Path.resolve('node_modules'), Path.resolve('..', 'node_modules'), Path.resolve('src')],
+      alias: {
+        shared: Path.resolve("..", "shared")
+    }
     }
   };
 };

@@ -75,6 +75,9 @@ export const SongMediumDataGrid = (props: Authorization.PermissionsProps) => (
     <ReferenceField label="Creator" source="creatorId" reference="users" linkType="show">
       <TextField source="username" />
     </ReferenceField>
+    <ReferenceField label="Station" source="stationId" reference="stations" linkType="show">
+      <TextField source="stationId" />
+    </ReferenceField>
     <FunctionField
       label="Score"
       render={(record: any) => (

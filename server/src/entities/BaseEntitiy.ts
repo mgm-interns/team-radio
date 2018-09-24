@@ -10,11 +10,11 @@ export class BaseEntity {
 
   @Field(type => String)
   public get id() {
-    return this._id;
+    return this._id.toHexString();
   }
 
-  public set id(id: ObjectID) {
-    this._id = id;
+  public set id(id: string) {
+    this._id = new ObjectID(id);
   }
 
   public async validate() {

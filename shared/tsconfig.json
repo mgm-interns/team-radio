@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "noEmitHelpers": true,
+    "importHelpers": false,
+    "moduleResolution": "node"
+  }
+}

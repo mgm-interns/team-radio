@@ -1,38 +1,34 @@
-import Axios from 'axios';
-import { BadRequestException, NotFoundException } from 'exceptions';
+import { BadRequestException } from 'exceptions';
 import * as getVideoId from 'get-video-id';
 import * as Moment from 'moment';
+import Fetch from 'node-fetch';
 import { Logger } from 'services';
 import { Inject, Service } from 'typedi';
-import { YoutubeVideo } from '.';
+import { YoutubeHelper } from '../../../../shared/youtube';
+export { YoutubeVideo } from '../../../../shared/youtube';
 
 @Service()
 export class YoutubeService {
   @Inject()
   private logger: Logger;
 
+  constructor(private youtubeHelper = new YoutubeHelper(Fetch, Moment)) {}
+
   public async getVideoDetail(url: string) {
     try {
       const { id } = getVideoId(url);
       if (!id) throw new BadRequestException('Invalid url');
-      const { data } = await Axios.get<YoutubeVideo.Response>(`${process.env.YOUTUBE_API_URL}/videos`, {
-        params: {
-          id,
-          key: process.env.YOUTUBE_API_KEY,
-          part: 'id,snippet,contentDetails,status'
-        }
+      return this.youtubeHelper.fetchVideoDetail(id, {
+        apiKey: process.env.YOUTUBE_API_KEY as string,
+        apiUrl: process.env.YOUTUBE_API_URL as string
       });
-      if (data && data.items[0]) {
-        return data.items[0];
-      }
-      throw new NotFoundException('Could not find Video.');
     } catch (error) {
       this.logger.error('Error while fetching video detail', error);
-      throw error;
+      throw new BadRequestException(error.message);
     }
   }
 
   public parseDuration(duration: string) {
-    return Moment.duration(duration).asMilliseconds();
+    return this.youtubeHelper.parseDuration(duration);
   }
 }

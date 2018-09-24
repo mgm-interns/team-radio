@@ -16,6 +16,6 @@ export class SongsResolver extends BaseSongResolver {
   public async addSong(@Arg('url') url: string, @Ctx() context: IAuthenticatedContext) {
     if (!context.currentStation) throw new BadRequestException('Required to join a station first');
     this.logger.info('start calling service');
-    return this.songCRUDService.create(url, context.currentStation.id.toString(), context.user.id.toString());
+    return this.songCRUDService.create(url, context.currentStation.id, context.user.id);
   }
 }

@@ -1,6 +1,5 @@
 import { ObjectType, Field } from 'type-graphql';
 import { Entity, Column, ObjectID } from 'typeorm';
-import { ObjectId } from 'bson';
 
 @ObjectType()
 @Entity()

@@ -16,7 +16,6 @@ export namespace YoutubeVideo {
     id: string;
     snippet: Snippet;
     contentDetails: ContentDetail;
-    status: Status;
   }
 
   export interface Snippet {
@@ -48,22 +47,15 @@ export namespace YoutubeVideo {
     height: number;
   }
 
-  export  interface ContentDetail {
+  export interface ContentDetail {
     duration: string;
     dimension: string;
     definition: string;
     caption: string;
     licensedContent: boolean;
     regionRestriction?: {
-      blocked: string[]
-    }
+      blocked: string[];
+    };
   }
 
-  export interface Status {
-    uploadStatus: string;
-    privacyStatus: 'public' | 'private';
-    license: string;
-    embeddable: boolean;
-    publicStatsViewable: boolean;
-  }
 }
