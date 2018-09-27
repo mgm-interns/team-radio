@@ -1,21 +1,24 @@
-import { GraphQLManager, Context, IAuthenticatedContext, IAnonymousContext } from 'config';
+import { Context, IAnonymousContext, IAuthenticatedContext } from 'config';
+import { PubSub } from 'graphql-yoga';
 import { UserRepository } from 'repositories';
 import { Logger } from 'services';
-import { RealTimeStationsManager } from 'subscription';
-import { Container, Inject, Service } from 'typedi';
+import { RealTimeStationsManager, StationTopic } from 'subscription';
+import { Inject, Service, Container } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { StationTopic } from './station';
 
 @Service()
 export class SubscriptionManager {
   @Inject()
   private logger: Logger;
 
-  @Inject()
-  private manager: RealTimeStationsManager;
-
   @InjectRepository()
   private userRepository: UserRepository;
+
+  private _pubSub = new PubSub();
+
+  public get pubSub() {
+    return this._pubSub;
+  }
 
   getOnConnectingHandler() {
     return (headers: SubscriptionHeader): SubscriptionHeader => {
@@ -33,10 +36,11 @@ export class SubscriptionManager {
       const context = new Context(this.logger, this.userRepository) as IAuthenticatedContext | IAnonymousContext;
       await context.setUserFromTokens(tokens);
       if (context.user) {
-        this.manager.stations.forEach(station => {
+        const manager = Container.get(RealTimeStationsManager);
+        manager.stations.forEach(station => {
           if (station.isExistedUser(context.user)) {
-            if (this.manager.leaveStation(station.stationId, context.user)) {
-              Container.get(GraphQLManager).pubSub.publish(StationTopic.LEAVE_STATION, {
+            if (manager.leaveStation(station.stationId, context.user)) {
+              this.pubSub.publish(StationTopic.LEAVE_STATION, {
                 stationId: station.stationId,
                 user: context.user
               });

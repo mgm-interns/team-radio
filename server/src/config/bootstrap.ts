@@ -3,7 +3,8 @@ import * as Express from 'express';
 import { GraphQLServer, Options } from 'graphql-yoga';
 import * as Path from 'path';
 import { Logger } from 'services';
-import { RealTimeStationsManager, SubscriptionManager } from 'subscription';
+import { RealTimeStationsManager } from 'subscription/station';
+import { SubscriptionManager } from 'subscription';
 import { Container } from 'typedi';
 import { sleep } from 'utils';
 import { WorkersManager } from 'workers';
@@ -41,20 +42,24 @@ export async function bootstrap() {
     }
   };
 
+  // Then initiate real time stations manager
+  await Container.get(RealTimeStationsManager).initialize();
+
   // Start the GraphQL server
   server
     .start(serverOptions, ({ port, playground }) => {
       logger.info(`Server is running, GraphQL Playground available at http://localhost:${port}${playground}`);
     })
-    .then(async () => {
-      await Promise.all([
-        Container.get(RealTimeStationsManager).initialize(),
-        graphQLManager.initializeGraphQLDocs(port, apiEndpoint)
-      ]);
-      // Postpone this task for 5 minutes, to reduce stress to server
-      await sleep(1000 * 60 * 5);
-      Container.get(WorkersManager).start();
-    })
+    .then(() =>
+      Promise.all([
+        graphQLManager.initializeGraphQLDocs(port, apiEndpoint),
+        async () => {
+          // Postpone this task for 5 minutes, to reduce stress to server
+          await sleep(1000 * 60 * 5);
+          Container.get(WorkersManager).start();
+        }
+      ])
+    )
     .catch(error => {
       logger.error('Error while running the server', error);
       console.error(error);

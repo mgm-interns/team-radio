@@ -9,7 +9,6 @@
   "dependencies": {
     "@material-ui/core": "~1.4.0",
     "@material-ui/icons": "^1.1.1",
-    "ajv": "^6.0.0",
     "apollo-cache-inmemory": "^1.2.9",
     "apollo-link-context": "^1.0.8",
     "apollo-link-http": "^1.5.4",

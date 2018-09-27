@@ -46,19 +46,17 @@ export class RealTimeStationsManager {
   }
 
   public joinStation(stationId: string, user: User | AnonymousUser): boolean {
-    const station = this.list.find(station => station.stationId === stationId);
-    if (!station) throw new StationNotFoundException();
+    const station = this.findStation(stationId);
     if (user instanceof User) {
       if (station.addOnlineUser(user)) return true;
     } else {
       if (station.addAnonymousUser(user)) return true;
     }
-    throw new UnprocessedEntityException('User has already been in station');
+    throw new UnprocessedEntityException('User is not permitted to join this station');
   }
 
   public leaveStation(stationId: string, user: User | AnonymousUser): boolean {
-    const station = this.list.find(station => station.stationId === stationId);
-    if (!station) throw new StationNotFoundException();
+    const station = this.findStation(stationId);
     if (user instanceof User) {
       if (station.removeOnlineUser(user)) return true;
     } else {

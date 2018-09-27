@@ -1,0 +1,24 @@
+{
+  "name": "team-radio-shared",
+  "version": "1.0.0-SNAPSHOT",
+  "description": "Team radio shared modules that can be used for both server & client side.",
+  "scripts": {
+    "compile": "tsc --project ."
+  },
+  "keywords": [
+    "typescript",
+    "youtube",
+    "get-video-id"
+  ],
+  "author": "@pvtri96",
+  "license": "ISC",
+  "dependencies": {
+    "get-video-id": "^3.1.0",
+    "moment": "2.x"
+  },
+  "devDependencies": {
+    "typescript": "^3.0.3"
+  },
+  "main": "build/index.js",
+  "files": ["src", "typing", "build"]
+}

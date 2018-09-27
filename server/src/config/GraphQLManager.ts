@@ -3,7 +3,6 @@ import * as ChildProcess from 'child_process';
 import { UserRole } from 'entities';
 import { Exception, UnauthorizedException, UnprocessedEntityException } from 'exceptions';
 import { GraphQLError } from 'graphql';
-import { PubSub } from 'graphql-subscriptions';
 import { ContextCallback } from 'graphql-yoga/dist/types';
 import { getStatusText, INTERNAL_SERVER_ERROR, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from 'http-status-codes';
 import { UserRepository } from 'repositories';
@@ -13,7 +12,7 @@ import {
   PlaylistSongsCRUDResolver,
   RealTimStationResolver,
   SongCRUDResolver,
-  SongsResolver,
+  RealTimeStationPlayerResolver,
   StationCRUDResolver,
   UserCRUDResolver
 } from 'resolvers';
@@ -23,6 +22,7 @@ import { Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Context, IContext } from '.';
 import { IAuthenticatedContext } from './context';
+import { SubscriptionManager } from 'subscription';
 
 @Service()
 export class GraphQLManager {
@@ -32,12 +32,13 @@ export class GraphQLManager {
   @InjectRepository()
   private userRepository: UserRepository;
 
-  public pubSub = new PubSub();
+  @Inject()
+  private subscriptionManager: SubscriptionManager;
 
   public async buildSchemas() {
     const schema = await buildSchema({
       authChecker: this.getAuthChecker(),
-      pubSub: this.pubSub,
+      pubSub: this.subscriptionManager.pubSub,
       resolvers: [
         // User
         UserCRUDResolver,
@@ -46,7 +47,7 @@ export class GraphQLManager {
         StationCRUDResolver,
         RealTimStationResolver,
         // Song
-        SongsResolver,
+        RealTimeStationPlayerResolver,
         SongCRUDResolver,
         PlaylistSongsCRUDResolver,
         HistorySongsCRUDResolver
@@ -62,17 +63,16 @@ export class GraphQLManager {
     return new Promise(resolve => {
       const schemaUrl = `http://localhost:${port}${endpoint}`;
       ChildProcess.exec(`npm run docs -- -e ${schemaUrl} -f`, () => {
-        this.logger.info('Compiled documentation for GrahpQL API');
+        this.logger.info('Compiled documentation for GraphQL API');
         resolve();
       });
     });
   }
 
   public getContextHandler(): ContextCallback {
-    return async params => {
+    return async ({ request, connection, response }) => {
       const context = new Context(this.logger, this.userRepository);
-      if (params.request) {
-        const { request } = params;
+      if (request) {
         const token = request.get('Authorization');
         const refreshToken = request.get('refreshToken');
         const byPassToken = request.get('byPassToken');
@@ -80,11 +80,10 @@ export class GraphQLManager {
         const tokens = { token, refreshToken, byPassToken, clientId };
         this.logger.info('HTTP request info', tokens);
         await context.setUserFromTokens(tokens);
+        response.setHeader('clientId', clientId);
       }
-      if (params.connection) {
-        const {
-          connection: { context: tokens }
-        } = params;
+      if (connection) {
+        const { context: tokens } = connection;
         this.logger.info('Web socket connection info', tokens);
         if (!tokens.clientId) {
           tokens.clientId = GraphQLManager.generateUniqueSocketId();

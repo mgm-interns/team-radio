@@ -6,15 +6,15 @@
   "license": "ISC",
   "scripts": {
     "start": "cd server && npm start",
+    "install:shared": "cd shared && npm install && npm run compile",
     "install:server": "cd server && npm install",
     "install:client": "cd client && npm install",
     "install:admin": "cd admin && npm install",
     "build:server": "cd server && npm run build",
     "build:client": "cd client && npm run build",
     "build:admin": "cd admin && npm run build",
-    "build": "npm-run-all --parallel build:**",
-    "postinstall": "npm-run-all install:** build",
-    "clean": "rm -rf node_modules server/node_modules client/node_modules admin/node_modules"
+    "postinstall": "npm-run-all install:** build:**",
+    "clean": "rm -rf node_modules shared/node_modules server/node_modules client/node_modules admin/node_modules"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.3"

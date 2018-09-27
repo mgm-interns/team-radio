@@ -1,9 +1,20 @@
 {
   "compilerOptions": {
+    "baseUrl": "src",
+    "lib": ["es2018"],
+    "rootDir": "./src",
+    "outDir": "./build",
+    "sourceMap": true,
     "strict": true,
-    "noEmit": true,
-    "noEmitHelpers": true,
     "importHelpers": false,
-    "moduleResolution": "node"
-  }
+    "declaration": true,
+    "moduleResolution": "node",
+    "types": [
+      "../typing"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

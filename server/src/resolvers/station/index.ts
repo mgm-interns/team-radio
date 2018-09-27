@@ -1,3 +1,4 @@
 export * from './BaseStationResolver';
 export * from './StationCRUDResolver';
-export * from './RealTimStationResolver';
+export * from './RealTimeStationResolver';
+export * from './RealTimeStationPlayerResolver';

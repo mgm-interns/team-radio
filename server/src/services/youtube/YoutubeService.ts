@@ -1,24 +1,20 @@
 import { BadRequestException } from 'exceptions';
-import * as getVideoId from 'get-video-id';
-import * as Moment from 'moment';
 import Fetch from 'node-fetch';
 import { Logger } from 'services';
+import { YoutubeHelper } from 'team-radio-shared';
 import { Inject, Service } from 'typedi';
-import { YoutubeHelper } from '../../../../shared/youtube';
-export { YoutubeVideo } from '../../../../shared/youtube';
+export { YoutubeVideo } from 'team-radio-shared';
 
 @Service()
 export class YoutubeService {
   @Inject()
   private logger: Logger;
 
-  constructor(private youtubeHelper = new YoutubeHelper(Fetch, Moment)) {}
+  constructor(private youtubeHelper = new YoutubeHelper(Fetch)) {}
 
   public async getVideoDetail(url: string) {
     try {
-      const { id } = getVideoId(url);
-      if (!id) throw new BadRequestException('Invalid url');
-      return this.youtubeHelper.fetchVideoDetail(id, {
+      return this.youtubeHelper.fetchVideoDetail(url, {
         apiKey: process.env.YOUTUBE_API_KEY as string,
         apiUrl: process.env.YOUTUBE_API_URL as string
       });

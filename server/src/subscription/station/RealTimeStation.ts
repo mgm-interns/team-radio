@@ -1,14 +1,13 @@
 import { Station, User, PlaylistSong } from 'entities';
 import { ObjectType, Field, Int } from 'type-graphql';
-import { AnonymousUser, RealTimeStationPlayer } from '.';
+import { RealTimeStationPlayer } from '.';
+import { AnonymousUser } from 'subscription';
+import { Container } from 'typedi';
+import { SubscriptionManager } from '../SubscriptionManager';
+import { StationTopic } from './StationTopic';
 
 @ObjectType()
 export class RealTimeStation extends Station {
-  constructor() {
-    super();
-    this.player = new RealTimeStationPlayer();
-  }
-
   @Field(type => [User])
   onlineUsers: User[] = [];
 
@@ -20,7 +19,11 @@ export class RealTimeStation extends Station {
     return this.onlineUsers.length + this.onlineAnonymous.length;
   }
 
-  player: RealTimeStationPlayer;
+  private _player: RealTimeStationPlayer = new RealTimeStationPlayer();
+
+  public get player(): RealTimeStationPlayer {
+    return this._player;
+  }
 
   public addOnlineUser(user: User): boolean {
     let userIndex = -1;
@@ -88,6 +91,10 @@ export class RealTimeStation extends Station {
       : this.onlineAnonymous.some(({ clientId }) => clientId === user.clientId);
   }
 
+  public registerPubSub() {
+    this.subscriptionManager.pubSub.subscribe(StationTopic.ADD_PLAYLIST_SONG, this.onAddedSong.bind(this));
+  }
+
   public static async fromStation(
     station: Station,
     playlist: PlaylistSong[],
@@ -98,10 +105,39 @@ export class RealTimeStation extends Station {
     realTimeStation.onlineUsers = onlineUsers;
     realTimeStation.onlineAnonymous = onlineAnonymous;
     realTimeStation.player.playlist = playlist;
+    realTimeStation.player.parent = realTimeStation;
+    realTimeStation.registerPubSub();
     return realTimeStation;
   }
 
   protected onUserChanged() {
     // TODO: Start player or do something in here
+    if (this.onlineCount > 0) {
+      if (!this.player.playing) this.startPlayer();
+    }
+  }
+
+  protected onAddedSong(payload: StationTopic.AddPlaylistSongPayLoad) {
+    // Filter by stationId
+    if (payload.stationId === this.stationId) {
+      // Check if the song is already in the list
+      if (!this.player.playlist.some(song => song.id === payload.song.id)) {
+        this.player.playlist = [...this.player.playlist, PlaylistSong.fromSong(payload.song)];
+        if (!this.player.playing) this.startPlayer();
+      }
+    }
+  }
+
+  private startPlayer() {
+    this.player.start();
+    this.publish<StationTopic.StartPlayerPayLoad>(StationTopic.START_PLAYER, { stationId: this.stationId });
+  }
+
+  private get subscriptionManager(): SubscriptionManager {
+    return Container.get(SubscriptionManager);
+  }
+
+  private publish<Payload>(triggerName: string, payload: Payload): boolean {
+    return Container.get(SubscriptionManager).pubSub.publish(triggerName, payload);
   }
 }

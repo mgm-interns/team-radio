@@ -1,6 +1,6 @@
 import { Station } from 'entities';
 import { Field, Int, ObjectType } from 'type-graphql';
-import { RealTimeStation } from './RealTimeStation';
+import { RealTimeStation } from '.';
 
 @ObjectType()
 export class RealTimeStationWithOnlineCount extends Station {

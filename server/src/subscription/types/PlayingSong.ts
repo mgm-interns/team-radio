@@ -3,6 +3,11 @@ import { PlaylistSong } from 'entities';
 
 @ObjectType()
 export class PlayingSong {
+  constructor(song: PlaylistSong, startedAt: number) {
+    this.song = song;
+    this.startedAt = startedAt;
+  }
+
   @Field(type => PlaylistSong)
   song: PlaylistSong;
 
