@@ -1,4 +1,4 @@
-import { AnonymousUser } from '../types';
+import { AnonymousUser } from 'subscription';
 import { User, Song } from 'entities';
 
 export namespace StationTopic {

@@ -12,7 +12,9 @@ export class RealTimStationResolver extends BaseStationResolver {
 
   @Query(returns => RealTimeStation, {
     name: 'RealTimeStation',
-    description: 'Query station with online users count'
+    description:
+      'Query station with online users count' +
+      'combine with "onStationChanged" for fetching initial data then listening for changes.'
   })
   public one(@Arg('stationId') stationId: string): RealTimeStation {
     return this.manager.findStation(stationId);
@@ -22,7 +24,7 @@ export class RealTimStationResolver extends BaseStationResolver {
     name: 'allRealTimeStations',
     description:
       'Query all stations with online users count, ' +
-      'combine with "subscribeStations" for fetching initial data then listening for changes.'
+      'combine with "onStationsChanged" for fetching initial data then listening for changes.'
   })
   public all(): RealTimeStationWithOnlineCount[] {
     return this.manager.orderedStations.map(RealTimeStationWithOnlineCount.fromRealTimeStation);
@@ -60,12 +62,18 @@ export class RealTimStationResolver extends BaseStationResolver {
     this.manager.stations.forEach(station => {
       if (station.isExistedUser(context.user)) {
         const result = this.manager.leaveStation(station.stationId, context.user);
-        if (result) publishLeaveStation({ stationId: station.stationId, user: context.user });
+        if (result) {
+          const payload: StationTopic.LeaveStationPayLoad = { stationId: station.stationId, user: context.user };
+          this.logger.debug(`Publish event ${StationTopic.LEAVE_STATION} with payload:`, payload);
+          publishLeaveStation(payload);
+        }
       }
     });
     // Join station
     if (this.manager.joinStation(stationId, context.user)) {
-      return publishJoinStation({ stationId, user: context.user });
+      const payload: StationTopic.JoinStationPayLoad = { stationId, user: context.user };
+      this.logger.debug(`Publish event ${StationTopic.JOIN_STATION} with payload:`, payload);
+      return publishJoinStation(payload);
     }
     throw new BadRequestException('Can not join station');
   }
@@ -77,7 +85,9 @@ export class RealTimStationResolver extends BaseStationResolver {
     @Ctx() context: IAuthenticatedContext | IAnonymousContext
   ): boolean {
     if (this.manager.leaveStation(stationId, context.user)) {
-      return publish({ stationId, user: context.user });
+      const payload: StationTopic.LeaveStationPayLoad = { stationId, user: context.user };
+      this.logger.debug(`Publish event ${StationTopic.LEAVE_STATION} with payload:`, payload);
+      return publish(payload);
     }
     throw new BadRequestException('Can not leave station');
   }

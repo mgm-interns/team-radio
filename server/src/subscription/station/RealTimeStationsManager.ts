@@ -2,6 +2,7 @@ import { PlaylistSong, User } from 'entities';
 import { StationNotFoundException, UnprocessedEntityException } from 'exceptions';
 import { SongRepository, StationRepository } from 'repositories';
 import { Logger } from 'services';
+import { StationsHelper } from 'team-radio-shared';
 import { Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { AnonymousUser, RealTimeStation } from '..';
@@ -25,7 +26,7 @@ export class RealTimeStationsManager {
 
   // TODO: Update sort algorithm
   public get orderedStations() {
-    return this.list.sort((s1, s2) => s2.onlineCount - s1.onlineCount);
+    return StationsHelper.sortRealTimeStations(this.list);
   }
 
   public findStation(stationId: string): RealTimeStation {

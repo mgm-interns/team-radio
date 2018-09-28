@@ -3,7 +3,7 @@ import { PlaylistSong } from 'entities';
 
 @ObjectType()
 export class PlayingSong {
-  constructor(song: PlaylistSong, startedAt: number) {
+  constructor(song: PlaylistSong, startedAt: number = Date.now()) {
     this.song = song;
     this.startedAt = startedAt;
   }

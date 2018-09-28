@@ -1,10 +1,11 @@
-import { Station, User, PlaylistSong } from 'entities';
-import { ObjectType, Field, Int } from 'type-graphql';
-import { RealTimeStationPlayer } from '.';
-import { AnonymousUser } from 'subscription';
+import { DataAccess } from 'config';
+import { PlaylistSong, Station, User } from 'entities';
+import { StationRepository } from 'repositories';
+import { Logger } from 'services';
+import { AnonymousUser, SubscriptionManager, StationTopic } from 'subscription';
+import { Field, Int, ObjectType } from 'type-graphql';
 import { Container } from 'typedi';
-import { SubscriptionManager } from '../SubscriptionManager';
-import { StationTopic } from './StationTopic';
+import { RealTimeStationPlayer } from '.';
 
 @ObjectType()
 export class RealTimeStation extends Station {
@@ -36,6 +37,7 @@ export class RealTimeStation extends Station {
     if (userIndex === -1) {
       this.onlineUsers.push(user);
       this.onUserChanged();
+      this.logger.info(`User ${user.username} has joined station ${this.stationId}`);
       return true;
     }
     return false;
@@ -52,6 +54,7 @@ export class RealTimeStation extends Station {
     if (removedIndex === -1) return false;
     this.onlineUsers.splice(removedIndex, 1);
     this.onUserChanged();
+    this.logger.info(`User ${user.username} has leaved station ${this.stationId}`);
     return true;
   }
 
@@ -66,6 +69,7 @@ export class RealTimeStation extends Station {
     if (userIndex === -1) {
       this.onlineAnonymous.push(user);
       this.onUserChanged();
+      this.logger.info(`Anonymous user ${user.clientId} has joined station ${this.stationId}`);
       return true;
     }
     return false;
@@ -82,6 +86,7 @@ export class RealTimeStation extends Station {
     if (removedIndex === -1) return false;
     this.onlineAnonymous.splice(removedIndex, 1);
     this.onUserChanged();
+    this.logger.info(`Anonymous user ${user.clientId} has leaved station ${this.stationId}`);
     return true;
   }
 
@@ -91,8 +96,28 @@ export class RealTimeStation extends Station {
       : this.onlineAnonymous.some(({ clientId }) => clientId === user.clientId);
   }
 
+  public async updateStationState(startingTime: number | null, currentPlayingSongId: string | null) {
+    this.startingTime = startingTime;
+    this.currentPlayingSongId = currentPlayingSongId;
+    const station = await this.stationRepository.findOneOrFail(this.id);
+    station.startingTime = startingTime;
+    station.currentPlayingSongId = currentPlayingSongId;
+    this.logger.info(`Station ${this.stationId} has new state:`, { startingTime, currentPlayingSongId });
+    return this.stationRepository.save(station);
+  }
+
+  public publish<Payload>(triggerName: string, payload: ExcludeOne<Payload, StationTopic.StationIdPayload>): boolean {
+    this.logger.debug(`Publish event ${triggerName} with payload:`, payload);
+    return this.subscriptionManager.pubSub.publish(triggerName, Object.assign(this.getDefaultPubSubPayload(), payload));
+  }
+
   public registerPubSub() {
     this.subscriptionManager.pubSub.subscribe(StationTopic.ADD_PLAYLIST_SONG, this.onAddedSong.bind(this));
+  }
+
+  public startPlayer() {
+    this.player.start();
+    this.publish<StationTopic.StartPlayerPayLoad>(StationTopic.START_PLAYER, { stationId: this.stationId });
   }
 
   public static async fromStation(
@@ -107,14 +132,12 @@ export class RealTimeStation extends Station {
     realTimeStation.player.playlist = playlist;
     realTimeStation.player.parent = realTimeStation;
     realTimeStation.registerPubSub();
+    if (realTimeStation.currentPlayingSongId && realTimeStation.startingTime) realTimeStation.startPlayer();
     return realTimeStation;
   }
 
   protected onUserChanged() {
     // TODO: Start player or do something in here
-    if (this.onlineCount > 0) {
-      if (!this.player.playing) this.startPlayer();
-    }
   }
 
   protected onAddedSong(payload: StationTopic.AddPlaylistSongPayLoad) {
@@ -128,16 +151,24 @@ export class RealTimeStation extends Station {
     }
   }
 
-  private startPlayer() {
-    this.player.start();
-    this.publish<StationTopic.StartPlayerPayLoad>(StationTopic.START_PLAYER, { stationId: this.stationId });
+  private get logger(): Logger {
+    return Container.get(Logger);
   }
 
   private get subscriptionManager(): SubscriptionManager {
     return Container.get(SubscriptionManager);
   }
 
-  private publish<Payload>(triggerName: string, payload: Payload): boolean {
-    return Container.get(SubscriptionManager).pubSub.publish(triggerName, payload);
+  private get stationRepository(): StationRepository {
+    return Container.get(DataAccess).connection.getCustomRepository(StationRepository);
+  }
+
+  private getDefaultPubSubPayload(): StationTopic.StationIdPayload {
+    return { stationId: this.stationId };
   }
 }
+
+/**
+ * @description: Exclude properties from the Payload which provided by ExcludedPayload
+ */
+type ExcludeOne<Payload, ExcludedPayload> = { [P in Exclude<keyof Payload, keyof ExcludedPayload>]: Payload[P] };

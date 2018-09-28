@@ -1,6 +1,6 @@
 import { IAuthenticatedContext } from 'config';
 import { Song } from 'entities';
-import { BadRequestException } from 'exceptions';
+import { NotInStationBadRequestException } from 'exceptions';
 import { SongCRUDService } from 'services';
 import { RealTimeStationPlayer, RealTimeStationsManager, StationTopic } from 'subscription';
 import { Arg, Authorized, Ctx, Mutation, Publisher, PubSub, Query, Resolver, Subscription } from 'type-graphql';
@@ -22,27 +22,25 @@ export class RealTimeStationPlayerResolver extends BaseResolver<RealTimeStationP
     @Ctx() context: IAuthenticatedContext,
     @PubSub(StationTopic.ADD_PLAYLIST_SONG) publish: Publisher<StationTopic.AddPlaylistSongPayLoad>
   ): Promise<Song> {
-    if (!context.currentStation) throw new BadRequestException('Required to join a station first');
+    if (!context.currentStation) throw new NotInStationBadRequestException();
     const song = await this.songCRUDService.create(url, context.currentStation.id, context.user.id);
     publish({ song, stationId: context.currentStation.stationId, user: context.user });
     return song;
   }
 
-  @Query(returns => RealTimeStationPlayer, { name: 'StationPlayer' })
+  @Query(returns => RealTimeStationPlayer, {
+    name: 'StationPlayer',
+    description:
+      'Query station current player state, ' +
+      'combine with "onStationPlayerChanged" for fetching initial data then listening for changes.'
+  })
   public getPlayer(@Arg('stationId') stationId: string): RealTimeStationPlayer {
-    console.log(this.manager.findStation(stationId).player);
     return this.manager.findStation(stationId).player;
   }
 
   @Subscription(returns => RealTimeStationPlayer, {
     name: 'onStationPlayerChanged',
-    topics: [
-      StationTopic.ADD_PLAYLIST_SONG,
-      StationTopic.REMOVE_PLAYLIST_SONG,
-      StationTopic.UPDATE_PLAYER_SONG,
-      StationTopic.STOP_PLAYER,
-      StationTopic.START_PLAYER
-    ],
+    topics: [StationTopic.ADD_PLAYLIST_SONG, StationTopic.REMOVE_PLAYLIST_SONG, StationTopic.UPDATE_PLAYER_SONG],
     filter: ({ args, payload }) => payload.stationId === args.stationId,
     description:
       'Subscribe on every change on station player like: add song, remove song, update song, start player, stop player... It is not recommended to use this subscription due to performance issue.',

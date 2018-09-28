@@ -1,7 +1,7 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, MaxLength, MinLength, NotContains } from 'class-validator';
 import { User } from 'entities';
 import slugify from 'slugify';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType, Int } from 'type-graphql';
 import { Column, Entity, ObjectID } from 'typeorm';
 import { BaseEntity } from '..';
 import { UserRole } from '../user';
@@ -34,9 +34,13 @@ export class Station extends BaseEntity {
 
   @IsNumber()
   @IsOptional()
-  @Field({ nullable: true })
+  @Field(type => Int, { nullable: true })
   @Column({ nullable: true })
-  startingTime: number;
+  startingTime: number | null;
+
+  @Field(type => String, { nullable: true })
+  @Column({ nullable: true })
+  currentPlayingSongId: string | null;
 
   @Field()
   @Column()
