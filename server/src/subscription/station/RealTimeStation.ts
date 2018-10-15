@@ -5,7 +5,7 @@ import { Logger } from 'services';
 import { AnonymousUser, SubscriptionManager, StationTopic } from 'subscription';
 import { Field, Int, ObjectType } from 'type-graphql';
 import { Container } from 'typedi';
-import { RealTimeStationPlayer } from '.';
+import { RealTimeStationPlayer } from './RealTimeStationPlayer';
 
 @ObjectType()
 export class RealTimeStation extends Station {

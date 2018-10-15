@@ -1,6 +1,6 @@
 import { ObjectType } from 'type-graphql';
 import { Entity } from 'typeorm';
-import { Song } from '.';
+import { Song } from './Song';
 
 @ObjectType()
 @Entity({ name: 'songs' })

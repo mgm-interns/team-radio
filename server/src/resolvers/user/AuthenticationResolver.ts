@@ -3,7 +3,7 @@ import { User } from 'entities';
 import { BadRequestException, ForbiddenException, UserNotFoundException } from 'exceptions';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { ChangePasswordInput, LoggedInUser, LoginInput, RegisterInput } from 'types';
-import { BaseUserResolver } from '.';
+import { BaseUserResolver } from './BaseUserResolver';
 
 @Resolver(of => User)
 export class AuthenticationResolver extends BaseUserResolver {

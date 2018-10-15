@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { UsersWorker } from '.';
+import { UsersWorker } from './UsersWorker';
 
 @Service()
 export class WorkersManager {

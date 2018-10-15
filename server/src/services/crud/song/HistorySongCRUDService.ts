@@ -1,7 +1,7 @@
-import { Service } from 'typedi';
-import { SongCRUDService } from '.';
 import { HistorySong } from 'entities';
+import { Service } from 'typedi';
 import { SongFilter } from 'types';
+import { SongCRUDService } from './SongCRUDService';
 
 @Service()
 export class HistorySongCRUDService extends SongCRUDService {

@@ -1,9 +1,9 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, MaxLength, MinLength, NotContains } from 'class-validator';
 import { User } from 'entities';
 import slugify from 'slugify';
-import { Field, ObjectType, Int } from 'type-graphql';
-import { Column, Entity, ObjectID } from 'typeorm';
-import { BaseEntity } from '..';
+import { Field, Int, ObjectType } from 'type-graphql';
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from '../BaseEntity';
 import { UserRole } from '../user';
 
 @ObjectType()

@@ -1,4 +1,4 @@
-import { NotFoundException } from 'exceptions';
+import { NotFoundException } from '../NotFoundException';
 
 export class SongNotFoundException extends NotFoundException {
   constructor(message?: string) {

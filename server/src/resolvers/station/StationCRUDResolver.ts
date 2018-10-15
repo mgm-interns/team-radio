@@ -3,8 +3,8 @@ import { StationCRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
 import { ListMetaData, StationFilter } from 'types';
-import { BaseStationResolver } from '.';
-import { ICRUDResolver } from '..';
+import { BaseStationResolver } from './BaseStationResolver';
+import { ICRUDResolver } from '../ICRUDResolver';
 
 @Resolver(of => Station)
 export class StationCRUDResolver extends BaseStationResolver implements ICRUDResolver<Station> {

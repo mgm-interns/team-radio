@@ -1,7 +1,7 @@
 import { IsUrl } from 'class-validator';
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity } from 'typeorm';
-import { BaseEntity } from '..';
+import { BaseEntity } from '../BaseEntity';
 
 @ObjectType()
 @Entity({ name: 'songs' })

@@ -3,8 +3,8 @@ import { UserCRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
 import { BaseFilter, ListMetaData } from 'types';
-import { BaseUserResolver } from '.';
-import { ICRUDResolver } from '..';
+import { BaseUserResolver } from './BaseUserResolver';
+import { ICRUDResolver } from '../ICRUDResolver';
 
 @Resolver(of => User)
 export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<User> {

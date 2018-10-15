@@ -5,7 +5,7 @@ import { Inject, Service } from 'typedi';
 import { EntityRepository } from 'typeorm';
 import { RegisterInput } from 'types';
 import { TokenHelper } from 'utils';
-import { BaseRepository } from '..';
+import { BaseRepository } from '../BaseRepository';
 
 @Service()
 @EntityRepository(User)

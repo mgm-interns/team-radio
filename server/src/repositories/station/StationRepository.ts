@@ -3,7 +3,7 @@ import { StationNotFoundException } from 'exceptions';
 import { Logger } from 'services';
 import { Inject, Service } from 'typedi';
 import { EntityRepository } from 'typeorm';
-import { BaseRepository } from '..';
+import { BaseRepository } from '../BaseRepository';
 
 @Service()
 @EntityRepository(Station)

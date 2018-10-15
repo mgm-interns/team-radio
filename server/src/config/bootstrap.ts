@@ -1,4 +1,3 @@
-import { DataAccess, GraphQLManager } from 'config';
 import * as Express from 'express';
 import { GraphQLServer, Options } from 'graphql-yoga';
 import * as Path from 'path';
@@ -8,6 +7,8 @@ import { SubscriptionManager } from 'subscription';
 import { Container } from 'typedi';
 import { sleep } from 'utils';
 import { WorkersManager } from 'workers';
+import { DataAccess } from './DataAccess';
+import { GraphQLManager } from './GraphQLManager';
 
 export async function bootstrap() {
   // Retrieve logger instance

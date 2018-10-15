@@ -2,12 +2,12 @@ import { DataAccess } from 'config';
 import { PlaylistSong } from 'entities';
 import { Exception } from 'exceptions';
 import { SongRepository } from 'repositories';
-import { PlayingSong } from 'subscription';
 import { PlaylistHelper } from 'team-radio-shared';
 import { Field, Int, ObjectType } from 'type-graphql';
 import { Container } from 'typedi';
 import { RealTimeStation, StationTopic } from '.';
 import { Logger } from 'services';
+import { PlayingSong } from '../types';
 
 @ObjectType()
 export class RealTimeStationPlayer {

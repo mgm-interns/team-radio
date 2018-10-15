@@ -3,7 +3,7 @@ import { BadRequestException } from 'exceptions';
 import { RealTimeStation, RealTimeStationsManager, RealTimeStationWithOnlineCount, StationTopic } from 'subscription';
 import { Arg, Ctx, Mutation, Publisher, PubSub, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { Inject } from 'typedi';
-import { BaseStationResolver } from '.';
+import { BaseStationResolver } from './BaseStationResolver';
 
 @Resolver(of => RealTimeStation)
 export class RealTimStationResolver extends BaseStationResolver {

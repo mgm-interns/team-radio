@@ -1,4 +1,4 @@
-export * from './BaseEntitiy';
+export * from './BaseEntity';
 export * from './user';
 export * from './station';
 export * from './song';

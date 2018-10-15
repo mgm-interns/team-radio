@@ -5,7 +5,8 @@ import { Logger } from 'services';
 import { StationsHelper } from 'team-radio-shared';
 import { Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { AnonymousUser, RealTimeStation } from '..';
+import { AnonymousUser } from '../types';
+import { RealTimeStation } from './RealTimeStation';
 
 @Service()
 export class RealTimeStationsManager {

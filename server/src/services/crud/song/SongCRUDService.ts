@@ -2,10 +2,10 @@ import { DataAccess } from 'config';
 import { Song } from 'entities';
 import { BadRequestException, MethodNotAllowedException, SongNotFoundException } from 'exceptions';
 import { SongRepository } from 'repositories';
-import { YoutubeService } from 'services';
 import { Container, Inject, Service } from 'typedi';
 import { SongFilter } from 'types';
-import { BaseCRUDService } from '..';
+import { BaseCRUDService } from '../BaseCRUDService';
+import { YoutubeService } from '../../youtube/YoutubeService';
 
 @Service()
 export class SongCRUDService extends BaseCRUDService {

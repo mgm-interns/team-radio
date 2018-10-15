@@ -1,4 +1,4 @@
-import { NotFoundException } from 'exceptions';
+import { NotFoundException } from '../NotFoundException';
 
 export class StationNotFoundException extends NotFoundException {
   constructor(message?: string) {

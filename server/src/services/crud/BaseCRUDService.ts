@@ -1,4 +1,4 @@
-import { Logger } from 'services';
+import { Logger } from '../logger';
 import { Inject, Service } from 'typedi';
 import { BaseFilter } from 'types';
 

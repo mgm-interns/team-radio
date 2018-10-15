@@ -20,8 +20,7 @@ import { Logger } from 'services';
 import { AuthChecker, buildSchema, formatArgumentValidationError } from 'type-graphql';
 import { Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Context, IContext } from '.';
-import { IAuthenticatedContext } from './context';
+import { IAuthenticatedContext, IContext, Context } from './context';
 import { SubscriptionManager } from 'subscription';
 
 @Service()

@@ -1,6 +1,6 @@
 import { BadRequestException } from 'exceptions';
 import Fetch from 'node-fetch';
-import { Logger } from 'services';
+import { Logger } from '../logger';
 import { YoutubeHelper } from 'team-radio-shared';
 import { Inject, Service } from 'typedi';
 export { YoutubeVideo } from 'team-radio-shared';

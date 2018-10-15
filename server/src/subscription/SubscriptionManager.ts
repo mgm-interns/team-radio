@@ -2,9 +2,9 @@ import { Context, IAnonymousContext, IAuthenticatedContext } from 'config';
 import { PubSub } from 'graphql-yoga';
 import { UserRepository } from 'repositories';
 import { Logger } from 'services';
-import { RealTimeStationsManager, StationTopic } from 'subscription';
 import { Inject, Service, Container } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { RealTimeStationsManager, StationTopic } from './station';
 
 @Service()
 export class SubscriptionManager {

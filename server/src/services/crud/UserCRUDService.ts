@@ -5,7 +5,7 @@ import { ForbiddenException, UnprocessedEntityException, UserNotFoundException }
 import { UserRepository } from 'repositories';
 import { Container, Service } from 'typedi';
 import { BaseFilter } from 'types';
-import { BaseCRUDService } from '.';
+import { BaseCRUDService } from './BaseCRUDService';
 
 @Service()
 export class UserCRUDService extends BaseCRUDService {

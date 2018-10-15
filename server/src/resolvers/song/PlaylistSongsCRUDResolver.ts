@@ -4,7 +4,7 @@ import { PlaylistSongCRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
 import { ListMetaData, SongFilter } from 'types';
-import { SongCRUDResolver } from '.';
+import { SongCRUDResolver } from './SongCRUDResolver';
 
 @Resolver(of => PlaylistSong)
 export class PlaylistSongsCRUDResolver extends SongCRUDResolver {

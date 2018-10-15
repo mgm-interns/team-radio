@@ -3,8 +3,9 @@ import { IsEmail, IsNumber, IsOptional, IsUrl, MaxLength, MinLength } from 'clas
 import { IdentifiableUser } from 'config';
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity } from 'typeorm';
-import { AuthToken, Role, UserRole } from '.';
-import { BaseEntity } from '..';
+import { BaseEntity } from '../BaseEntity';
+import { AuthToken } from './AuthToken';
+import { Role, UserRole } from './Role';
 
 @ObjectType()
 @Entity({ name: 'users' })

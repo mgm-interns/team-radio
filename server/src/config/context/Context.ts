@@ -3,7 +3,7 @@ import { UserRepository } from 'repositories';
 import { Logger } from 'services';
 import { AnonymousUser, RealTimeStation, RealTimeStationsManager } from 'subscription';
 import { Container } from 'typedi';
-import { IContext, Tokens } from '.';
+import { IContext, Tokens } from './IContext';
 
 export class Context implements IContext {
   public user: User | AnonymousUser | undefined;

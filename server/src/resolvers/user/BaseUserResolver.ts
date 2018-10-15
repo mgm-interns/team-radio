@@ -1,10 +1,10 @@
 import { User } from 'entities';
 import { UserRepository } from 'repositories';
-import { BaseResolver } from 'resolvers';
 import { Logger } from 'services';
 import { FieldResolver, Resolver, Root } from 'type-graphql';
 import { Inject } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { BaseResolver } from '../BaseResolver';
 
 @Resolver(of => User)
 export abstract class BaseUserResolver extends BaseResolver<User> {

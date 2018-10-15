@@ -4,8 +4,8 @@ import { SongCRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
 import { ListMetaData, SongFilter } from 'types';
-import { BaseSongResolver } from '.';
-import { ICRUDResolver } from '..';
+import { BaseSongResolver } from './BaseSongResolver';
+import { ICRUDResolver } from '../ICRUDResolver';
 
 @Resolver(of => Song)
 export class SongCRUDResolver extends BaseSongResolver implements ICRUDResolver<Song> {

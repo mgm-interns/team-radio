@@ -1,4 +1,4 @@
-import { BadRequestException } from 'exceptions';
+import { BadRequestException } from '../BadRequestException';
 
 export class NotInStationBadRequestException extends BadRequestException {
   constructor(message?: string) {

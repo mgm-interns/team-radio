@@ -1,9 +1,9 @@
 import { Song } from 'entities';
 import { SongNotFoundException } from 'exceptions';
-import { BaseRepository } from '..';
 import { Logger } from 'services/logger';
 import { Inject, Service } from 'typedi';
 import { EntityRepository } from 'typeorm';
+import { BaseRepository } from '../BaseRepository';
 
 @Service()
 @EntityRepository(Song)
