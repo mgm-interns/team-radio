@@ -73,7 +73,8 @@ export class RealTimStationResolver extends BaseStationResolver {
     if (this.manager.joinStation(stationId, context.user)) {
       const payload: StationTopic.JoinStationPayLoad = { stationId, user: context.user };
       this.logger.debug(`Publish event ${StationTopic.JOIN_STATION} with payload:`, payload);
-      return publishJoinStation(payload);
+      publishJoinStation(payload);
+      return true;
     }
     throw new BadRequestException('Can not join station');
   }
@@ -87,7 +88,8 @@ export class RealTimStationResolver extends BaseStationResolver {
     if (this.manager.leaveStation(stationId, context.user)) {
       const payload: StationTopic.LeaveStationPayLoad = { stationId, user: context.user };
       this.logger.debug(`Publish event ${StationTopic.LEAVE_STATION} with payload:`, payload);
-      return publish(payload);
+      publish(payload);
+      return true;
     }
     throw new BadRequestException('Can not leave station');
   }

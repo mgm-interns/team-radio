@@ -1,8 +1,8 @@
 import { Context, IAnonymousContext, IAuthenticatedContext } from 'config';
-import { PubSub } from 'graphql-yoga';
+import { PubSub } from 'graphql-subscriptions';
 import { UserRepository } from 'repositories';
 import { Logger } from 'services';
-import { Inject, Service, Container } from 'typedi';
+import { Container, Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { RealTimeStationsManager, StationTopic } from './station';
 

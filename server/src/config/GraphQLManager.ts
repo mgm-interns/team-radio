@@ -1,27 +1,27 @@
+import { ContextFunction } from 'apollo-server-core';
 import * as Bcrypt from 'bcrypt-nodejs';
 import * as ChildProcess from 'child_process';
 import { UserRole } from 'entities';
 import { Exception, UnauthorizedException, UnprocessedEntityException } from 'exceptions';
 import { GraphQLError } from 'graphql';
-import { ContextCallback } from 'graphql-yoga/dist/types';
 import { getStatusText, INTERNAL_SERVER_ERROR, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from 'http-status-codes';
 import { UserRepository } from 'repositories';
 import {
   AuthenticationResolver,
   HistorySongsCRUDResolver,
   PlaylistSongsCRUDResolver,
+  RealTimeStationPlayerResolver,
   RealTimStationResolver,
   SongCRUDResolver,
-  RealTimeStationPlayerResolver,
   StationCRUDResolver,
   UserCRUDResolver
 } from 'resolvers';
 import { Logger } from 'services';
+import { SubscriptionManager } from 'subscription';
 import { AuthChecker, buildSchema, formatArgumentValidationError } from 'type-graphql';
 import { Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { IAuthenticatedContext, IContext, Context } from './context';
-import { SubscriptionManager } from 'subscription';
+import { Context, IAuthenticatedContext, IContext } from './context';
 
 @Service()
 export class GraphQLManager {
@@ -68,18 +68,18 @@ export class GraphQLManager {
     });
   }
 
-  public getContextHandler(): ContextCallback {
-    return async ({ request, connection, response }) => {
+  public getContextHandler(): ContextFunction {
+    return async ({ req, connection, res }) => {
       const context = new Context(this.logger, this.userRepository);
-      if (request) {
-        const token = request.get('Authorization');
-        const refreshToken = request.get('refreshToken');
-        const byPassToken = request.get('byPassToken');
-        const clientId = request.get('clientId') || GraphQLManager.generateUniqueSocketId();
+      if (req) {
+        const token = req.get('Authorization');
+        const refreshToken = req.get('refreshToken');
+        const byPassToken = req.get('byPassToken');
+        const clientId = req.get('clientId') || GraphQLManager.generateUniqueSocketId();
         const tokens = { token, refreshToken, byPassToken, clientId };
         this.logger.info('HTTP request info', tokens);
         await context.setUserFromTokens(tokens);
-        response.setHeader('clientId', clientId);
+        res.setHeader('clientId', clientId);
       }
       if (connection) {
         const { context: tokens } = connection;

@@ -1,7 +1,9 @@
 import * as Express from 'express';
-import { GraphQLServer, Options } from 'graphql-yoga';
 import * as Path from 'path';
 import { Logger } from 'services';
+import { createServer } from 'http';
+import { ApolloServer } from 'apollo-server-express';
+import { execute, subscribe } from 'graphql';
 import { RealTimeStationsManager } from 'subscription/station';
 import { SubscriptionManager } from 'subscription';
 import { Container } from 'typedi';
@@ -9,6 +11,7 @@ import { sleep } from 'utils';
 import { WorkersManager } from 'workers';
 import { DataAccess } from './DataAccess';
 import { GraphQLManager } from './GraphQLManager';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 
 export async function bootstrap() {
   // Retrieve logger instance
@@ -22,56 +25,60 @@ export async function bootstrap() {
   // Retrieve SubscriptionManager instance
   const subscriptionManager = Container.get(SubscriptionManager);
 
+  const port = parseInt(process.env.PORT as string, 10);
+  const endpoint = '/api';
+
+  const express = Express();
+
+  const schema = await graphQLManager.buildSchemas();
+
   // Create GraphQL server
-  const server = new GraphQLServer({
-    schema: await graphQLManager.buildSchemas(),
-    context: graphQLManager.getContextHandler()
+  const apolloServer = new ApolloServer({
+    schema,
+    context: graphQLManager.getContextHandler(),
+    playground: true,
+    formatError: graphQLManager.getErrorFormatter(),
+    subscriptions: false // Disable subscription config in apollo server due unknow bug
   });
 
-  const port = parseInt(process.env.PORT as string, 10);
-  const apiEndpoint = '/api';
-  // Configure server options
-  const serverOptions: Options = {
-    port,
-    endpoint: apiEndpoint,
-    playground: apiEndpoint,
-    formatError: graphQLManager.getErrorFormatter(),
-    subscriptions: {
-      path: apiEndpoint,
-      onConnect: subscriptionManager.getOnConnectingHandler(),
-      onDisconnect: subscriptionManager.getOnDisconnectingHandler()
-    }
-  };
+  // Serve GraphQL documentation site
+  express.use(`${endpoint}/docs`, Express.static(Path.resolve(process.cwd(), 'build', 'docs')));
+
+  // Serve GraphQL API by applying apollo server to express instance
+  apolloServer.applyMiddleware({ app: express, path: endpoint });
+
+  // Serve admin site
+  express.use('/admin', Express.static(Path.resolve(process.cwd(), '..', 'admin', 'build')));
+
+  // Serve client site
+  express.use('/', Express.static(Path.resolve(process.cwd(), '..', 'client', 'build')));
 
   // Then initiate real time stations manager
   await Container.get(RealTimeStationsManager).initialize();
 
-  // Start the GraphQL server
-  server
-    .start(serverOptions, ({ port, playground }) => {
-      logger.info(`Server is running, GraphQL Playground available at http://localhost:${port}${playground}`);
-    })
-    .then(() =>
-      Promise.all([
-        graphQLManager.initializeGraphQLDocs(port, apiEndpoint),
-        async () => {
-          // Postpone this task for 5 minutes, to reduce stress to server
-          await sleep(1000 * 60 * 5);
-          Container.get(WorkersManager).start();
-        }
-      ])
-    )
-    .catch(error => {
-      logger.error('Error while running the server', error);
-      console.error(error);
-    });
+  const httpServer = createServer(express);
 
-  // Serve GraphQL documentation
-  server.express.use(`${apiEndpoint}/docs`, Express.static(Path.resolve(process.cwd(), 'build', 'docs')));
-
-  // Serve admin
-  server.express.use('/admin', Express.static(Path.resolve(process.cwd(), '..', 'admin', 'build')));
-
-  // Serve client
-  server.express.use('/', Express.static(Path.resolve(process.cwd(), '..', 'client', 'build')));
+  httpServer.listen({ port }, () => {
+    logger.info(`Apollo Server on http://localhost:${port}/${endpoint}`);
+    // Initialize subscription server after initializing http server
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema,
+        onConnect: subscriptionManager.getOnConnectingHandler(),
+        onDisconnect: subscriptionManager.getOnDisconnectingHandler()
+      },
+      { server: httpServer, path: endpoint }
+    );
+    // Start the GraphQL server
+    Promise.all([
+      graphQLManager.initializeGraphQLDocs(port, endpoint),
+      async () => {
+        // Postpone this task for 5 minutes, to reduce stress to server
+        await sleep(1000 * 60 * 5);
+        Container.get(WorkersManager).start();
+      }
+    ]);
+  });
 }

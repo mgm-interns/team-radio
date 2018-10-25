@@ -108,7 +108,8 @@ export class RealTimeStation extends Station {
 
   public publish<Payload>(triggerName: string, payload: ExcludeOne<Payload, StationTopic.StationIdPayload>): boolean {
     this.logger.debug(`Publish event ${triggerName} with payload:`, payload);
-    return this.subscriptionManager.pubSub.publish(triggerName, Object.assign(this.getDefaultPubSubPayload(), payload));
+    this.subscriptionManager.pubSub.publish(triggerName, Object.assign(this.getDefaultPubSubPayload(), payload));
+    return true;
   }
 
   public registerPubSub() {
