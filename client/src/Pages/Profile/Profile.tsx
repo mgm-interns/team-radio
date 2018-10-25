@@ -1,11 +1,16 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
+import { FullLayout } from 'Containers';
 import * as React from 'react';
 import { styles } from './styles';
 
 class CoreProfile extends React.Component<CoreProfile.Props> {
   public render(): React.ReactNode {
-    return <div>Profile here</div>;
+    return (
+      <FullLayout>
+        <div>Profile here</div>
+      </FullLayout>
+    );
   }
 }
 

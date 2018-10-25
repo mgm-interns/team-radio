@@ -11,6 +11,7 @@ import {
 import classnames from 'classnames';
 import { Identifiable, Styleable } from 'Common';
 import { SimpleStation } from 'Components';
+import { FullLayout } from 'Containers';
 import { AllStations } from 'RadioGraphql';
 import * as React from 'react';
 import { Query } from 'react-apollo';
@@ -30,13 +31,14 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
   public render(): React.ReactNode {
     const { classes } = this.props;
     return (
-      <div className={classes.container}>
-        <div className={classes.backgroundContainer}>
-          <picture>
-            <img
-              className={classes.image}
-              sizes="(max-width: 2520px) 100vw, 2520px"
-              srcSet="
+      <FullLayout>
+        <div className={classes.container}>
+          <div className={classes.backgroundContainer}>
+            <picture>
+              <img
+                className={classes.image}
+                sizes="(max-width: 2520px) 100vw, 2520px"
+                srcSet="
                 /images/homepage_BG_d0mq87_c_scale,w_320.jpg 320w,
                 /images/homepage_BG_d0mq87_c_scale,w_707.jpg 707w,
                 /images/homepage_BG_d0mq87_c_scale,w_986.jpg 986w,
@@ -51,56 +53,57 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
                 /images/homepage_BG_d0mq87_c_scale,w_2466.jpg 2466w,
                 /images/homepage_BG_d0mq87_c_scale,w_2497.jpg 2497w,
                 /images/homepage_BG_d0mq87_c_scale,w_2520.jpg 2520w"
-              src="/images/homepage_BG_d0mq87_c_scale,w_2520.jpg"
-              alt=""
-            />
-          </picture>
-        </div>
-        <div className={classes.pageInfoContainer}>
-          <div className={classes.homeBio}>
-            <Typography className={classes.logo} color={'inherit'} variant={'display4'}>
-              Team Radio
-            </Typography>
-            <Typography color={'inherit'} variant={'display2'}>
-              A Radio Station for your team
-            </Typography>
+                src="/images/homepage_BG_d0mq87_c_scale,w_2520.jpg"
+                alt=""
+              />
+            </picture>
           </div>
-          <div className={classes.stationCreator}>
-            <FormGroup row>
-              <TextField
-                label={'Your team station'}
-                placeholder={'e.g. Awesome Radio'}
-                margin={'normal'}
+          <div className={classes.pageInfoContainer}>
+            <div className={classes.homeBio}>
+              <Typography className={classes.logo} color={'inherit'} variant={'display4'}>
+                Team Radio
+              </Typography>
+              <Typography color={'inherit'} variant={'display2'}>
+                A Radio Station for your team
+              </Typography>
+            </div>
+            <div className={classes.stationCreator}>
+              <FormGroup row>
+                <TextField
+                  label={'Your team station'}
+                  placeholder={'e.g. Awesome Radio'}
+                  margin={'normal'}
+                  fullWidth
+                  InputProps={{ className: classes.input }}
+                  InputLabelProps={{ className: classes.inputLabel }}
+                  onChange={this.onChange}
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={this.state.privateStation}
+                      onChange={this.onPrivateStationSwitch}
+                      color={'primary'}
+                    />
+                  }
+                  label={<Typography color={'primary'}>Private</Typography>}
+                />
+              </FormGroup>
+              <Button
+                className={classnames({ disabled: this.state.inputValue === '' })}
+                variant={'contained'}
+                color={'primary'}
                 fullWidth
-                InputProps={{ className: classes.input }}
-                InputLabelProps={{ className: classes.inputLabel }}
-                onChange={this.onChange}
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={this.state.privateStation}
-                    onChange={this.onPrivateStationSwitch}
-                    color={'primary'}
-                  />
-                }
-                label={<Typography color={'primary'}>Private</Typography>}
-              />
-            </FormGroup>
-            <Button
-              className={classnames({ disabled: this.state.inputValue === '' })}
-              variant={'contained'}
-              color={'primary'}
-              fullWidth
-              disabled={this.state.inputValue === ''}
-            >
-              <MdCreate /> <span className={classes.createButtonLabel}>Create</span>
-            </Button>
+                disabled={this.state.inputValue === ''}
+              >
+                <MdCreate /> <span className={classes.createButtonLabel}>Create</span>
+              </Button>
+            </div>
           </div>
+          {this.getAllStations()}
+          <div>Something</div>
         </div>
-        {this.getAllStations()}
-        <div>Something</div>
-      </div>
+      </FullLayout>
     );
   }
 

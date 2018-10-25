@@ -1,9 +1,11 @@
-import { Card, Drawer, Grid, Tab, Tabs, withStyles, WithStyles } from '@material-ui/core';
+import { withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
-import { HorizontalStation } from 'Components';
+import { VerticalStation } from 'Components';
+import { StationChatBox, StationPlayer, StationSongs, StationSongSearch } from 'Modules';
 import { AllStations } from 'RadioGraphql';
 import * as React from 'react';
 import { Query } from 'react-apollo';
+import { DefaultLayout } from './Layout';
 import { styles } from './styles';
 
 class CoreStation extends React.Component<CoreStation.Props, CoreStation.States> {
@@ -11,50 +13,14 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
     super(props);
 
     this.state = {
-      tabValue: 0
+      drawer: false
     };
   }
-  public render(): React.ReactNode {
-    const { classes } = this.props;
-    const { tabValue } = this.state;
-    return (
-      <div className={classes.root}>
-        <Drawer variant="permanent" classes={{ paper: classes.drawerPaper }}>
-          {this.getAllStations()}
-        </Drawer>
-        <Grid container spacing={16} className={classes.container}>
-          <Grid item xs={9}>
-            <Card>
-              <Tabs
-                value={tabValue}
-                onChange={this.handleTabChange}
-                indicatorColor={'primary'}
-                textColor={'primary'}
-                scrollable
-                scrollButtons={'auto'}
-              >
-                <Tab label={'Player'} />
-                <Tab label={'Playlist'} />
-                <Tab label={'History'} />
-                <Tab label={'Favorite'} />
-              </Tabs>
-              {tabValue === 0 && this.TabContainer('Player here')}
-              {tabValue === 1 && this.TabContainer('Playlist here')}
-              {tabValue === 2 && this.TabContainer('History here')}
-              {tabValue === 3 && this.TabContainer('Favorite here')}
-            </Card>
-          </Grid>
-          <Grid item xs={3}>
-            <Card>Chat here</Card>
-          </Grid>
-        </Grid>
-      </div>
-    );
-  }
 
-  private TabContainer = (children: React.ReactNode): React.ReactElement<{}> => {
-    return <div>{children}</div>;
-  };
+  public render(): React.ReactNode {
+    const Layout = this.getLayout();
+    return <Layout {...this.getLayoutProps()} />;
+  }
 
   private getAllStations = (): React.ReactElement<{}> => {
     return (
@@ -64,30 +30,51 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
           if (error) return `Error: ${error.message}`;
 
           return data.allStations.map((station: AllStations.Station) => (
-            <HorizontalStation key={station.stationId} station={station} />
+            <VerticalStation
+              key={station.stationId}
+              station={station}
+              onClick={() => this.setState({ drawer: false })}
+            />
           ));
         }}
       </Query>
     );
   };
 
-  private handleTabChange = (event: React.ChangeEvent<{}>, value: number): void => {
-    this.setState({
-      tabValue: value
-    });
+  private getLayout = (): React.ComponentType<DefaultLayout.Props> => {
+    // TODO: any other layouts?
+    switch (true) {
+      default:
+        return DefaultLayout;
+    }
+  };
+
+  private getLayoutProps = (): DefaultLayout.Props => {
+    return {
+      stationPlayer: <StationPlayer />,
+      stationChatBox: <StationChatBox />,
+      stationSongs: <StationSongs />,
+      stationSongSearch: <StationSongSearch />,
+      stations: this.getAllStations(),
+      drawer: {
+        open: this.state.drawer,
+        onClose: () => this.setState({ drawer: false }),
+        onOpen: () => this.setState({ drawer: true }),
+        toggle: () => this.setState(state => ({ drawer: !state.drawer }))
+      }
+    };
   };
 }
 
 namespace CoreStation {
   export interface Props extends Station.Props, WithStyles<typeof styles> {}
-  export interface States extends Station.States {}
+  export interface States {
+    drawer: boolean;
+  }
 }
 
 export const Station: React.ComponentType<Station.Props> = withStyles(styles)(CoreStation);
 
 export namespace Station {
   export interface Props extends Identifiable, Styleable {}
-  export interface States {
-    tabValue: number;
-  }
 }

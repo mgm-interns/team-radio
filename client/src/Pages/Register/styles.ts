@@ -19,7 +19,9 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
       top: '50%',
       left: '50%',
       transform: 'translate(-50%,-50%)',
-      color: palette.common.white
+      color: palette.common.white,
+      width: '95vw',
+      maxWidth: 400
     },
     cardContainer: {
       background: palette.common.transparent(0.5)
@@ -30,8 +32,8 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
       color: palette.common.white
     },
     textFieldsContainer: {
-      marginLeft: 12,
-      marginRight: 12
+      marginLeft: spacing.mediumUnit,
+      marginRight: spacing.mediumUnit
     },
     textField: {
       marginBottom: spacing.hugeUnit
@@ -48,6 +50,8 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
     },
     cardActions: {
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      marginLeft: spacing.smallUnit * -1,
+      marginRight: spacing.smallUnit * -1
     }
   });

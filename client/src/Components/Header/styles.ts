@@ -12,7 +12,8 @@ export const styles = ({ palette, spacing, zIndex }: RadioTheme) =>
     },
     containerLeft: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      color: palette.common.white
     },
     containerRight: {
       textAlign: 'end'

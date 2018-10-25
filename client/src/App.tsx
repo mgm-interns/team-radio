@@ -4,8 +4,9 @@ import { ApolloProvider } from 'react-apollo';
 import { AppRouter } from 'router';
 
 export const App = () => {
+  const { hostname, protocol } = window.location;
   const client = new ApolloClient({
-    uri: 'http://localhost:8000/api'
+    uri: `${protocol}//${hostname}:8000/api`
   });
 
   return (

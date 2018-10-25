@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
 import { TextLink } from 'Components';
+import { FullLayout } from 'Containers';
 import * as React from 'react';
 import { FaFacebookF, FaGooglePlusG } from 'react-icons/fa';
 import { styles } from './styles';
@@ -19,13 +20,14 @@ class CoreLogin extends React.Component<CoreLogin.Props> {
   public render(): React.ReactNode {
     const { classes } = this.props;
     return (
-      <div className={classes.container}>
-        <div className={classes.backgroundContainer}>
-          <picture>
-            <img
-              className={classes.image}
-              sizes="(max-width: 2520px) 100vw, 2520px"
-              srcSet="
+      <FullLayout>
+        <div className={classes.container}>
+          <div className={classes.backgroundContainer}>
+            <picture>
+              <img
+                className={classes.image}
+                sizes="(max-width: 2520px) 100vw, 2520px"
+                srcSet="
                 /images/login_BG_m7gib7_c_scale,w_320.jpg 320w,
                 /images/login_BG_m7gib7_c_scale,w_760.jpg 760w,
                 /images/login_BG_m7gib7_c_scale,w_1065.jpg 1065w,
@@ -39,62 +41,68 @@ class CoreLogin extends React.Component<CoreLogin.Props> {
                 /images/login_BG_m7gib7_c_scale,w_2457.jpg 2457w,
                 /images/login_BG_m7gib7_c_scale,w_2514.jpg 2514w,
                 /images/login_BG_m7gib7_c_scale,w_2520.jpg 2520w"
-              src="/images/login_BG_m7gib7_c_scale,w_2520.jpg"
-              alt=""
-            />
-          </picture>
-        </div>
-        <div className={classes.pageInfoContainer}>
-          <Card className={classes.cardContainer}>
-            <CardContent>
-              <Typography className={classes.cardHeaderTitle} variant={'headline'}>
-                Login
-              </Typography>
-              <Typography className={classes.cardHeaderTitle} variant={'subheading'}>
-                for listening and sharing music
-              </Typography>
-              <CardActions className={classes.loginActions}>
-                <Button variant={'fab'} className={classes.facebookLoginButton}>
-                  <Icon>
-                    <FaFacebookF />
-                  </Icon>
-                </Button>
-                <Button variant={'fab'} className={classes.googleLoginButton}>
-                  <Icon>
-                    <FaGooglePlusG />
-                  </Icon>
-                </Button>
-              </CardActions>
-              <div className={classes.textFieldsContainer}>
-                <TextField
-                  className={classes.textField}
-                  fullWidth
-                  label={'Username'}
-                  InputProps={{ className: classes.input }}
-                  InputLabelProps={{ className: classes.inputLabel }}
-                />
-                <TextField
-                  className={classes.textField}
-                  fullWidth
-                  label={'Password'}
-                  type={'password'}
-                  InputProps={{ className: classes.input }}
-                  InputLabelProps={{ className: classes.inputLabel }}
-                />
-              </div>
-              <CardActions className={classes.cardActions}>
-                <Button color={'primary'} variant={'contained'} fullWidth>
+                src="/images/login_BG_m7gib7_c_scale,w_2520.jpg"
+                alt=""
+              />
+            </picture>
+          </div>
+          <div className={classes.pageInfoContainer}>
+            <Card className={classes.cardContainer}>
+              <CardContent>
+                <Typography className={classes.cardHeaderTitle} variant={'headline'}>
                   Login
-                </Button>
-                <TextLink linkTo={'./'} color={'primary'} className={classes.textLink}>
-                  Forgot your password
-                </TextLink>
-                <TextLink linkTo={'./'} color={'primary'} children={'Create an account'} className={classes.textLink} />
-              </CardActions>
-            </CardContent>
-          </Card>
+                </Typography>
+                <Typography className={classes.cardHeaderTitle} variant={'subheading'}>
+                  to start listening and sharing music
+                </Typography>
+                <CardActions className={classes.loginActions}>
+                  <Button variant={'fab'} className={classes.facebookLoginButton}>
+                    <Icon>
+                      <FaFacebookF />
+                    </Icon>
+                  </Button>
+                  <Button variant={'fab'} className={classes.googleLoginButton}>
+                    <Icon>
+                      <FaGooglePlusG />
+                    </Icon>
+                  </Button>
+                </CardActions>
+                <div className={classes.textFieldsContainer}>
+                  <TextField
+                    className={classes.textField}
+                    fullWidth
+                    label={'Username'}
+                    InputProps={{ className: classes.input }}
+                    InputLabelProps={{ className: classes.inputLabel }}
+                  />
+                  <TextField
+                    className={classes.textField}
+                    fullWidth
+                    label={'Password'}
+                    type={'password'}
+                    InputProps={{ className: classes.input }}
+                    InputLabelProps={{ className: classes.inputLabel }}
+                  />
+                </div>
+                <CardActions className={classes.cardActions}>
+                  <Button color={'primary'} variant={'contained'} fullWidth>
+                    Login
+                  </Button>
+                  <TextLink linkTo={'/'} color={'primary'} className={classes.textLink}>
+                    Forgot your password
+                  </TextLink>
+                  <TextLink
+                    linkTo={'/'}
+                    color={'primary'}
+                    children={'Create an account'}
+                    className={classes.textLink}
+                  />
+                </CardActions>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
+      </FullLayout>
     );
   }
 }

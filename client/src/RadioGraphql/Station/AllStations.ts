@@ -11,7 +11,6 @@ export namespace AllStations {
         ownerId
         stationId
         stationName
-        startingTime
       }
     }
   `;
@@ -24,8 +23,6 @@ export namespace AllStations {
     stationName: string;
 
     createdAt: number;
-
-    startingTime: number;
 
     ownerId: string;
 
