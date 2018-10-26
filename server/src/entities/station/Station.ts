@@ -1,7 +1,8 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, MaxLength, MinLength, NotContains } from 'class-validator';
 import { User } from 'entities';
+import { TimestampScalar } from 'scalars';
 import slugify from 'slugify';
-import { Field, Int, ObjectType } from 'type-graphql';
+import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../BaseEntity';
 import { UserRole } from '../user';
@@ -22,7 +23,7 @@ export class Station extends BaseEntity {
   @Column()
   stationName: string;
 
-  @Field()
+  @Field(type => TimestampScalar)
   @Column()
   createdAt: number = Date.now();
 
@@ -34,7 +35,7 @@ export class Station extends BaseEntity {
 
   @IsNumber()
   @IsOptional()
-  @Field(type => Int, { nullable: true })
+  @Field(type => TimestampScalar, { nullable: true })
   @Column({ nullable: true })
   startingTime: number | null;
 

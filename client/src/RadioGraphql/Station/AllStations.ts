@@ -22,7 +22,7 @@ export namespace AllStations {
 
     stationName: string;
 
-    createdAt: number;
+    createdAt: string;
 
     ownerId: string;
 

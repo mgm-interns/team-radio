@@ -1,4 +1,5 @@
 import { IsUrl } from 'class-validator';
+import { TimestampScalar } from 'scalars';
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../BaseEntity';
@@ -40,7 +41,7 @@ export class Song extends BaseEntity {
   @Field()
   isPlayed: boolean = false;
 
-  @Field()
+  @Field(type => TimestampScalar)
   @Column()
   createdAt: number = Date.now();
 
