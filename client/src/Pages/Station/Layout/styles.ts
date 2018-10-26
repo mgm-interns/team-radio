@@ -1,7 +1,7 @@
 import { createStyles } from '@material-ui/core';
-import { RadioTheme } from 'Themes';
+import { RadioTheme, ThemeType } from 'Themes';
 
-export const styles = ({ metrics, spacing, breakpoints }: RadioTheme) =>
+export const styles = ({ metrics, spacing, palette }: RadioTheme) =>
   createStyles({
     root: {
       flexGrow: 1,
@@ -18,7 +18,10 @@ export const styles = ({ metrics, spacing, breakpoints }: RadioTheme) =>
     drawerPaper: {
       paddingLeft: spacing.mediumUnit,
       paddingRight: spacing.mediumUnit,
-      marginRight: spacing.mediumUnit
+      paddingTop: spacing.smallUnit,
+      paddingBottom: spacing.smallUnit,
+      marginRight: spacing.mediumUnit,
+      borderRight: palette.type === ThemeType.dark ? 'none' : undefined
     },
     drawerPaperMobile: {
       width: '50vw'
@@ -49,5 +52,14 @@ export const styles = ({ metrics, spacing, breakpoints }: RadioTheme) =>
     },
     searchBoxLayout: {
       height: 300
+    },
+    drawerBottomSection: {
+      marginTop: 'auto',
+      paddingTop: spacing.unit,
+      paddingBottom: spacing.unit
+    },
+    drawerBottomSectionIcon: {
+      marginRight: spacing.mediumUnit,
+      fontSize: 12
     }
   });

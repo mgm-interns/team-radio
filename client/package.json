@@ -1,7 +1,6 @@
 {
   "name": "team-radio",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.0-SNAPSHOT",
   "main": "index.js",
   "scripts": {
     "start": "react-app-rewired start",
@@ -11,6 +10,8 @@
   "dependencies": {
     "@material-ui/core": "^3.3.1",
     "apollo-boost": "^0.1.17",
+    "apollo-link-context": "^1.0.9",
+    "apollo-link-ws": "^1.0.9",
     "classnames": "^2.2.6",
     "graphql": "^14.0.2",
     "react": "^16.6.0",
@@ -21,7 +22,8 @@
     "react-responsive": "^5.0.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-virtualized": "^9.21.0"
+    "react-virtualized": "^9.21.0",
+    "subscriptions-transport-ws": "^0.9.15"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.6",

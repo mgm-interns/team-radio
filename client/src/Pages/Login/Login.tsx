@@ -10,7 +10,7 @@ import {
   WithStyles
 } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
-import { TextLink } from 'Components';
+import { InternalLink } from 'Components';
 import { FullLayout } from 'Containers';
 import * as React from 'react';
 import { FaFacebookF, FaGooglePlusG } from 'react-icons/fa';
@@ -49,10 +49,10 @@ class CoreLogin extends React.Component<CoreLogin.Props> {
           <div className={classes.pageInfoContainer}>
             <Card className={classes.cardContainer}>
               <CardContent>
-                <Typography className={classes.cardHeaderTitle} variant={'headline'}>
+                <Typography className={classes.cardHeaderTitle} variant={'h5'}>
                   Login
                 </Typography>
-                <Typography className={classes.cardHeaderTitle} variant={'subheading'}>
+                <Typography className={classes.cardHeaderTitle} variant={'subtitle1'}>
                   to start listening and sharing music
                 </Typography>
                 <CardActions className={classes.loginActions}>
@@ -88,11 +88,11 @@ class CoreLogin extends React.Component<CoreLogin.Props> {
                   <Button color={'primary'} variant={'contained'} fullWidth>
                     Login
                   </Button>
-                  <TextLink linkTo={'/'} color={'primary'} className={classes.textLink}>
+                  <InternalLink href={'/'} color={'primary'} className={classes.textLink}>
                     Forgot your password
-                  </TextLink>
-                  <TextLink
-                    linkTo={'/'}
+                  </InternalLink>
+                  <InternalLink
+                    href={'/'}
                     color={'primary'}
                     children={'Create an account'}
                     className={classes.textLink}

@@ -1,11 +1,10 @@
 import { Typography, withStyles, WithStyles } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
-import { AllStations } from 'RadioGraphql';
+import { InternalLink } from 'Components';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { StationItem } from '..';
 import { styles } from './styles';
 
-class CoreSimpleStation extends React.Component<CoreSimpleStation.Props, SimpleStation.States> {
+class CoreSimpleStation extends React.Component<CoreSimpleStation.Props, CoreSimpleStation.States> {
   constructor(props: CoreSimpleStation.Props) {
     super(props);
   }
@@ -14,32 +13,30 @@ class CoreSimpleStation extends React.Component<CoreSimpleStation.Props, SimpleS
     const { classes, station } = this.props;
     const className = [classes.stationContainer, this.props.className].join(' ').trim();
     return (
-      <Link to={`./station/${station.stationId}`}>
+      <InternalLink href={`./station/${station.stationId}`} disableTypography>
         <div className={className} id={this.props.id} style={this.props.style}>
           <div className={classes.avatarContainer}>
             <img src="/images/station_default_cover.png" alt="" className={classes.img} />
-            <Typography variant={'body2'} className={classes.onlineNumber}>
+            <Typography variant={'body1'} className={classes.onlineNumber}>
               0 online
             </Typography>
           </div>
-          <Typography variant={'subheading'} color={'default'} className={classes.stationName}>
+          <Typography variant={'subtitle1'} color={'textPrimary'} className={classes.stationName}>
             {station.stationName}
           </Typography>
         </div>
-      </Link>
+      </InternalLink>
     );
   }
 }
 
 namespace CoreSimpleStation {
   export interface Props extends SimpleStation.Props, WithStyles<typeof styles> {}
+  export interface States {}
 }
 
 export const SimpleStation: React.ComponentType<SimpleStation.Props> = withStyles(styles)(CoreSimpleStation);
 
 export namespace SimpleStation {
-  export interface Props extends Identifiable, Styleable {
-    station: AllStations.Station;
-  }
-  export interface States {}
+  export interface Props extends StationItem.Props {}
 }

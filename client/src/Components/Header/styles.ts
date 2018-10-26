@@ -1,10 +1,10 @@
 import { createStyles } from '@material-ui/core';
-import { RadioTheme } from 'Themes';
+import { RadioTheme, ThemeType } from 'Themes';
 
 export const styles = ({ palette, spacing, zIndex }: RadioTheme) =>
   createStyles({
     container: {
-      background: palette.primary.main,
+      background: palette.type === ThemeType.light ? palette.primary.main : palette.secondary.main,
       zIndex: zIndex.drawer + 1
     },
     toolBarContainer: {
@@ -19,6 +19,7 @@ export const styles = ({ palette, spacing, zIndex }: RadioTheme) =>
       textAlign: 'end'
     },
     homeButton: {
-      marginLeft: spacing.mediumUnit
+      marginLeft: spacing.mediumUnit,
+      color: palette.common.white
     }
   });

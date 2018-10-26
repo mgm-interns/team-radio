@@ -1,12 +1,32 @@
-import { Drawer, Grid, IconButton, WithStyles, withStyles } from '@material-ui/core';
+import { Badge, Drawer, Grid, Icon, IconButton, Typography, WithStyles, withStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
-import { Header, Responsive } from 'Components';
+import { Header, InternalLink, Responsive } from 'Components';
 import * as React from 'react';
-import { MdMenu as DrawerIcon } from 'react-icons/md';
+import { MdArrowBack as BackIcon, MdMenu as DrawerIcon, MdSupervisorAccount as UserIcon } from 'react-icons/md';
 import { styles } from './styles';
 
 export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
-  const { classes, stationSongs, stationChatBox, stationSongSearch, stationPlayer, stations, drawer } = props;
+  const {
+    classes,
+    title,
+    stationSongs,
+    stationChatBox,
+    stationSongSearch,
+    stationPlayer,
+    stations,
+    drawer,
+    toolbar
+  } = props;
+  const homeLink = (
+    <div className={classes.drawerBottomSection}>
+      <InternalLink href={'/'}>
+        <Icon fontSize={'inherit'} className={classes.drawerBottomSectionIcon}>
+          <BackIcon />
+        </Icon>
+        Back to home
+      </InternalLink>
+    </div>
+  );
   return (
     <>
       {/* Only display drawer icon on tablet and mobile devices */}
@@ -18,6 +38,14 @@ export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
             </IconButton>
           </Responsive>
         }
+        leftText={
+          title && (
+            <Typography variant={'h6'} color={'inherit'}>
+              {title}
+            </Typography>
+          )
+        }
+        additionalRightIcons={toolbar}
       />
       <div className={classes.root}>
         {/* Mobile layout */}
@@ -28,6 +56,7 @@ export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
             onClose={drawer.onClose}
           >
             {stations}
+            {homeLink}
           </Drawer>
           <Grid container spacing={16} className={classes.container}>
             <Grid item xs={12} className={classes.fullHeight}>
@@ -49,6 +78,7 @@ export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
             onClose={drawer.onClose}
           >
             {stations}
+            {homeLink}
           </Drawer>
           <Grid container spacing={16} className={classes.container}>
             <Grid item xs={12} className={classes.fullHeight}>
@@ -73,6 +103,7 @@ export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
             classes={{ paper: [classes.drawerPaper, classes.drawerPaperDesktop].join(' ').trim() }}
           >
             {stations}
+            {homeLink}
           </Drawer>
           <Grid container spacing={16} className={classes.container}>
             <Grid item xs={7} className={classes.fullHeight}>
@@ -104,16 +135,17 @@ export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
             classes={{ paper: [classes.drawerPaper, classes.drawerPaperLargeDesktop].join(' ').trim() }}
           >
             {stations}
+            {homeLink}
           </Drawer>
           <Grid container spacing={16} className={classes.container}>
-            <Grid item xs={6} className={classes.fullHeight}>
+            <Grid item xs={7} className={classes.fullHeight}>
               <Grid container spacing={16} className={classes.fullHeight}>
                 <Grid item xs={12}>
                   {stationPlayer}
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={6} className={classes.fullHeight}>
+            <Grid item xs={5} className={classes.fullHeight}>
               <Grid container spacing={16} className={classes.fullHeight}>
                 <Grid item xs={6} className={classes.searchBoxOtherLayout}>
                   {stationSongs}
@@ -141,10 +173,12 @@ export const DefaultLayout: React.ComponentType<DefaultLayout.Props> = withStyle
 
 export namespace DefaultLayout {
   export interface Props extends Identifiable, Styleable {
+    title?: string;
     stationPlayer: React.ReactNode;
     stationSongs: React.ReactNode;
     stationChatBox: React.ReactNode;
     stationSongSearch: React.ReactNode;
+    toolbar: React.ReactNode;
     drawer: {
       open: boolean;
       onOpen(): void;

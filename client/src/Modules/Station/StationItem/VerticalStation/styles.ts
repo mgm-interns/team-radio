@@ -1,7 +1,7 @@
 import { createStyles } from '@material-ui/core';
 import { RadioTheme } from 'Themes';
 
-export const styles = ({ palette, spacing }: RadioTheme) =>
+export const styles = ({ palette, spacing, breakpoints }: RadioTheme) =>
   createStyles({
     stationContainer: {
       marginBottom: spacing.smallUnit,
@@ -18,15 +18,24 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
     },
     stationInfo: {
       marginLeft: spacing.mediumUnit,
-      width: `calc(100% - 64px)`
+      width: `calc(100% - 64px)`,
+      paddingTop: spacing.smallUnit,
+      paddingBottom: spacing.smallUnit
     },
-    onlineNumber: {},
     stationName: {
-      // '& > *': {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      width: '100%'
-      // }
+      width: '100%',
+      fontSize: 14,
+      [breakpoints.up('lg')]: {
+        fontSize: 16
+      }
+    },
+    onlineNumber: {
+      fontSize: 12,
+      [breakpoints.up('lg')]: {
+        fontSize: 14
+      }
     }
   });

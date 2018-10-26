@@ -1,10 +1,9 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
-import { VerticalStation } from 'Components';
-import { StationChatBox, StationPlayer, StationSongs, StationSongSearch } from 'Modules';
-import { AllStations } from 'RadioGraphql';
+import { StationChatBox, StationList, StationPlayer, StationSongs, StationSongSearch, StationToolbar } from 'Modules';
+import { StationItem } from 'Modules/Station/StationItem';
+import { AllRealTimeStations, OnRealTimeStationsChanged } from 'RadioGraphql';
 import * as React from 'react';
-import { Query } from 'react-apollo';
 import { DefaultLayout } from './Layout';
 import { styles } from './styles';
 
@@ -19,25 +18,22 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
 
   public render(): React.ReactNode {
     const Layout = this.getLayout();
-    return <Layout {...this.getLayoutProps()} />;
+    const title = 'My Station';
+    return <Layout {...this.getLayoutProps(title)} />;
   }
 
   private getAllStations = (): React.ReactElement<{}> => {
     return (
-      <Query query={AllStations.getAllStationsQuery}>
-        {({ loading, error, data }) => {
-          if (loading) return 'Loading...';
-          if (error) return `Error: ${error.message}`;
-
-          return data.allStations.map((station: AllStations.Station) => (
-            <VerticalStation
-              key={station.stationId}
-              station={station}
-              onClick={() => this.setState({ drawer: false })}
-            />
-          ));
-        }}
-      </Query>
+      <AllRealTimeStations.Query query={AllRealTimeStations.QUERY}>
+        {({ subscribeToMore, ...others }) => (
+          <StationList
+            {...others}
+            subscribeToStationsChanged={() => subscribeToMore(OnRealTimeStationsChanged.getSubscribeToMoreOptions())}
+            stationComponent={StationItem.VerticalStation}
+            onItemClick={() => this.setState({ drawer: false })}
+          />
+        )}
+      </AllRealTimeStations.Query>
     );
   };
 
@@ -49,12 +45,14 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
     }
   };
 
-  private getLayoutProps = (): DefaultLayout.Props => {
+  private getLayoutProps = (title?: string): DefaultLayout.Props => {
     return {
+      title,
       stationPlayer: <StationPlayer />,
       stationChatBox: <StationChatBox />,
       stationSongs: <StationSongs />,
       stationSongSearch: <StationSongSearch />,
+      toolbar: <StationToolbar />,
       stations: this.getAllStations(),
       drawer: {
         open: this.state.drawer,

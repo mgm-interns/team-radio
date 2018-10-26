@@ -46,10 +46,10 @@ class CoreRegister extends React.Component<CoreRegister.Props> {
           <div className={classes.pageInfoContainer}>
             <Card className={classes.cardContainer}>
               <CardContent>
-                <Typography className={classes.cardHeaderTitle} variant={'headline'}>
+                <Typography className={classes.cardHeaderTitle} variant={'h5'}>
                   Register
                 </Typography>
-                <Typography className={classes.cardHeaderTitle} variant={'subheading'}>
+                <Typography className={classes.cardHeaderTitle} variant={'subtitle1'}>
                   to get the most out of Team Radio
                 </Typography>
                 <div className={classes.textFieldsContainer}>

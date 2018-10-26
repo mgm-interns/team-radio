@@ -8,14 +8,14 @@ import {
   WithStyles,
   withStyles
 } from '@material-ui/core';
-import classnames from 'classnames';
 import { Identifiable, Styleable } from 'Common';
-import { SimpleStation } from 'Components';
 import { FullLayout } from 'Containers';
-import { AllStations } from 'RadioGraphql';
+import { StationList } from 'Modules';
+import { StationItem } from 'Modules/Station/StationItem';
+import { AllRealTimeStations, OnRealTimeStationsChanged } from 'RadioGraphql';
 import * as React from 'react';
-import { Query } from 'react-apollo';
 import { MdCreate } from 'react-icons/md';
+import { classnames } from 'Themes';
 import { styles } from './styles';
 
 class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
@@ -39,20 +39,20 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
                 className={classes.image}
                 sizes="(max-width: 2520px) 100vw, 2520px"
                 srcSet="
-                /images/homepage_BG_d0mq87_c_scale,w_320.jpg 320w,
-                /images/homepage_BG_d0mq87_c_scale,w_707.jpg 707w,
-                /images/homepage_BG_d0mq87_c_scale,w_986.jpg 986w,
-                /images/homepage_BG_d0mq87_c_scale,w_1232.jpg 1232w,
-                /images/homepage_BG_d0mq87_c_scale,w_1435.jpg 1435w,
-                /images/homepage_BG_d0mq87_c_scale,w_1615.jpg 1615w,
-                /images/homepage_BG_d0mq87_c_scale,w_1786.jpg 1786w,
-                /images/homepage_BG_d0mq87_c_scale,w_1938.jpg 1938w,
-                /images/homepage_BG_d0mq87_c_scale,w_2076.jpg 2076w,
-                /images/homepage_BG_d0mq87_c_scale,w_2218.jpg 2218w,
-                /images/homepage_BG_d0mq87_c_scale,w_2344.jpg 2344w,
-                /images/homepage_BG_d0mq87_c_scale,w_2466.jpg 2466w,
-                /images/homepage_BG_d0mq87_c_scale,w_2497.jpg 2497w,
-                /images/homepage_BG_d0mq87_c_scale,w_2520.jpg 2520w"
+                  /images/homepage_BG_d0mq87_c_scale,w_320.jpg 320w,
+                  /images/homepage_BG_d0mq87_c_scale,w_707.jpg 707w,
+                  /images/homepage_BG_d0mq87_c_scale,w_986.jpg 986w,
+                  /images/homepage_BG_d0mq87_c_scale,w_1232.jpg 1232w,
+                  /images/homepage_BG_d0mq87_c_scale,w_1435.jpg 1435w,
+                  /images/homepage_BG_d0mq87_c_scale,w_1615.jpg 1615w,
+                  /images/homepage_BG_d0mq87_c_scale,w_1786.jpg 1786w,
+                  /images/homepage_BG_d0mq87_c_scale,w_1938.jpg 1938w,
+                  /images/homepage_BG_d0mq87_c_scale,w_2076.jpg 2076w,
+                  /images/homepage_BG_d0mq87_c_scale,w_2218.jpg 2218w,
+                  /images/homepage_BG_d0mq87_c_scale,w_2344.jpg 2344w,
+                  /images/homepage_BG_d0mq87_c_scale,w_2466.jpg 2466w,
+                  /images/homepage_BG_d0mq87_c_scale,w_2497.jpg 2497w,
+                  /images/homepage_BG_d0mq87_c_scale,w_2520.jpg 2520w"
                 src="/images/homepage_BG_d0mq87_c_scale,w_2520.jpg"
                 alt=""
               />
@@ -60,10 +60,10 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
           </div>
           <div className={classes.pageInfoContainer}>
             <div className={classes.homeBio}>
-              <Typography className={classes.logo} color={'inherit'} variant={'display4'}>
+              <Typography className={classes.logo} color={'inherit'} variant={'h4'}>
                 Team Radio
               </Typography>
-              <Typography color={'inherit'} variant={'display2'}>
+              <Typography color={'inherit'} variant={'h2'}>
                 A Radio Station for your team
               </Typography>
             </div>
@@ -101,7 +101,6 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
             </div>
           </div>
           {this.getAllStations()}
-          <div>Something</div>
         </div>
       </FullLayout>
     );
@@ -114,20 +113,17 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
   private getAllStations = (): React.ReactElement<{}> => {
     const { classes } = this.props;
     return (
-      <Query query={AllStations.getAllStationsQuery}>
-        {({ loading, error, data }) => {
-          if (loading) return 'Loading...';
-          if (error) return `Error: ${error.message}`;
-
-          return (
-            <div className={classes.stations}>
-              {data.allStations.map((station: AllStations.Station) => (
-                <SimpleStation key={station.stationId} station={station} />
-              ))}
-            </div>
-          );
-        }}
-      </Query>
+      <AllRealTimeStations.Query query={AllRealTimeStations.QUERY}>
+        {({ subscribeToMore, ...others }) => (
+          <div className={classes.stations}>
+            <StationList
+              {...others}
+              subscribeToStationsChanged={() => subscribeToMore(OnRealTimeStationsChanged.getSubscribeToMoreOptions())}
+              stationComponent={StationItem.SimpleStation}
+            />
+          </div>
+        )}
+      </AllRealTimeStations.Query>
     );
   };
 

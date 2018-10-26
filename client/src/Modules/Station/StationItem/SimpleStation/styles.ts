@@ -26,6 +26,7 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
       color: palette.common.white
     },
     stationName: {
+      color: palette.common.black,
       '& > *': {
         whiteSpace: 'nowrap',
         overflow: 'hidden',

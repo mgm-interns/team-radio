@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core';
-import { RadioTheme } from 'Themes';
+import { RadioTheme, ThemeType } from 'Themes';
 
 export const styles = ({ palette, spacing }: RadioTheme) =>
   createStyles({
@@ -36,11 +36,15 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
       color: palette.common.white,
 
       '&::before': {
-        borderBottomColor: palette.primary.main
+        borderBottomColor: palette.type === ThemeType.light ? palette.primary.main : undefined
+      },
+
+      '&::after': {
+        borderBottomColor: palette.type === ThemeType.dark ? palette.common.white : undefined
       }
     },
     inputLabel: {
-      color: palette.common.white
+      color: `${palette.common.white} !important`
     },
     disabled: {
       color: palette.common.white

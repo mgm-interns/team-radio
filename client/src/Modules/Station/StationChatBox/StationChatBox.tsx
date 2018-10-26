@@ -1,7 +1,21 @@
+import { Typography } from '@material-ui/core';
 import * as React from 'react';
 
 export class StationChatBox extends React.Component {
   public render() {
-    return <div style={{ width: '100%', height: '100%', background: 'hotpink' }} />;
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          background: 'hotpink',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Typography>Chat box</Typography>
+      </div>
+    );
   }
 }
