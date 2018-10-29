@@ -1,10 +1,10 @@
 import { SubscribeToMoreOptions } from 'apollo-boost';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { AllRealTimeStations } from './AllRealTimeStations';
+import { AllRealTimeStationsQuery } from './AllRealTimeStationsQuery';
 
-export namespace OnRealTimeStationsChanged {
-  export const subscription = gql`
+export namespace OnRealTimeStationsChangedSubscription {
+  export const SUBSCRIPTION = gql`
     subscription {
       onStationsChanged {
         id
@@ -19,25 +19,25 @@ export namespace OnRealTimeStationsChanged {
   `;
 
   export interface Response {
-    onStationsChanged: AllRealTimeStations.Station;
+    onStationsChanged: AllRealTimeStationsQuery.Station;
   }
 
   export interface Variables {}
 
-  export const withAllStations = graphql<{}, Response, Variables>(subscription);
+  export const withAllRealTimeStationsChanged = graphql<{}, Response, Variables>(SUBSCRIPTION);
 
   export function getSubscribeToMoreOptions(): SubscribeToMoreOptions<
-    AllRealTimeStations.Response,
-    AllRealTimeStations.Variables,
+    AllRealTimeStationsQuery.Response,
+    AllRealTimeStationsQuery.Variables,
     Response
   > {
     return {
-      document: subscription,
-      updateQuery: (prev: AllRealTimeStations.Response, { subscriptionData }) => {
+      document: SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         return {
           ...prev,
-          allStations: prev.allRealTimeStations.map((station: AllRealTimeStations.Station) => {
+          allStations: prev.allRealTimeStations.map((station: AllRealTimeStationsQuery.Station) => {
             if (station.id === subscriptionData.data.onStationsChanged.id) {
               return {
                 ...station,

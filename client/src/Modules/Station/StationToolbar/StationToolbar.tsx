@@ -1,4 +1,5 @@
 import { Badge, IconButton, WithStyles, withStyles } from '@material-ui/core';
+import { Identifiable } from 'Common';
 import * as React from 'react';
 import { MdShare as ShareIcon } from 'react-icons/md';
 import { TiUser as UserIcon } from 'react-icons/ti';

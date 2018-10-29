@@ -1,7 +1,7 @@
 import { createStyles } from '@material-ui/core';
-import { RadioTheme, ThemeType } from 'Themes';
+import { RadioTheme } from 'Themes';
 
-export const styles = ({ palette, spacing, breakpoints }: RadioTheme) =>
+export const styles = ({ palette, spacing }: RadioTheme) =>
   createStyles({
     onlineIcon: {
       marginRight: spacing.mediumUnit
@@ -9,7 +9,7 @@ export const styles = ({ palette, spacing, breakpoints }: RadioTheme) =>
     onlineBadge: {
       top: 1,
       right: -15,
-      background: palette.type === ThemeType.light ? palette.common.online : undefined,
+      background: palette.common.online,
       border: `1px solid ${palette.grey[200]}`
     }
   });

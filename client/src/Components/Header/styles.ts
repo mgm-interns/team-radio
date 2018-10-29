@@ -4,7 +4,7 @@ import { RadioTheme, ThemeType } from 'Themes';
 export const styles = ({ palette, spacing, zIndex }: RadioTheme) =>
   createStyles({
     container: {
-      background: palette.type === ThemeType.light ? palette.primary.main : palette.secondary.main,
+      background: palette.type === ThemeType.LIGHT ? palette.primary.main : palette.secondary.main,
       zIndex: zIndex.drawer + 1
     },
     toolBarContainer: {

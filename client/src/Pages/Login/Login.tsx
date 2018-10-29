@@ -9,7 +9,6 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
 import { InternalLink } from 'Components';
 import { FullLayout } from 'Containers';
 import * as React from 'react';
@@ -109,11 +108,11 @@ class CoreLogin extends React.Component<CoreLogin.Props> {
 
 namespace CoreLogin {
   export interface Props extends Login.Props, WithStyles<typeof styles> {}
+  export interface States {}
 }
 
 export const Login: React.ComponentType<Login.Props> = withStyles(styles)(CoreLogin);
 
 export namespace Login {
-  export interface Props extends Identifiable, Styleable {}
-  export interface States {}
+  export interface Props {}
 }

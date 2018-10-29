@@ -1,2 +1,2 @@
-export * from './AllRealTimeStations';
-export * from './OnRealTimeStationsChanged';
+export * from './AllRealTimeStationsQuery';
+export * from './OnRealTimeStationsChangedSubscription';

@@ -1,4 +1,7 @@
-import { Card, Grid, Tab, Tabs, withStyles, WithStyles } from '@material-ui/core';
+import { Card, Tab, Tabs, withStyles, WithStyles } from '@material-ui/core';
+import { Identifiable } from 'Common';
+import { Playlist } from 'Modules';
+import { RealTimeStationPlayerQuery } from 'RadioGraphql';
 import * as React from 'react';
 import { styles } from './styles';
 
@@ -13,10 +16,10 @@ class CoreStationSongs extends React.Component<CoreStationSongs.Props, CoreStati
 
   public render() {
     const { tabValue } = this.state;
-    const { classes } = this.props;
+    const { classes, params, id } = this.props;
 
     return (
-      <Card className={classes.container}>
+      <Card id={id} className={classes.container}>
         <Tabs
           value={tabValue}
           onChange={this.handleTabChange}
@@ -29,7 +32,7 @@ class CoreStationSongs extends React.Component<CoreStationSongs.Props, CoreStati
           <Tab label={'History'} />
           <Tab label={'Favorite'} />
         </Tabs>
-        {tabValue === 0 && this.generateTabContainer('Playlist')}
+        {tabValue === 0 && <Playlist params={params} />}
         {tabValue === 1 && this.generateTabContainer('History')}
         {tabValue === 2 && this.generateTabContainer('Favorite')}
       </Card>
@@ -67,5 +70,7 @@ namespace CoreStationSongs {
 export const StationSongs = withStyles(styles)(CoreStationSongs);
 
 export namespace StationSongs {
-  export interface Props {}
+  export interface Props extends Identifiable {
+    params: RealTimeStationPlayerQuery.Variables;
+  }
 }

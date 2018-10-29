@@ -91,7 +91,7 @@ class CoreHeader extends React.Component<CoreHeader.Props, CoreHeader.States> {
                   <MenuItem onClick={() => switchTheme()}>
                     <ListItemText>Dark mode</ListItemText>
                     <ListItemIcon>
-                      {theme.palette.type === ThemeType.light ? <MdRadioButtonUnchecked /> : <MdRadioButtonChecked />}
+                      {theme.palette.type === ThemeType.LIGHT ? <MdRadioButtonUnchecked /> : <MdRadioButtonChecked />}
                     </ListItemIcon>
                   </MenuItem>
                 )}

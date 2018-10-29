@@ -1,10 +1,10 @@
-import { Typography } from '@material-ui/core';
+import { Card, Typography } from '@material-ui/core';
 import * as React from 'react';
 
 export class StationChatBox extends React.Component {
   public render() {
     return (
-      <div
+      <Card
         style={{
           width: '100%',
           height: '100%',
@@ -15,7 +15,7 @@ export class StationChatBox extends React.Component {
         }}
       >
         <Typography>Chat box</Typography>
-      </div>
+      </Card>
     );
   }
 }

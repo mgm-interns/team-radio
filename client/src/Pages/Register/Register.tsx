@@ -100,11 +100,11 @@ class CoreRegister extends React.Component<CoreRegister.Props> {
 
 namespace CoreRegister {
   export interface Props extends Register.Props, WithStyles<typeof styles> {}
+  export interface States {}
 }
 
 export const Register: React.ComponentType<Register.Props> = withStyles(styles)(CoreRegister);
 
 export namespace Register {
   export interface Props extends Identifiable, Styleable {}
-  export interface States {}
 }

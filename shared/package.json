@@ -3,7 +3,10 @@
   "version": "1.0.0-SNAPSHOT",
   "description": "Team radio shared modules that can be used for both server & client side.",
   "scripts": {
-    "compile": "tsc --project ."
+    "compile": "tsc --project .",
+    "update": "npm run update:server && npm run update:client",
+    "update:client": "cd ../client && npm un team-radio-shared && npm i team-radio-shared",
+    "update:server": "cd ../server && npm un team-radio-shared && npm i team-radio-shared"
   },
   "keywords": [
     "typescript",

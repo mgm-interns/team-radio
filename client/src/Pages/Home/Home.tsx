@@ -8,11 +8,9 @@ import {
   WithStyles,
   withStyles
 } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
 import { FullLayout } from 'Containers';
 import { StationList } from 'Modules';
 import { StationItem } from 'Modules/Station/StationItem';
-import { AllRealTimeStations, OnRealTimeStationsChanged } from 'RadioGraphql';
 import * as React from 'react';
 import { MdCreate } from 'react-icons/md';
 import { classnames } from 'Themes';
@@ -100,7 +98,9 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
               </Button>
             </div>
           </div>
-          {this.getAllStations()}
+          <div className={classes.stations}>
+            <StationList itemComponent={StationItem.SimpleStation} />
+          </div>
         </div>
       </FullLayout>
     );
@@ -108,23 +108,6 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
 
   private onPrivateStationSwitch = (): void => {
     this.setState({ privateStation: !this.state.privateStation });
-  };
-
-  private getAllStations = (): React.ReactElement<{}> => {
-    const { classes } = this.props;
-    return (
-      <AllRealTimeStations.Query query={AllRealTimeStations.QUERY}>
-        {({ subscribeToMore, ...others }) => (
-          <div className={classes.stations}>
-            <StationList
-              {...others}
-              subscribeToStationsChanged={() => subscribeToMore(OnRealTimeStationsChanged.getSubscribeToMoreOptions())}
-              stationComponent={StationItem.SimpleStation}
-            />
-          </div>
-        )}
-      </AllRealTimeStations.Query>
-    );
   };
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -135,15 +118,14 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
 
 namespace CoreHome {
   export interface Props extends Home.Props, WithStyles<typeof styles> {}
-  export interface States extends Home.States {}
+  export interface States {
+    inputValue: string;
+    privateStation: boolean;
+  }
 }
 
 export const Home: React.ComponentType<Home.Props> = withStyles(styles)(CoreHome);
 
 export namespace Home {
-  export interface Props extends Identifiable, Styleable {}
-  export interface States {
-    inputValue: string;
-    privateStation: boolean;
-  }
+  export interface Props {}
 }

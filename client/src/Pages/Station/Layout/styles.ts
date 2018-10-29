@@ -21,7 +21,7 @@ export const styles = ({ metrics, spacing, palette }: RadioTheme) =>
       paddingTop: spacing.smallUnit,
       paddingBottom: spacing.smallUnit,
       marginRight: spacing.mediumUnit,
-      borderRight: palette.type === ThemeType.dark ? 'none' : undefined
+      borderRight: palette.type === ThemeType.DARK ? 'none' : undefined
     },
     drawerPaperMobile: {
       width: '50vw'

@@ -7,7 +7,7 @@ export class Container extends React.Component<Container.Props, Container.States
     super(props);
 
     this.state = {
-      theme: ThemeLocalStorageHelper.get() === ThemeType.light ? themes.light : themes.dark
+      theme: ThemeLocalStorageHelper.get() === ThemeType.LIGHT ? themes.light : themes.dark
     };
   }
 
@@ -26,7 +26,7 @@ export class Container extends React.Component<Container.Props, Container.States
   private switchTheme: SwitchThemeFunction = (desiredTheme?: ThemeType) => {
     let theme = this.state.theme.palette.type === 'light' ? themes.dark : themes.light;
     if (desiredTheme) {
-      theme = desiredTheme === ThemeType.light ? themes.light : themes.dark;
+      theme = desiredTheme === ThemeType.LIGHT ? themes.light : themes.dark;
     }
     this.setState({ theme }, () => ThemeLocalStorageHelper.set(this.state.theme.palette.type));
   };

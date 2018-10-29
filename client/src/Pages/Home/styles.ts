@@ -36,11 +36,11 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
       color: palette.common.white,
 
       '&::before': {
-        borderBottomColor: palette.type === ThemeType.light ? palette.primary.main : undefined
+        borderBottomColor: palette.type === ThemeType.LIGHT ? palette.primary.main : undefined
       },
 
       '&::after': {
-        borderBottomColor: palette.type === ThemeType.dark ? palette.common.white : undefined
+        borderBottomColor: palette.type === ThemeType.DARK ? palette.common.white : undefined
       }
     },
     inputLabel: {
@@ -53,9 +53,11 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
       marginLeft: spacing.smallUnit
     },
     stations: {
+      display: 'flex',
       overflowX: 'scroll',
       background: '#f4f0ea',
       overflowY: 'hidden',
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
+      minHeight: 214
     }
   });

@@ -7,6 +7,6 @@ import { ThemeLocalStorageHelper } from './storage';
 export const themes: { light: RadioTheme; dark: RadioTheme } = { light, dark };
 
 export const ThemeContext = React.createContext<IThemeContext>({
-  theme: ThemeLocalStorageHelper.get() === ThemeType.light ? themes.light : themes.dark,
+  theme: ThemeLocalStorageHelper.get() === ThemeType.LIGHT ? themes.light : themes.dark,
   switchTheme: (theme?: ThemeType) => ({})
 });

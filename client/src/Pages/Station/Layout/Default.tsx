@@ -1,8 +1,9 @@
-import { Badge, Drawer, Grid, Icon, IconButton, Typography, WithStyles, withStyles } from '@material-ui/core';
+import { Drawer, Grid, Icon, IconButton, Typography, WithStyles, withStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
 import { Header, InternalLink, Responsive } from 'Components';
 import * as React from 'react';
-import { MdArrowBack as BackIcon, MdMenu as DrawerIcon, MdSupervisorAccount as UserIcon } from 'react-icons/md';
+import { MdArrowBack as BackIcon, MdMenu as DrawerIcon } from 'react-icons/md';
+import { classnames } from 'Themes';
 import { styles } from './styles';
 
 export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
@@ -52,7 +53,7 @@ export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
         <Responsive.Mobile>
           <Drawer
             open={drawer.open}
-            classes={{ paper: [classes.drawerPaper, classes.drawerPaperMobile].join(' ').trim() }}
+            classes={{ paper: classnames(classes.drawerPaper, classes.drawerPaperMobile) }}
             onClose={drawer.onClose}
           >
             {stations}
@@ -74,7 +75,7 @@ export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
         <Responsive.Tablet>
           <Drawer
             open={drawer.open}
-            classes={{ paper: [classes.drawerPaper, classes.drawerPaperTablet].join(' ').trim() }}
+            classes={{ paper: classnames(classes.drawerPaper, classes.drawerPaperTablet) }}
             onClose={drawer.onClose}
           >
             {stations}
@@ -98,10 +99,7 @@ export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
         </Responsive.Tablet>
         {/* Desktop layout */}
         <Responsive.Desktop>
-          <Drawer
-            variant="permanent"
-            classes={{ paper: [classes.drawerPaper, classes.drawerPaperDesktop].join(' ').trim() }}
-          >
+          <Drawer variant="permanent" classes={{ paper: classnames(classes.drawerPaper, classes.drawerPaperDesktop) }}>
             {stations}
             {homeLink}
           </Drawer>
@@ -132,20 +130,20 @@ export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
         <Responsive.LargeDesktop>
           <Drawer
             variant="permanent"
-            classes={{ paper: [classes.drawerPaper, classes.drawerPaperLargeDesktop].join(' ').trim() }}
+            classes={{ paper: classnames(classes.drawerPaper, classes.drawerPaperLargeDesktop) }}
           >
             {stations}
             {homeLink}
           </Drawer>
           <Grid container spacing={16} className={classes.container}>
-            <Grid item xs={7} className={classes.fullHeight}>
+            <Grid item xs={6} className={classes.fullHeight}>
               <Grid container spacing={16} className={classes.fullHeight}>
                 <Grid item xs={12}>
                   {stationPlayer}
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={5} className={classes.fullHeight}>
+            <Grid item xs={6} className={classes.fullHeight}>
               <Grid container spacing={16} className={classes.fullHeight}>
                 <Grid item xs={6} className={classes.searchBoxOtherLayout}>
                   {stationSongs}
@@ -173,7 +171,7 @@ export const DefaultLayout: React.ComponentType<DefaultLayout.Props> = withStyle
 
 export namespace DefaultLayout {
   export interface Props extends Identifiable, Styleable {
-    title?: string;
+    title?: React.ReactNode;
     stationPlayer: React.ReactNode;
     stationSongs: React.ReactNode;
     stationChatBox: React.ReactNode;

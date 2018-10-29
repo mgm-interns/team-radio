@@ -1,9 +1,9 @@
-import { withStyles, WithStyles } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
+import { CircularProgress, withStyles, WithStyles } from '@material-ui/core';
 import { StationChatBox, StationList, StationPlayer, StationSongs, StationSongSearch, StationToolbar } from 'Modules';
 import { StationItem } from 'Modules/Station/StationItem';
-import { AllRealTimeStations, OnRealTimeStationsChanged } from 'RadioGraphql';
+import { JoinStationMutation, RealTimeStationQuery } from 'RadioGraphql';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { DefaultLayout } from './Layout';
 import { styles } from './styles';
 
@@ -18,24 +18,22 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
 
   public render(): React.ReactNode {
     const Layout = this.getLayout();
-    const title = 'My Station';
-    return <Layout {...this.getLayoutProps(title)} />;
-  }
-
-  private getAllStations = (): React.ReactElement<{}> => {
     return (
-      <AllRealTimeStations.Query query={AllRealTimeStations.QUERY}>
-        {({ subscribeToMore, ...others }) => (
-          <StationList
-            {...others}
-            subscribeToStationsChanged={() => subscribeToMore(OnRealTimeStationsChanged.getSubscribeToMoreOptions())}
-            stationComponent={StationItem.VerticalStation}
-            onItemClick={() => this.setState({ drawer: false })}
-          />
-        )}
-      </AllRealTimeStations.Query>
+      <RealTimeStationQuery.Query
+        query={RealTimeStationQuery.QUERY}
+        variables={this.props.match.params}
+        onCompleted={() => this.props.mutate({ variables: this.props.match.params })}
+      >
+        {({ data, loading, error }) => {
+          let stationName = <CircularProgress color={'inherit'} />;
+          if (!loading && !error) {
+            stationName = <span>{data.RealTimeStation.stationName}</span>;
+          }
+          return <Layout {...this.getLayoutProps(stationName)} />;
+        }}
+      </RealTimeStationQuery.Query>
     );
-  };
+  }
 
   private getLayout = (): React.ComponentType<DefaultLayout.Props> => {
     // TODO: any other layouts?
@@ -45,15 +43,18 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
     }
   };
 
-  private getLayoutProps = (title?: string): DefaultLayout.Props => {
+  private getLayoutProps = (title?: React.ReactNode): DefaultLayout.Props => {
+    const { params } = this.props.match;
     return {
       title,
-      stationPlayer: <StationPlayer />,
+      stationPlayer: <StationPlayer params={params} />,
       stationChatBox: <StationChatBox />,
-      stationSongs: <StationSongs />,
+      stationSongs: <StationSongs params={params} />,
       stationSongSearch: <StationSongSearch />,
       toolbar: <StationToolbar />,
-      stations: this.getAllStations(),
+      stations: (
+        <StationList itemComponent={StationItem.VerticalStation} onItemClick={() => this.setState({ drawer: false })} />
+      ),
       drawer: {
         open: this.state.drawer,
         onClose: () => this.setState({ drawer: false }),
@@ -65,14 +66,20 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
 }
 
 namespace CoreStation {
-  export interface Props extends Station.Props, WithStyles<typeof styles> {}
+  export interface Props
+    extends Station.Props,
+      JoinStationMutation.WithHOCProps,
+      RouteComponentProps<RealTimeStationQuery.Variables>,
+      WithStyles<typeof styles> {}
   export interface States {
     drawer: boolean;
   }
 }
 
-export const Station: React.ComponentType<Station.Props> = withStyles(styles)(CoreStation);
+export const Station: React.ComponentType<Station.Props> = JoinStationMutation.withHOC<Station.Props>({})(
+  withStyles(styles)(withRouter(CoreStation))
+);
 
 export namespace Station {
-  export interface Props extends Identifiable, Styleable {}
+  export interface Props {}
 }

@@ -34,8 +34,8 @@ export interface RadioTheme extends Theme {
 }
 
 export enum ThemeType {
-  light = 'light',
-  dark = 'dark'
+  LIGHT = 'light',
+  DARK = 'dark'
 }
 
 export type SwitchThemeFunction = (theme?: ThemeType) => void;

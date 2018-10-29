@@ -1,8 +1,8 @@
 import { ApolloError, NetworkStatus } from 'apollo-boost';
 import gql from 'graphql-tag';
-import { graphql, Query as GraphQLQuery } from 'react-apollo';
+import { DataProps, graphql, Query as GraphQLQuery } from 'react-apollo';
 
-export namespace AllRealTimeStations {
+export namespace AllRealTimeStationsQuery {
   export const QUERY = gql`
     {
       allRealTimeStations {
@@ -42,11 +42,13 @@ export namespace AllRealTimeStations {
   export class Query extends GraphQLQuery<Response, Variables> {}
 
   export interface QueryResult {
-    data: AllRealTimeStations.Response;
+    data?: Response;
     error?: ApolloError;
     loading: boolean;
     networkStatus: NetworkStatus;
   }
 
-  export const withAllStations = graphql<{}, Response, Variables>(QUERY);
+  export const withHOC = <TProps>() => graphql<TProps, Response, Variables>(QUERY);
+
+  export interface WithHOCProps extends DataProps<Response, Variables> {}
 }

@@ -9,10 +9,10 @@ export namespace ThemeLocalStorageHelper {
 
   export function get(): ThemeType {
     const value = window.localStorage.getItem(KEY);
-    if (value === ThemeType.light || value === ThemeType.dark) {
+    if (value === ThemeType.LIGHT || value === ThemeType.DARK) {
       return value;
     }
-    set(ThemeType.light);
-    return ThemeType.light;
+    set(ThemeType.LIGHT);
+    return ThemeType.LIGHT;
   }
 }
