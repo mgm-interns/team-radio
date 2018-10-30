@@ -15,7 +15,7 @@ class CoreStationToolbar extends React.Component<CoreStationToolbar.Props> {
           </Tooltip>
         </IconButton>
         <IconButton color={'inherit'} className={classes.onlineIcon}>
-          <Tooltip title={'Online users'}>
+          <Tooltip title={'99 online users'}>
             <Badge badgeContent={99} color="primary" classes={{ badge: classes.onlineBadge }}>
               <UserIcon />
             </Badge>

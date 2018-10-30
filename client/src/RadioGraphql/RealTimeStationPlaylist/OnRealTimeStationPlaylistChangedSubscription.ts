@@ -1,13 +1,13 @@
 import { SubscribeToMoreOptions } from 'apollo-boost';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { RealTimeStationPlayerQuery } from './RealTimeStationPlayerQuery';
+import { RealTimeStationPlaylistQuery } from './RealTimeStationPlaylistQuery';
 
-export namespace OnRealTimeStationPlayerChangedSubscription {
+export namespace OnRealTimeStationPlaylistChangedSubscription {
   export const SUBSCRIPTION = gql`
-    subscription onStationPlayerChanged($stationId: String!) {
-      onStationPlayerChanged(stationId: $stationId) {
-        playing {
+    subscription onStationPlaylistChanged($stationId: String!) {
+      onStationPlaylistChanged(stationId: $stationId) {
+        playlist {
           id
           url
           thumbnail
@@ -15,17 +15,15 @@ export namespace OnRealTimeStationPlayerChangedSubscription {
           creatorId
           createdAt
           duration
+          upVotes
+          downVotes
         }
-        currentlyPlayingAt
-        startedAt
-        playlistCount
-        nextSongThumbnail
       }
     }
   `;
 
   export interface Response {
-    readonly onStationPlayerChanged: RealTimeStationPlayerQuery.Player;
+    readonly onStationPlaylistChanged: RealTimeStationPlaylistQuery.Playlist;
   }
 
   export interface Variables {
@@ -36,7 +34,7 @@ export namespace OnRealTimeStationPlayerChangedSubscription {
 
   export function getSubscribeToMoreOptions(
     variables: Variables
-  ): SubscribeToMoreOptions<RealTimeStationPlayerQuery.Response, RealTimeStationPlayerQuery.Variables, Response> {
+  ): SubscribeToMoreOptions<RealTimeStationPlaylistQuery.Response, RealTimeStationPlaylistQuery.Variables, Response> {
     return {
       variables,
       document: SUBSCRIPTION,
@@ -45,7 +43,7 @@ export namespace OnRealTimeStationPlayerChangedSubscription {
 
         return {
           ...prev,
-          StationPlayer: subscriptionData.data.onStationPlayerChanged
+          StationPlaylist: subscriptionData.data.onStationPlaylistChanged
         };
       }
     };

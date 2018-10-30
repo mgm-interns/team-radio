@@ -1,5 +1,4 @@
 import { Typography, withStyles, WithStyles } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
 import { InternalLink } from 'Components';
 import * as React from 'react';
 import { classnames } from 'Themes';
@@ -17,7 +16,11 @@ class CoreVerticalStation extends React.Component<CoreVerticalStation.Props> {
       <InternalLink href={`/station/${station.stationId}`} disableTypography>
         <div className={classnames(classes.stationContainer, className)} id={id} style={style} onClick={onClick}>
           <div className={classes.avatarContainer}>
-            <img src="/images/station_default_cover.png" alt="" className={classes.img} />
+            <img
+              src={station.thumbnail || '/images/station_default_cover.png'}
+              alt={station.stationName}
+              className={classes.img}
+            />
           </div>
           <div className={classes.stationInfo}>
             <Typography variant={'subtitle1'} color={'default'} className={classes.stationName}>

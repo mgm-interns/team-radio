@@ -1,11 +1,33 @@
-import { AppBar, Avatar, Divider, Hidden, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Tooltip, withStyles, WithStyles } from '@material-ui/core';
+import {
+  AppBar,
+  Avatar,
+  Divider,
+  Hidden,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  withStyles,
+  WithStyles
+} from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
 import { InternalLink } from 'Components';
 import { Authenticated, UnAuthenticated } from 'Modules';
 import { CurrentUserQuery, LoginMutation } from 'RadioGraphql';
 import * as React from 'react';
 import { ApolloConsumer } from 'react-apollo';
-import { MdAccountCircle, MdAssignment, MdMoreVert, MdPowerSettingsNew, MdRadioButtonChecked, MdRadioButtonUnchecked, MdVpnKey } from 'react-icons/md';
+import {
+  MdAccountCircle,
+  MdAssignment,
+  MdMoreVert,
+  MdPowerSettingsNew,
+  MdRadioButtonChecked,
+  MdRadioButtonUnchecked,
+  MdVpnKey
+} from 'react-icons/md';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { ThemeContext, ThemeType } from 'Themes';
 import { styles } from './styles';
@@ -56,7 +78,7 @@ class CoreHeader extends React.Component<CoreHeader.Props, CoreHeader.States> {
               </UnAuthenticated>
             </Hidden>
             <IconButton aira-owns={this.openMenu ? 'menu-appbar' : null} color={'inherit'} onClick={this.openMenu}>
-              <CurrentUserQuery.Query query={CurrentUserQuery.QUERY}>
+              <CurrentUserQuery>
                 {({ loading, error, data }) => (
                   <Tooltip title={'Menu'}>
                     {loading || error || !data.currentUser.avatarUrl ? (
@@ -66,7 +88,7 @@ class CoreHeader extends React.Component<CoreHeader.Props, CoreHeader.States> {
                     )}
                   </Tooltip>
                 )}
-              </CurrentUserQuery.Query>
+              </CurrentUserQuery>
             </IconButton>
             {this.renderMenu()}
           </div>

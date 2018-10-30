@@ -1,5 +1,6 @@
 import { ObjectType, Field } from 'type-graphql';
 import { PlaylistSong } from 'entities';
+import { TimestampScalar } from 'scalars';
 
 @ObjectType()
 export class PlayingSong {
@@ -11,6 +12,6 @@ export class PlayingSong {
   @Field(type => PlaylistSong)
   song: PlaylistSong;
 
-  @Field()
+  @Field(type => TimestampScalar)
   startedAt: number;
 }

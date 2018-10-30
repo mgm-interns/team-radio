@@ -5,8 +5,9 @@ import { Logger } from 'services';
 import { AnonymousUser, SubscriptionManager, StationTopic } from 'subscription';
 import { Field, Int, ObjectType } from 'type-graphql';
 import { Container } from 'typedi';
-import { RealTimeStationPlayer } from './RealTimeStationPlayer';
+import { RealTimeStationPlayerManager } from './RealTimeStationPlayerManager';
 
+// TODO: convert this entities to manager type
 @ObjectType()
 export class RealTimeStation extends Station {
   @Field(type => [User])
@@ -20,9 +21,9 @@ export class RealTimeStation extends Station {
     return this.onlineUsers.length + this.onlineAnonymous.length;
   }
 
-  private _player: RealTimeStationPlayer = new RealTimeStationPlayer();
+  private _player: RealTimeStationPlayerManager = new RealTimeStationPlayerManager();
 
-  public get player(): RealTimeStationPlayer {
+  public get player(): RealTimeStationPlayerManager {
     return this._player;
   }
 

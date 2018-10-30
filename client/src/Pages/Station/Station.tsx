@@ -20,9 +20,9 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
   public render(): React.ReactNode {
     const Layout = this.getLayout();
     return (
-      <RealTimeStationQuery.Query
-        query={RealTimeStationQuery.QUERY}
+      <RealTimeStationQuery
         variables={this.props.match.params}
+        notifyOnNetworkStatusChange
         onCompleted={() => this.props.mutate({ variables: this.props.match.params })}
       >
         {({ data, loading, error }) => {
@@ -32,7 +32,7 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
           }
           return <Layout {...this.getLayoutProps(stationName)} />;
         }}
-      </RealTimeStationQuery.Query>
+      </RealTimeStationQuery>
     );
   }
 

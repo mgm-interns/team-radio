@@ -32,7 +32,7 @@ export class RealTimStationResolver extends BaseStationResolver {
 
   @Subscription(returns => RealTimeStationWithOnlineCount, {
     name: 'onStationsChanged',
-    topics: [StationTopic.JOIN_STATION, StationTopic.LEAVE_STATION],
+    topics: [StationTopic.JOIN_STATION, StationTopic.LEAVE_STATION, StationTopic.UPDATE_PLAYER_SONG],
     description: 'Subscribe for online users changes between stations.'
   })
   public subscribeStations(

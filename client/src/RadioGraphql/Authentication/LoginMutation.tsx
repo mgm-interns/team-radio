@@ -1,6 +1,12 @@
 import gql from 'graphql-tag';
+import * as React from 'react';
 import { FetchResult, graphql, MutateProps, Mutation as GraphQLMutation } from 'react-apollo';
 import { UserRole } from '.';
+import { PartialMutationProps } from '../types';
+
+export function LoginMutation(props: LoginMutation.Props) {
+  return <LoginMutation.MutationComponent mutation={LoginMutation.MUTATION} {...props} />;
+}
 
 export namespace LoginMutation {
   export const MUTATION = gql`
@@ -19,15 +25,15 @@ export namespace LoginMutation {
   `;
 
   export interface Response {
-    login: {
-      authToken: AuthToken;
-      roles: UserRole[];
+    readonly login: {
+      readonly authToken: AuthToken;
+      readonly roles: UserRole[];
     };
   }
 
   export interface AuthToken {
-    token: string;
-    refreshToken: string;
+    readonly token: string;
+    readonly refreshToken: string;
   }
 
   export interface Variables {
@@ -38,16 +44,19 @@ export namespace LoginMutation {
 
   export interface MutationResult extends FetchResult<Response> {}
 
-  export class Mutation extends GraphQLMutation<Response, Variables> {}
+  export class MutationComponent extends GraphQLMutation<Response, Variables> {}
 
-  export const withHOC = <TProps>() =>
-    graphql<TProps, Response, Variables>(MUTATION, {
+  export function withHOC<TProps>() {
+    return graphql<TProps, Response, Variables>(MUTATION, {
       options: {
         onCompleted: saveLoginSession
       }
     });
+  }
 
   export interface WithHOCProps extends MutateProps<Response, Variables> {}
+
+  export interface Props extends PartialMutationProps<Response, Variables> {}
 
   export function saveLoginSession(data: Response) {
     const { authToken, roles } = data.login;

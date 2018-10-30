@@ -1,5 +1,4 @@
 import { Typography, withStyles, WithStyles } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
 import { InternalLink } from 'Components';
 import * as React from 'react';
 import { classnames } from 'Themes';
@@ -17,7 +16,11 @@ class CoreSimpleStation extends React.Component<CoreSimpleStation.Props, CoreSim
       <InternalLink href={`./station/${station.stationId}`} disableTypography>
         <div id={id} className={classnames(classes.stationContainer, className)} style={style}>
           <div className={classes.avatarContainer}>
-            <img src="/images/station_default_cover.png" alt="" className={classes.img} />
+            <img
+              src={station.thumbnail || '/images/station_default_cover.png'}
+              alt={station.stationName}
+              className={classes.img}
+            />
             <Typography variant={'body1'} className={classes.onlineNumber}>
               0 online
             </Typography>

@@ -1,9 +1,10 @@
 import { ApolloError } from 'apollo-boost';
+import { GraphQLError } from 'graphql';
 
 export namespace ErrorHelper {
-  export function extractError(error: ApolloError): GraphQLError | null {
+  export function extractError(error: ApolloError): RadioGraphQLError | null {
     if (error.graphQLErrors.length === 0) return null;
-    return error.graphQLErrors[0];
+    return error.graphQLErrors[0] as RadioGraphQLError;
   }
 
   export function extractStatusCode(error: ApolloError): number {
@@ -11,10 +12,7 @@ export namespace ErrorHelper {
   }
 }
 
-export interface GraphQLError {
-  message: string;
-  locations: [{ line: number; column: number }];
-  path: string[];
-  statusCode: number;
-  statusCodeText: string;
+export interface RadioGraphQLError extends GraphQLError {
+  readonly statusCode: number;
+  readonly statusCodeText: string;
 }

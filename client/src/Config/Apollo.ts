@@ -4,28 +4,42 @@ import { createHttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 
+export interface RadioClient extends ApolloClient<any> {}
+let client: RadioClient | null;
+let connectionAttempts: number;
+
 export function initClient() {
   const { hostname, protocol } = window.location;
+  const serverPort = process.env.NODE_ENV === 'production' ? '' : ':8000';
+
   const httpLink = createHttpLink({
-    uri: process.env.NODE_ENV === 'production' ? '/api' : `${protocol}//${hostname}:8000/api`
+    uri: `${protocol}//${hostname}${serverPort}/api`,
+    useGETForQueries: true
   });
 
   const wsLink = new WebSocketLink({
-    uri: `ws://localhost${process.env.NODE_ENV === 'production' ? '' : ':8000'}/api`,
+    uri: `ws://${hostname}${serverPort}/api`,
     options: {
       reconnect: true,
       connectionParams: {
         token: localStorage.getItem('token') || undefined,
         refreshToken: localStorage.getItem('refreshToken') || undefined,
         clientId: localStorage.getItem('clientId') || undefined
+      },
+      connectionCallback: () => {
+        if (connectionAttempts > 0) {
+          console.log('Reconnect successful! Start resetting apollo store');
+          if (client) client.resetStore();
+        }
+        connectionAttempts += 1;
       }
     }
   });
 
   const link = split(
     ({ query }) => {
-      const { kind, operation } = getMainDefinition(query);
-      return kind === 'OperationDefinition' && operation === 'subscription';
+      const definition = getMainDefinition(query);
+      return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
     },
     wsLink,
     httpLink
@@ -50,10 +64,13 @@ export function initClient() {
     return { headers: newHeaders };
   });
 
-  return new ApolloClient({
+  client = new ApolloClient({
     link: authLink.concat(link),
     cache: new InMemoryCache()
   });
+  connectionAttempts = 0;
+
+  return client;
 }
 
 export function generateUniqueClientId() {

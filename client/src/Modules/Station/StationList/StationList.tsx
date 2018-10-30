@@ -1,4 +1,5 @@
 import { Typography, withStyles, WithStyles } from '@material-ui/core';
+import { ReactSubscriptionComponent } from 'Common';
 import { Loading } from 'Components';
 import { AllRealTimeStationsQuery, OnRealTimeStationsChangedSubscription } from 'RadioGraphql';
 import * as React from 'react';
@@ -6,31 +7,7 @@ import { StationsHelper } from 'team-radio-shared';
 import { StationItem } from '../StationItem';
 import { styles } from './styles';
 
-class CoreStationList extends React.Component<CoreStationList.Props> {
-  private isSubscribed: boolean;
-  private unSubscribe: () => void;
-
-  /**
-   * Subscribe to update the station player status
-   * Also cancel the subscription when change station
-   */
-  public componentDidUpdate() {
-    if (this.props.data.allRealTimeStations && !this.isSubscribed) {
-      this.isSubscribed = true;
-      const options = OnRealTimeStationsChangedSubscription.getSubscribeToMoreOptions();
-      this.unSubscribe = this.props.data.subscribeToMore(options);
-    }
-  }
-
-  /**
-   * Cancel subscription when destroy component
-   */
-  public componentWillUnmount() {
-    if (this.isSubscribed) {
-      this.callUnsubscribe();
-    }
-  }
-
+class CoreStationList extends ReactSubscriptionComponent<CoreStationList.Props> {
   public render() {
     const { itemComponent: StationComponent, onItemClick } = this.props;
 
@@ -40,6 +17,10 @@ class CoreStationList extends React.Component<CoreStationList.Props> {
       ))
     );
   }
+
+  protected getSubscribeToMoreOptions = () => {
+    return OnRealTimeStationsChangedSubscription.getSubscribeToMoreOptions();
+  };
 
   private renderWrapper = (children: (data: AllRealTimeStationsQuery.Station[]) => React.ReactNode) => {
     const { data, classes } = this.props;
@@ -57,13 +38,6 @@ class CoreStationList extends React.Component<CoreStationList.Props> {
     }
 
     return children(data.allRealTimeStations);
-  };
-
-  private callUnsubscribe = () => {
-    if (typeof this.unSubscribe === 'function') {
-      this.unSubscribe();
-      this.isSubscribed = false;
-    }
   };
 }
 

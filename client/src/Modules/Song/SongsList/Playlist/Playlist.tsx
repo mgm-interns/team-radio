@@ -1,28 +1,18 @@
-import {
-  Badge,
-  Card,
-  Grid,
-  IconButton,
-  LinearProgress,
-  List,
-  Typography,
-  withStyles,
-  WithStyles
-} from '@material-ui/core';
-import { Identifiable } from 'Common';
+import { Badge, Grid, IconButton, LinearProgress, List, Typography, withStyles, WithStyles } from '@material-ui/core';
+import { Identifiable, ReactSubscriptionComponent, Styleable } from 'Common';
 import { Loading } from 'Components';
 import { SongItem } from 'Modules';
-import { RealTimeStationPlayerQuery } from 'RadioGraphql';
+import { OnRealTimeStationPlaylistChangedSubscription, RealTimeStationPlaylistQuery } from 'RadioGraphql';
 import * as React from 'react';
 import { MdFavorite, MdThumbDown, MdThumbUp } from 'react-icons/md';
 import { classnames } from 'Themes';
 import { styles } from './styles';
 
-class CorePlaylist extends React.Component<CorePlaylist.Props> {
+class CorePlaylist extends ReactSubscriptionComponent<CorePlaylist.Props> {
   public render(): React.ReactNode {
-    const { classes } = this.props;
+    const { classes, className, style } = this.props;
     return this.renderPlayerWrapper(data => (
-      <List className={classes.listContainer}>
+      <List className={classnames(classes.listContainer, className)} style={style}>
         {data.map(song => (
           <SongItem.SimpleSong key={song.id} song={song} actions={this.renderActions(song)} />
         ))}
@@ -30,8 +20,12 @@ class CorePlaylist extends React.Component<CorePlaylist.Props> {
     ));
   }
 
-  private renderPlayerWrapper = (children: (data: RealTimeStationPlayerQuery.PlaylistSong[]) => React.ReactNode) => {
-    const { classes, data, id } = this.props;
+  protected getSubscribeToMoreOptions = () => {
+    return OnRealTimeStationPlaylistChangedSubscription.getSubscribeToMoreOptions(this.props.params);
+  };
+
+  private renderPlayerWrapper = (children: (data: RealTimeStationPlaylistQuery.PlaylistSong[]) => React.ReactNode) => {
+    const { classes, data, id, className, style } = this.props;
     let content: React.ReactNode;
     if (data.error) {
       // Error
@@ -39,22 +33,22 @@ class CorePlaylist extends React.Component<CorePlaylist.Props> {
     } else if (data.loading) {
       // Loading
       content = <Loading />;
-    } else if (!data.StationPlayer.playlist.length) {
+    } else if (!data.StationPlaylist.playlist.length) {
       // No playing song and no song in playlist
       content = <Typography>No song</Typography>;
     } else {
       // Playing song is active
-      return children(data.StationPlayer.playlist);
+      return children(data.StationPlaylist.playlist);
     }
 
     return (
-      <Card id={id} className={classes.container}>
+      <div id={id} className={classnames(classes.container, className)} style={style}>
         {content}
-      </Card>
+      </div>
     );
   };
 
-  private renderActions = (song: RealTimeStationPlayerQuery.PlaylistSong): React.ReactNode => {
+  private renderActions = (song: RealTimeStationPlaylistQuery.PlaylistSong): React.ReactNode => {
     const { classes } = this.props;
     return (
       <Grid container>
@@ -95,15 +89,15 @@ class CorePlaylist extends React.Component<CorePlaylist.Props> {
 }
 
 namespace CorePlaylist {
-  export interface Props extends RealTimeStationPlayerQuery.WithHOCProps, WithStyles<typeof styles>, Playlist.Props {}
+  export interface Props extends RealTimeStationPlaylistQuery.WithHOCProps, WithStyles<typeof styles>, Playlist.Props {}
 }
 
-export const Playlist = RealTimeStationPlayerQuery.withHOC<Playlist.Props>({
+export const Playlist = RealTimeStationPlaylistQuery.withHOC<Playlist.Props>({
   options: (props: Playlist.Props) => ({ variables: props.params })
 })(withStyles(styles)(CorePlaylist));
 
 export namespace Playlist {
-  export interface Props extends Identifiable {
-    params: RealTimeStationPlayerQuery.Variables;
+  export interface Props extends Identifiable, Styleable {
+    params: RealTimeStationPlaylistQuery.Variables;
   }
 }

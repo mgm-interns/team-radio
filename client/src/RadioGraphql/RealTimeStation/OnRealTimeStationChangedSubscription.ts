@@ -30,7 +30,7 @@ export namespace OnRealTimeStationChangedSubscription {
   `;
 
   export interface Response {
-    onStationChanged: RealTimeStationQuery.Station;
+    readonly onStationChanged: RealTimeStationQuery.Station;
   }
 
   export interface Variables {

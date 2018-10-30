@@ -2,22 +2,19 @@ import { DataAccess } from 'config';
 import { PlaylistSong } from 'entities';
 import { Exception } from 'exceptions';
 import { SongRepository } from 'repositories';
+import { Logger } from 'services';
 import { PlaylistHelper } from 'team-radio-shared';
-import { Field, Int, ObjectType } from 'type-graphql';
 import { Container } from 'typedi';
 import { RealTimeStation, StationTopic } from '.';
-import { Logger } from 'services';
 import { PlayingSong } from '../types';
 
-@ObjectType()
-export class RealTimeStationPlayer {
+export class RealTimeStationPlayerManager {
   private _playlist: PlaylistSong[] = [];
 
   private stationTimeout: NodeJS.Timer;
 
   public parent: RealTimeStation;
 
-  @Field(type => [PlaylistSong])
   public get playlist(): PlaylistSong[] {
     return PlaylistHelper.sortPlaylist(this._playlist, this.parent.currentPlayingSongId);
   }
@@ -26,10 +23,8 @@ export class RealTimeStationPlayer {
     this._playlist = playlist;
   }
 
-  @Field(type => PlayingSong, { nullable: true })
   public playing: PlayingSong | null = null;
 
-  @Field(type => Int, { nullable: true })
   public get currentlyPlayingAt(): number | null {
     if (this.playing && this.parent.startingTime) {
       const at = Date.now() - this.parent.startingTime || 0;

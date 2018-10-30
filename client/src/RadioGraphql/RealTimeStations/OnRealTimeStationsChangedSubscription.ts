@@ -14,12 +14,13 @@ export namespace OnRealTimeStationsChangedSubscription {
         isPrivate
         ownerId
         stationName
+        thumbnail
       }
     }
   `;
 
   export interface Response {
-    onStationsChanged: AllRealTimeStationsQuery.Station;
+    readonly onStationsChanged: AllRealTimeStationsQuery.Station;
   }
 
   export interface Variables {}

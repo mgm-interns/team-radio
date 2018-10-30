@@ -32,24 +32,21 @@ class CoreStationSongs extends React.Component<CoreStationSongs.Props, CoreStati
           <Tab label={'History'} />
           <Tab label={'Favorite'} />
         </Tabs>
-        {tabValue === 0 && <Playlist params={params} />}
-        {tabValue === 1 && this.generateTabContainer('History')}
-        {tabValue === 2 && this.generateTabContainer('Favorite')}
+        {tabValue === 0 && this.generateTabContainer(<Playlist params={params} />)}
+        {tabValue === 1 && this.generateTabContainer()}
+        {tabValue === 2 && this.generateTabContainer()}
       </Card>
     );
   }
 
   // TODO: fetch data for each tab
-  private generateTabContainer = (tab: React.ReactNode): React.ReactElement<{}> => {
+  private generateTabContainer = (tab?: React.ReactNode): React.ReactElement<{}> => {
     const { classes } = this.props;
-    const children = Array.from({ length: 20 });
-    return (
-      <div className={classes.tabContainer}>
-        {children.map((item, index) => (
-          <div key={index} style={{ height: 80, marginTop: 4, marginBottom: 4, background: 'orchid' }} />
-        ))}
-      </div>
-    );
+    let content: React.ReactNode = Array.from({ length: 20 }).map((item, index) => (
+      <div key={index} style={{ height: 80, marginTop: 4, marginBottom: 4, background: 'orchid' }} />
+    ));
+    if (tab) content = tab;
+    return <div className={classes.tabContainer}>{content}</div>;
   };
 
   private handleTabChange = (event: React.ChangeEvent<{}>, value: number): void => {

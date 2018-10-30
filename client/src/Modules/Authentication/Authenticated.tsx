@@ -8,7 +8,7 @@ class CoreAuthenticated extends React.Component<CoreAuthenticated.Props> {
   public render() {
     const { render, children, redirect, disableLoading, history } = this.props;
     return (
-      <CurrentUserQuery.Query query={CurrentUserQuery.QUERY}>
+      <CurrentUserQuery>
         {({ error, loading, data }) => {
           if (error) {
             if (redirect) history.replace(redirect);
@@ -24,7 +24,7 @@ class CoreAuthenticated extends React.Component<CoreAuthenticated.Props> {
           }
           return children;
         }}
-      </CurrentUserQuery.Query>
+      </CurrentUserQuery>
     );
   }
 }

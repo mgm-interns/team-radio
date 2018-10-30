@@ -13,14 +13,12 @@ export const styles = ({ palette, spacing, breakpoints }: RadioTheme) =>
     },
     img: {
       width: '100%',
-      height: '100%',
-      objectFit: 'contain'
+      height: 48,
+      objectFit: 'cover'
     },
     stationInfo: {
       marginLeft: spacing.mediumUnit,
-      width: `calc(100% - 64px)`,
-      paddingTop: spacing.smallUnit,
-      paddingBottom: spacing.smallUnit
+      width: `calc(100% - 64px)`
     },
     stationName: {
       whiteSpace: 'nowrap',

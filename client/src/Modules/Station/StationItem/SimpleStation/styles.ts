@@ -13,8 +13,8 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
     },
     img: {
       width: '100%',
-      height: '100%',
-      objectFit: 'contain'
+      height: 150,
+      objectFit: 'cover'
     },
     onlineNumber: {
       position: 'absolute',

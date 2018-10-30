@@ -11,6 +11,7 @@ import {
   HistorySongsCRUDResolver,
   PlaylistSongsCRUDResolver,
   RealTimeStationPlayerResolver,
+  RealTimeStationPlaylistResolver,
   RealTimStationResolver,
   SongCRUDResolver,
   StationCRUDResolver,
@@ -47,6 +48,7 @@ export class GraphQLManager {
         RealTimStationResolver,
         // Song
         RealTimeStationPlayerResolver,
+        RealTimeStationPlaylistResolver,
         SongCRUDResolver,
         PlaylistSongsCRUDResolver,
         HistorySongsCRUDResolver
@@ -77,20 +79,19 @@ export class GraphQLManager {
         const byPassToken = req.get('byPassToken');
         const clientId = req.get('clientId') || GraphQLManager.generateUniqueSocketId();
         const tokens = { token, refreshToken, byPassToken, clientId };
-        this.logger.info('HTTP request info', tokens);
+        this.logger.debug('HTTP request info', tokens);
         await context.setUserFromTokens(tokens);
         res.setHeader('clientId', clientId);
       }
       if (connection) {
         const { context: tokens } = connection;
-        this.logger.info('Web socket connection info', tokens);
         if (!tokens.clientId) {
           tokens.clientId = GraphQLManager.generateUniqueSocketId();
         }
-        this.logger.info('Web socket connection info', tokens);
+        this.logger.debug('Web socket connection info', tokens);
         await context.setUserFromTokens(tokens);
       }
-      this.logger.info('Initiated context.');
+      this.logger.debug('Initiated context.');
       return context;
     };
   }

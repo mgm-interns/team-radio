@@ -67,5 +67,8 @@ export const light = createMuiTheme({
   },
   typography: {
     useNextVariants: true
+  },
+  zIndex: {
+    fullScreenLoading: 1999
   }
 } as any) as RadioTheme;
