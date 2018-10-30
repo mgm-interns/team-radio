@@ -80,7 +80,7 @@ export namespace RealTimeStationQuery {
 
   export class Query extends GraphQLQuery<Response, Variables> {}
 
-  export const withHOC = <TProps>(options: OperationOption<{}, Response, Variables>) =>
+  export const withHOC = <TProps>(options: OperationOption<TProps, Response, Variables>) =>
     graphql<TProps, Response, Variables>(QUERY, options);
 
   export interface WithHOCProps extends DataProps<Response, Variables> {}

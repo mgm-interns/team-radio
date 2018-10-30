@@ -1,5 +1,4 @@
-import { Badge, IconButton, WithStyles, withStyles } from '@material-ui/core';
-import { Identifiable } from 'Common';
+import { Badge, IconButton, Tooltip, WithStyles, withStyles } from '@material-ui/core';
 import * as React from 'react';
 import { MdShare as ShareIcon } from 'react-icons/md';
 import { TiUser as UserIcon } from 'react-icons/ti';
@@ -11,12 +10,16 @@ class CoreStationToolbar extends React.Component<CoreStationToolbar.Props> {
     return (
       <React.Fragment>
         <IconButton color={'inherit'}>
-          <ShareIcon />
+          <Tooltip title={'Share'}>
+            <ShareIcon />
+          </Tooltip>
         </IconButton>
         <IconButton color={'inherit'} className={classes.onlineIcon}>
-          <Badge badgeContent={99} color="primary" classes={{ badge: classes.onlineBadge }}>
-            <UserIcon />
-          </Badge>
+          <Tooltip title={'Online users'}>
+            <Badge badgeContent={99} color="primary" classes={{ badge: classes.onlineBadge }}>
+              <UserIcon />
+            </Badge>
+          </Tooltip>
         </IconButton>
       </React.Fragment>
     );

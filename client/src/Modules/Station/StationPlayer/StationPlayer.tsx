@@ -1,5 +1,6 @@
-import { Card, CircularProgress, Typography, withStyles, WithStyles } from '@material-ui/core';
+import { Card, Typography, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
+import { Loading } from 'Components';
 import { OnRealTimeStationPlayerChangedSubscription, RealTimeStationPlayerQuery } from 'RadioGraphql';
 import * as React from 'react';
 import Player from 'react-player';
@@ -61,7 +62,7 @@ class CoreStationPlayer extends React.Component<CoreStationPlayer.Props> {
       content = <Typography color={'error'}>Error {data.error.message}</Typography>;
     } else if (data.loading) {
       // Loading
-      content = <CircularProgress />;
+      content = <Loading />;
     } else if (!data.StationPlayer.playing && !data.StationPlayer.playlist.length) {
       // No playing song and no song in playlist
       content = <Typography>No song, add a new one to start listening.</Typography>;

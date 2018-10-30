@@ -33,6 +33,16 @@ export interface Container {
 }
 
 /**
+ * Can not contain children.
+ */
+export interface InContainer {
+  /**
+   * define children will throw compiler error
+   */
+  children?: never;
+}
+
+/**
  * Can be styled.
  */
 export interface Styleable {

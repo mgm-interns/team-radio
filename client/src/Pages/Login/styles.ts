@@ -53,7 +53,7 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
       marginRight: 12
     },
     textField: {
-      marginBottom: spacing.hugeUnit
+      marginBottom: spacing.mediumUnit
     },
     input: {
       color: palette.common.white,

@@ -1,25 +1,12 @@
-import {
-  AppBar,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Toolbar,
-  withStyles,
-  WithStyles
-} from '@material-ui/core';
+import { AppBar, Avatar, Divider, Hidden, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Tooltip, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
 import { InternalLink } from 'Components';
+import { Authenticated, UnAuthenticated } from 'Modules';
+import { CurrentUserQuery, LoginMutation } from 'RadioGraphql';
 import * as React from 'react';
-import {
-  MdAccountCircle,
-  MdAssignment,
-  MdFingerprint,
-  MdMoreVert,
-  MdRadioButtonChecked,
-  MdRadioButtonUnchecked
-} from 'react-icons/md';
+import { ApolloConsumer } from 'react-apollo';
+import { MdAccountCircle, MdAssignment, MdMoreVert, MdPowerSettingsNew, MdRadioButtonChecked, MdRadioButtonUnchecked, MdVpnKey } from 'react-icons/md';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { ThemeContext, ThemeType } from 'Themes';
 import { styles } from './styles';
 
@@ -33,75 +20,161 @@ class CoreHeader extends React.Component<CoreHeader.Props, CoreHeader.States> {
   }
 
   public render(): React.ReactNode {
-    const { classes, leftIcon, leftText, additionalRightIcons } = this.props;
+    const {
+      classes,
+      leftIcon,
+      leftText,
+      additionalRightIcons,
+      history: { push }
+    } = this.props;
     return (
       <AppBar position={'static'} className={classes.container}>
         <Toolbar color={'primary'} className={classes.toolBarContainer}>
           <div className={classes.containerLeft}>
             {leftIcon}
-            {leftText || (
-              <InternalLink
-                href={'/'}
-                variant={'h6'}
-                color={'inherit'}
-                children={'Home'}
-                className={classes.homeButton}
-              />
-            )}
+            <Hidden xsDown>
+              {leftText || (
+                <InternalLink
+                  href={'/'}
+                  variant={'h6'}
+                  color={'inherit'}
+                  children={'Home'}
+                  className={classes.homeButton}
+                />
+              )}
+            </Hidden>
           </div>
           <div className={classes.containerRight}>
             {additionalRightIcons}
+            <Hidden smDown>
+              <UnAuthenticated disableLoading>
+                <IconButton color={'inherit'} onClick={() => push('/login')}>
+                  <Tooltip title={'Login'}>
+                    <MdVpnKey />
+                  </Tooltip>
+                </IconButton>
+              </UnAuthenticated>
+            </Hidden>
             <IconButton aira-owns={this.openMenu ? 'menu-appbar' : null} color={'inherit'} onClick={this.openMenu}>
-              <MdMoreVert />
-            </IconButton>
-            <Menu
-              id={'menu-appbar'}
-              anchorEl={this.state.anchorEl}
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-              open={Boolean(this.state.anchorEl)}
-              onClose={this.closeMenu}
-            >
-              <InternalLink href={'/profile'} variant={'h6'} color={'inherit'} className={classes.homeButton}>
-                <MenuItem onClick={this.closeMenu}>
-                  <ListItemText>Profile</ListItemText>
-                  <ListItemIcon>
-                    <MdAccountCircle />
-                  </ListItemIcon>
-                </MenuItem>
-              </InternalLink>
-              <InternalLink href={'/login'} variant={'h6'} color={'inherit'} className={classes.homeButton}>
-                <MenuItem onClick={this.closeMenu}>
-                  <ListItemText>Login</ListItemText>
-                  <ListItemIcon>
-                    <MdFingerprint />
-                  </ListItemIcon>
-                </MenuItem>
-              </InternalLink>
-              <InternalLink href={'/register'} variant={'h6'} color={'inherit'} className={classes.homeButton}>
-                <MenuItem onClick={this.closeMenu}>
-                  <ListItemText>Register</ListItemText>
-                  <ListItemIcon>
-                    <MdAssignment />
-                  </ListItemIcon>
-                </MenuItem>
-              </InternalLink>
-              <ThemeContext.Consumer>
-                {({ theme, switchTheme }) => (
-                  <MenuItem onClick={() => switchTheme()}>
-                    <ListItemText>Dark mode</ListItemText>
-                    <ListItemIcon>
-                      {theme.palette.type === ThemeType.LIGHT ? <MdRadioButtonUnchecked /> : <MdRadioButtonChecked />}
-                    </ListItemIcon>
-                  </MenuItem>
+              <CurrentUserQuery.Query query={CurrentUserQuery.QUERY}>
+                {({ loading, error, data }) => (
+                  <Tooltip title={'Menu'}>
+                    {loading || error || !data.currentUser.avatarUrl ? (
+                      <MdMoreVert />
+                    ) : (
+                      <Avatar src={data.currentUser.avatarUrl} className={classes.avatar} />
+                    )}
+                  </Tooltip>
                 )}
-              </ThemeContext.Consumer>
-            </Menu>
+              </CurrentUserQuery.Query>
+            </IconButton>
+            {this.renderMenu()}
           </div>
         </Toolbar>
       </AppBar>
     );
   }
+
+  private renderMenu = () => {
+    const {
+      classes,
+      history: { push }
+    } = this.props;
+    return (
+      <Menu
+        id={'menu-appbar'}
+        anchorEl={this.state.anchorEl}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={Boolean(this.state.anchorEl)}
+        onClose={() => this.closeMenu()}
+      >
+        <Authenticated
+          disableLoading
+          render={user => (
+            <>
+              <MenuItem>
+                <ListItemIcon>
+                  {!user.avatarUrl ? <MdAccountCircle /> : <Avatar src={user.avatarUrl} className={classes.avatar} />}
+                </ListItemIcon>
+                <ListItemText>{user.username}</ListItemText>
+              </MenuItem>
+              <Divider />
+            </>
+          )}
+        />
+        <Authenticated disableLoading>
+          <MenuItem
+            onClick={() => {
+              this.closeMenu();
+              push('/profile');
+            }}
+          >
+            <ListItemText>Profile</ListItemText>
+            <ListItemIcon>
+              <MdAccountCircle />
+            </ListItemIcon>
+          </MenuItem>
+        </Authenticated>
+        <UnAuthenticated disableLoading>
+          <Hidden smUp>
+            <MenuItem
+              onClick={() => {
+                this.closeMenu();
+                push('/login');
+              }}
+            >
+              <ListItemText>Login</ListItemText>
+              <ListItemIcon>
+                <MdVpnKey />
+              </ListItemIcon>
+            </MenuItem>
+          </Hidden>
+        </UnAuthenticated>
+        <UnAuthenticated disableLoading>
+          <MenuItem
+            onClick={() => {
+              this.closeMenu();
+              push('/register');
+            }}
+          >
+            <ListItemText>Register</ListItemText>
+            <ListItemIcon>
+              <MdAssignment />
+            </ListItemIcon>
+          </MenuItem>
+        </UnAuthenticated>
+        <Authenticated disableLoading>
+          <ApolloConsumer>
+            {client => (
+              <MenuItem
+                onClick={() => {
+                  this.closeMenu();
+                  LoginMutation.clearLoginSession();
+                  client.resetStore();
+                }}
+              >
+                <ListItemText>Logout</ListItemText>
+                <ListItemIcon>
+                  <MdPowerSettingsNew />
+                </ListItemIcon>
+              </MenuItem>
+            )}
+          </ApolloConsumer>
+        </Authenticated>
+        <ThemeContext.Consumer>
+          {({ theme, switchTheme }) => (
+            <MenuItem onClick={() => this.closeMenu(switchTheme)}>
+              <ListItemText>Dark mode</ListItemText>
+              <ListItemIcon>
+                {theme.palette.type === ThemeType.LIGHT ? <MdRadioButtonUnchecked /> : <MdRadioButtonChecked />}
+              </ListItemIcon>
+            </MenuItem>
+          )}
+        </ThemeContext.Consumer>
+      </Menu>
+    );
+  };
 
   private openMenu = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({
@@ -109,21 +182,24 @@ class CoreHeader extends React.Component<CoreHeader.Props, CoreHeader.States> {
     });
   };
 
-  private closeMenu = () => {
-    this.setState({
-      anchorEl: null
-    });
+  private closeMenu = (callback?: () => void) => {
+    this.setState(
+      {
+        anchorEl: null
+      },
+      callback
+    );
   };
 }
 
 namespace CoreHeader {
-  export interface Props extends Header.Props, WithStyles<typeof styles> {}
+  export interface Props extends Header.Props, RouteComponentProps, WithStyles<typeof styles> {}
   export interface States {
     anchorEl: HTMLElement;
   }
 }
 
-export const Header: React.ComponentType<Header.Props> = withStyles(styles)(CoreHeader);
+export const Header: React.ComponentType<Header.Props> = withStyles(styles)(withRouter(CoreHeader));
 
 export namespace Header {
   export interface Props extends Identifiable, Styleable {

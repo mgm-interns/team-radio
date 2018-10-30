@@ -1,5 +1,5 @@
-import { CircularProgress, Typography, withStyles, WithStyles } from '@material-ui/core';
-import { Identifiable } from 'Common';
+import { Typography, withStyles, WithStyles } from '@material-ui/core';
+import { Loading } from 'Components';
 import { AllRealTimeStationsQuery, OnRealTimeStationsChangedSubscription } from 'RadioGraphql';
 import * as React from 'react';
 import { StationsHelper } from 'team-radio-shared';
@@ -51,7 +51,7 @@ class CoreStationList extends React.Component<CoreStationList.Props> {
     if (data.loading) {
       return (
         <div className={classes.progressContainer}>
-          <CircularProgress />
+          <Loading />
         </div>
       );
     }

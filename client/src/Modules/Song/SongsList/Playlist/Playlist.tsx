@@ -1,7 +1,6 @@
 import {
   Badge,
   Card,
-  CircularProgress,
   Grid,
   IconButton,
   LinearProgress,
@@ -11,6 +10,7 @@ import {
   WithStyles
 } from '@material-ui/core';
 import { Identifiable } from 'Common';
+import { Loading } from 'Components';
 import { SongItem } from 'Modules';
 import { RealTimeStationPlayerQuery } from 'RadioGraphql';
 import * as React from 'react';
@@ -38,7 +38,7 @@ class CorePlaylist extends React.Component<CorePlaylist.Props> {
       content = <Typography color={'error'}>Error {data.error.message}</Typography>;
     } else if (data.loading) {
       // Loading
-      content = <CircularProgress />;
+      content = <Loading />;
     } else if (!data.StationPlayer.playlist.length) {
       // No playing song and no song in playlist
       content = <Typography>No song</Typography>;

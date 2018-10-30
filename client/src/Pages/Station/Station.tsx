@@ -1,4 +1,5 @@
-import { CircularProgress, withStyles, WithStyles } from '@material-ui/core';
+import { withStyles, WithStyles } from '@material-ui/core';
+import { Loading } from 'Components';
 import { StationChatBox, StationList, StationPlayer, StationSongs, StationSongSearch, StationToolbar } from 'Modules';
 import { StationItem } from 'Modules/Station/StationItem';
 import { JoinStationMutation, RealTimeStationQuery } from 'RadioGraphql';
@@ -25,7 +26,7 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
         onCompleted={() => this.props.mutate({ variables: this.props.match.params })}
       >
         {({ data, loading, error }) => {
-          let stationName = <CircularProgress color={'inherit'} />;
+          let stationName = <Loading color={'inherit'} />;
           if (!loading && !error) {
             stationName = <span>{data.RealTimeStation.stationName}</span>;
           }

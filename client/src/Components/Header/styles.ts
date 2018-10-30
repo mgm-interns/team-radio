@@ -21,5 +21,10 @@ export const styles = ({ palette, spacing, zIndex }: RadioTheme) =>
     homeButton: {
       marginLeft: spacing.mediumUnit,
       color: palette.common.white
+    },
+    avatar: {
+      background: palette.common.white,
+      width: '1.25em',
+      height: '1.25em'
     }
   });
