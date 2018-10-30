@@ -4,7 +4,7 @@ import { Footer, Header } from 'Components';
 import React from 'react';
 import { styles } from './styles';
 
-class CoreFullLayout extends React.Component<CoreFullLayout.Props, CoreFullLayout.States> {
+class FullLayout extends React.Component<CoreProps, CoreStates> {
   public render() {
     const { classes } = this.props;
     return (
@@ -17,13 +17,9 @@ class CoreFullLayout extends React.Component<CoreFullLayout.Props, CoreFullLayou
   }
 }
 
-namespace CoreFullLayout {
-  export interface Props extends FullLayout.Props, WithStyles<typeof styles> {}
-  export interface States {}
-}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
+interface CoreStates {}
 
-export const FullLayout: React.ComponentType<FullLayout.Props> = withStyles(styles)(CoreFullLayout);
+export default withStyles(styles)(FullLayout);
 
-export namespace FullLayout {
-  export interface Props extends Styleable, Identifiable, Container {}
-}
+export interface Props extends Styleable, Identifiable, Container {}

@@ -7,32 +7,30 @@ import * as React from 'react';
 import { graphql, MutateProps, Mutation as GraphQLMutation, OperationOption } from 'react-apollo';
 import { PartialMutationProps } from '../types';
 
-export function JoinStationMutation(props: JoinStationMutation.Props) {
-  return <JoinStationMutation.MutationComponent mutation={JoinStationMutation.MUTATION} {...props} />;
+const MUTATION = gql`
+  mutation joinStation($stationId: String!) {
+    joinStation(stationId: $stationId)
+  }
+`;
+
+export class MutationComponent extends GraphQLMutation<Response, Variables> {}
+
+export default function JoinStationMutation(props: Props) {
+  return <MutationComponent mutation={MUTATION} {...props} />;
 }
 
-export namespace JoinStationMutation {
-  export const MUTATION = gql`
-    mutation joinStation($stationId: String!) {
-      joinStation(stationId: $stationId)
-    }
-  `;
-
-  export interface Response {
-    readonly joinStation: boolean;
-  }
-
-  export interface Variables {
-    stationId: string;
-  }
-
-  export class MutationComponent extends GraphQLMutation<Response, Variables> {}
-
-  export function withHOC<TProps>(options: OperationOption<TProps, Response, Variables>) {
-    return graphql<TProps, Response, Variables>(MUTATION, options);
-  }
-
-  export interface WithHOCProps extends MutateProps<Response, Variables> {}
-
-  export interface Props extends PartialMutationProps<Response, Variables> {}
+export function withHOC<TProps>(options?: OperationOption<TProps, Response, Variables>) {
+  return graphql<TProps, Response, Variables>(MUTATION, options);
 }
+
+export interface Response {
+  readonly joinStation: boolean;
+}
+
+export interface Variables {
+  stationId: string;
+}
+
+export interface WithHOCProps extends MutateProps<Response, Variables> {}
+
+export interface Props extends PartialMutationProps<Response, Variables> {}

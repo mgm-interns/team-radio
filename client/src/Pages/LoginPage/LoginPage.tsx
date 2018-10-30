@@ -11,18 +11,18 @@ import {
   WithStyles
 } from '@material-ui/core';
 import { ApolloClient } from 'apollo-boost';
-import { InternalLink } from 'Components';
+import { InternalLink, Picture } from 'Components';
 import { FullLayout } from 'Containers';
 import { ErrorHelper } from 'Error';
-import { LoginMutation } from 'RadioGraphql';
+import { LoginMutationVariables, withLoginMutation, WithLoginMutationProps } from 'RadioGraphql';
 import * as React from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import { FaFacebookF, FaGooglePlusG } from 'react-icons/fa';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { styles } from './styles';
 
-class CoreLogin extends React.Component<CoreLogin.Props, CoreLogin.States> {
-  constructor(props: CoreLogin.Props) {
+class LoginPage extends React.Component<CoreProps, CoreStates> {
+  constructor(props: CoreProps) {
     super(props);
 
     this.state = { username: '', password: '', errorText: '', loading: false };
@@ -34,11 +34,10 @@ class CoreLogin extends React.Component<CoreLogin.Props, CoreLogin.States> {
       <FullLayout>
         <div className={classes.container}>
           <div className={classes.backgroundContainer}>
-            <picture>
-              <img
-                className={classes.image}
-                sizes="(max-width: 2520px) 100vw, 2520px"
-                srcSet="
+            <Picture
+              className={classes.image}
+              sizes="(max-width: 2520px) 100vw, 2520px"
+              srcSet="
                 /images/login_BG_m7gib7_c_scale,w_320.jpg 320w,
                 /images/login_BG_m7gib7_c_scale,w_760.jpg 760w,
                 /images/login_BG_m7gib7_c_scale,w_1065.jpg 1065w,
@@ -52,10 +51,9 @@ class CoreLogin extends React.Component<CoreLogin.Props, CoreLogin.States> {
                 /images/login_BG_m7gib7_c_scale,w_2457.jpg 2457w,
                 /images/login_BG_m7gib7_c_scale,w_2514.jpg 2514w,
                 /images/login_BG_m7gib7_c_scale,w_2520.jpg 2520w"
-                src="/images/login_BG_m7gib7_c_scale,w_2520.jpg"
-                alt=""
-              />
-            </picture>
+              src="/images/login_BG_m7gib7_c_scale,w_2520.jpg"
+              alt=""
+            />
           </div>
           <ApolloConsumer>
             {client => (
@@ -156,23 +154,13 @@ class CoreLogin extends React.Component<CoreLogin.Props, CoreLogin.States> {
   };
 }
 
-namespace CoreLogin {
-  export interface Props
-    extends LoginMutation.WithHOCProps,
-      RouteComponentProps,
-      WithStyles<typeof styles>,
-      Login.Props {}
+interface CoreProps extends WithLoginMutationProps, RouteComponentProps, WithStyles<typeof styles>, Props {}
 
-  export interface States extends LoginMutation.Variables {
-    errorText: string;
-    loading: boolean;
-  }
+interface CoreStates extends LoginMutationVariables {
+  errorText: string;
+  loading: boolean;
 }
 
-export const Login: React.ComponentType<Login.Props> = LoginMutation.withHOC<Login.Props>()(
-  withStyles(styles)(withRouter(CoreLogin))
-);
+export default withLoginMutation<Props>()(withStyles(styles)(withRouter(LoginPage)));
 
-export namespace Login {
-  export interface Props {}
-}
+export interface Props {}

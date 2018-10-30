@@ -39,10 +39,8 @@ export interface RadioTheme extends Theme {
   zIndex: RadioZIndex;
 }
 
-export enum ThemeType {
-  LIGHT = 'light',
-  DARK = 'dark'
-}
+export type ThemeType = 'light' | 'dark';
+export const ThemeType: { LIGHT: 'light'; DARK: 'dark' } = { LIGHT: 'light', DARK: 'dark' };
 
 export type SwitchThemeFunction = (theme?: ThemeType) => void;
 

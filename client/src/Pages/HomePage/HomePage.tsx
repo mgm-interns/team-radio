@@ -8,16 +8,16 @@ import {
   WithStyles,
   withStyles
 } from '@material-ui/core';
+import { Picture } from 'Components';
 import { FullLayout } from 'Containers';
-import { StationList } from 'Modules';
-import { StationItem } from 'Modules/Station/StationItem';
+import { StationItem, StationList } from 'Modules';
 import * as React from 'react';
 import { MdCreate } from 'react-icons/md';
 import { classnames } from 'Themes';
 import { styles } from './styles';
 
-class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
-  constructor(props: CoreHome.Props) {
+class HomePage extends React.Component<CoreProps, CoreStates> {
+  constructor(props: CoreProps) {
     super(props);
 
     this.state = {
@@ -32,11 +32,10 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
       <FullLayout>
         <div className={classes.container}>
           <div className={classes.backgroundContainer}>
-            <picture>
-              <img
-                className={classes.image}
-                sizes="(max-width: 2520px) 100vw, 2520px"
-                srcSet="
+            <Picture
+              className={classes.image}
+              sizes="(max-width: 2520px) 100vw, 2520px"
+              srcSet="
                   /images/homepage_BG_d0mq87_c_scale,w_320.jpg 320w,
                   /images/homepage_BG_d0mq87_c_scale,w_707.jpg 707w,
                   /images/homepage_BG_d0mq87_c_scale,w_986.jpg 986w,
@@ -51,10 +50,9 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
                   /images/homepage_BG_d0mq87_c_scale,w_2466.jpg 2466w,
                   /images/homepage_BG_d0mq87_c_scale,w_2497.jpg 2497w,
                   /images/homepage_BG_d0mq87_c_scale,w_2520.jpg 2520w"
-                src="/images/homepage_BG_d0mq87_c_scale,w_2520.jpg"
-                alt=""
-              />
-            </picture>
+              src="/images/homepage_BG_d0mq87_c_scale,w_2520.jpg"
+              alt=""
+            />
           </div>
           <div className={classes.pageInfoContainer}>
             <div className={classes.homeBio}>
@@ -116,16 +114,12 @@ class CoreHome extends React.Component<CoreHome.Props, CoreHome.States> {
   };
 }
 
-namespace CoreHome {
-  export interface Props extends Home.Props, WithStyles<typeof styles> {}
-  export interface States {
-    inputValue: string;
-    privateStation: boolean;
-  }
+interface CoreProps extends WithStyles<typeof styles>, Props {}
+interface CoreStates {
+  inputValue: string;
+  privateStation: boolean;
 }
 
-export const Home: React.ComponentType<Home.Props> = withStyles(styles)(CoreHome);
+export default withStyles(styles)(HomePage);
 
-export namespace Home {
-  export interface Props {}
-}
+export interface Props {}

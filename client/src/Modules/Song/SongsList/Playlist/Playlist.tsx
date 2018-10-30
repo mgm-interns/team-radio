@@ -2,13 +2,19 @@ import { Badge, Grid, IconButton, LinearProgress, List, Typography, withStyles, 
 import { Identifiable, ReactSubscriptionComponent, Styleable } from 'Common';
 import { Loading } from 'Components';
 import { SongItem } from 'Modules';
-import { OnRealTimeStationPlaylistChangedSubscription, RealTimeStationPlaylistQuery } from 'RadioGraphql';
+import {
+  getSubscribeToMoreOptionsForRealTimeStationPlaylistSubscription,
+  RealTimeStationPlaylistQueryPlaylistSong,
+  RealTimeStationPlaylistQueryVariables,
+  withRealTimeStationPlaylistQuery,
+  WithRealTimeStationPlaylistQueryProps
+} from 'RadioGraphql';
 import * as React from 'react';
 import { MdFavorite, MdThumbDown, MdThumbUp } from 'react-icons/md';
 import { classnames } from 'Themes';
 import { styles } from './styles';
 
-class CorePlaylist extends ReactSubscriptionComponent<CorePlaylist.Props> {
+class Playlist extends ReactSubscriptionComponent<CoreProps> {
   public render(): React.ReactNode {
     const { classes, className, style } = this.props;
     return this.renderPlayerWrapper(data => (
@@ -21,10 +27,10 @@ class CorePlaylist extends ReactSubscriptionComponent<CorePlaylist.Props> {
   }
 
   protected getSubscribeToMoreOptions = () => {
-    return OnRealTimeStationPlaylistChangedSubscription.getSubscribeToMoreOptions(this.props.params);
+    return getSubscribeToMoreOptionsForRealTimeStationPlaylistSubscription(this.props.params);
   };
 
-  private renderPlayerWrapper = (children: (data: RealTimeStationPlaylistQuery.PlaylistSong[]) => React.ReactNode) => {
+  private renderPlayerWrapper = (children: (data: RealTimeStationPlaylistQueryPlaylistSong[]) => React.ReactNode) => {
     const { classes, data, id, className, style } = this.props;
     let content: React.ReactNode;
     if (data.error) {
@@ -48,7 +54,7 @@ class CorePlaylist extends ReactSubscriptionComponent<CorePlaylist.Props> {
     );
   };
 
-  private renderActions = (song: RealTimeStationPlaylistQuery.PlaylistSong): React.ReactNode => {
+  private renderActions = (song: RealTimeStationPlaylistQueryPlaylistSong): React.ReactNode => {
     const { classes } = this.props;
     return (
       <Grid container>
@@ -88,16 +94,12 @@ class CorePlaylist extends ReactSubscriptionComponent<CorePlaylist.Props> {
   };
 }
 
-namespace CorePlaylist {
-  export interface Props extends RealTimeStationPlaylistQuery.WithHOCProps, WithStyles<typeof styles>, Playlist.Props {}
-}
+interface CoreProps extends WithRealTimeStationPlaylistQueryProps, WithStyles<typeof styles>, Props {}
 
-export const Playlist = RealTimeStationPlaylistQuery.withHOC<Playlist.Props>({
-  options: (props: Playlist.Props) => ({ variables: props.params })
-})(withStyles(styles)(CorePlaylist));
+export default withRealTimeStationPlaylistQuery<Props>({
+  options: (props: Props) => ({ variables: props.params })
+})(withStyles(styles)(Playlist));
 
-export namespace Playlist {
-  export interface Props extends Identifiable, Styleable {
-    params: RealTimeStationPlaylistQuery.Variables;
-  }
+export interface Props extends Identifiable, Styleable {
+  params: RealTimeStationPlaylistQueryVariables;
 }

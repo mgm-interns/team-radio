@@ -1,2 +1,5 @@
 export * from './baseProps';
-export * from './ReactSubscriptionComponent';
+export {
+  default as ReactSubscriptionComponent,
+  Props as ReactSubscriptionComponentProps
+} from './ReactSubscriptionComponent';

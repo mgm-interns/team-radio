@@ -3,7 +3,7 @@ import { Identifiable, Styleable } from 'Common';
 import * as React from 'react';
 import { styles } from './styles';
 
-function CorePicture(props: CorePicture.Props): React.ReactElement<CorePicture.Props> {
+function Picture(props: CoreProps): React.ReactElement<CoreProps> {
   return (
     <picture>
       <img className={props.className} sizes={props.sizes} srcSet={props.srcSet} src={props.src} alt={props.alt} />
@@ -11,17 +11,13 @@ function CorePicture(props: CorePicture.Props): React.ReactElement<CorePicture.P
   );
 }
 
-namespace CorePicture {
-  export interface Props extends Picture.Props, WithStyles<typeof styles> {}
-}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
 
-export const Picture: React.ComponentType<Picture.Props> = withStyles(styles)(CorePicture);
+export default withStyles(styles)(Picture);
 
-export namespace Picture {
-  export interface Props extends Identifiable, Styleable {
-    sizes: string;
-    srcSet: string;
-    src: string;
-    alt?: string;
-  }
+export interface Props extends Identifiable, Styleable {
+  sizes: string;
+  srcSet: string;
+  src: string;
+  alt?: string;
 }

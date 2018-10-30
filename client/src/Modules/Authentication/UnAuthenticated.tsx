@@ -4,7 +4,7 @@ import { CurrentUserQuery } from 'RadioGraphql';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-class CoreUnAuthenticated extends React.Component<CoreUnAuthenticated.Props> {
+class UnAuthenticated extends React.Component<CoreProps> {
   public render() {
     const { children, redirect, disableLoading, history } = this.props;
     return (
@@ -26,23 +26,21 @@ class CoreUnAuthenticated extends React.Component<CoreUnAuthenticated.Props> {
   }
 }
 
-namespace CoreUnAuthenticated {
-  export interface Props extends RouteComponentProps<{}>, UnAuthenticated.Props {}
-}
+interface CoreProps extends RouteComponentProps<{}>, Props {}
 
-export const UnAuthenticated = withRouter(CoreUnAuthenticated);
+const WithRouterUnAuthenticated = withRouter(UnAuthenticated);
 
-namespace UnAuthenticated {
-  export interface Props extends Container {
-    redirect?: string;
-    disableLoading?: boolean;
-  }
+export default WithRouterUnAuthenticated;
+
+export interface Props extends Container {
+  redirect?: string;
+  disableLoading?: boolean;
 }
 
 export function withUnAuthenticated<TProps>(redirect?: string) {
   return (Child: React.ComponentType<TProps>) => (props: TProps) => (
-    <UnAuthenticated redirect={redirect}>
+    <WithRouterUnAuthenticated redirect={redirect}>
       <Child {...props} />
-    </UnAuthenticated>
+    </WithRouterUnAuthenticated>
   );
 }

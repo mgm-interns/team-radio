@@ -4,7 +4,7 @@ import * as React from 'react';
 import { classnames } from 'Themes';
 import { styles } from './styles';
 
-export class CoreLoading extends React.Component<CoreLoading.Props> {
+export class Loading extends React.Component<CoreProps> {
   public render() {
     const { fullScreen, classes, className, style, id, size, color } = this.props;
     return (
@@ -19,16 +19,12 @@ export class CoreLoading extends React.Component<CoreLoading.Props> {
   }
 }
 
-export namespace CoreLoading {
-  export interface Props extends WithStyles<typeof styles>, Loading.Props {}
-}
+export interface CoreProps extends WithStyles<typeof styles>, Props {}
 
-export const Loading = withStyles(styles)(CoreLoading);
+export default withStyles(styles)(Loading);
 
-export namespace Loading {
-  export interface Props extends Styleable, Identifiable, InContainer {
-    fullScreen?: boolean;
-    size?: number | string;
-    color?: 'primary' | 'secondary' | 'inherit';
-  }
+export interface Props extends Styleable, Identifiable, InContainer {
+  fullScreen?: boolean;
+  size?: number | string;
+  color?: 'primary' | 'secondary' | 'inherit';
 }

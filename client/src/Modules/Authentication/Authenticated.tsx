@@ -1,10 +1,10 @@
 import { Container } from 'Common';
 import { Loading } from 'Components';
-import { CurrentUserQuery } from 'RadioGraphql';
+import { CurrentUserQuery, CurrentUserQueryUser } from 'RadioGraphql';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-class CoreAuthenticated extends React.Component<CoreAuthenticated.Props> {
+class Authenticated extends React.Component<CoreProps> {
   public render() {
     const { render, children, redirect, disableLoading, history } = this.props;
     return (
@@ -29,24 +29,22 @@ class CoreAuthenticated extends React.Component<CoreAuthenticated.Props> {
   }
 }
 
-namespace CoreAuthenticated {
-  export interface Props extends RouteComponentProps<{}>, Authenticated.Props {}
-}
+interface CoreProps extends RouteComponentProps<{}>, Props {}
 
-export const Authenticated = withRouter(CoreAuthenticated);
+const WithRouterAuthenticated = withRouter(Authenticated);
 
-namespace Authenticated {
-  export interface Props extends Container {
-    redirect?: string;
-    disableLoading?: boolean;
-    render?(user: CurrentUserQuery.User): React.ReactNode;
-  }
+export default WithRouterAuthenticated;
+
+export interface Props extends Container {
+  redirect?: string;
+  disableLoading?: boolean;
+  render?(user: CurrentUserQueryUser): React.ReactNode;
 }
 
 export function withAuthenticated<TProps>(redirect?: string) {
   return (Child: React.ComponentType<TProps>) => (props: TProps) => (
-    <Authenticated redirect={redirect}>
+    <WithRouterAuthenticated redirect={redirect}>
       <Child {...props} />
-    </Authenticated>
+    </WithRouterAuthenticated>
   );
 }

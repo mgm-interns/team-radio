@@ -2,11 +2,11 @@ import { Typography, withStyles, WithStyles } from '@material-ui/core';
 import { InternalLink } from 'Components';
 import * as React from 'react';
 import { classnames } from 'Themes';
-import { StationItem } from '..';
+import { StationItemProps } from '..';
 import { styles } from './styles';
 
-class CoreSimpleStation extends React.Component<CoreSimpleStation.Props, CoreSimpleStation.States> {
-  constructor(props: CoreSimpleStation.Props) {
+class SimpleStation extends React.Component<CoreProps, CoreStates> {
+  constructor(props: CoreProps) {
     super(props);
   }
 
@@ -34,13 +34,9 @@ class CoreSimpleStation extends React.Component<CoreSimpleStation.Props, CoreSim
   }
 }
 
-namespace CoreSimpleStation {
-  export interface Props extends SimpleStation.Props, WithStyles<typeof styles> {}
-  export interface States {}
-}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
+interface CoreStates {}
 
-export const SimpleStation: React.ComponentType<SimpleStation.Props> = withStyles(styles)(CoreSimpleStation);
+export default withStyles(styles)(SimpleStation);
 
-export namespace SimpleStation {
-  export interface Props extends StationItem.Props {}
-}
+export interface Props extends StationItemProps {}

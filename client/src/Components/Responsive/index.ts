@@ -1,1 +1,1 @@
-export * from './Responsive';
+export { default as Responsive, Props as ResponsiveProps } from './Responsive';

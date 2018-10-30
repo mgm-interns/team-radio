@@ -1,16 +1,15 @@
 import * as React from 'react';
 import MediaQuery, { MediaQueryProps } from 'react-responsive';
 
-export function Responsive(props: Responsive.Props) {
+export function Responsive(props: Props) {
   return <MediaQuery {...props} />;
 }
 
-export namespace Responsive {
-  export const LargeDesktop = (props: Props) => <MediaQuery minWidth={1440} {...props} />;
-  export const Desktop = (props: Props) => <MediaQuery minWidth={992} maxWidth={1440} {...props} />;
-  export const Tablet = (props: Props) => <MediaQuery minWidth={768} maxWidth={992} {...props} />;
-  export const Mobile = (props: Props) => <MediaQuery maxWidth={767} {...props} />;
-  export const Default = (props: Props) => <MediaQuery minWidth={768} {...props} />;
+Responsive.LargeDesktop = (props: Props) => <MediaQuery minWidth={1440} {...props} />;
+Responsive.Desktop = (props: Props) => <MediaQuery minWidth={992} maxWidth={1440} {...props} />;
+Responsive.Tablet = (props: Props) => <MediaQuery minWidth={768} maxWidth={992} {...props} />;
+Responsive.Mobile = (props: Props) => <MediaQuery maxWidth={767} {...props} />;
+Responsive.Default = (props: Props) => <MediaQuery minWidth={768} {...props} />;
 
-  export interface Props extends MediaQueryProps {}
-}
+export default Responsive;
+export interface Props extends MediaQueryProps {}

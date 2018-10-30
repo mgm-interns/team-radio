@@ -1,15 +1,27 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import { Loading } from 'Components';
-import { StationChatBox, StationList, StationPlayer, StationSongs, StationSongSearch, StationToolbar } from 'Modules';
-import { StationItem } from 'Modules/Station/StationItem';
-import { JoinStationMutation, RealTimeStationQuery } from 'RadioGraphql';
+import {
+  StationChatBox,
+  StationItem,
+  StationList,
+  StationPlayer,
+  StationSongs,
+  StationSongSearch,
+  StationToolbar
+} from 'Modules';
+import {
+  RealTimeStationQuery,
+  RealTimeStationQueryVariables,
+  withJoinStationMutation,
+  WithJoinStationMutationProps
+} from 'RadioGraphql';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { DefaultLayout } from './Layout';
+import { DefaultLayout, DefaultLayoutProps } from './Layout';
 import { styles } from './styles';
 
-class CoreStation extends React.Component<CoreStation.Props, CoreStation.States> {
-  constructor(props: CoreStation.Props) {
+class StationPage extends React.Component<CoreProps, CoreStates> {
+  constructor(props: CoreProps) {
     super(props);
 
     this.state = {
@@ -36,7 +48,7 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
     );
   }
 
-  private getLayout = (): React.ComponentType<DefaultLayout.Props> => {
+  private getLayout = (): React.ComponentType<DefaultLayoutProps> => {
     // TODO: any other layouts?
     switch (true) {
       default:
@@ -44,7 +56,7 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
     }
   };
 
-  private getLayoutProps = (title?: React.ReactNode): DefaultLayout.Props => {
+  private getLayoutProps = (title?: React.ReactNode): DefaultLayoutProps => {
     const { params } = this.props.match;
     return {
       title,
@@ -66,21 +78,15 @@ class CoreStation extends React.Component<CoreStation.Props, CoreStation.States>
   };
 }
 
-namespace CoreStation {
-  export interface Props
-    extends Station.Props,
-      JoinStationMutation.WithHOCProps,
-      RouteComponentProps<RealTimeStationQuery.Variables>,
-      WithStyles<typeof styles> {}
-  export interface States {
-    drawer: boolean;
-  }
+interface CoreProps
+  extends WithJoinStationMutationProps,
+    RouteComponentProps<RealTimeStationQueryVariables>,
+    WithStyles<typeof styles>,
+    Props {}
+interface CoreStates {
+  drawer: boolean;
 }
 
-export const Station: React.ComponentType<Station.Props> = JoinStationMutation.withHOC<Station.Props>({})(
-  withStyles(styles)(withRouter(CoreStation))
-);
+export default withJoinStationMutation<Props>()(withStyles(styles)(withRouter(StationPage)));
 
-export namespace Station {
-  export interface Props {}
-}
+export interface Props {}

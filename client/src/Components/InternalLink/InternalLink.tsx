@@ -4,7 +4,7 @@ import { Container, Identifiable, Styleable } from 'Common';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-function CoreInternalLink(props: CoreInternalLink.Props): React.ReactElement<CoreInternalLink.Props> {
+function InternalLink(props: CoreProps): React.ReactElement<CoreProps> {
   return (
     <Link
       to={props.href}
@@ -26,15 +26,11 @@ function CoreInternalLink(props: CoreInternalLink.Props): React.ReactElement<Cor
   );
 }
 
-namespace CoreInternalLink {
-  export interface Props extends InternalLink.Props {}
-}
+interface CoreProps extends Props {}
 
-export const InternalLink: React.ComponentType<InternalLink.Props> = CoreInternalLink;
+export default InternalLink;
 
-export namespace InternalLink {
-  export interface Props extends Identifiable, Styleable, Container, TypographyProps {
-    href: string;
-    disableTypography?: boolean;
-  }
+export interface Props extends Identifiable, Styleable, Container, TypographyProps {
+  href: string;
+  disableTypography?: boolean;
 }

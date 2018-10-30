@@ -3,10 +3,10 @@ import * as React from 'react';
 import { DataValue } from 'react-apollo';
 
 // TODO: the params or data in props should have only 1 property, if there are 2 or more, not sure???
-export class ReactSubscriptionComponent<
-  Props extends ReactSubscriptionComponent.Props,
-  States = ReactSubscriptionComponent.States
-> extends React.Component<Props, States> {
+export class ReactSubscriptionComponent<TProps extends Props, TStates = States> extends React.Component<
+  TProps,
+  TStates
+> {
   private isSubscribed: boolean;
   private unSubscribe: () => void;
 
@@ -14,7 +14,7 @@ export class ReactSubscriptionComponent<
    * Subscribe to update the station player status
    * Also cancel the subscription when change station
    */
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: TProps) {
     if (this.props.params) {
       Object.keys(this.props.params).forEach(key => {
         if (prevProps.params[key] !== this.props.params[key]) {
@@ -45,10 +45,7 @@ export class ReactSubscriptionComponent<
     }
   }
 
-  protected getSubscribeToMoreOptions = (): SubscribeToMoreOptions<
-    ReactSubscriptionComponent.Response,
-    ReactSubscriptionComponent.Variables
-  > | null => {
+  protected getSubscribeToMoreOptions = (): SubscribeToMoreOptions<Response, Variables> | null => {
     return null;
   };
 
@@ -59,19 +56,19 @@ export class ReactSubscriptionComponent<
   };
 }
 
-export namespace ReactSubscriptionComponent {
-  export interface Props {
-    params?: Variables;
-    data: DataValue<Response | Variables>;
-  }
-
-  export interface States extends KeyValuePairObject {}
-
-  export interface Response extends KeyValuePairObject {}
-
-  export interface Variables extends KeyValuePairObject {}
-
-  interface KeyValuePairObject {
-    [key: string]: any;
-  }
+export interface Props {
+  params?: Variables;
+  data: DataValue<Response | Variables>;
 }
+
+interface States extends KeyValuePairObject {}
+
+interface Response extends KeyValuePairObject {}
+
+interface Variables extends KeyValuePairObject {}
+
+interface KeyValuePairObject {
+  [key: string]: any;
+}
+
+export default ReactSubscriptionComponent;

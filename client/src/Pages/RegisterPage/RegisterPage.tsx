@@ -9,22 +9,22 @@ import {
   WithStyles
 } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
+import { Picture } from 'Components';
 import { FullLayout } from 'Containers';
 import * as React from 'react';
 import { styles } from './styles';
 
-class CoreRegister extends React.Component<CoreRegister.Props> {
+class RegisterPage extends React.Component<CoreProps> {
   public render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <FullLayout>
         <div className={classes.container}>
           <div className={classes.backgroundContainer}>
-            <picture>
-              <img
-                className={classes.image}
-                sizes="(max-width: 2520px) 100vw, 2520px"
-                srcSet="
+            <Picture
+              className={classes.image}
+              sizes="(max-width: 2520px) 100vw, 2520px"
+              srcSet="
                 /images/login_BG_m7gib7_c_scale,w_320.jpg 320w,
                 /images/login_BG_m7gib7_c_scale,w_760.jpg 760w,
                 /images/login_BG_m7gib7_c_scale,w_1065.jpg 1065w,
@@ -38,10 +38,9 @@ class CoreRegister extends React.Component<CoreRegister.Props> {
                 /images/login_BG_m7gib7_c_scale,w_2457.jpg 2457w,
                 /images/login_BG_m7gib7_c_scale,w_2514.jpg 2514w,
                 /images/login_BG_m7gib7_c_scale,w_2520.jpg 2520w"
-                src="/images/login_BG_m7gib7_c_scale,w_2520.jpg"
-                alt=""
-              />
-            </picture>
+              src="/images/login_BG_m7gib7_c_scale,w_2520.jpg"
+              alt=""
+            />
           </div>
           <div className={classes.pageInfoContainer}>
             <Card className={classes.cardContainer}>
@@ -98,13 +97,9 @@ class CoreRegister extends React.Component<CoreRegister.Props> {
   }
 }
 
-namespace CoreRegister {
-  export interface Props extends Register.Props, WithStyles<typeof styles> {}
-  export interface States {}
-}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
+interface CoreStates {}
 
-export const Register: React.ComponentType<Register.Props> = withStyles(styles)(CoreRegister);
+export default withStyles(styles)(RegisterPage);
 
-export namespace Register {
-  export interface Props extends Identifiable, Styleable {}
-}
+export interface Props extends Identifiable, Styleable {}

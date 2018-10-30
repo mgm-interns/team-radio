@@ -3,7 +3,7 @@ import { Identifiable } from 'Common';
 import * as React from 'react';
 import { styles } from './styles';
 
-class CoreStationSongSearch extends React.Component<CoreStationSongSearch.Props> {
+class StationSongSearch extends React.Component<CoreProps> {
   constructor(props: any) {
     super(props);
   }
@@ -23,12 +23,8 @@ class CoreStationSongSearch extends React.Component<CoreStationSongSearch.Props>
   }
 }
 
-namespace CoreStationSongSearch {
-  export interface Props extends StationSongSearch.Props, WithStyles<typeof styles> {}
-}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
 
-export const StationSongSearch = withStyles(styles)(CoreStationSongSearch);
+export default withStyles(styles)(StationSongSearch);
 
-export namespace StationSongSearch {
-  export interface Props extends Identifiable {}
-}
+export interface Props extends Identifiable {}

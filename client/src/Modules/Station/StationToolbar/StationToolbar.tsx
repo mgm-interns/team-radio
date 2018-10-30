@@ -4,7 +4,7 @@ import { MdShare as ShareIcon } from 'react-icons/md';
 import { TiUser as UserIcon } from 'react-icons/ti';
 import { styles } from './styles';
 
-class CoreStationToolbar extends React.Component<CoreStationToolbar.Props> {
+class StationToolbar extends React.Component<CoreProps> {
   public render() {
     const { classes } = this.props;
     return (
@@ -26,12 +26,8 @@ class CoreStationToolbar extends React.Component<CoreStationToolbar.Props> {
   }
 }
 
-namespace CoreStationToolbar {
-  export interface Props extends StationToolbar.Props, WithStyles<typeof styles> {}
-}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
 
-export const StationToolbar = withStyles(styles)(CoreStationToolbar);
+export default withStyles(styles)(StationToolbar);
 
-export namespace StationToolbar {
-  export interface Props {}
-}
+export interface Props {}

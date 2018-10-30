@@ -2,11 +2,11 @@ import { Avatar, ListItem, ListItemSecondaryAction, ListItemText, withStyles, Wi
 import { Identifiable } from 'Common';
 import * as React from 'react';
 import { classnames } from 'Themes';
-import { SongItem } from '..';
+import { SongItemProps } from '..';
 import { styles } from './styles';
 
-class CoreSimpleSong extends React.Component<CoreSimpleSong.Props, CoreSimpleSong.States> {
-  constructor(props: CoreSimpleSong.Props) {
+class SimpleSong extends React.Component<CoreProps, CoreStates> {
+  constructor(props: CoreProps) {
     super(props);
   }
 
@@ -22,15 +22,11 @@ class CoreSimpleSong extends React.Component<CoreSimpleSong.Props, CoreSimpleSon
   }
 }
 
-namespace CoreSimpleSong {
-  export interface Props extends SimpleSong.Props, WithStyles<typeof styles> {}
-  export interface States {}
-}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
+interface CoreStates {}
 
-export const SimpleSong: React.ComponentType<SimpleSong.Props> = withStyles(styles)(CoreSimpleSong);
+export default withStyles(styles)(SimpleSong);
 
-export namespace SimpleSong {
-  export interface Props extends SongItem.Props, Identifiable {
-    actions?: React.ReactNode;
-  }
+export interface Props extends SongItemProps, Identifiable {
+  actions?: React.ReactNode;
 }

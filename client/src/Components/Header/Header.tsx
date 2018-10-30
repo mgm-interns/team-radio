@@ -32,8 +32,8 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { ThemeContext, ThemeType } from 'Themes';
 import { styles } from './styles';
 
-class CoreHeader extends React.Component<CoreHeader.Props, CoreHeader.States> {
-  constructor(props: CoreHeader.Props) {
+class Header extends React.Component<CoreProps, CoreStates> {
+  constructor(props: CoreProps) {
     super(props);
 
     this.state = {
@@ -214,19 +214,15 @@ class CoreHeader extends React.Component<CoreHeader.Props, CoreHeader.States> {
   };
 }
 
-namespace CoreHeader {
-  export interface Props extends Header.Props, RouteComponentProps, WithStyles<typeof styles> {}
-  export interface States {
-    anchorEl: HTMLElement;
-  }
+interface CoreProps extends RouteComponentProps, WithStyles<typeof styles>, Props {}
+interface CoreStates {
+  anchorEl: HTMLElement;
 }
 
-export const Header: React.ComponentType<Header.Props> = withStyles(styles)(withRouter(CoreHeader));
+export default withStyles(styles)(withRouter(Header));
 
-export namespace Header {
-  export interface Props extends Identifiable, Styleable {
-    leftIcon?: React.ReactNode;
-    leftText?: React.ReactNode;
-    additionalRightIcons?: React.ReactNode;
-  }
+export interface Props extends Identifiable, Styleable {
+  leftIcon?: React.ReactNode;
+  leftText?: React.ReactNode;
+  additionalRightIcons?: React.ReactNode;
 }

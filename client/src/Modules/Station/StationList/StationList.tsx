@@ -1,13 +1,18 @@
 import { Typography, withStyles, WithStyles } from '@material-ui/core';
 import { ReactSubscriptionComponent } from 'Common';
 import { Loading } from 'Components';
-import { AllRealTimeStationsQuery, OnRealTimeStationsChangedSubscription } from 'RadioGraphql';
+import {
+  AllRealTimeStationsQueryStation,
+  getSubscribeToMoreOptionsForRealTimeStationsSubscription,
+  withAllRealTimeStationsQuery,
+  WithAllRealTimeStationsQueryProps
+} from 'RadioGraphql';
 import * as React from 'react';
 import { StationsHelper } from 'team-radio-shared';
-import { StationItem } from '../StationItem';
+import { StationItemProps } from '../StationItem';
 import { styles } from './styles';
 
-class CoreStationList extends ReactSubscriptionComponent<CoreStationList.Props> {
+class StationList extends ReactSubscriptionComponent<CoreProps> {
   public render() {
     const { itemComponent: StationComponent, onItemClick } = this.props;
 
@@ -19,10 +24,10 @@ class CoreStationList extends ReactSubscriptionComponent<CoreStationList.Props> 
   }
 
   protected getSubscribeToMoreOptions = () => {
-    return OnRealTimeStationsChangedSubscription.getSubscribeToMoreOptions();
+    return getSubscribeToMoreOptionsForRealTimeStationsSubscription();
   };
 
-  private renderWrapper = (children: (data: AllRealTimeStationsQuery.Station[]) => React.ReactNode) => {
+  private renderWrapper = (children: (data: AllRealTimeStationsQueryStation[]) => React.ReactNode) => {
     const { data, classes } = this.props;
 
     if (data.error) {
@@ -41,16 +46,12 @@ class CoreStationList extends ReactSubscriptionComponent<CoreStationList.Props> 
   };
 }
 
-export namespace CoreStationList {
-  export interface Props extends AllRealTimeStationsQuery.WithHOCProps, WithStyles<typeof styles>, StationList.Props {}
-}
+interface CoreProps extends WithAllRealTimeStationsQueryProps, WithStyles<typeof styles>, Props {}
 
-export const StationList = AllRealTimeStationsQuery.withHOC<StationList.Props>()(withStyles(styles)(CoreStationList));
+export default withAllRealTimeStationsQuery<Props>()(withStyles(styles)(StationList));
 
-export namespace StationList {
-  export interface Props {
-    itemComponent: React.ComponentType<StationItem.Props>;
-    onItemClick?(): void;
-    subscribeToStationsChanged?(): void;
-  }
+export interface Props {
+  itemComponent: React.ComponentType<StationItemProps>;
+  onItemClick?(): void;
+  subscribeToStationsChanged?(): void;
 }

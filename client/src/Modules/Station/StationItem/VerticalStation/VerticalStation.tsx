@@ -2,11 +2,11 @@ import { Typography, withStyles, WithStyles } from '@material-ui/core';
 import { InternalLink } from 'Components';
 import * as React from 'react';
 import { classnames } from 'Themes';
-import { StationItem } from '..';
+import { StationItemProps } from '..';
 import { styles } from './styles';
 
-class CoreVerticalStation extends React.Component<CoreVerticalStation.Props> {
-  constructor(props: CoreVerticalStation.Props) {
+class VerticalStation extends React.Component<CoreProps> {
+  constructor(props: CoreProps) {
     super(props);
   }
 
@@ -36,12 +36,8 @@ class CoreVerticalStation extends React.Component<CoreVerticalStation.Props> {
   }
 }
 
-namespace CoreVerticalStation {
-  export interface Props extends VerticalStation.Props, WithStyles<typeof styles> {}
-}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
 
-export const VerticalStation: React.ComponentType<VerticalStation.Props> = withStyles(styles)(CoreVerticalStation);
+export default withStyles(styles)(VerticalStation);
 
-export namespace VerticalStation {
-  export interface Props extends StationItem.Props {}
-}
+export interface Props extends StationItemProps {}

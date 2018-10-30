@@ -1,18 +1,18 @@
 import { ThemeType } from './interfaces';
 
-export namespace ThemeLocalStorageHelper {
-  const KEY = 'theme';
+export const ThemeLocalStorageHelper = {
+  KEY: 'theme',
 
-  export function set(theme: ThemeType | 'light' | 'dark') {
-    window.localStorage.setItem(KEY, theme);
-  }
+  set(theme: ThemeType) {
+    window.localStorage.setItem(ThemeLocalStorageHelper.KEY, theme);
+  },
 
-  export function get(): ThemeType {
-    const value = window.localStorage.getItem(KEY);
+  get(): ThemeType {
+    const value = window.localStorage.getItem(ThemeLocalStorageHelper.KEY);
     if (value === ThemeType.LIGHT || value === ThemeType.DARK) {
       return value;
     }
-    set(ThemeType.LIGHT);
+    ThemeLocalStorageHelper.set(ThemeType.LIGHT);
     return ThemeType.LIGHT;
   }
-}
+};

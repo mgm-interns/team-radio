@@ -1,12 +1,18 @@
 import { Card, Typography, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, ReactSubscriptionComponent, Styleable } from 'Common';
 import { Loading } from 'Components';
-import { OnRealTimeStationPlayerChangedSubscription, RealTimeStationPlayerQuery } from 'RadioGraphql';
+import {
+  getSubscribeToMoreOptionsForRealTimeStationPlayerSubscription,
+  RealTimeStationPlayerQueryPlayer,
+  RealTimeStationPlayerQueryVariables,
+  withRealTimeStationPlayerQuery,
+  WithRealTimeStationPlayerQueryProps
+} from 'RadioGraphql';
 import * as React from 'react';
 import Player from 'react-player';
 import { styles } from './styles';
 
-class CoreStationPlayer extends ReactSubscriptionComponent<CoreStationPlayer.Props> {
+class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
   public render() {
     const { id, style, className } = this.props;
     return this.renderPlayerWrapper(data => (
@@ -24,10 +30,10 @@ class CoreStationPlayer extends ReactSubscriptionComponent<CoreStationPlayer.Pro
   }
 
   protected getSubscribeToMoreOptions = () => {
-    return OnRealTimeStationPlayerChangedSubscription.getSubscribeToMoreOptions(this.props.params);
+    return getSubscribeToMoreOptionsForRealTimeStationPlayerSubscription(this.props.params);
   };
 
-  private renderPlayerWrapper = (children: (data: RealTimeStationPlayerQuery.Player) => React.ReactNode) => {
+  private renderPlayerWrapper = (children: (data: RealTimeStationPlayerQueryPlayer) => React.ReactNode) => {
     const { classes, data } = this.props;
     let content: React.ReactNode;
 
@@ -53,19 +59,12 @@ class CoreStationPlayer extends ReactSubscriptionComponent<CoreStationPlayer.Pro
   };
 }
 
-namespace CoreStationPlayer {
-  export interface Props
-    extends RealTimeStationPlayerQuery.WithHOCProps,
-      WithStyles<typeof styles>,
-      StationPlayer.Props {}
-}
+interface CoreProps extends WithRealTimeStationPlayerQueryProps, WithStyles<typeof styles>, Props {}
 
-export const StationPlayer = RealTimeStationPlayerQuery.withHOC<StationPlayer.Props>({
-  options: (props: StationPlayer.Props) => ({ variables: props.params })
-})(withStyles(styles)(CoreStationPlayer));
+export default withRealTimeStationPlayerQuery<Props>({
+  options: (props: Props) => ({ variables: props.params })
+})(withStyles(styles)(StationPlayer));
 
-export namespace StationPlayer {
-  export interface Props extends Identifiable, Styleable {
-    params: RealTimeStationPlayerQuery.Variables;
-  }
+export interface Props extends Identifiable, Styleable {
+  params: RealTimeStationPlayerQueryVariables;
 }

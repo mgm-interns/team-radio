@@ -6,7 +6,7 @@ import { MdArrowBack as BackIcon, MdMenu as DrawerIcon } from 'react-icons/md';
 import { classnames } from 'Themes';
 import { styles } from './styles';
 
-export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
+export const DefaultLayout = (props: CoreProps) => {
   const {
     classes,
     title,
@@ -163,26 +163,22 @@ export const CoreDefaultLayout = (props: CoreDefaultLayout.Props) => {
   );
 };
 
-namespace CoreDefaultLayout {
-  export interface Props extends DefaultLayout.Props, WithStyles<typeof styles> {}
-}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
 
-export const DefaultLayout: React.ComponentType<DefaultLayout.Props> = withStyles(styles)(CoreDefaultLayout);
+export default withStyles(styles)(DefaultLayout);
 
-export namespace DefaultLayout {
-  export interface Props extends Identifiable, Styleable {
-    title?: React.ReactNode;
-    stationPlayer: React.ReactNode;
-    stationSongs: React.ReactNode;
-    stationChatBox: React.ReactNode;
-    stationSongSearch: React.ReactNode;
-    toolbar: React.ReactNode;
-    drawer: {
-      open: boolean;
-      onOpen(): void;
-      onClose(): void;
-      toggle(): void;
-    };
-    stations: React.ReactNode;
-  }
+export interface Props extends Identifiable, Styleable {
+  title?: React.ReactNode;
+  stationPlayer: React.ReactNode;
+  stationSongs: React.ReactNode;
+  stationChatBox: React.ReactNode;
+  stationSongSearch: React.ReactNode;
+  toolbar: React.ReactNode;
+  drawer: {
+    open: boolean;
+    onOpen(): void;
+    onClose(): void;
+    toggle(): void;
+  };
+  stations: React.ReactNode;
 }

@@ -1,12 +1,12 @@
 import { Card, Tab, Tabs, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable } from 'Common';
 import { Playlist } from 'Modules';
-import { RealTimeStationPlayerQuery } from 'RadioGraphql';
+import { RealTimeStationPlayerQueryVariables } from 'RadioGraphql';
 import * as React from 'react';
 import { styles } from './styles';
 
-class CoreStationSongs extends React.Component<CoreStationSongs.Props, CoreStationSongs.States> {
-  constructor(props: CoreStationSongs.Props) {
+class StationSongs extends React.Component<CoreProps, CoreStates> {
+  constructor(props: CoreProps) {
     super(props);
 
     this.state = {
@@ -42,10 +42,12 @@ class CoreStationSongs extends React.Component<CoreStationSongs.Props, CoreStati
   // TODO: fetch data for each tab
   private generateTabContainer = (tab?: React.ReactNode): React.ReactElement<{}> => {
     const { classes } = this.props;
-    let content: React.ReactNode = Array.from({ length: 20 }).map((item, index) => (
-      <div key={index} style={{ height: 80, marginTop: 4, marginBottom: 4, background: 'orchid' }} />
-    ));
-    if (tab) content = tab;
+    let content: React.ReactNode = tab;
+    if (!tab) {
+      content = Array.from({ length: 20 }).map((item, index) => (
+        <div key={index} style={{ height: 80, marginTop: 4, marginBottom: 4, background: 'orchid' }} />
+      ));
+    }
     return <div className={classes.tabContainer}>{content}</div>;
   };
 
@@ -57,17 +59,13 @@ class CoreStationSongs extends React.Component<CoreStationSongs.Props, CoreStati
   };
 }
 
-namespace CoreStationSongs {
-  export interface Props extends StationSongs.Props, WithStyles<typeof styles> {}
-  export interface States {
-    tabValue: number;
-  }
+interface CoreProps extends WithStyles<typeof styles>, Props {}
+interface CoreStates {
+  tabValue: number;
 }
 
-export const StationSongs = withStyles(styles)(CoreStationSongs);
+export default withStyles(styles)(StationSongs);
 
-export namespace StationSongs {
-  export interface Props extends Identifiable {
-    params: RealTimeStationPlayerQuery.Variables;
-  }
+export interface Props extends Identifiable {
+  params: RealTimeStationPlayerQueryVariables;
 }

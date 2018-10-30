@@ -2,8 +2,8 @@ import { CssBaseline, MuiThemeProvider } from '@material-ui/core';
 import * as React from 'react';
 import { RadioTheme, SwitchThemeFunction, ThemeContext, ThemeLocalStorageHelper, themes, ThemeType } from 'Themes';
 
-export class Container extends React.Component<Container.Props, Container.States> {
-  constructor(props: Container.Props) {
+export class Container extends React.Component<CoreProps, CoreStates> {
+  constructor(props: CoreProps) {
     super(props);
 
     this.state = {
@@ -32,10 +32,11 @@ export class Container extends React.Component<Container.Props, Container.States
   };
 }
 
-export namespace Container {
-  export interface Props {}
-
-  export interface States {
-    theme: RadioTheme;
-  }
+interface CoreProps extends Props {}
+interface CoreStates {
+  theme: RadioTheme;
 }
+
+export default Container;
+
+export interface Props {}
