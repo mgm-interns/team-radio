@@ -6,10 +6,6 @@ import { StationItemProps } from '..';
 import { styles } from './styles';
 
 class VerticalStation extends React.Component<CoreProps> {
-  constructor(props: CoreProps) {
-    super(props);
-  }
-
   public render(): React.ReactNode {
     const { classes, station, onClick, id, style, className } = this.props;
     return (

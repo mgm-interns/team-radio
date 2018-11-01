@@ -4,10 +4,6 @@ import * as React from 'react';
 import { styles } from './styles';
 
 class StationSongSearch extends React.Component<CoreProps> {
-  constructor(props: any) {
-    super(props);
-  }
-
   public render() {
     const { classes, id } = this.props;
     return (

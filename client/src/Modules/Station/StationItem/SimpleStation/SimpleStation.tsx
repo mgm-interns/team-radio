@@ -6,10 +6,6 @@ import { StationItemProps } from '..';
 import { styles } from './styles';
 
 class SimpleStation extends React.Component<CoreProps, CoreStates> {
-  constructor(props: CoreProps) {
-    super(props);
-  }
-
   public render(): React.ReactNode {
     const { classes, station, id, style, className } = this.props;
     return (

@@ -10,6 +10,7 @@ import {
 const SUBSCRIPTION = gql`
   subscription onStationPlaylistChanged($stationId: String!) {
     onStationPlaylistChanged(stationId: $stationId) {
+      currentPlayingSongId
       playlist {
         id
         url

@@ -6,6 +6,7 @@ import { PartialQueryProps } from '../types';
 const QUERY = gql`
   query StationPlaylist($stationId: String!) {
     StationPlaylist(stationId: $stationId) {
+      currentPlayingSongId
       playlist {
         id
         url
@@ -32,6 +33,7 @@ export function withHOC<TProps>(options: OperationOption<{}, Response, Variables
 }
 
 export interface Playlist {
+  readonly currentPlayingSongId: string;
   readonly playlist: PlaylistSong[];
 }
 

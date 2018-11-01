@@ -1,5 +1,6 @@
 import { Container } from 'Common';
 import { Loading } from 'Components';
+import { ErrorHelper } from 'Error';
 import { CurrentUserQuery } from 'RadioGraphql';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -9,7 +10,11 @@ class UnAuthenticated extends React.Component<CoreProps> {
     const { children, redirect, disableLoading, history } = this.props;
     return (
       <CurrentUserQuery>
-        {({ data, loading }) => {
+        {({ data, loading, error }) => {
+          if (error) {
+            const statusCode = ErrorHelper.extractStatusCode(error);
+            if (statusCode && statusCode === 401) return children;
+          }
           if (data && data.currentUser) {
             if (redirect) history.replace(redirect);
             return null;

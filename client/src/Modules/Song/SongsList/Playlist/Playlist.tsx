@@ -4,6 +4,7 @@ import { Loading } from 'Components';
 import { SongItem } from 'Modules';
 import {
   getSubscribeToMoreOptionsForRealTimeStationPlaylistSubscription,
+  RealTimeStationPlaylistQueryPlaylist,
   RealTimeStationPlaylistQueryPlaylistSong,
   RealTimeStationPlaylistQueryVariables,
   withRealTimeStationPlaylistQuery,
@@ -19,8 +20,13 @@ class Playlist extends ReactSubscriptionComponent<CoreProps> {
     const { classes, className, style } = this.props;
     return this.renderPlayerWrapper(data => (
       <List className={classnames(classes.listContainer, className)} style={style}>
-        {data.map(song => (
-          <SongItem.SimpleSong key={song.id} song={song} actions={this.renderActions(song)} />
+        {data.playlist.map(song => (
+          <SongItem.SimpleSong
+            key={song.id}
+            song={song}
+            actions={this.renderActions(song, data.currentPlayingSongId)}
+            playing={song.id === data.currentPlayingSongId}
+          />
         ))}
       </List>
     ));
@@ -30,7 +36,7 @@ class Playlist extends ReactSubscriptionComponent<CoreProps> {
     return getSubscribeToMoreOptionsForRealTimeStationPlaylistSubscription(this.props.params);
   };
 
-  private renderPlayerWrapper = (children: (data: RealTimeStationPlaylistQueryPlaylistSong[]) => React.ReactNode) => {
+  private renderPlayerWrapper = (children: (data: RealTimeStationPlaylistQueryPlaylist) => React.ReactNode) => {
     const { classes, data, id, className, style } = this.props;
     let content: React.ReactNode;
     if (data.error) {
@@ -44,7 +50,7 @@ class Playlist extends ReactSubscriptionComponent<CoreProps> {
       content = <Typography>No song</Typography>;
     } else {
       // Playing song is active
-      return children(data.StationPlaylist.playlist);
+      return children(data.StationPlaylist);
     }
 
     return (
@@ -54,7 +60,10 @@ class Playlist extends ReactSubscriptionComponent<CoreProps> {
     );
   };
 
-  private renderActions = (song: RealTimeStationPlaylistQueryPlaylistSong): React.ReactNode => {
+  private renderActions = (
+    song: RealTimeStationPlaylistQueryPlaylistSong,
+    currentPlayingSongId?: string
+  ): React.ReactNode => {
     const { classes } = this.props;
     return (
       <Grid container>

@@ -17,14 +17,10 @@ import { classnames } from 'Themes';
 import { styles } from './styles';
 
 class HomePage extends React.Component<CoreProps, CoreStates> {
-  constructor(props: CoreProps) {
-    super(props);
-
-    this.state = {
-      inputValue: '',
-      privateStation: false
-    };
-  }
+  public state: CoreStates = {
+    inputValue: '',
+    privateStation: false
+  };
 
   public render(): React.ReactNode {
     const { classes } = this.props;

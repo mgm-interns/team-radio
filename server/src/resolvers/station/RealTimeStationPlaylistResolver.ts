@@ -40,7 +40,7 @@ export class RealTimeStationPlaylistResolver extends BaseResolver<RealTimeStatio
 
   @Subscription(returns => RealTimeStationPlaylist, {
     name: 'onStationPlaylistChanged',
-    topics: [StationTopic.ADD_PLAYLIST_SONG, StationTopic.REMOVE_PLAYLIST_SONG],
+    topics: [StationTopic.ADD_PLAYLIST_SONG, StationTopic.REMOVE_PLAYLIST_SONG, StationTopic.UPDATE_PLAYER_SONG],
     filter: ({ args, payload }) => payload.stationId === args.stationId,
     description: 'Subscribe to changes on station player manager like: add song, remove song, update song,...'
   })

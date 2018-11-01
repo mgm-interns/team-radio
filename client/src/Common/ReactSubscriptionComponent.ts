@@ -27,6 +27,19 @@ export class ReactSubscriptionComponent<TProps extends Props, TStates = States> 
     }
 
     Object.keys(this.props.data).forEach(key => {
+      const ignoredKeys = [
+        'error',
+        'networkStatus',
+        'loading',
+        'variables',
+        'fetchMore',
+        'refetch',
+        'startPolling',
+        'stopPolling',
+        'subscribeToMore',
+        'updateQuery'
+      ];
+      if (ignoredKeys.includes(key)) return;
       if (this.props.data[key] && !this.isSubscribed) {
         this.isSubscribed = true;
         const options = this.getSubscribeToMoreOptions();

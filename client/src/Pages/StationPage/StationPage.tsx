@@ -1,5 +1,6 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import { Loading } from 'Components';
+import { DefaultStationLayoutProps, StationLayout } from 'Containers';
 import {
   StationChatBox,
   StationItem,
@@ -17,24 +18,18 @@ import {
 } from 'RadioGraphql';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { DefaultLayout, DefaultLayoutProps } from './Layout';
 import { styles } from './styles';
 
 class StationPage extends React.Component<CoreProps, CoreStates> {
-  constructor(props: CoreProps) {
-    super(props);
-
-    this.state = {
-      drawer: false
-    };
-  }
+  public state: CoreStates = {
+    drawer: false
+  };
 
   public render(): React.ReactNode {
     const Layout = this.getLayout();
     return (
       <RealTimeStationQuery
         variables={this.props.match.params}
-        notifyOnNetworkStatusChange
         onCompleted={() => this.props.mutate({ variables: this.props.match.params })}
       >
         {({ data, loading, error }) => {
@@ -48,15 +43,15 @@ class StationPage extends React.Component<CoreProps, CoreStates> {
     );
   }
 
-  private getLayout = (): React.ComponentType<DefaultLayoutProps> => {
+  private getLayout = (): React.ComponentType<DefaultStationLayoutProps> => {
     // TODO: any other layouts?
     switch (true) {
       default:
-        return DefaultLayout;
+        return StationLayout.DefaultLayout;
     }
   };
 
-  private getLayoutProps = (title?: React.ReactNode): DefaultLayoutProps => {
+  private getLayoutProps = (title?: React.ReactNode): DefaultStationLayoutProps => {
     const { params } = this.props.match;
     return {
       title,

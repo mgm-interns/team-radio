@@ -1,5 +1,5 @@
 import { IAnonymousContext, IAuthenticatedContext } from 'config';
-import { BadRequestException } from 'exceptions';
+import { BadRequestException, Exception } from 'exceptions';
 import { RealTimeStation, RealTimeStationsManager, RealTimeStationWithOnlineCount, StationTopic } from 'subscription';
 import { Arg, Ctx, Mutation, Publisher, PubSub, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { Inject } from 'typedi';

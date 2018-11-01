@@ -3,13 +3,9 @@ import * as React from 'react';
 import { RadioTheme, SwitchThemeFunction, ThemeContext, ThemeLocalStorageHelper, themes, ThemeType } from 'Themes';
 
 export class Container extends React.Component<CoreProps, CoreStates> {
-  constructor(props: CoreProps) {
-    super(props);
-
-    this.state = {
-      theme: ThemeLocalStorageHelper.get() === ThemeType.LIGHT ? themes.light : themes.dark
-    };
-  }
+  public state: CoreStates = {
+    theme: ThemeLocalStorageHelper.get() === ThemeType.LIGHT ? themes.light : themes.dark
+  };
 
   public render(): React.ReactNode {
     console.log(this.state.theme);

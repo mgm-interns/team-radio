@@ -22,11 +22,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { styles } from './styles';
 
 class LoginPage extends React.Component<CoreProps, CoreStates> {
-  constructor(props: CoreProps) {
-    super(props);
-
-    this.state = { username: '', password: '', errorText: '', loading: false };
-  }
+  public state: CoreStates = { username: '', password: '', errorText: '', loading: false };
 
   public render(): React.ReactNode {
     const { classes } = this.props;

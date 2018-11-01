@@ -15,5 +15,6 @@ export interface SongItemProps extends Identifiable, Styleable {
     createdAt: string;
     duration: number;
   };
+  playing?: boolean;
   onClick?(): void;
 }

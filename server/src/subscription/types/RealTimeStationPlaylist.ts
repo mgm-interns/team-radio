@@ -8,12 +8,18 @@ export class RealTimeStationPlaylist {
   public playlist: PlaylistSong[] = [];
 
   @Field(type => Int, { nullable: true })
-  public currentlyPlayingAt: number | null;
+  public currentlyPlayingAt: number | null = null;
+
+  @Field(type => String, { nullable: true })
+  public currentPlayingSongId: string | null = null;
 
   static fromRealTimeStationPlayerManager(manager: RealTimeStationPlayerManager): RealTimeStationPlaylist {
     const player = new RealTimeStationPlaylist();
     player.playlist = manager.playlist;
     player.currentlyPlayingAt = manager.currentlyPlayingAt;
+    if (manager.playing) {
+      player.currentPlayingSongId = manager.playing.song.id;
+    }
     return player;
   }
 }

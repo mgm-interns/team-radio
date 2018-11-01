@@ -3,7 +3,7 @@ import { RadioTheme } from 'Themes';
 
 export const styles = ({ palette, spacing }: RadioTheme) =>
   createStyles({
-    progressContainer: {
+    error: {
       margin: 'auto'
     }
   });

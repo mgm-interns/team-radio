@@ -30,15 +30,15 @@ class StationList extends ReactSubscriptionComponent<CoreProps> {
   private renderWrapper = (children: (data: AllRealTimeStationsQueryStation[]) => React.ReactNode) => {
     const { data, classes } = this.props;
 
-    if (data.error) {
-      return <Typography color={'error'}>Error {data.error.message}</Typography>;
+    if (data.loading) {
+      return <Loading />;
     }
 
-    if (data.loading) {
+    if (data.error) {
       return (
-        <div className={classes.progressContainer}>
-          <Loading />
-        </div>
+        <Typography className={classes.error} color={'error'}>
+          Error {data.error.message}
+        </Typography>
       );
     }
 

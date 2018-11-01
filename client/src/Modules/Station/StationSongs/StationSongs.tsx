@@ -6,13 +6,9 @@ import * as React from 'react';
 import { styles } from './styles';
 
 class StationSongs extends React.Component<CoreProps, CoreStates> {
-  constructor(props: CoreProps) {
-    super(props);
-
-    this.state = {
-      tabValue: 0
-    };
-  }
+  public state: CoreStates = {
+    tabValue: 0
+  };
 
   public render() {
     const { tabValue } = this.state;

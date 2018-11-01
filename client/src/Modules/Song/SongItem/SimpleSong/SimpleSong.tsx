@@ -6,14 +6,14 @@ import { SongItemProps } from '..';
 import { styles } from './styles';
 
 class SimpleSong extends React.Component<CoreProps, CoreStates> {
-  constructor(props: CoreProps) {
-    super(props);
-  }
-
   public render(): React.ReactNode {
-    const { id, classes, song, actions } = this.props;
+    const { id, classes, song, playing, actions } = this.props;
     return (
-      <ListItem id={id} className={classnames(this.props.className, classes.container)} dense>
+      <ListItem
+        id={id}
+        className={classnames(this.props.className, classes.container, { [classes.playing]: playing })}
+        dense
+      >
         <Avatar src={song.thumbnail} className={classes.thumbnail} />
         <ListItemText primary={song.title} secondary={song.duration} className={classes.text} />
         {actions && <ListItemSecondaryAction>{actions}</ListItemSecondaryAction>}

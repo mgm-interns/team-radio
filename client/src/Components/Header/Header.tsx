@@ -30,16 +30,13 @@ import {
 } from 'react-icons/md';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { ThemeContext, ThemeType } from 'Themes';
+import { ErrorHeader } from './ErrorHeader';
 import { styles } from './styles';
 
 class Header extends React.Component<CoreProps, CoreStates> {
-  constructor(props: CoreProps) {
-    super(props);
-
-    this.state = {
-      anchorEl: null
-    };
-  }
+  public state: CoreStates = {
+    anchorEl: null
+  };
 
   public render(): React.ReactNode {
     const {
@@ -50,50 +47,52 @@ class Header extends React.Component<CoreProps, CoreStates> {
       history: { push }
     } = this.props;
     return (
-      <AppBar position={'static'} className={classes.container}>
-        <Toolbar color={'primary'} className={classes.toolBarContainer}>
-          <div className={classes.containerLeft}>
-            {leftIcon}
-            <Hidden xsDown>
-              {leftText || (
-                <InternalLink
-                  href={'/'}
-                  variant={'h6'}
-                  color={'inherit'}
-                  children={'Home'}
-                  className={classes.homeButton}
-                />
-              )}
-            </Hidden>
-          </div>
-          <div className={classes.containerRight}>
-            {additionalRightIcons}
-            <Hidden smDown>
-              <UnAuthenticated disableLoading>
-                <IconButton color={'inherit'} onClick={() => push('/login')}>
-                  <Tooltip title={'Login'}>
-                    <MdVpnKey />
-                  </Tooltip>
-                </IconButton>
-              </UnAuthenticated>
-            </Hidden>
-            <IconButton aira-owns={this.openMenu ? 'menu-appbar' : null} color={'inherit'} onClick={this.openMenu}>
-              <CurrentUserQuery>
-                {({ loading, error, data }) => (
-                  <Tooltip title={'Menu'}>
-                    {loading || error || !data.currentUser.avatarUrl ? (
-                      <MdMoreVert />
-                    ) : (
-                      <Avatar src={data.currentUser.avatarUrl} className={classes.avatar} />
-                    )}
-                  </Tooltip>
+      <ErrorHeader>
+        <AppBar position={'static'} className={classes.container}>
+          <Toolbar color={'primary'} className={classes.toolBarContainer}>
+            <div className={classes.containerLeft}>
+              {leftIcon}
+              <Hidden xsDown>
+                {leftText || (
+                  <InternalLink
+                    href={'/'}
+                    variant={'h6'}
+                    color={'inherit'}
+                    children={'Home'}
+                    className={classes.homeButton}
+                  />
                 )}
-              </CurrentUserQuery>
-            </IconButton>
-            {this.renderMenu()}
-          </div>
-        </Toolbar>
-      </AppBar>
+              </Hidden>
+            </div>
+            <div className={classes.containerRight}>
+              {additionalRightIcons}
+              <Hidden smDown>
+                <UnAuthenticated disableLoading>
+                  <IconButton color={'inherit'} onClick={() => push('/login')}>
+                    <Tooltip title={'Login'}>
+                      <MdVpnKey />
+                    </Tooltip>
+                  </IconButton>
+                </UnAuthenticated>
+              </Hidden>
+              <IconButton aira-owns={this.openMenu ? 'menu-appbar' : null} color={'inherit'} onClick={this.openMenu}>
+                <CurrentUserQuery>
+                  {({ loading, error, data }) => (
+                    <Tooltip title={'Menu'}>
+                      {loading || error || !data.currentUser.avatarUrl ? (
+                        <MdMoreVert />
+                      ) : (
+                        <Avatar src={data.currentUser.avatarUrl} className={classes.avatar} />
+                      )}
+                    </Tooltip>
+                  )}
+                </CurrentUserQuery>
+              </IconButton>
+              {this.renderMenu()}
+            </div>
+          </Toolbar>
+        </AppBar>
+      </ErrorHeader>
     );
   }
 
@@ -115,7 +114,12 @@ class Header extends React.Component<CoreProps, CoreStates> {
           disableLoading
           render={user => (
             <>
-              <MenuItem>
+              <MenuItem
+                onClick={() => {
+                  this.closeMenu();
+                  push('/profile');
+                }}
+              >
                 <ListItemIcon>
                   {!user.avatarUrl ? <MdAccountCircle /> : <Avatar src={user.avatarUrl} className={classes.avatar} />}
                 </ListItemIcon>
@@ -216,7 +220,7 @@ class Header extends React.Component<CoreProps, CoreStates> {
 
 interface CoreProps extends RouteComponentProps, WithStyles<typeof styles>, Props {}
 interface CoreStates {
-  anchorEl: HTMLElement;
+  anchorEl: HTMLElement | null;
 }
 
 export default withStyles(styles)(withRouter(Header));

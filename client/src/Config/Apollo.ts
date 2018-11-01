@@ -1,20 +1,45 @@
-import { ApolloClient, InMemoryCache, split } from 'apollo-boost';
-import { setContext } from 'apollo-link-context';
-import { createHttpLink } from 'apollo-link-http';
+import { ApolloClient, ApolloLink, InMemoryCache } from 'apollo-boost';
+import * as ContextLink from 'apollo-link-context';
+import * as ErrorLink from 'apollo-link-error';
+import * as HttpLink from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { RadioGraphQLError } from 'Error';
 
 export interface RadioClient extends ApolloClient<any> {}
+export interface RadioClientConfig {
+  onError?(error?: RadioGraphQLError | string): void;
+}
+
 let client: RadioClient | null;
 let connectionAttempts: number;
 
-export function initClient() {
+export function initClient(config: RadioClientConfig) {
   const { hostname, protocol } = window.location;
   const serverPort = process.env.NODE_ENV === 'production' ? '' : ':8000';
 
-  const httpLink = createHttpLink({
+  const httpLink = HttpLink.createHttpLink({
     uri: `${protocol}//${hostname}${serverPort}/api`,
     useGETForQueries: true
+  });
+
+  const authLink = ContextLink.setContext((_, { headers }) => {
+    const token = localStorage.getItem('token') || undefined;
+    const refreshToken = localStorage.getItem('refreshToken') || undefined;
+    let clientId = localStorage.getItem('clientId') || undefined;
+    const newHeaders = headers || {};
+    if (token) {
+      newHeaders.Authorization = token;
+    }
+    if (refreshToken) {
+      newHeaders.refreshToken = refreshToken;
+    }
+    if (!clientId) {
+      clientId = generateUniqueClientId();
+      localStorage.setItem('clientId', clientId);
+    }
+    newHeaders.clientId = clientId;
+    return { headers: newHeaders };
   });
 
   const wsLink = new WebSocketLink({
@@ -36,7 +61,7 @@ export function initClient() {
     }
   });
 
-  const link = split(
+  const link = ApolloLink.split(
     ({ query }) => {
       const definition = getMainDefinition(query);
       return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
@@ -45,27 +70,23 @@ export function initClient() {
     httpLink
   );
 
-  const authLink = setContext((_, { headers }) => {
-    const token = localStorage.getItem('token') || undefined;
-    const refreshToken = localStorage.getItem('refreshToken') || undefined;
-    let clientId = localStorage.getItem('clientId') || undefined;
-    const newHeaders = headers || {};
-    if (token) {
-      newHeaders.Authorization = token;
+  const errorLink = ErrorLink.onError(error => {
+    console.error(error);
+    if (!config.onError) return;
+    if (error.networkError) {
+      const { message } = error.networkError;
+      if (/Failed to fetch/.test(message)) {
+        config.onError(message);
+      }
     }
-    if (refreshToken) {
-      newHeaders.refreshToken = refreshToken;
+    if (error.graphQLErrors && error.graphQLErrors[0]) {
+      const graphQLError = error.graphQLErrors[0] as RadioGraphQLError;
+      config.onError(graphQLError);
     }
-    if (!clientId) {
-      clientId = generateUniqueClientId();
-      localStorage.setItem('clientId', clientId);
-    }
-    newHeaders.clientId = clientId;
-    return { headers: newHeaders };
   });
 
   client = new ApolloClient({
-    link: authLink.concat(link),
+    link: ApolloLink.from([authLink, errorLink, link]),
     cache: new InMemoryCache()
   });
   connectionAttempts = 0;

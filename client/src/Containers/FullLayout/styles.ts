@@ -1,7 +1,7 @@
 import { createStyles } from '@material-ui/core';
 import { RadioTheme } from 'Themes';
 
-export const styles = ({ metrics }: RadioTheme) =>
+export const styles = ({ palette, spacing }: RadioTheme) =>
   createStyles({
     body: {
       height: '100%'

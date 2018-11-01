@@ -7,8 +7,9 @@ export const ErrorHelper = {
     return error.graphQLErrors[0] as RadioGraphQLError;
   },
 
-  extractStatusCode(error: ApolloError): number {
-    return ErrorHelper.extractError(error).statusCode;
+  extractStatusCode(error: ApolloError): number | null {
+    const extractedError = ErrorHelper.extractError(error);
+    return extractedError ? extractedError.statusCode : null;
   }
 };
 

@@ -1,3 +1,6 @@
+// React hot loader must be imported first
+import { hot } from 'react-hot-loader'; 
+// tslint:disable-next-line
 import { CircularProgress, Typography } from '@material-ui/core';
 import {
   Group as UserIcon,
@@ -126,3 +129,5 @@ export namespace App {
     dataProvider: any;
   }
 }
+
+export default hot(module)(App);
