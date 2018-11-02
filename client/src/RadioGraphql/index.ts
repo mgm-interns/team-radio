@@ -4,3 +4,4 @@ export * from './RealTimeStations';
 export * from './RealTimeStation';
 export * from './RealTimeStationPlayer';
 export * from './RealTimeStationPlaylist';
+export * from './Song';

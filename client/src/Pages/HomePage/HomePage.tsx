@@ -93,7 +93,7 @@ class HomePage extends React.Component<CoreProps, CoreStates> {
             </div>
           </div>
           <div className={classes.stations}>
-            <StationList itemComponent={StationItem.SimpleStation} />
+            <StationList StationItem={StationItem.SimpleStation} />
           </div>
         </div>
       </FullLayout>

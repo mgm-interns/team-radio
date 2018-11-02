@@ -14,12 +14,12 @@ export const styles = ({ palette, spacing }: RadioTheme) =>
       width: 200
     },
     input: {
-      '&::before': {
-        borderBottomColor: palette.type === ThemeType.LIGHT ? palette.primary.main : undefined
-      },
       '&::after': {
-        borderBottomColor: palette.type === ThemeType.DARK ? palette.common.white : undefined
+        borderBottomColor: palette.type === ThemeType.DARK ? palette.primary.main : undefined
       }
     },
-    inputLabel: {}
+    inputLabel: {},
+    button: {
+      marginLeft: spacing.mediumUnit
+    }
   });

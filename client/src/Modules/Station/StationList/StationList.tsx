@@ -14,11 +14,11 @@ import { styles } from './styles';
 
 class StationList extends ReactSubscriptionComponent<CoreProps> {
   public render() {
-    const { itemComponent: StationComponent, onItemClick } = this.props;
+    const { StationItem, onItemClick } = this.props;
 
     return this.renderWrapper(data =>
       StationsHelper.sortRealTimeStations(data).map(station => (
-        <StationComponent key={station.id} station={station} onClick={onItemClick} />
+        <StationItem key={station.id} station={station} onClick={onItemClick} />
       ))
     );
   }
@@ -51,7 +51,7 @@ interface CoreProps extends WithAllRealTimeStationsQueryProps, WithStyles<typeof
 export default withAllRealTimeStationsQuery<Props>()(withStyles(styles)(StationList));
 
 export interface Props {
-  itemComponent: React.ComponentType<StationItemProps>;
+  StationItem: React.ComponentType<StationItemProps>;
   onItemClick?(): void;
   subscribeToStationsChanged?(): void;
 }

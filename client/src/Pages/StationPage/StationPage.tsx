@@ -61,7 +61,7 @@ class StationPage extends React.Component<CoreProps, CoreStates> {
       stationSongSearch: <StationSongSearch />,
       toolbar: <StationToolbar />,
       stations: (
-        <StationList itemComponent={StationItem.VerticalStation} onItemClick={() => this.setState({ drawer: false })} />
+        <StationList StationItem={StationItem.VerticalStation} onItemClick={() => this.setState({ drawer: false })} />
       ),
       drawer: {
         open: this.state.drawer,

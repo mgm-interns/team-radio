@@ -36,7 +36,7 @@ export function withHOC<TProps>(options: OperationOption<{}, Response, Variables
 export interface Player {
   readonly playing?: Song;
   readonly startedAt?: string;
-  readonly currentlyPlayingAt?: string;
+  readonly currentlyPlayingAt?: number;
   readonly playlistCount: number;
   readonly nextSongThumbnail?: string;
 }
