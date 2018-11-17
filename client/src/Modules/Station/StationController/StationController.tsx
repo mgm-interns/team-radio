@@ -2,7 +2,7 @@ import { RealTimeStationQueryOnlineAnonymous, RealTimeStationQueryOnlineUser } f
 import * as React from 'react';
 
 export interface IStationControllerLocalState {
-  mute: boolean;
+  muted: boolean;
 }
 
 export interface IStationControllerNetworkState {
@@ -21,7 +21,7 @@ export interface IStationController extends IStationControllerLocalState, IStati
 }
 
 export const StationController = React.createContext<IStationController>({
-  mute: false,
+  muted: false,
   onlineUsers: [],
   onlineAnonymous: [],
   onlineCount: 0,

@@ -17,18 +17,17 @@ class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
     const { id, style, className } = this.props;
     return this.renderPlayerWrapper(data => (
       <StationController.Consumer>
-        {({ mute }) => (
+        {({ muted }) => (
           <Player
-            key={data.playing.id}
             id={id}
             style={style}
             className={className}
-            url={data.playing && data.playing.url}
+            url={data && data.playing && data.playing.url}
             height="100%"
             width="100%"
-            currentlyPlayedAt={data.currentlyPlayingAt / 1000}
+            currentlyPlayedAt={data && data.currentlyPlayingAt / 1000}
             playing
-            muted={mute}
+            muted={muted}
           />
         )}
       </StationController.Consumer>
@@ -39,7 +38,7 @@ class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
     return getSubscribeToMoreOptionsForRealTimeStationPlayerSubscription(this.props.params);
   };
 
-  private renderPlayerWrapper = (children: (data: RealTimeStationPlayerQueryPlayer) => React.ReactNode) => {
+  private renderPlayerWrapper = (children: (data?: RealTimeStationPlayerQueryPlayer) => React.ReactNode) => {
     const { classes, data } = this.props;
     let content: React.ReactNode;
 
@@ -56,11 +55,13 @@ class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
     } else if (data.StationPlayer.nextSongThumbnail) {
       // Display next song thumbnail if there is one in response
       content = <img src={data.StationPlayer.nextSongThumbnail} className={classes.thumbnail} />;
-    } else {
-      // Playing song is active
-      content = children(data.StationPlayer);
     }
-    return <Card className={classes.container}>{content}</Card>;
+    return (
+      <Card className={classes.container}>
+        {children(data.StationPlayer)}
+        {content && <div className={classes.overlayContainer}>{content}</div>}
+      </Card>
+    );
   };
 }
 

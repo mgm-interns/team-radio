@@ -10,7 +10,7 @@ import * as React from 'react';
 
 export class PageLogic extends React.Component<CoreProps, CoreStates> {
   public state: CoreStates = {
-    mute: false
+    muted: false
   };
   private isSubscribed: boolean;
   private unSubscribe: () => void;
@@ -40,7 +40,7 @@ export class PageLogic extends React.Component<CoreProps, CoreStates> {
   }
 
   public render() {
-    const { mute } = this.state;
+    const { muted } = this.state;
     const { RealTimeStation, layout } = this.props;
     let onlineAnonymous: RealTimeStationQueryOnlineAnonymous[] = [];
     let onlineUsers: RealTimeStationQueryOnlineUser[] = [];
@@ -52,15 +52,15 @@ export class PageLogic extends React.Component<CoreProps, CoreStates> {
     }
     return (
       <StationController.Provider
-        value={{ mute, onlineAnonymous, onlineCount, onlineUsers, setState: this.setContextState }}
+        value={{ muted, onlineAnonymous, onlineCount, onlineUsers, setState: this.setContextState }}
       >
         {layout}
       </StationController.Provider>
     );
   }
 
-  private setContextState: SetStationControllerStateFunction = ({ mute }, callback) => {
-    this.setState({ mute }, callback);
+  private setContextState: SetStationControllerStateFunction = ({ muted }, callback) => {
+    this.setState({ muted }, callback);
   };
 
   private callUnsubscribe = () => {

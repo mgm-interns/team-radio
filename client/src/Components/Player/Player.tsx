@@ -14,7 +14,8 @@ export class Player extends React.Component<CoreProps, CoreStates> {
     playedAt: this.props.currentlyPlayedAt,
     loadedAt: 0,
     loadedAtPercent: 0,
-    playedAtPercent: 0
+    playedAtPercent: 0,
+    preload: false
   };
 
   private reactPlayer: ReactPlayer;
@@ -44,14 +45,13 @@ export class Player extends React.Component<CoreProps, CoreStates> {
           {...otherProps}
           id={id}
           style={{ pointerEvents: 'none', ...style }}
-          config={{ youtube: { playerVars: { disablekb: 1 }, preload: true } }}
+          config={{ youtube: { preload: this.state.preload } }}
           className={className}
           height={this.resolvePlayerHeight()}
           width={width}
           onProgress={this.onProgress}
-          onError={(...args) => {
-            console.error(`Error while playing video`, args);
-          }}
+          onStart={() => this.setState({ preload: true })}
+          onError={(...args) => console.error(`Error while playing video`, args)}
           ref={this.ref}
         />
         <Tooltip title={`${Math.round(this.state.playedAt)} seconds`}>
@@ -120,6 +120,8 @@ interface CoreStates {
   loadedAt: number;
   playedAtPercent: number;
   loadedAtPercent: number;
+
+  preload: boolean;
 }
 
 export interface Props extends Identifiable, ReactPlayerProps {

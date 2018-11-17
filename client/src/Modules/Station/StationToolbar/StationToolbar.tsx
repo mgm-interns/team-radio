@@ -10,10 +10,10 @@ class StationToolbar extends React.Component<CoreProps> {
     const { classes } = this.props;
     return (
       <StationController.Consumer>
-        {({ mute, onlineCount, setState }) => (
+        {({ muted, onlineCount, setState }) => (
           <>
-            <IconButton color={'inherit'} onClick={() => setState({ mute: !mute })}>
-              <Tooltip title={'Mute/Unmute'}>{mute ? <MuteIcon /> : <UnMuteIcon />}</Tooltip>
+            <IconButton color={'inherit'} onClick={() => setState({ muted: !muted })}>
+              <Tooltip title={'Mute/Unmute'}>{muted ? <MuteIcon /> : <UnMuteIcon />}</Tooltip>
             </IconButton>
             <IconButton color={'inherit'}>
               <Tooltip title={'Share'}>
