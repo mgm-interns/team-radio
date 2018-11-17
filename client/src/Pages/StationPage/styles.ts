@@ -1,4 +1,3 @@
-import { createStyles } from '@material-ui/core';
-import { RadioTheme } from 'Themes';
+import { createStyles, Theme } from '@material-ui/core';
 
-export const styles = ({  }: RadioTheme) => createStyles({});
+export const styles = ({  }: Theme) => createStyles({});

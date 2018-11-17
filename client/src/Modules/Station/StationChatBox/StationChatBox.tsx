@@ -8,7 +8,6 @@ export class StationChatBox extends React.Component {
         style={{
           width: '100%',
           height: '100%',
-          background: 'hotpink',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center'

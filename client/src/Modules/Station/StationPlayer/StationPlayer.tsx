@@ -1,6 +1,6 @@
 import { Card, Typography, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, ReactSubscriptionComponent, Styleable } from 'Common';
-import { Loading } from 'Components';
+import { Loading, Player } from 'Components';
 import {
   getSubscribeToMoreOptionsForRealTimeStationPlayerSubscription,
   RealTimeStationPlayerQueryPlayer,
@@ -9,23 +9,29 @@ import {
   WithRealTimeStationPlayerQueryProps
 } from 'RadioGraphql';
 import * as React from 'react';
-import Player from 'react-player';
+import { StationController } from '../StationController';
 import { styles } from './styles';
 
 class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
   public render() {
     const { id, style, className } = this.props;
     return this.renderPlayerWrapper(data => (
-      <Player
-        id={id}
-        style={style}
-        className={className}
-        url={data.playing && data.playing.url}
-        height="100%"
-        width="100%"
-        playing
-        muted
-      />
+      <StationController.Consumer>
+        {({ mute }) => (
+          <Player
+            key={data.playing.id}
+            id={id}
+            style={style}
+            className={className}
+            url={data.playing && data.playing.url}
+            height="100%"
+            width="100%"
+            currentlyPlayedAt={data.currentlyPlayingAt / 1000}
+            playing
+            muted={mute}
+          />
+        )}
+      </StationController.Consumer>
     ));
   }
 
@@ -54,7 +60,6 @@ class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
       // Playing song is active
       content = children(data.StationPlayer);
     }
-
     return <Card className={classes.container}>{content}</Card>;
   };
 }
@@ -62,7 +67,7 @@ class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
 interface CoreProps extends WithRealTimeStationPlayerQueryProps, WithStyles<typeof styles>, Props {}
 
 export default withRealTimeStationPlayerQuery<Props>({
-  options: (props: Props) => ({ variables: props.params })
+  options: (props: Props) => ({ variables: props.params, fetchPolicy: 'network-only' })
 })(withStyles(styles)(StationPlayer));
 
 export interface Props extends Identifiable, Styleable {

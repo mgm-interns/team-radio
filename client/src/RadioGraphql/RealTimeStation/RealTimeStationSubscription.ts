@@ -30,13 +30,12 @@ const SUBSCRIPTION = gql`
 
 export const withHOC = <TProps>() => graphql<TProps, Response, Variables>(SUBSCRIPTION);
 
-export function getSubscribeToMoreOptions(): SubscribeToMoreOptions<
-  RealTimeStationQueryResponse,
-  RealTimeStationQueryVariables,
-  Response
-> {
+export function getSubscribeToMoreOptions(
+  params: Variables
+): SubscribeToMoreOptions<RealTimeStationQueryResponse, RealTimeStationQueryVariables, Response> {
   return {
     document: SUBSCRIPTION,
+    variables: params,
     updateQuery: (prev: RealTimeStationQueryResponse, { subscriptionData }) => {
       if (!subscriptionData.data) return prev;
       // TODO: Implement subscription for real time station

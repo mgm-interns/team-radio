@@ -1,5 +1,4 @@
 import { createMuiTheme } from '@material-ui/core';
-import { RadioTheme } from './interfaces';
 import { rgba } from './rgba';
 
 export const dark = createMuiTheme({
@@ -58,4 +57,4 @@ export const dark = createMuiTheme({
   zIndex: {
     fullScreenLoading: 1999
   }
-} as any) as RadioTheme;
+});

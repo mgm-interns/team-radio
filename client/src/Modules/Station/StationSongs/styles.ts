@@ -1,9 +1,8 @@
-import { createStyles } from '@material-ui/core';
-import { RadioTheme } from 'Themes';
+import { createStyles, Theme } from '@material-ui/core';
 
 export const TABS_HEIGHT = 48;
 
-export const styles = ({ palette, spacing }: RadioTheme) =>
+export const styles = ({ palette, spacing }: Theme) =>
   createStyles({
     container: {
       height: '100%'

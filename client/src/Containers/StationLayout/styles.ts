@@ -1,7 +1,7 @@
-import { createStyles } from '@material-ui/core';
-import { RadioTheme, ThemeType } from 'Themes';
+import { createStyles, Theme } from '@material-ui/core';
+import { ThemeType } from 'Themes';
 
-export const styles = ({ metrics, spacing, palette }: RadioTheme) =>
+export const styles = ({ metrics, spacing, palette }: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,

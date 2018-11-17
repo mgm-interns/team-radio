@@ -1,7 +1,6 @@
-import { createStyles } from '@material-ui/core';
-import { RadioTheme } from 'Themes';
+import { createStyles, Theme } from '@material-ui/core';
 
-export const styles = ({ zIndex }: RadioTheme) =>
+export const styles = ({ zIndex }: Theme) =>
   createStyles({
     container: { width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' },
     fullScreen: {

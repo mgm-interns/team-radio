@@ -18,6 +18,7 @@ import {
 } from 'RadioGraphql';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
+import PageLogic from './PageLogic';
 import { styles } from './styles';
 
 class StationPage extends React.Component<CoreProps, CoreStates> {
@@ -32,12 +33,19 @@ class StationPage extends React.Component<CoreProps, CoreStates> {
         variables={this.props.match.params}
         onCompleted={() => this.props.mutate({ variables: this.props.match.params })}
       >
-        {({ data, loading, error }) => {
+        {({ data, loading, error, subscribeToMore }) => {
           let stationName = <Loading color={'inherit'} />;
           if (!loading && !error) {
             stationName = <span>{data.RealTimeStation.stationName}</span>;
           }
-          return <Layout {...this.getLayoutProps(stationName)} />;
+          return (
+            <PageLogic
+              RealTimeStation={data.RealTimeStation}
+              layout={<Layout {...this.getLayoutProps(stationName)} />}
+              params={this.props.match.params}
+              subscribeToMore={subscribeToMore}
+            />
+          );
         }}
       </RealTimeStationQuery>
     );
@@ -78,6 +86,7 @@ interface CoreProps
     RouteComponentProps<RealTimeStationQueryVariables>,
     WithStyles<typeof styles>,
     Props {}
+
 interface CoreStates {
   drawer: boolean;
 }

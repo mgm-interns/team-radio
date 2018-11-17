@@ -1,5 +1,4 @@
-import { createMuiTheme } from '@material-ui/core';
-import { RadioTheme } from './interfaces';
+import { createMuiTheme, Theme } from '@material-ui/core';
 import { rgba } from './rgba';
 
 export const light = createMuiTheme({
@@ -71,4 +70,4 @@ export const light = createMuiTheme({
   zIndex: {
     fullScreenLoading: 1999
   }
-} as any) as RadioTheme;
+});

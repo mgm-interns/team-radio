@@ -1,42 +1,45 @@
 import { Theme } from '@material-ui/core';
-import { CommonColors } from '@material-ui/core/colors/common';
-import { Palette } from '@material-ui/core/styles/createPalette';
-import { Spacing } from '@material-ui/core/styles/spacing';
-import { ZIndex } from '@material-ui/core/styles/zIndex';
+import { RGBA } from './rgba';
 
-interface RadioSpacing extends Spacing {
-  smallUnit: number;
-  mediumUnit: number;
-  largeUnit: number;
-  hugeUnit: number;
+declare module '@material-ui/core/styles/spacing' {
+  interface Spacing {
+    smallUnit: number;
+    mediumUnit: number;
+    largeUnit: number;
+    hugeUnit: number;
+  }
 }
 
-interface RadioCommonColors extends CommonColors {
-  facebookButtonBG: string;
-  googleButtonBG: string;
-  facebookButtonHoverBG: string;
-  googleButtonHoverBG: string;
-  online: string;
-  transparent(a?: number): string;
+declare module '@material-ui/core/colors/common' {
+  interface CommonColors {
+    facebookButtonBG: string;
+    googleButtonBG: string;
+    facebookButtonHoverBG: string;
+    googleButtonHoverBG: string;
+    online: string;
+    transparent(a?: number): string;
+    rgba(config: RGBA): string;
+  }
 }
 
-interface RadioPalette extends Palette {
-  common: RadioCommonColors;
-}
-
-interface RadioZIndex extends ZIndex {
-  fullScreenLoading: number;
+declare module '@material-ui/core/styles/zIndex' {
+  interface ZIndex {
+    fullScreenLoading: number;
+  }
 }
 
 interface RadioMetrics {
   headerHeight: number;
 }
 
-export interface RadioTheme extends Theme {
-  spacing: RadioSpacing;
-  palette: RadioPalette;
-  metrics: RadioMetrics;
-  zIndex: RadioZIndex;
+declare module '@material-ui/core/styles/createMuiTheme' {
+  export interface Theme {
+    metrics: RadioMetrics;
+  }
+
+  export interface ThemeOptions {
+    metrics: RadioMetrics;
+  }
 }
 
 export type ThemeType = 'light' | 'dark';
@@ -45,6 +48,6 @@ export const ThemeType: { LIGHT: 'light'; DARK: 'dark' } = { LIGHT: 'light', DAR
 export type SwitchThemeFunction = (theme?: ThemeType) => void;
 
 export interface IThemeContext {
-  theme: RadioTheme;
+  theme: Theme;
   switchTheme: SwitchThemeFunction;
 }

@@ -1,7 +1,7 @@
-import { createStyles } from '@material-ui/core';
-import { RadioTheme, ThemeType } from 'Themes';
+import { createStyles, Theme } from '@material-ui/core';
+import { ThemeType } from 'Themes';
 
-export const styles = ({ palette, spacing }: RadioTheme) =>
+export const styles = ({ palette, spacing }: Theme) =>
   createStyles({
     container: {},
     backgroundContainer: {

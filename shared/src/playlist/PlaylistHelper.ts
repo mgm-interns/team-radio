@@ -4,9 +4,9 @@ export namespace PlaylistHelper {
       // Sort by current playing song
       if (currentPlayingSongId && s1.id === currentPlayingSongId) return -1;
       // Then by upVotes
-      if (s1.upVotes.length > 0 || s2.upVotes.length > 0) s2.upVotes.length - s1.upVotes.length;
+      if (s1.upVotes.length > 0 || s2.upVotes.length > 0) s1.upVotes.length - s2.upVotes.length;
       // Finally by created at
-      return s2.createdAt - s1.createdAt;
+      return s1.createdAt - s2.createdAt;
     });
   }
 
