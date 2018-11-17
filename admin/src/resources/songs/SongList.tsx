@@ -62,7 +62,7 @@ export const SongMediumDataGrid = (props: Authorization.PermissionsProps) => (
       render={(record: any) => <Typography style={{ minWidth: 200, maxWidth: '10vw' }}> {record.title}</Typography>}
     />
     <FunctionField
-      label="Title"
+      label="Url"
       render={(record: any) => (
         <Typography>
           <a style={{ minWidth: 150, maxWidth: '10vw' }} href={record.url} target="_blank" rel="noopener">

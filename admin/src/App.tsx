@@ -1,5 +1,5 @@
 // React hot loader must be imported first
-import { hot } from 'react-hot-loader'; 
+import { hot } from 'react-hot-loader';
 // tslint:disable-next-line
 import { CircularProgress, Typography } from '@material-ui/core';
 import {
