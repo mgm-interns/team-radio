@@ -8,15 +8,18 @@ import { RadioGraphQLError } from 'Error';
 
 export interface RadioClient extends ApolloClient<any> {}
 export interface RadioClientConfig {
-  onError?(error?: RadioGraphQLError | string): void;
+  onError?(error: RadioGraphQLError | string, errorType: string): void;
 }
 
 let client: RadioClient | null;
 let connectionAttempts: number;
 
 export function initClient(config: RadioClientConfig) {
-  const { hostname, protocol } = window.location;
-  const serverPort = process.env.NODE_ENV === 'production' ? '' : ':8000';
+  const { hostname, protocol, port } = window.location;
+  let serverPort = port ? `:${port}` : '';
+  if (process.env.NODE_ENV !== 'production') {
+    serverPort = ':8000';
+  }
 
   const httpLink = HttpLink.createHttpLink({
     uri: `${protocol}//${hostname}${serverPort}/api`,
@@ -76,12 +79,20 @@ export function initClient(config: RadioClientConfig) {
     if (error.networkError) {
       const { message } = error.networkError;
       if (/Failed to fetch/.test(message)) {
-        config.onError(message);
+        config.onError(message, 'failed_to_fetch');
       }
     }
     if (error.graphQLErrors && error.graphQLErrors[0]) {
       const graphQLError = error.graphQLErrors[0] as RadioGraphQLError;
-      config.onError(graphQLError);
+      let errorType = 'common';
+      if (/Token expired/.test(graphQLError.message)) {
+        console.log('found error', graphQLError.message);
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        client.resetStore();
+        errorType = 'expired_token';
+      }
+      config.onError(graphQLError, errorType);
     }
   });
 

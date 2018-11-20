@@ -4,6 +4,7 @@ import { Logger } from 'services';
 import { AnonymousUser, RealTimeStation, RealTimeStationsManager } from 'subscription';
 import { Container } from 'typedi';
 import { IContext, Tokens } from './IContext';
+import { UnauthorizedException } from 'exceptions';
 
 export class Context implements IContext {
   public user: User | AnonymousUser | undefined;
@@ -33,6 +34,9 @@ export class Context implements IContext {
     if (token) {
       this.logger.debug('Request tokens', { token, refreshToken });
       this.user = await this.getUserFromAuthToken(token, refreshToken);
+      if (!this.user) {
+        throw new UnauthorizedException('Token expired');
+      }
       this.setCurrentStation(this.user as User);
       return;
     }

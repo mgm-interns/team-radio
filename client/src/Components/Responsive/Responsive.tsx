@@ -1,7 +1,7 @@
 import * as React from 'react';
 import MediaQuery, { MediaQueryProps } from 'react-responsive';
 
-export function Responsive(props: Props) {
+function Responsive(props: Props) {
   return <MediaQuery {...props} />;
 }
 

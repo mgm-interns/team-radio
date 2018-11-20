@@ -1,23 +1,14 @@
 import { Drawer, Grid, Icon, IconButton, Typography, WithStyles, withStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
 import { Header, InternalLink, Responsive } from 'Components';
+import { StationPlayerControllerContainer } from 'Modules';
 import * as React from 'react';
 import { MdArrowBack as BackIcon, MdMenu as DrawerIcon } from 'react-icons/md';
 import { classnames } from 'Themes';
 import { styles } from './styles';
 
 export const DefaultLayout = (props: CoreProps) => {
-  const {
-    classes,
-    title,
-    stationSongs,
-    stationChatBox,
-    stationSongSearch,
-    stationPlayer,
-    stations,
-    drawer,
-    toolbar
-  } = props;
+  const { classes, title, stationSongs, stationChatBox, stationSongSearch, stations, drawer, toolbar } = props;
   const homeLink = (
     <div className={classes.drawerBottomSection}>
       <InternalLink href={'/'}>
@@ -107,7 +98,7 @@ export const DefaultLayout = (props: CoreProps) => {
             <Grid item xs={7} className={classes.fullHeight}>
               <Grid container spacing={16} className={classes.fullHeight}>
                 <Grid item xs={12} className={classes.searchBoxOtherLayout}>
-                  {stationPlayer}
+                  <StationPlayerControllerContainer />
                 </Grid>
                 <Grid item xs={12} className={classes.searchBoxLayout}>
                   {stationSongSearch}
@@ -139,7 +130,7 @@ export const DefaultLayout = (props: CoreProps) => {
             <Grid item xs={6} className={classes.fullHeight}>
               <Grid container spacing={16} className={classes.fullHeight}>
                 <Grid item xs={12}>
-                  {stationPlayer}
+                  <StationPlayerControllerContainer />
                 </Grid>
               </Grid>
             </Grid>
@@ -169,7 +160,6 @@ export default withStyles(styles)(DefaultLayout);
 
 export interface Props extends Identifiable, Styleable {
   title?: React.ReactNode;
-  stationPlayer: React.ReactNode;
   stationSongs: React.ReactNode;
   stationChatBox: React.ReactNode;
   stationSongSearch: React.ReactNode;

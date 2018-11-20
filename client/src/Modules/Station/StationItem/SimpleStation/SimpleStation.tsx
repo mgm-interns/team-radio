@@ -18,7 +18,7 @@ class SimpleStation extends React.Component<CoreProps, CoreStates> {
               className={classes.img}
             />
             <Typography variant={'body1'} className={classes.onlineNumber}>
-              0 online
+              {station.onlineCount} online
             </Typography>
           </div>
           <Typography variant={'subtitle1'} color={'textPrimary'} className={classes.stationName}>

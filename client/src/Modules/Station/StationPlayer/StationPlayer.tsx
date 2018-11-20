@@ -9,28 +9,36 @@ import {
   WithRealTimeStationPlayerQueryProps
 } from 'RadioGraphql';
 import * as React from 'react';
-import { StationController } from '../StationController';
+import { StationController } from '../StationContext';
+import { StationPlayerController } from './Controllers';
 import { styles } from './styles';
 
 class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
   public render() {
     const { id, style, className } = this.props;
     return this.renderPlayerWrapper(data => (
-      <StationController.Consumer>
-        {({ muted }) => (
-          <Player
-            id={id}
-            style={style}
-            className={className}
-            url={data && data.playing && data.playing.url}
-            height="100%"
-            width="100%"
-            currentlyPlayedAt={data && data.currentlyPlayingAt / 1000}
-            playing
-            muted={muted}
-          />
-        )}
-      </StationController.Consumer>
+      <StationPlayerController.Consumer>
+        {({ top, left, width, height }) => {
+          console.log({ top, left, width, height });
+          return (
+            <StationController.Consumer>
+              {({ muted }) => (
+                <Player
+                  id={id}
+                  style={style}
+                  className={className}
+                  url={data && data.playing && data.playing.url}
+                  height="100%"
+                  width="100%"
+                  currentlyPlayedAt={data && data.currentlyPlayingAt / 1000}
+                  playing
+                  muted={muted}
+                />
+              )}
+            </StationController.Consumer>
+          );
+        }}
+      </StationPlayerController.Consumer>
     ));
   }
 

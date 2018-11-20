@@ -2,7 +2,7 @@ import { Badge, IconButton, Tooltip, WithStyles, withStyles } from '@material-ui
 import * as React from 'react';
 import { MdShare as ShareIcon, MdVolumeOff as MuteIcon, MdVolumeUp as UnMuteIcon } from 'react-icons/md';
 import { TiUser as UserIcon } from 'react-icons/ti';
-import { StationController } from '../StationController';
+import { StationController } from '../StationContext';
 import { styles } from './styles';
 
 class StationToolbar extends React.Component<CoreProps> {

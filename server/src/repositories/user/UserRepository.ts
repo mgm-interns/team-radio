@@ -30,9 +30,8 @@ export class UserRepository extends BaseRepository<User> {
     return user;
   }
 
-  public async findByAuthToken(token: string): Promise<User> {
+  public async findByAuthToken(token: string): Promise<User | undefined> {
     const user = await this.findOne({ where: { 'authToken.token': token } });
-    if (!user) throw new UserNotFoundException();
     return user;
   }
 

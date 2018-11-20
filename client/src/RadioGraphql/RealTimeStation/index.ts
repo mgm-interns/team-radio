@@ -25,3 +25,12 @@ export {
   withHOC as withJoinStationMutation,
   WithHOCProps as WithJoinStationMutationProps
 } from './JoinStationMutation';
+
+export {
+  default as LeaveStationMutation,
+  Props as LeaveStationMutationProps,
+  Variables as LeaveStationMutationVariables,
+  Response as LeaveStationMutationResponse,
+  withHOC as withLeaveStationMutation,
+  WithHOCProps as WithLeaveStationMutationProps
+} from './LeaveStationMutation';

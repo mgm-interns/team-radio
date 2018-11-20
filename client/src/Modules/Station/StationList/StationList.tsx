@@ -48,7 +48,9 @@ class StationList extends ReactSubscriptionComponent<CoreProps> {
 
 interface CoreProps extends WithAllRealTimeStationsQueryProps, WithStyles<typeof styles>, Props {}
 
-export default withAllRealTimeStationsQuery<Props>()(withStyles(styles)(StationList));
+export default withAllRealTimeStationsQuery<Props>({
+  options: { notifyOnNetworkStatusChange: true, fetchPolicy: 'network-only' }
+})(withStyles(styles)(StationList));
 
 export interface Props {
   StationItem: React.ComponentType<StationItemProps>;

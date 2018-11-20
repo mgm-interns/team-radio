@@ -106,7 +106,11 @@ class Playlist extends ReactSubscriptionComponent<CoreProps> {
 interface CoreProps extends WithRealTimeStationPlaylistQueryProps, WithStyles<typeof styles>, Props {}
 
 export default withRealTimeStationPlaylistQuery<Props>({
-  options: (props: Props) => ({ variables: props.params })
+  options: (props: Props) => ({
+    variables: props.params,
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'network-only'
+  })
 })(withStyles(styles)(Playlist));
 
 export interface Props extends Identifiable, Styleable {

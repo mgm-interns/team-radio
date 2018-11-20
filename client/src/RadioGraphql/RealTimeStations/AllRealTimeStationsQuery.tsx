@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
-import { DataProps, graphql, Query as GraphQLQuery } from 'react-apollo';
+import { DataProps, graphql, OperationOption, Query as GraphQLQuery } from 'react-apollo';
 import { PartialQueryProps } from '../types';
 
 const QUERY = gql`
@@ -24,8 +24,8 @@ export default function AllRealTimeStationsQuery(props: Props) {
   return <QueryComponent query={QUERY} {...props} />;
 }
 
-export function withHOC<TProps>() {
-  return graphql<TProps, Response, Variables>(QUERY);
+export function withHOC<TProps>(options?: OperationOption<{}, Response, Variables>) {
+  return graphql<TProps, Response, Variables>(QUERY, options);
 }
 
 export interface Station {

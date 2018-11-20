@@ -24,6 +24,14 @@ export class Player extends React.Component<CoreProps, CoreStates> {
     if (prevProps.currentlyPlayedAt !== this.props.currentlyPlayedAt) {
       this.setState({ playedAt: this.props.currentlyPlayedAt });
     }
+    if (prevProps.url !== this.props.url && !this.props.url) {
+      this.setState({
+        playedAt: 0,
+        loadedAt: 0,
+        loadedAtPercent: 0,
+        playedAtPercent: 0
+      });
+    }
   }
 
   public render() {

@@ -1,4 +1,11 @@
-import { IStationControllerLocalState, SetStationControllerStateFunction, StationController } from 'Modules';
+import {
+  IStationControllerLocalState,
+  SetStationControllerStateFunction,
+  StationController,
+  StationPlayer,
+  StationPlayerController,
+  StationPlayerControllerProvider
+} from 'Modules';
 import {
   getSubscribeToMoreOptionsRealTimeStationSubscription,
   RealTimeStationQueryOnlineAnonymous,
@@ -41,7 +48,7 @@ export class PageLogic extends React.Component<CoreProps, CoreStates> {
 
   public render() {
     const { muted } = this.state;
-    const { RealTimeStation, layout } = this.props;
+    const { RealTimeStation, layout, params } = this.props;
     let onlineAnonymous: RealTimeStationQueryOnlineAnonymous[] = [];
     let onlineUsers: RealTimeStationQueryOnlineUser[] = [];
     let onlineCount = 0;
@@ -52,14 +59,23 @@ export class PageLogic extends React.Component<CoreProps, CoreStates> {
     }
     return (
       <StationController.Provider
-        value={{ muted, onlineAnonymous, onlineCount, onlineUsers, setState: this.setContextState }}
+        value={{ muted, onlineAnonymous, onlineCount, onlineUsers, setState: this.setStationControllerLocalState }}
       >
-        {layout}
+        <StationPlayerControllerProvider>
+          {layout}
+          <StationPlayerController.Consumer>
+            {({ top, left, width, height }) => (
+              <div style={{ top, left, width, height, position: 'fixed' }}>
+                <StationPlayer params={params} />
+              </div>
+            )}
+          </StationPlayerController.Consumer>
+        </StationPlayerControllerProvider>
       </StationController.Provider>
     );
   }
 
-  private setContextState: SetStationControllerStateFunction = ({ muted }, callback) => {
+  private setStationControllerLocalState: SetStationControllerStateFunction = ({ muted }, callback) => {
     this.setState({ muted }, callback);
   };
 
@@ -81,7 +97,7 @@ interface CoreStates extends IStationControllerLocalState {}
 export default PageLogic;
 
 export interface Props {
-  RealTimeStation: RealTimeStationQueryStation;
+  RealTimeStation?: RealTimeStationQueryStation;
   layout: React.ReactNode;
   params: RealTimeStationQueryVariables;
   subscribeToMore: any;

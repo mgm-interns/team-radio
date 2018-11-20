@@ -14,7 +14,9 @@ import {
   RealTimeStationQuery,
   RealTimeStationQueryVariables,
   withJoinStationMutation,
-  WithJoinStationMutationProps
+  WithJoinStationMutationProps,
+  withLeaveStationMutation,
+  WithLeaveStationMutationProps
 } from 'RadioGraphql';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -26,12 +28,17 @@ class StationPage extends React.Component<CoreProps, CoreStates> {
     drawer: false
   };
 
+  public componentWillUnmount() {
+    this.props.leaveStation({ variables: this.props.match.params });
+  }
+
   public render(): React.ReactNode {
     const Layout = this.getLayout();
     return (
       <RealTimeStationQuery
         variables={this.props.match.params}
-        onCompleted={() => this.props.mutate({ variables: this.props.match.params })}
+        notifyOnNetworkStatusChange
+        onCompleted={() => this.props.joinStation({ variables: this.props.match.params })}
       >
         {({ data, loading, error, subscribeToMore }) => {
           let stationName = <Loading color={'inherit'} />;
@@ -40,7 +47,7 @@ class StationPage extends React.Component<CoreProps, CoreStates> {
           }
           return (
             <PageLogic
-              RealTimeStation={data.RealTimeStation}
+              RealTimeStation={data && data.RealTimeStation}
               layout={<Layout {...this.getLayoutProps(stationName)} />}
               params={this.props.match.params}
               subscribeToMore={subscribeToMore}
@@ -63,7 +70,6 @@ class StationPage extends React.Component<CoreProps, CoreStates> {
     const { params } = this.props.match;
     return {
       title,
-      stationPlayer: <StationPlayer params={params} />,
       stationChatBox: <StationChatBox />,
       stationSongs: <StationSongs params={params} />,
       stationSongSearch: <StationSongSearch />,
@@ -83,6 +89,7 @@ class StationPage extends React.Component<CoreProps, CoreStates> {
 
 interface CoreProps
   extends WithJoinStationMutationProps,
+    WithLeaveStationMutationProps,
     RouteComponentProps<RealTimeStationQueryVariables>,
     WithStyles<typeof styles>,
     Props {}
@@ -91,6 +98,8 @@ interface CoreStates {
   drawer: boolean;
 }
 
-export default withJoinStationMutation<Props>()(withStyles(styles)(withRouter(StationPage)));
+export default withLeaveStationMutation<Props>()(
+  withJoinStationMutation<Props>()(withStyles(styles)(withRouter(StationPage)))
+);
 
 export interface Props {}
