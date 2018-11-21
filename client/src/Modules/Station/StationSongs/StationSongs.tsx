@@ -41,7 +41,7 @@ class StationSongs extends React.Component<CoreProps, CoreStates> {
     let content: React.ReactNode = tab;
     if (!tab) {
       content = Array.from({ length: 20 }).map((item, index) => (
-        <div key={index} style={{ height: 80, marginTop: 4, marginBottom: 4, background: 'orchid' }} />
+        <div key={index} style={{ height: 80, marginTop: 4, marginBottom: 4, background: 'grey' }} />
       ));
     }
     return <div className={classes.tabContainer}>{content}</div>;

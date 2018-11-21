@@ -17,6 +17,11 @@ export class BaseEntity {
     this._id = new ObjectID(id);
   }
 
+  // tslint:disable-next-line function-name
+  public UNSAFE_getObjectId() {
+    return this._id;
+  }
+
   public async validate() {
     return validate(this);
   }

@@ -6,6 +6,8 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { RadioGraphQLError } from 'Error';
 
+declare const process: any;
+
 export interface RadioClient extends ApolloClient<any> {}
 export interface RadioClientConfig {
   onError?(error: RadioGraphQLError | string, errorType: string): void;

@@ -1,18 +1,17 @@
-import { Badge, Grid, IconButton, LinearProgress, List, Typography, withStyles, WithStyles } from '@material-ui/core';
+import { List, Typography, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, ReactSubscriptionComponent, Styleable } from 'Common';
 import { Loading } from 'Components';
 import { SongItem } from 'Modules';
 import {
   getSubscribeToMoreOptionsForRealTimeStationPlaylistSubscription,
   RealTimeStationPlaylistQueryPlaylist,
-  RealTimeStationPlaylistQueryPlaylistSong,
   RealTimeStationPlaylistQueryVariables,
   withRealTimeStationPlaylistQuery,
   WithRealTimeStationPlaylistQueryProps
 } from 'RadioGraphql';
 import * as React from 'react';
-import { MdFavorite, MdThumbDown, MdThumbUp } from 'react-icons/md';
 import { classnames } from 'Themes';
+import { ItemAction } from './ItemAction';
 import { styles } from './styles';
 
 class Playlist extends ReactSubscriptionComponent<CoreProps> {
@@ -24,7 +23,7 @@ class Playlist extends ReactSubscriptionComponent<CoreProps> {
           <SongItem.SimpleSong
             key={song.id}
             song={song}
-            actions={this.renderActions(song, data.currentPlayingSongId)}
+            actions={<ItemAction song={song} currentPlayingSongId={data.currentPlayingSongId} />}
             playing={song.id === data.currentPlayingSongId}
           />
         ))}
@@ -58,48 +57,6 @@ class Playlist extends ReactSubscriptionComponent<CoreProps> {
         {content}
       </div>
     );
-  };
-
-  private renderActions = (
-    song: RealTimeStationPlaylistQueryPlaylistSong,
-    currentPlayingSongId?: string
-  ): React.ReactNode => {
-    const { classes } = this.props;
-    return (
-      <Grid container>
-        <div>
-          <Grid container>
-            <Grid item xs={12}>
-              <IconButton className={classes.iconButton}>
-                <Badge badgeContent={song.upVotes.length} color="primary" classes={{ badge: classes.badge }}>
-                  <MdThumbUp />
-                </Badge>
-              </IconButton>
-              <IconButton className={classes.iconButton}>
-                <Badge badgeContent={song.downVotes.length} color="primary" classes={{ badge: classes.badge }}>
-                  <MdThumbDown />
-                </Badge>
-              </IconButton>
-            </Grid>
-            <Grid item xs={12}>
-              <LinearProgress
-                className={classes.linearProgress}
-                variant={'determinate'}
-                value={this.calculateVotesRating(song.upVotes.length, song.downVotes.length)}
-              />
-            </Grid>
-          </Grid>
-        </div>
-        <IconButton className={classnames(classes.iconButton, classes.favoriteButton)}>
-          <MdFavorite />
-        </IconButton>
-      </Grid>
-    );
-  };
-
-  private calculateVotesRating = (upVotes: number, downVotes: number): number => {
-    if (upVotes === 0 && downVotes === 0) return 50;
-    return (upVotes / (upVotes + downVotes)) * 100;
   };
 }
 

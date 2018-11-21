@@ -18,10 +18,10 @@ export class ReactSubscriptionComponent<TProps extends Props, TStates = States> 
     if (this.props.params) {
       Object.keys(this.props.params).forEach(key => {
         if (prevProps.params[key] !== this.props.params[key]) {
-          this.isSubscribed = false;
           if (this.isSubscribed) {
             this.callUnsubscribe();
           }
+          this.isSubscribed = false;
         }
       });
     }
@@ -41,10 +41,10 @@ export class ReactSubscriptionComponent<TProps extends Props, TStates = States> 
       ];
       if (ignoredKeys.includes(key)) return;
       if (this.props.data[key] && !this.isSubscribed) {
-        this.isSubscribed = true;
         const options = this.getSubscribeToMoreOptions();
         if (!options) throw new Error('Protected method getSubscribeToMoreOptions must be implemented.');
         this.unSubscribe = this.props.data.subscribeToMore(options);
+        this.isSubscribed = true;
       }
     });
   }

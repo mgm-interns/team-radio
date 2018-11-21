@@ -203,18 +203,11 @@ class Header extends React.Component<CoreProps, CoreStates> {
   };
 
   private openMenu = (event: React.MouseEvent<HTMLElement>) => {
-    this.setState({
-      anchorEl: event.currentTarget
-    });
+    this.setState({ anchorEl: event.currentTarget });
   };
 
   private closeMenu = (callback?: () => void) => {
-    this.setState(
-      {
-        anchorEl: null
-      },
-      callback
-    );
+    this.setState({ anchorEl: null }, callback);
   };
 }
 

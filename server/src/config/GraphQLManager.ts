@@ -15,7 +15,8 @@ import {
   RealTimStationResolver,
   SongCRUDResolver,
   StationCRUDResolver,
-  UserCRUDResolver
+  UserCRUDResolver,
+  DistinctSongResolver
 } from 'resolvers';
 import { Logger } from 'services';
 import { SubscriptionManager } from 'subscription';
@@ -49,6 +50,7 @@ export class GraphQLManager {
         // Song
         RealTimeStationPlayerResolver,
         RealTimeStationPlaylistResolver,
+        DistinctSongResolver,
         SongCRUDResolver,
         PlaylistSongsCRUDResolver,
         HistorySongsCRUDResolver

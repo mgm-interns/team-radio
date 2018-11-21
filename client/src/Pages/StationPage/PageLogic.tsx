@@ -2,6 +2,7 @@ import {
   IStationControllerLocalState,
   SetStationControllerStateFunction,
   StationController,
+  StationControllerLocaleStorageHelper,
   StationPlayer,
   StationPlayerController,
   StationPlayerControllerProvider
@@ -17,7 +18,7 @@ import * as React from 'react';
 
 export class PageLogic extends React.Component<CoreProps, CoreStates> {
   public state: CoreStates = {
-    muted: false
+    muted: StationControllerLocaleStorageHelper.getMuted()
   };
   private isSubscribed: boolean;
   private unSubscribe: () => void;
@@ -76,7 +77,10 @@ export class PageLogic extends React.Component<CoreProps, CoreStates> {
   }
 
   private setStationControllerLocalState: SetStationControllerStateFunction = ({ muted }, callback) => {
-    this.setState({ muted }, callback);
+    this.setState({ muted }, () => {
+      StationControllerLocaleStorageHelper.setMuted(this.state.muted);
+      if (callback) callback();
+    });
   };
 
   private callUnsubscribe = () => {

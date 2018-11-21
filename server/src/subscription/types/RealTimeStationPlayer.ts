@@ -26,7 +26,7 @@ export class RealTimeStationPlayer {
       player.playing = manager.playing.song;
       player.startedAt = manager.playing.startedAt;
     }
-    player.currentlyPlayingAt = manager.currentlyPlayingAt;
+    player.currentlyPlayingAt = manager.getCurrentlyPlayingAt();
     player.playlistCount = manager.playlist.length;
     // No playing song, but there is at least 1 song in playlist
     if (!player.playing && player.playlistCount > 0) player.nextSongThumbnail = manager.playlist[0].thumbnail;

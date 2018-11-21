@@ -1,4 +1,4 @@
-import { Song, Station, User } from 'entities';
+import { Song, Station, User, DistinctSong } from 'entities';
 import { Logger } from 'services';
 import { Inject, Service } from 'typedi';
 import {
@@ -27,7 +27,7 @@ export class DataAccess {
 
   public async connect() {
     try {
-      const connectionOptions = await DataAccess.getConnectionOptions([User, Station, Song]);
+      const connectionOptions = await DataAccess.getConnectionOptions([User, Station, Song, DistinctSong]);
       this._connection = await createConnection(connectionOptions);
       return this.connection;
     } catch (e) {

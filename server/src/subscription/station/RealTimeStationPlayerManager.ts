@@ -1,8 +1,8 @@
 import { DataAccess } from 'config';
 import { PlaylistSong } from 'entities';
 import { Exception } from 'exceptions';
-import { SongRepository } from 'repositories';
-import { Logger } from 'services';
+import { DistinctSongRepository, SongRepository, UserRepository } from 'repositories';
+import { Logger, SongCRUDService } from 'services';
 import { PlaylistHelper } from 'team-radio-shared';
 import { Container } from 'typedi';
 import { RealTimeStation, StationTopic } from '.';
@@ -25,10 +25,11 @@ export class RealTimeStationPlayerManager {
 
   public playing: PlayingSong | null = null;
 
-  public get currentlyPlayingAt(): number | null {
-    if (this.playing && this.parent.startingTime) {
+  public getCurrentlyPlayingAt(playingSong?: PlayingSong): number | null {
+    const playing = playingSong || this.playing;
+    if (playing && this.parent.startingTime) {
       const at = Date.now() - this.parent.startingTime || 0;
-      if (at < this.playing.song.duration) {
+      if (at < playing.song.duration) {
         return at;
       }
     }
@@ -39,6 +40,21 @@ export class RealTimeStationPlayerManager {
     if (!this.playlist[0]) return;
     try {
       this.playing = this.pickPlayingSong();
+
+      // In normal case, start the player base on playing value
+      clearTimeout(this.stationTimeout);
+      // start the next song timeout with song duration
+      let timeout = this.playing.song.duration;
+      const currentlyPlayingAt = this.getCurrentlyPlayingAt();
+      if (currentlyPlayingAt) {
+        timeout = timeout - currentlyPlayingAt;
+      }
+      this.stationTimeout = setTimeout(this.next.bind(this), timeout);
+      // then update station & player state
+      this.parent.publish<StationTopic.UpdatePlayerSongPayLoad>(StationTopic.UPDATE_PLAYER_SONG, {
+        song: this.playing.song
+      });
+      await this.updateStationState(this.playing.startedAt);
     } catch (e) {
       // In case of the pickingPlayingSong throw an Exception,
       // because the first song in playlist has been out of play time,
@@ -49,34 +65,39 @@ export class RealTimeStationPlayerManager {
       await this.songRepository.save(playedSong);
       await this.updateStationState(null);
       await this.start();
-      return;
     }
-
-    // In normal case, start the player base on playing value
-    clearTimeout(this.stationTimeout);
-    this.stationTimeout = setTimeout(this.next.bind(this), this.playing.song.duration);
-    this.parent.publish<StationTopic.UpdatePlayerSongPayLoad>(StationTopic.UPDATE_PLAYER_SONG, {
-      song: this.playing.song
-    });
-    await this.updateStationState(this.playing.startedAt);
   }
 
   public async next() {
+    // Remove song from playlist then update it
     const playedSong = this.shiftSong();
     playedSong.isPlayed = true;
     this.playing = null;
     this.parent.publish<StationTopic.UpdatePlayerSongPayLoad>(StationTopic.UPDATE_PLAYER_SONG, {
       song: null
     });
+    // Clear the player timeout
     clearTimeout(this.stationTimeout);
+    // Then update station & player state
     await Promise.all([
       this.updateStationState(null),
       //
       this.songRepository.save(playedSong)
     ]);
+
     // After finishing a song, wait 5000 second to play the next one.
     this.logger.info(`Finish song ${playedSong.id}, preparing for the next one.`);
-    setTimeout(this.start.bind(this), 5000);
+
+    // auto add song if this is the end of playlist and there is at least 1 user in station
+    // TODO: Add flag to auto add song or not
+    if (!this.playlist[0] && this.parent.onlineCount) {
+      this.nextByPickingRandomSong();
+    }
+    // Or if the playlist already has a song,
+    // pending in 5 seconds
+    else {
+      setTimeout(this.start.bind(this), 5000);
+    }
   }
 
   // TODO: Do we need this feature?
@@ -96,11 +117,31 @@ export class RealTimeStationPlayerManager {
     await this.start();
   }
 
-  private pickPlayingSong() {
+  private async nextByPickingRandomSong(): Promise<void> {
+    const randomizedNextSong = await this.distinctSongRepository.findRandomPlayedSong(this.parent.id);
+    this.logger.debug(`Picked a random song ${randomizedNextSong.url}`);
+    const songOwner = await this.userRepository.findOneOrFail(randomizedNextSong.creatorId);
+    const nextSong = await this.songCRUDService.create(randomizedNextSong.url, this.parent.id, songOwner.id);
+    this.logger.info(`Ready for the next random song ${nextSong.id} in 5 seconds.`);
+
+    const publisher = () => {
+      this.parent.publish<StationTopic.AddPlaylistSongPayLoad>(StationTopic.ADD_PLAYLIST_SONG, {
+        song: nextSong,
+        user: songOwner
+      });
+      this.start();
+    };
+    setTimeout(publisher, 5000);
+  }
+
+  private pickPlayingSong(): PlayingSong {
     if (this.parent.currentPlayingSongId && this.parent.startingTime) {
-      const playingSong = this.playlist.find(song => song.id === this.parent.currentPlayingSongId);
-      if (playingSong && this.currentlyPlayingAt) {
-        return new PlayingSong(playingSong, this.parent.startingTime);
+      const song = this.playlist.find(song => song.id === this.parent.currentPlayingSongId);
+      if (song) {
+        const playingSong = new PlayingSong(song, this.parent.startingTime);
+        if (this.getCurrentlyPlayingAt(playingSong)) {
+          return playingSong;
+        }
       }
       throw new Exception('Song not found or out of playing time');
     }
@@ -126,6 +167,18 @@ export class RealTimeStationPlayerManager {
 
   private get songRepository(): SongRepository {
     return Container.get(DataAccess).connection.getCustomRepository(SongRepository);
+  }
+
+  private get distinctSongRepository(): DistinctSongRepository {
+    return Container.get(DistinctSongRepository);
+  }
+
+  private get userRepository(): UserRepository {
+    return Container.get(DataAccess).connection.getCustomRepository(UserRepository);
+  }
+
+  private get songCRUDService(): SongCRUDService {
+    return Container.get(SongCRUDService);
   }
 
   private get logger(): Logger {

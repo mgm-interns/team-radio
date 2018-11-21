@@ -1,5 +1,6 @@
 import { RealTimeStationQueryOnlineAnonymous, RealTimeStationQueryOnlineUser } from 'RadioGraphql';
 import * as React from 'react';
+import { StationControllerLocaleStorageHelper } from './StationControllerLocaleStorageHelper';
 
 export interface IStationControllerLocalState {
   muted: boolean;
@@ -21,7 +22,7 @@ export interface IStationController extends IStationControllerLocalState, IStati
 }
 
 export const StationController = React.createContext<IStationController>({
-  muted: false,
+  muted: StationControllerLocaleStorageHelper.getMuted(),
   onlineUsers: [],
   onlineAnonymous: [],
   onlineCount: 0,

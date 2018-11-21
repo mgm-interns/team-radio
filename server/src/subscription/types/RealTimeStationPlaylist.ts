@@ -16,7 +16,7 @@ export class RealTimeStationPlaylist {
   static fromRealTimeStationPlayerManager(manager: RealTimeStationPlayerManager): RealTimeStationPlaylist {
     const player = new RealTimeStationPlaylist();
     player.playlist = manager.playlist;
-    player.currentlyPlayingAt = manager.currentlyPlayingAt;
+    player.currentlyPlayingAt = manager.getCurrentlyPlayingAt();
     if (manager.playing) {
       player.currentPlayingSongId = manager.playing.song.id;
     }
