@@ -1,10 +1,11 @@
 import { validate } from 'class-validator';
 import { ObjectType, Field } from 'type-graphql';
 import { Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { ValidatableEntity } from './ValidatableEntity';
 
 @ObjectType()
 @Entity()
-export class BaseEntity {
+export class BaseEntity extends ValidatableEntity {
   @ObjectIdColumn()
   private _id: ObjectID;
 
@@ -20,9 +21,5 @@ export class BaseEntity {
   // tslint:disable-next-line function-name
   public UNSAFE_getObjectId() {
     return this._id;
-  }
-
-  public async validate() {
-    return validate(this);
   }
 }

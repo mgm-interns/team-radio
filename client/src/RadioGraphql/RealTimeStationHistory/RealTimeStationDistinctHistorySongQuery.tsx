@@ -4,29 +4,21 @@ import { DataProps, DataValue, graphql, OperationOption, Query as GraphQLQuery }
 import { PartialQueryProps } from '../types';
 
 const QUERY = gql`
-  query StationPlayer($stationId: String!) {
-    StationPlayer(stationId: $stationId) {
-      playing {
-        id
-        url
-        thumbnail
-        highQualityThumbnail
-        title
-        creatorId
-        createdAt
-        duration
-      }
-      currentlyPlayingAt
-      startedAt
-      playlistCount
-      nextSongThumbnail
+  query allDistinctHistorySongs($stationId: String!, $perPage: Int, $page: Int) {
+    allDistinctHistorySongs(filter: { stationId: $stationId }, perPage: $perPage, page: $page) {
+      title
+      url
+      thumbnail
+      duration
+      createdAt
+      creatorId
     }
   }
 `;
 
 export class QueryComponent extends GraphQLQuery<Response, Variables> {}
 
-export default function RealTimeStationPlayerQuery(props: Props) {
+export default function RealTimeStationPlaylistQuery(props: Props) {
   return <QueryComponent query={QUERY} {...props} />;
 }
 
@@ -34,31 +26,23 @@ export function withHOC<TProps>(options: OperationOption<{}, Response, Variables
   return graphql<TProps, Response, Variables>(QUERY, options);
 }
 
-export interface Player {
-  readonly playing?: Song;
-  readonly startedAt?: string;
-  readonly currentlyPlayingAt?: number;
-  readonly playlistCount: number;
-  readonly nextSongThumbnail?: string;
-}
-
 export interface Song {
-  readonly id: string;
+  readonly title: string;
   readonly url: string;
   readonly thumbnail: string;
-  readonly highQualityThumbnail?: string;
-  readonly title: string;
-  readonly creatorId: string;
-  readonly createdAt: number;
   readonly duration: number;
+  readonly createdAt: number;
+  readonly creatorId: string;
 }
 
 export interface Response {
-  readonly StationPlayer: Player;
+  readonly allDistinctHistorySongs: Song[];
 }
 
 export interface Variables {
   stationId: string;
+  perPage?: number;
+  page?: number;
 }
 
 export interface WithHOCProps extends DataProps<Response, Variables> {}

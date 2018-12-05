@@ -1,15 +1,7 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import { Loading } from 'Components';
 import { DefaultStationLayoutProps, StationLayout } from 'Containers';
-import {
-  StationChatBox,
-  StationItem,
-  StationList,
-  StationPlayer,
-  StationSongs,
-  StationSongSearch,
-  StationToolbar
-} from 'Modules';
+import { StationChatBox, StationItem, StationList, StationSongs, StationSongSearch, StationToolbar } from 'Modules';
 import {
   RealTimeStationQuery,
   RealTimeStationQueryVariables,

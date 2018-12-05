@@ -45,6 +45,7 @@ export class RealTimeStationPlayerManager {
       clearTimeout(this.stationTimeout);
       // start the next song timeout with song duration
       let timeout = this.playing.song.duration;
+      // Then calculate the actual remain time of the song
       const currentlyPlayingAt = this.getCurrentlyPlayingAt();
       if (currentlyPlayingAt) {
         timeout = timeout - currentlyPlayingAt;
@@ -62,7 +63,7 @@ export class RealTimeStationPlayerManager {
       const playedSong = this.shiftSong();
       playedSong.isPlayed = true;
       this.logger.info(`Song ${playedSong.id} has been out of play time. Prepare to restart the player.`);
-      await this.songRepository.save(playedSong);
+      await this.songRepository.saveOrFail(playedSong);
       await this.updateStationState(null);
       await this.start();
     }
@@ -82,7 +83,7 @@ export class RealTimeStationPlayerManager {
     await Promise.all([
       this.updateStationState(null),
       //
-      this.songRepository.save(playedSong)
+      this.songRepository.saveOrFail(playedSong)
     ]);
 
     // After finishing a song, wait 5000 second to play the next one.
@@ -113,7 +114,7 @@ export class RealTimeStationPlayerManager {
       song: null
     });
     stoppedSong.isPlayed = true;
-    await this.songRepository.save(stoppedSong);
+    await this.songRepository.saveOrFail(stoppedSong);
     await this.start();
   }
 
@@ -124,14 +125,10 @@ export class RealTimeStationPlayerManager {
     const nextSong = await this.songCRUDService.create(randomizedNextSong.url, this.parent.id, songOwner.id);
     this.logger.info(`Ready for the next random song ${nextSong.id} in 5 seconds.`);
 
-    const publisher = () => {
-      this.parent.publish<StationTopic.AddPlaylistSongPayLoad>(StationTopic.ADD_PLAYLIST_SONG, {
-        song: nextSong,
-        user: songOwner
-      });
-      this.start();
-    };
-    setTimeout(publisher, 5000);
+    this.parent.publish<StationTopic.AddPlaylistSongPayLoad>(StationTopic.ADD_PLAYLIST_SONG, {
+      song: nextSong,
+      user: songOwner
+    });
   }
 
   private pickPlayingSong(): PlayingSong {

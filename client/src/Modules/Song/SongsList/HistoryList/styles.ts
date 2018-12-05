@@ -16,7 +16,7 @@ export const styles = ({ palette, spacing, typography }: Theme) =>
     },
     itemText: {
       '& >*': {
-        width: `calc(100% - 108px)`
+        width: `calc(100% - 48px)`
       }
     }
   });

@@ -68,6 +68,7 @@ export const light = createMuiTheme({
     useNextVariants: true
   },
   zIndex: {
-    fullScreenLoading: 1999
+    fullScreenLoading: 1999,
+    stationPlayerContainer: 999
   }
 });

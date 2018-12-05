@@ -1,3 +1,4 @@
+export * from './ValidatableEntity';
 export * from './BaseEntity';
 export * from './user';
 export * from './station';

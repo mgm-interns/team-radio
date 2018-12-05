@@ -64,11 +64,13 @@ export class SongCRUDService extends BaseCRUDService {
       songId: video.id,
       duration: this.youtubeService.parseDuration(video.contentDetails.duration),
       title: video.snippet.title,
-      thumbnail: video.snippet.thumbnails && video.snippet.thumbnails.default && video.snippet.thumbnails.default.url
+      thumbnail: video.snippet.thumbnails && video.snippet.thumbnails.default && video.snippet.thumbnails.default.url,
+      highQualityThumbnail:
+        video.snippet.thumbnails && video.snippet.thumbnails.high && video.snippet.thumbnails.high.url
     });
     song.stationId = stationId;
     song.creatorId = creatorId;
-    return this.songRepository.save(song);
+    return this.songRepository.saveOrFail(song);
   }
 
   public async update(

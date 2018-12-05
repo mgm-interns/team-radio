@@ -1,29 +1,31 @@
-import { ObjectType, Field } from 'type-graphql';
-import { BaseEntity } from '../BaseEntity';
-import { Entity, Column } from 'typeorm';
+import { ValidatableEntity } from '../ValidatableEntity';
+import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
-@Entity({ name: 'songs' })
-export class DistinctSong extends BaseEntity {
-  @Column()
+export class DistinctSong extends ValidatableEntity {
   @Field()
   title: string;
 
-  @Column()
   @Field()
   url: string;
 
-  @Column()
   @Field()
   duration: number;
 
-  @Column()
   @Field()
   thumbnail: string;
 
-  @Column()
   @Field()
   isPlayed: boolean;
+
+  @Field()
+  createdAt: number;
+
+  @Field()
+  stationId: string;
+
+  @Field()
+  creatorId: string;
 
   public static fromObject(object: object) {
     return Object.assign(new DistinctSong(), object);

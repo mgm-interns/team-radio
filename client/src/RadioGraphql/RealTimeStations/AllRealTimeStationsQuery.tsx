@@ -32,7 +32,7 @@ export interface Station {
   readonly id: string;
   readonly stationId: string;
   readonly stationName: string;
-  readonly createdAt: string;
+  readonly createdAt: number;
   readonly ownerId: string;
   readonly isPrivate: boolean;
   readonly onlineCount: number;

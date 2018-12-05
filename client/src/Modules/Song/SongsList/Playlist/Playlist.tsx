@@ -25,6 +25,7 @@ class Playlist extends ReactSubscriptionComponent<CoreProps> {
             song={song}
             actions={<ItemAction song={song} currentPlayingSongId={data.currentPlayingSongId} />}
             playing={song.id === data.currentPlayingSongId}
+            textClassName={classes.itemText}
           />
         ))}
       </List>

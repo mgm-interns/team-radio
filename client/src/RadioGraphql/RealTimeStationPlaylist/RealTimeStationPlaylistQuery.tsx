@@ -43,7 +43,7 @@ export interface PlaylistSong {
   readonly thumbnail: string;
   readonly title: string;
   readonly creatorId: string;
-  readonly createdAt: string;
+  readonly createdAt: number;
   readonly duration: number;
   readonly upVotes: string[];
   readonly downVotes: string[];

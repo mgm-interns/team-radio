@@ -62,7 +62,11 @@ export class Player extends React.Component<CoreProps, CoreStates> {
           onError={(...args) => console.error(`Error while playing video`, args)}
           ref={this.ref}
         />
-        <Tooltip title={`${Math.round(this.state.playedAt)} seconds`}>
+        <Tooltip
+          title={`${Math.round(this.state.playedAt)} seconds`}
+          placement={'top-start'}
+          classes={{ tooltipPlacementTop: classes.tooltip, tooltipPlacementBottom: classes.tooltip }}
+        >
           <LinearProgress
             color={'primary'}
             style={{ height: progressBarHeight, width: '100%' }}

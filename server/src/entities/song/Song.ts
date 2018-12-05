@@ -1,4 +1,4 @@
-import { IsUrl } from 'class-validator';
+import { IsUrl, IsOptional } from 'class-validator';
 import { TimestampScalar } from 'scalars';
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity } from 'typeorm';
@@ -36,6 +36,12 @@ export class Song extends BaseEntity {
   @Column()
   @Field()
   thumbnail: string;
+
+  @IsUrl()
+  @IsOptional()
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  highQualityThumbnail?: string;
 
   @Column()
   @Field()

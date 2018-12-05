@@ -7,12 +7,12 @@ export const SongItem = {
 
 export interface SongItemProps extends Identifiable, Styleable {
   song: {
-    id: string;
+    id?: string;
     url: string;
     thumbnail: string;
     title: string;
     creatorId: string;
-    createdAt: string;
+    createdAt: number;
     duration: number;
   };
   playing?: boolean;

@@ -29,6 +29,7 @@ export class RealTimeStation extends Station {
 
   public addOnlineUser(user: User): boolean {
     let userIndex = -1;
+    const beforeOnlineUsersChanged = this.onlineCount;
     for (let index = 0; index < this.onlineUsers.length; index += 1) {
       if (this.onlineUsers[index].username === user.username) {
         userIndex = index;
@@ -37,7 +38,7 @@ export class RealTimeStation extends Station {
     }
     if (userIndex === -1) {
       this.onlineUsers.push(user);
-      this.onUserChanged();
+      this.onUserChanged(beforeOnlineUsersChanged);
       this.logger.info(`User ${user.username} has joined station ${this.stationId}`);
       return true;
     }
@@ -46,6 +47,7 @@ export class RealTimeStation extends Station {
 
   public removeOnlineUser(user: User): boolean {
     let removedIndex = -1;
+    const beforeOnlineUsersChanged = this.onlineCount;
     for (let index = 0; index < this.onlineUsers.length; index += 1) {
       if (this.onlineUsers[index].username === user.username) {
         removedIndex = index;
@@ -54,13 +56,14 @@ export class RealTimeStation extends Station {
     }
     if (removedIndex === -1) return false;
     this.onlineUsers.splice(removedIndex, 1);
-    this.onUserChanged();
+    this.onUserChanged(beforeOnlineUsersChanged);
     this.logger.info(`User ${user.username} has leaved station ${this.stationId}`);
     return true;
   }
 
   public addAnonymousUser(user: AnonymousUser): boolean {
     let userIndex = -1;
+    const beforeOnlineUsersChanged = this.onlineCount;
     for (let index = 0; index < this.onlineAnonymous.length; index += 1) {
       if (this.onlineAnonymous[index].clientId === user.clientId) {
         userIndex = index;
@@ -69,7 +72,7 @@ export class RealTimeStation extends Station {
     }
     if (userIndex === -1) {
       this.onlineAnonymous.push(user);
-      this.onUserChanged();
+      this.onUserChanged(beforeOnlineUsersChanged);
       this.logger.info(`Anonymous user ${user.clientId} has joined station ${this.stationId}`);
       return true;
     }
@@ -78,6 +81,7 @@ export class RealTimeStation extends Station {
 
   public removeAnonymousUser(user: AnonymousUser): boolean {
     let removedIndex = -1;
+    const beforeOnlineUsersChanged = this.onlineCount;
     for (let index = 0; index < this.onlineAnonymous.length; index += 1) {
       if (this.onlineAnonymous[index].clientId === user.clientId) {
         removedIndex = index;
@@ -86,7 +90,7 @@ export class RealTimeStation extends Station {
     }
     if (removedIndex === -1) return false;
     this.onlineAnonymous.splice(removedIndex, 1);
-    this.onUserChanged();
+    this.onUserChanged(beforeOnlineUsersChanged);
     this.logger.info(`Anonymous user ${user.clientId} has leaved station ${this.stationId}`);
     return true;
   }
@@ -104,7 +108,7 @@ export class RealTimeStation extends Station {
     station.startingTime = startingTime;
     station.currentPlayingSongId = currentPlayingSongId;
     this.logger.info(`Station ${this.stationId} has new state:`, { startingTime, currentPlayingSongId });
-    return this.stationRepository.save(station);
+    return this.stationRepository.saveOrFail(station);
   }
 
   public publish<Payload>(triggerName: string, payload: ExcludeOne<Payload, StationTopic.StationIdPayload>): boolean {
@@ -138,8 +142,13 @@ export class RealTimeStation extends Station {
     return realTimeStation;
   }
 
-  protected onUserChanged() {
-    // TODO: Start player or do something in here
+  protected onUserChanged(oldOnlineCount: number) {
+    // Start player if there is a user join to the station and there is at least 1 song in the playlist
+    if (oldOnlineCount === 0 && this.onlineCount > 0) {
+      if (!this.player.playing && this.player.playlist.length > 0) {
+        setTimeout(this.startPlayer.bind(this), 5000);
+      }
+    }
   }
 
   protected onAddedSong(payload: StationTopic.AddPlaylistSongPayLoad) {
@@ -148,7 +157,10 @@ export class RealTimeStation extends Station {
       // Check if the song is already in the list
       if (!this.player.playlist.some(song => song.id === payload.song.id)) {
         this.player.playlist = [...this.player.playlist, PlaylistSong.fromSong(payload.song)];
-        if (!this.player.playing) this.startPlayer();
+        if (!this.player.playing) {
+          this.publish<StationTopic.UpdatePlayerSongPayLoad>(StationTopic.UPDATE_PLAYER_SONG, { song: null });
+          setTimeout(this.startPlayer.bind(this), 5000);
+        }
       }
     }
   }

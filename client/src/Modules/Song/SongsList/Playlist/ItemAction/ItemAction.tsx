@@ -3,7 +3,7 @@ import { RealTimeStationPlaylistQueryPlaylistSong } from 'RadioGraphql';
 import * as React from 'react';
 import { MdFavorite, MdThumbDown, MdThumbUp } from 'react-icons/md';
 import { classnames } from 'Themes';
-import { styles } from '../styles';
+import { styles } from './styles';
 
 class PlaylistItemAction extends React.Component<CoreProps> {
   public render() {

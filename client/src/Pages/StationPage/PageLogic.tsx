@@ -1,3 +1,4 @@
+import { withStyles, WithStyles } from '@material-ui/core';
 import {
   IStationControllerLocalState,
   SetStationControllerStateFunction,
@@ -15,6 +16,7 @@ import {
   RealTimeStationQueryVariables
 } from 'RadioGraphql';
 import * as React from 'react';
+import { styles } from './styles';
 
 export class PageLogic extends React.Component<CoreProps, CoreStates> {
   public state: CoreStates = {
@@ -49,7 +51,7 @@ export class PageLogic extends React.Component<CoreProps, CoreStates> {
 
   public render() {
     const { muted } = this.state;
-    const { RealTimeStation, layout, params } = this.props;
+    const { classes, RealTimeStation, layout, params } = this.props;
     let onlineAnonymous: RealTimeStationQueryOnlineAnonymous[] = [];
     let onlineUsers: RealTimeStationQueryOnlineUser[] = [];
     let onlineCount = 0;
@@ -65,11 +67,14 @@ export class PageLogic extends React.Component<CoreProps, CoreStates> {
         <StationPlayerControllerProvider>
           {layout}
           <StationPlayerController.Consumer>
-            {({ top, left, width, height }) => (
-              <div style={{ top, left, width, height, position: 'fixed' }}>
-                <StationPlayer params={params} />
-              </div>
-            )}
+            {({ top, left, width, height }) => {
+              console.log('Update station player position', { top, left, width, height });
+              return (
+                <div style={{ top, left, width, height }} className={classes.playerContainer}>
+                  <StationPlayer params={params} />
+                </div>
+              );
+            }}
           </StationPlayerController.Consumer>
         </StationPlayerControllerProvider>
       </StationController.Provider>
@@ -94,11 +99,11 @@ export class PageLogic extends React.Component<CoreProps, CoreStates> {
   };
 }
 
-interface CoreProps extends Props {}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
 
 interface CoreStates extends IStationControllerLocalState {}
 
-export default PageLogic;
+export default withStyles(styles)(PageLogic);
 
 export interface Props {
   RealTimeStation?: RealTimeStationQueryStation;

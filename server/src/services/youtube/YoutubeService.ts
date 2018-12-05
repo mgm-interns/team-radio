@@ -1,9 +1,8 @@
 import { BadRequestException } from 'exceptions';
 import { default as fetchFunction } from 'node-fetch';
 import { Logger } from '../logger';
-import { YoutubeHelper } from 'team-radio-shared';
+import { YoutubeHelper, YoutubeVideo } from 'team-radio-shared';
 import { Inject, Service } from 'typedi';
-export { YoutubeVideo } from 'team-radio-shared';
 
 @Service()
 export class YoutubeService {
@@ -12,7 +11,7 @@ export class YoutubeService {
 
   constructor(private youtubeHelper = new YoutubeHelper(fetchFunction)) {}
 
-  public async getVideoDetail(url: string) {
+  public async getVideoDetail(url: string): Promise<YoutubeVideo.Video> {
     try {
       return this.youtubeHelper.fetchVideoDetail(url, {
         apiKey: process.env.YOUTUBE_API_KEY as string,

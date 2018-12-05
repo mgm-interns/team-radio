@@ -7,7 +7,7 @@ import { styles } from './styles';
 
 class SimpleSong extends React.Component<CoreProps, CoreStates> {
   public render(): React.ReactNode {
-    const { id, classes, song, playing, actions } = this.props;
+    const { id, classes, song, playing, actions, textClassName } = this.props;
     return (
       <ListItem
         id={id}
@@ -15,7 +15,11 @@ class SimpleSong extends React.Component<CoreProps, CoreStates> {
         dense
       >
         <Avatar src={song.thumbnail} className={classes.thumbnail} />
-        <ListItemText primary={song.title} secondary={song.duration} className={classes.text} />
+        <ListItemText
+          primary={song.title}
+          secondary={song.duration}
+          className={classnames(classes.text, textClassName)}
+        />
         {actions && <ListItemSecondaryAction>{actions}</ListItemSecondaryAction>}
       </ListItem>
     );
@@ -29,4 +33,5 @@ export default withStyles(styles)(SimpleSong);
 
 export interface Props extends SongItemProps, Identifiable {
   actions?: React.ReactNode;
+  textClassName?: string;
 }

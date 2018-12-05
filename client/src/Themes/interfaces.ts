@@ -25,6 +25,7 @@ declare module '@material-ui/core/colors/common' {
 declare module '@material-ui/core/styles/zIndex' {
   interface ZIndex {
     fullScreenLoading: number;
+    stationPlayerContainer: number;
   }
 }
 

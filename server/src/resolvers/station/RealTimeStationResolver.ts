@@ -58,17 +58,28 @@ export class RealTimStationResolver extends BaseStationResolver {
     @Arg('stationId') stationId: string,
     @Ctx() context: IAuthenticatedContext | IAnonymousContext
   ): boolean {
+    let isAlreadyJoinedStation = false;
     // Leave joined station
     this.manager.stations.forEach(station => {
       if (station.isExistedUser(context.user)) {
-        const result = this.manager.leaveStation(station.stationId, context.user);
-        if (result) {
-          const payload: StationTopic.LeaveStationPayLoad = { stationId: station.stationId, user: context.user };
-          this.logger.debug(`Publish event ${StationTopic.LEAVE_STATION} with payload:`, payload);
-          publishLeaveStation(payload);
+        if (station.stationId === stationId) {
+          // Do nothing if user has been already existed in station
+          isAlreadyJoinedStation = true;
+        } else {
+          const result = this.manager.leaveStation(station.stationId, context.user);
+          if (result) {
+            const payload: StationTopic.LeaveStationPayLoad = { stationId: station.stationId, user: context.user };
+            this.logger.debug(`Publish event ${StationTopic.LEAVE_STATION} with payload:`, payload);
+            publishLeaveStation(payload);
+          }
         }
       }
     });
+
+    // Do nothing if user has been already existed in station
+    if (isAlreadyJoinedStation) {
+      return true;
+    }
     // Join station
     if (this.manager.joinStation(stationId, context.user)) {
       const payload: StationTopic.JoinStationPayLoad = { stationId, user: context.user };

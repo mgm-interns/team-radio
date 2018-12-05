@@ -29,7 +29,9 @@ export class RealTimeStationPlayer {
     player.currentlyPlayingAt = manager.getCurrentlyPlayingAt();
     player.playlistCount = manager.playlist.length;
     // No playing song, but there is at least 1 song in playlist
-    if (!player.playing && player.playlistCount > 0) player.nextSongThumbnail = manager.playlist[0].thumbnail;
+    if (!player.playing && player.playlistCount > 0) {
+      player.nextSongThumbnail = manager.playlist[0].highQualityThumbnail || manager.playlist[0].thumbnail;
+    }
     return player;
   }
 }

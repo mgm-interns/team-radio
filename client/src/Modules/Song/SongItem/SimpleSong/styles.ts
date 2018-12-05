@@ -19,8 +19,7 @@ export const styles = ({ palette, spacing }: Theme) =>
       '& >*': {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        width: `calc(100% - 108px)`
+        textOverflow: 'ellipsis'
       }
     }
   });

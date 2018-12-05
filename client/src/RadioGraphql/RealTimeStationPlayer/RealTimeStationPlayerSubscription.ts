@@ -14,6 +14,7 @@ const SUBSCRIPTION = gql`
         id
         url
         thumbnail
+        highQualityThumbnail
         title
         creatorId
         createdAt

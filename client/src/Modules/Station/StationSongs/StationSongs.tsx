@@ -1,6 +1,6 @@
 import { Card, Tab, Tabs, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable } from 'Common';
-import { Playlist } from 'Modules';
+import { HistoryList, Playlist } from 'Modules';
 import { RealTimeStationPlayerQueryVariables } from 'RadioGraphql';
 import * as React from 'react';
 import { styles } from './styles';
@@ -29,7 +29,7 @@ class StationSongs extends React.Component<CoreProps, CoreStates> {
           <Tab label={'Favorite'} />
         </Tabs>
         {tabValue === 0 && this.generateTabContainer(<Playlist params={params} />)}
-        {tabValue === 1 && this.generateTabContainer()}
+        {tabValue === 1 && this.generateTabContainer(<HistoryList params={params} />)}
         {tabValue === 2 && this.generateTabContainer()}
       </Card>
     );
