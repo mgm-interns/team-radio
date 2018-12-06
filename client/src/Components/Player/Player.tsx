@@ -45,6 +45,7 @@ export class Player extends React.Component<CoreProps, CoreStates> {
       currentlyPlayedAt,
       maximumDelaySeconds,
       progressBarHeight,
+      onPlayerError,
       ...otherProps
     } = this.props;
     return (
@@ -59,8 +60,12 @@ export class Player extends React.Component<CoreProps, CoreStates> {
           width={width}
           onProgress={this.onProgress}
           onStart={() => this.setState({ preload: true })}
-          onError={(...args) => console.error(`Error while playing video`, args)}
           ref={this.ref}
+          onError={errorCode => {
+            if (onPlayerError) {
+              onPlayerError(errorCode, this.props.url!);
+            }
+          }}
         />
         <Tooltip
           title={`${Math.round(this.state.playedAt)} seconds`}
@@ -136,11 +141,17 @@ interface CoreStates {
   preload: boolean;
 }
 
+export default withStyles(styles)(Player);
+
 export interface Props extends Identifiable, ReactPlayerProps {
+  onError: never;
+  url?: string;
   currentlyPlayedAt: number;
   maximumDelaySeconds?: number;
   progressBarHeight?: number | string;
+  /**
+   * @deprecated should not use this
+   */
   ref?(player: ReactPlayer): void;
+  onPlayerError?(errorCode: number, url: string): void;
 }
-
-export default withStyles(styles)(Player);

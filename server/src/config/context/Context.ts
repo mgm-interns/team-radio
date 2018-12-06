@@ -1,14 +1,14 @@
 import { User } from 'entities';
 import { UserRepository } from 'repositories';
 import { Logger } from 'services';
-import { AnonymousUser, RealTimeStation, RealTimeStationsManager } from 'subscription';
+import { AnonymousUser, RealTimeStationManager, RealTimeStationsManager } from 'subscription';
 import { Container } from 'typedi';
 import { IContext, Tokens } from './IContext';
 import { UnauthorizedException } from 'exceptions';
 
 export class Context implements IContext {
   public user: User | AnonymousUser | undefined;
-  public currentStation: RealTimeStation | undefined;
+  public currentStation: RealTimeStationManager | undefined;
 
   constructor(private logger: Logger, private userRepository: UserRepository) {}
 

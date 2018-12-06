@@ -1,6 +1,6 @@
 import { DataAccess } from 'config';
-import { DistinctSong, Song, Station } from 'entities';
-import Container, { Service } from 'typedi';
+import { DistinctSong, Song } from 'entities';
+import { Container, Service } from 'typedi';
 import { MongoRepository } from 'typeorm';
 import { Logger } from 'services';
 

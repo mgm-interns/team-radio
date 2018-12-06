@@ -1,8 +1,7 @@
 import { Station } from 'entities';
 import { Field, Int, ObjectType } from 'type-graphql';
-import { RealTimeStation } from '.';
+import { RealTimeStationManager } from '../station';
 
-// TODO: convert this entities to manager type
 @ObjectType()
 export class RealTimeStationWithOnlineCount extends Station {
   @Field(type => Int)
@@ -11,7 +10,7 @@ export class RealTimeStationWithOnlineCount extends Station {
   @Field(type => String, { nullable: true })
   thumbnail: string;
 
-  public static fromRealTimeStation(station: RealTimeStation) {
+  public static fromRealTimeStation(station: RealTimeStationManager) {
     const object = new RealTimeStationWithOnlineCount();
     Object.assign(object, station);
     object.onlineCount = station.onlineCount;

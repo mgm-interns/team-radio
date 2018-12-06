@@ -6,7 +6,7 @@ import { StationsHelper } from 'team-radio-shared';
 import { Inject, Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { AnonymousUser } from '../types';
-import { RealTimeStation } from './RealTimeStation';
+import { RealTimeStationManager } from './RealTimeStationManager';
 
 @Service()
 export class RealTimeStationsManager {
@@ -19,7 +19,7 @@ export class RealTimeStationsManager {
   @InjectRepository()
   private songRepository: SongRepository;
 
-  private list: RealTimeStation[] = [];
+  private list: RealTimeStationManager[] = [];
 
   public get stations() {
     return this.list;
@@ -30,7 +30,7 @@ export class RealTimeStationsManager {
     return StationsHelper.sortRealTimeStations(this.list);
   }
 
-  public findStation(stationId: string): RealTimeStation {
+  public findStation(stationId: string): RealTimeStationManager {
     const station = this.list.find(station => station.stationId === stationId);
     if (!station) throw new StationNotFoundException();
     return station;
@@ -41,7 +41,7 @@ export class RealTimeStationsManager {
     this.list = await Promise.all(
       stations.map(async station => {
         const songs = await this.songRepository.findPlaylistSongs(station);
-        return RealTimeStation.fromStation(station, songs.map(PlaylistSong.fromSong));
+        return RealTimeStationManager.fromStation(station, songs.map(PlaylistSong.fromSong));
       })
     );
     this.logger.info('Initialized real time stations manager service');

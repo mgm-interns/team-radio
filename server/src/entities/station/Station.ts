@@ -17,7 +17,7 @@ export class Station extends BaseEntity {
   stationId: string;
 
   @IsNotEmpty()
-  @MinLength(6)
+  @MinLength(2)
   @MaxLength(32)
   @Field()
   @Column()

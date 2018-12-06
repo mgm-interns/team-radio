@@ -109,15 +109,12 @@ class LoginPage extends React.Component<CoreProps, CoreStates> {
                       >
                         Login
                       </Button>
-                      <InternalLink href={'/'} color={'primary'} className={classes.textLink}>
+                      <InternalLink href={'/'} className={classes.textLink} TypographyProps={{ color: 'primary' }}>
                         Forgot your password
                       </InternalLink>
-                      <InternalLink
-                        href={'/'}
-                        color={'primary'}
-                        children={'Create an account'}
-                        className={classes.textLink}
-                      />
+                      <InternalLink href={'/'} className={classes.textLink} TypographyProps={{ color: 'primary' }}>
+                        Create an account
+                      </InternalLink>
                     </CardActions>
                   </CardContent>
                 </Card>

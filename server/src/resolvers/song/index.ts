@@ -3,3 +3,4 @@ export * from './SongCRUDResolver';
 export * from './PlaylistSongsCRUDResolver';
 export * from './HistorySongsCRUDResolver';
 export * from './DistinctSongResolver';
+export * from './UnavailableSongsResolver';

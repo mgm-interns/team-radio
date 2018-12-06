@@ -22,4 +22,9 @@ export class BaseEntity extends ValidatableEntity {
   public UNSAFE_getObjectId() {
     return this._id;
   }
+
+  // tslint:disable-next-line function-name
+  public UNSAFE_setObjectId(_id: ObjectID) {
+    this._id = _id;
+  }
 }

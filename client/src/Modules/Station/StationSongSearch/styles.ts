@@ -11,7 +11,8 @@ export const styles = ({ palette, spacing }: Theme) =>
       alignItems: 'center'
     },
     textField: {
-      width: 200
+      width: 300,
+      maxWidth: '95%'
     },
     input: {
       '&::after': {

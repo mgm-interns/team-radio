@@ -56,11 +56,14 @@ class Header extends React.Component<CoreProps, CoreStates> {
                 {leftText || (
                   <InternalLink
                     href={'/'}
-                    variant={'h6'}
-                    color={'inherit'}
-                    children={'Home'}
                     className={classes.homeButton}
-                  />
+                    TypographyProps={{
+                      variant: 'h6',
+                      color: 'inherit'
+                    }}
+                  >
+                    Home
+                  </InternalLink>
                 )}
               </Hidden>
             </div>

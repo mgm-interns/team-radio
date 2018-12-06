@@ -5,6 +5,7 @@ import {
   getSubscribeToMoreOptionsForRealTimeStationPlayerSubscription,
   RealTimeStationPlayerQueryPlayer,
   RealTimeStationPlayerQueryVariables,
+  ReportUnavailableSongMutation,
   withRealTimeStationPlayerQuery,
   WithRealTimeStationPlayerQueryProps
 } from 'RadioGraphql';
@@ -18,17 +19,27 @@ class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
     return this.renderPlayerWrapper(data => (
       <StationController.Consumer>
         {({ muted }) => (
-          <Player
-            id={id}
-            style={style}
-            className={className}
-            url={data && data.playing && data.playing.url}
-            height="100%"
-            width="100%"
-            currentlyPlayedAt={data && data.currentlyPlayingAt / 1000}
-            playing
-            muted={muted}
-          />
+          <ReportUnavailableSongMutation>
+            {reportUnavailableSong => (
+              <Player
+                id={id}
+                style={style}
+                className={className}
+                url={data && data.playing && data.playing.url}
+                height="100%"
+                width="100%"
+                currentlyPlayedAt={data && data.currentlyPlayingAt / 1000}
+                playing
+                muted={muted}
+                onPlayerError={(errorCode: number, url: string) => {
+                  console.error(`Error while playing video`, errorCode, url);
+                  reportUnavailableSong({
+                    variables: { errorCode, url, stationId: this.props.params.stationId }
+                  });
+                }}
+              />
+            )}
+          </ReportUnavailableSongMutation>
         )}
       </StationController.Consumer>
     ));
@@ -41,6 +52,7 @@ class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
   private renderPlayerWrapper = (children: (data?: RealTimeStationPlayerQueryPlayer) => React.ReactNode) => {
     const { classes, data } = this.props;
     let content: React.ReactNode;
+    console.log(data && data.StationPlayer && data.StationPlayer.playing);
 
     if (data.error) {
       console.error(data.error);

@@ -1,22 +1,17 @@
 import { DataAccess } from 'config';
 import { PlaylistSong, Station, User } from 'entities';
+import { BadRequestException } from 'exceptions';
 import { StationRepository } from 'repositories';
 import { Logger } from 'services';
-import { AnonymousUser, SubscriptionManager, StationTopic } from 'subscription';
-import { Field, Int, ObjectType } from 'type-graphql';
+import { AnonymousUser, StationTopic, SubscriptionManager } from 'subscription';
 import { Container } from 'typedi';
 import { RealTimeStationPlayerManager } from './RealTimeStationPlayerManager';
 
-// TODO: convert this entities to manager type
-@ObjectType()
-export class RealTimeStation extends Station {
-  @Field(type => [User])
-  onlineUsers: User[] = [];
+export class RealTimeStationManager extends Station {
+  public onlineUsers: User[] = [];
 
-  @Field(type => [AnonymousUser])
-  onlineAnonymous: AnonymousUser[] = [];
+  public onlineAnonymous: AnonymousUser[] = [];
 
-  @Field(type => Int)
   public get onlineCount(): number {
     return this.onlineUsers.length + this.onlineAnonymous.length;
   }
@@ -101,6 +96,21 @@ export class RealTimeStation extends Station {
       : this.onlineAnonymous.some(({ clientId }) => clientId === user.clientId);
   }
 
+  // TODO: Add an option to publish a notification about skipping unavailable song for QoL improvement
+  public async removeUnavailableSongFromPlayer(url: string) {
+    if (!this.player.playing || this.player.playing.song.url !== url) {
+      this.logger.error(`Song ${url} is not in playing state`);
+      throw new BadRequestException(`Song ${url} is not in playing state`);
+    }
+    const song = this.player.playlist.find(song => song.url === url);
+    if (!song) {
+      this.logger.error(`Song ${url} is not found in playlist`);
+      throw new BadRequestException(`Song ${url} is not found in playlist`);
+    }
+    await this.player.stop();
+    await this.player.restart();
+  }
+
   public async updateStationState(startingTime: number | null, currentPlayingSongId: string | null) {
     this.startingTime = startingTime;
     this.currentPlayingSongId = currentPlayingSongId;
@@ -111,19 +121,13 @@ export class RealTimeStation extends Station {
     return this.stationRepository.saveOrFail(station);
   }
 
-  public publish<Payload>(triggerName: string, payload: ExcludeOne<Payload, StationTopic.StationIdPayload>): boolean {
+  public async publish<Payload>(
+    triggerName: string,
+    payload: ExcludeOne<Payload, StationTopic.StationIdPayload>
+  ): Promise<boolean> {
     this.logger.debug(`Publish event ${triggerName} with payload:`, payload);
-    this.subscriptionManager.pubSub.publish(triggerName, Object.assign(this.getDefaultPubSubPayload(), payload));
+    await this.subscriptionManager.pubSub.publish(triggerName, Object.assign(this.getDefaultPubSubPayload(), payload));
     return true;
-  }
-
-  public registerPubSub() {
-    this.subscriptionManager.pubSub.subscribe(StationTopic.ADD_PLAYLIST_SONG, this.onAddedSong.bind(this));
-  }
-
-  public startPlayer() {
-    this.player.start();
-    this.publish<StationTopic.StartPlayerPayLoad>(StationTopic.START_PLAYER, { stationId: this.stationId });
   }
 
   public static async fromStation(
@@ -131,8 +135,8 @@ export class RealTimeStation extends Station {
     playlist: PlaylistSong[],
     onlineUsers: User[] = [],
     onlineAnonymous: AnonymousUser[] = []
-  ): Promise<RealTimeStation> {
-    const realTimeStation = Object.assign(new RealTimeStation(), station);
+  ): Promise<RealTimeStationManager> {
+    const realTimeStation = Object.assign(new RealTimeStationManager(), station);
     realTimeStation.onlineUsers = onlineUsers;
     realTimeStation.onlineAnonymous = onlineAnonymous;
     realTimeStation.player.playlist = playlist;
@@ -140,6 +144,15 @@ export class RealTimeStation extends Station {
     realTimeStation.registerPubSub();
     if (realTimeStation.currentPlayingSongId && realTimeStation.startingTime) realTimeStation.startPlayer();
     return realTimeStation;
+  }
+
+  protected registerPubSub() {
+    this.subscriptionManager.pubSub.subscribe(StationTopic.ADD_PLAYLIST_SONG, this.onAddedSong.bind(this));
+  }
+
+  protected async startPlayer() {
+    this.player.start();
+    await this.publish<StationTopic.StartPlayerPayLoad>(StationTopic.START_PLAYER, { stationId: this.stationId });
   }
 
   protected onUserChanged(oldOnlineCount: number) {
@@ -151,14 +164,14 @@ export class RealTimeStation extends Station {
     }
   }
 
-  protected onAddedSong(payload: StationTopic.AddPlaylistSongPayLoad) {
+  protected async onAddedSong(payload: StationTopic.AddPlaylistSongPayLoad) {
     // Filter by stationId
     if (payload.stationId === this.stationId) {
       // Check if the song is already in the list
       if (!this.player.playlist.some(song => song.id === payload.song.id)) {
         this.player.playlist = [...this.player.playlist, PlaylistSong.fromSong(payload.song)];
         if (!this.player.playing) {
-          this.publish<StationTopic.UpdatePlayerSongPayLoad>(StationTopic.UPDATE_PLAYER_SONG, { song: null });
+          await this.publish<StationTopic.UpdatePlayerSongPayLoad>(StationTopic.UPDATE_PLAYER_SONG, { song: null });
           setTimeout(this.startPlayer.bind(this), 5000);
         }
       }

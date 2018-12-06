@@ -1,8 +1,9 @@
-import { Button, Card, TextField, withStyles, WithStyles } from '@material-ui/core';
+import { Button, Card, IconButton, InputAdornment, TextField, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable } from 'Common';
 import { Loading } from 'Components';
 import { withAddSongMutation, WithAddSongMutationProps } from 'RadioGraphql';
 import * as React from 'react';
+import { MdClear as ClearIcon } from 'react-icons/md';
 import { YoutubeHelper } from 'team-radio-shared';
 import { styles } from './styles';
 
@@ -22,7 +23,17 @@ class StationSongSearch extends React.Component<CoreProps, CoreStates> {
         <TextField
           placeholder={'Type youtube URL here'}
           className={classes.textField}
-          InputProps={{ className: classes.input }}
+          InputProps={{
+            className: classes.input,
+            readOnly: this.state.loading,
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton disabled={this.state.loading} onClick={this.reset}>
+                  <ClearIcon />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
           InputLabelProps={{ className: classes.inputLabel }}
           FormHelperTextProps={{ error: true }}
           value={this.state.url}
@@ -53,6 +64,14 @@ class StationSongSearch extends React.Component<CoreProps, CoreStates> {
     } catch (error) {
       this.setState({ error: error.message });
     }
+  };
+
+  private reset = () => {
+    this.setState({
+      url: '',
+      error: null,
+      loading: false
+    });
   };
 }
 

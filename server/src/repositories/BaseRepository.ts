@@ -1,7 +1,7 @@
 import { BaseEntity } from 'entities';
 import { UnprocessedEntityException } from 'exceptions';
 import { EntityRepository, Repository, SaveOptions } from 'typeorm';
-import Container from 'typedi';
+import { Container } from 'typedi';
 import { Logger } from 'services';
 
 @EntityRepository(BaseEntity)

@@ -16,7 +16,8 @@ import {
   SongCRUDResolver,
   StationCRUDResolver,
   UserCRUDResolver,
-  DistinctSongResolver
+  DistinctSongResolver,
+  UnavailableSongsResolver
 } from 'resolvers';
 import { Logger } from 'services';
 import { SubscriptionManager } from 'subscription';
@@ -53,7 +54,8 @@ export class GraphQLManager {
         DistinctSongResolver,
         SongCRUDResolver,
         PlaylistSongsCRUDResolver,
-        HistorySongsCRUDResolver
+        HistorySongsCRUDResolver,
+        UnavailableSongsResolver
       ]
     });
 

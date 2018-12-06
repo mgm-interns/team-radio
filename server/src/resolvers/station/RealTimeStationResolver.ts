@@ -1,5 +1,5 @@
 import { IAnonymousContext, IAuthenticatedContext } from 'config';
-import { BadRequestException, Exception } from 'exceptions';
+import { BadRequestException } from 'exceptions';
 import { RealTimeStation, RealTimeStationsManager, RealTimeStationWithOnlineCount, StationTopic } from 'subscription';
 import { Arg, Ctx, Mutation, Publisher, PubSub, Query, Resolver, Root, Subscription } from 'type-graphql';
 import { Inject } from 'typedi';
@@ -17,7 +17,7 @@ export class RealTimStationResolver extends BaseStationResolver {
       'combine with "onStationChanged" for fetching initial data then listening for changes.'
   })
   public one(@Arg('stationId') stationId: string): RealTimeStation {
-    return this.manager.findStation(stationId);
+    return RealTimeStation.fromRealTimeStationManager(this.manager.findStation(stationId));
   }
 
   @Query(returns => [RealTimeStationWithOnlineCount], {
@@ -48,7 +48,7 @@ export class RealTimStationResolver extends BaseStationResolver {
     filter: ({ args, payload }) => payload.stationId === args.stationId
   })
   public subscribeStation(@Arg('stationId') stationId: string): RealTimeStation {
-    return this.manager.findStation(stationId);
+    return RealTimeStation.fromRealTimeStationManager(this.manager.findStation(stationId));
   }
 
   @Mutation({ description: 'Join specific station, this action will leave all other stations before joining another.' })

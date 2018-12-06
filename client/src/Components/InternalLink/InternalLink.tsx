@@ -1,36 +1,26 @@
-import { Typography } from '@material-ui/core';
+import { Typography, withStyles, WithStyles } from '@material-ui/core';
 import { TypographyProps } from '@material-ui/core/Typography';
 import { Container, Identifiable, Styleable } from 'Common';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { classnames } from 'Themes';
+import { styles } from './styles';
 
 function InternalLink(props: CoreProps): React.ReactElement<CoreProps> {
+  const { id, href, className, disableTypography, children, style, classes } = props;
   return (
-    <Link
-      to={props.href}
-      id={props.id}
-      className={props.className}
-      style={{
-        textDecoration: 'none',
-        ...props.style
-      }}
-    >
-      {props.disableTypography ? (
-        props.children
-      ) : (
-        <Typography variant={props.variant} color={props.color}>
-          {props.children}
-        </Typography>
-      )}
+    <Link to={href} id={id} className={classnames(classes.container, className)} style={style}>
+      {disableTypography ? children : <Typography {...props.TypographyProps}>{props.children}</Typography>}
     </Link>
   );
 }
 
-interface CoreProps extends Props {}
+interface CoreProps extends WithStyles<typeof styles>, Props {}
 
-export default InternalLink;
+export default withStyles(styles)(InternalLink);
 
-export interface Props extends Identifiable, Styleable, Container, TypographyProps {
+export interface Props extends Identifiable, Styleable, Container {
   href: string;
   disableTypography?: boolean;
+  TypographyProps?: TypographyProps;
 }
