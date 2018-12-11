@@ -9,9 +9,9 @@ module.exports = (env = {}) => {
     ...getBaseConfig(env),
     entry: {
       // Main application bundle
-      'bundle': Path.resolve('src', 'index.ts'),
+      bundle: Path.resolve('src', 'index.ts'),
       // Main migration service bundle
-      'migrate': Path.resolve('src', 'config', 'migrations', 'migrate.ts'),
+      migrate: Path.resolve('src', 'config', 'migrations', 'migrate.ts'),
       // Migration files
       ...Glob.sync(Path.resolve('src', 'migrations') + '/**.*ts').reduce((current, entry) => {
         // Get standardize static page id
@@ -28,10 +28,7 @@ module.exports = (env = {}) => {
     },
     resolve: {
       extensions: ['.ts'],
-      modules: [Path.resolve('node_modules'), Path.resolve('..', 'node_modules'), Path.resolve('src')],
-      alias: {
-        shared: Path.resolve("..", "shared")
-    }
+      modules: [Path.resolve('node_modules'), Path.resolve('..', 'node_modules'), Path.resolve('src')]
     }
   };
 };

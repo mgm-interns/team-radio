@@ -52,7 +52,6 @@ class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
   private renderPlayerWrapper = (children: (data?: RealTimeStationPlayerQueryPlayer) => React.ReactNode) => {
     const { classes, data } = this.props;
     let content: React.ReactNode;
-    console.log(data && data.StationPlayer && data.StationPlayer.playing);
 
     if (data.error) {
       console.error(data.error);

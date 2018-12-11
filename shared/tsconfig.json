@@ -9,9 +9,7 @@
     "importHelpers": false,
     "declaration": true,
     "moduleResolution": "node",
-    "types": [
-      "../typing"
-    ]
+    "typeRoots": ["node_modules/@types", "typing"]
   },
   "exclude": [
     "node_modules",

@@ -18,6 +18,7 @@ let connectionAttempts: number;
 
 export function initClient(config: RadioClientConfig) {
   const { hostname, protocol, port } = window.location;
+  const isHttps = /https/.test(protocol);
   let serverPort = port ? `:${port}` : '';
   if (process.env.NODE_ENV !== 'production') {
     serverPort = ':8000';
@@ -48,7 +49,7 @@ export function initClient(config: RadioClientConfig) {
   });
 
   const wsLink = new WebSocketLink({
-    uri: `ws://${hostname}${serverPort}/api`,
+    uri: `${isHttps ? 'wss' : 'ws'}://${hostname}${serverPort}/api`,
     options: {
       reconnect: true,
       connectionParams: {

@@ -16,7 +16,7 @@
     "build:admin": "cd admin && npm run build",
     "postinstall": "npm-run-all install:** build",
     "clean": "npm-run-all clean:**",
-    "clean:node_modules": "rm -rf node_modules **/*node_modules",
+    "clean:node_modules": "rm -rf node_modules client/node_modules admin/node_modules server/node_modules shared/node_modules",
     "copy:env": "npm-run-all copy:env:**",
     "copy:env:server": "cd server && cp .env.example .env",
     "copy:env:client": "cd client && cp .env.example .env",

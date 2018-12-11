@@ -11,5 +11,9 @@ export const styles = ({ palette, spacing }: Theme) =>
       height: `calc(100% - ${TABS_HEIGHT}px - ${spacing.smallUnit}px)`,
       overflowY: 'auto',
       marginTop: spacing.smallUnit
+    },
+    iconTab: {
+      minWidth: 48,
+      width: '33.33%'
     }
   });
