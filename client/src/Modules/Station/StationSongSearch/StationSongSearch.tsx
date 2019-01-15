@@ -1,6 +1,6 @@
-import { Button, Card, IconButton, InputAdornment, TextField, withStyles, WithStyles } from '@material-ui/core';
+import { Card, IconButton, InputAdornment, TextField, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable } from 'Common';
-import { Loading } from 'Components';
+import { GradientButton, Loading } from 'Components';
 import { withAddSongMutation, WithAddSongMutationProps } from 'RadioGraphql';
 import * as React from 'react';
 import { MdClear as ClearIcon } from 'react-icons/md';
@@ -40,15 +40,14 @@ class StationSongSearch extends React.Component<CoreProps, CoreStates> {
           onChange={e => this.setState({ url: e.target.value })}
           helperText={this.state.error}
         />
-        <Button
-          color={'primary'}
+        <GradientButton
           variant={'contained'}
           className={classes.button}
           onClick={this.submit}
           disabled={this.state.loading}
         >
-          {this.state.loading ? <Loading color={'inherit'} size={16} /> : 'Submit'}
-        </Button>
+          {this.state.loading ? <Loading color={'inherit'} size={16} className={classes.loadingContainer} /> : 'Submit'}
+        </GradientButton>
       </Card>
     );
   }

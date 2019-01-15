@@ -1,6 +1,16 @@
 import { Theme } from '@material-ui/core';
 import { RGBA } from './rgba';
 
+declare module '@material-ui/core/styles/createPalette' {
+  interface SimplePaletteColorOptions {
+    mainGradient: string;
+  }
+
+  interface PaletteColor {
+    mainGradient: string;
+  }
+}
+
 declare module '@material-ui/core/styles/spacing' {
   interface Spacing {
     smallUnit: number;

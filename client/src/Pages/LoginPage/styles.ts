@@ -1,6 +1,6 @@
 import { createStyles, Theme } from '@material-ui/core';
 
-export const styles = ({ palette, spacing }: Theme) =>
+export const styles = ({ palette, spacing, typography }: Theme) =>
   createStyles({
     container: {},
     backgroundContainer: {
@@ -26,6 +26,7 @@ export const styles = ({ palette, spacing }: Theme) =>
     facebookLoginButton: {
       background: palette.common.facebookButtonBG,
       color: palette.common.white,
+      fontSize: typography.h5.fontSize,
 
       '&:hover': {
         background: palette.common.facebookButtonHoverBG
@@ -34,6 +35,7 @@ export const styles = ({ palette, spacing }: Theme) =>
     googleLoginButton: {
       background: palette.common.googleButtonBG,
       color: palette.common.white,
+      fontSize: typography.h5.fontSize,
 
       '&:hover': {
         background: palette.common.googleButtonHoverBG

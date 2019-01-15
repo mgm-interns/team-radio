@@ -1,4 +1,5 @@
 import { createMuiTheme } from '@material-ui/core';
+import Red from '@material-ui/core/colors/red';
 import { rgba } from './rgba';
 
 export const dark = createMuiTheme({
@@ -8,30 +9,24 @@ export const dark = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      50: '#fbedea',
-      100: '#f6d2ca',
-      200: '#f0b5a7',
       light: '#f0b5a7',
-      300: '#e99783',
-      400: '#e58069',
-      500: '#e06a4e',
       main: '#e06a4e',
-      600: '#dc6247',
-      700: '#d8573d',
-      800: '#d34d35',
+      mainGradient: 'linear-gradient(to right, #f46b45, #eea849)',
       dark: '#d34d35',
-      900: '#cb3c25',
-      A100: '#ffffff',
-      A200: '#ffd9d4',
-      A400: '#ffaca1',
-      A700: '#ff9687',
       contrastText: '#fff'
     },
     secondary: {
       light: '#484848',
       main: '#212121',
+      mainGradient: 'linear-gradient(to right, #303030, #434343)',
       dark: '#000000',
       contrastText: '#fff'
+    },
+    error: {
+      light: Red['200'],
+      main: Red['500'],
+      dark: Red['800'],
+      mainGradient: 'linear-gradient(to right, #cb2d3e, #ef473a)'
     },
     common: {
       rgba,

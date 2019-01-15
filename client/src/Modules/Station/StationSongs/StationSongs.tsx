@@ -38,7 +38,7 @@ class StationSongs extends React.Component<CoreProps, CoreStates> {
           onChange={this.handleTabChange}
           indicatorColor={'primary'}
           textColor={'primary'}
-          fullWidth
+          variant={'fullWidth'}
           innerRef={ref => {
             this.tabRef = ref && ref.tabsRef;
           }}

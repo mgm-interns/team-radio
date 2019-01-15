@@ -5,7 +5,7 @@ import { PartialQueryProps } from '../types';
 
 const QUERY = gql`
   query allDistinctHistorySongs($stationId: String!, $perPage: Int, $page: Int) {
-    allDistinctHistorySongs(filter: { stationId: $stationId }, perPage: $perPage, page: $page) {
+    items: allDistinctHistorySongs(filter: { stationId: $stationId }, perPage: $perPage, page: $page) {
       title
       url
       thumbnail
@@ -36,7 +36,7 @@ export interface Song {
 }
 
 export interface Response {
-  readonly allDistinctHistorySongs: Song[];
+  readonly items: Song[];
 }
 
 export interface Variables {

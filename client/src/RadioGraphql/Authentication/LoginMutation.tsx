@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
-import { FetchResult, graphql, MutateProps, Mutation as GraphQLMutation } from 'react-apollo';
+import { graphql, MutateProps, Mutation as GraphQLMutation } from 'react-apollo';
 import { UserRole } from '.';
 import { PartialMutationProps } from '../types';
 

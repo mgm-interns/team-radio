@@ -1,15 +1,6 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  TextField,
-  Typography,
-  withStyles,
-  WithStyles
-} from '@material-ui/core';
+import { Card, CardActions, CardContent, TextField, Typography, withStyles, WithStyles } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
-import { Picture } from 'Components';
+import { GradientButton, Picture } from 'Components';
 import { FullLayout } from 'Containers';
 import * as React from 'react';
 import { styles } from './styles';
@@ -84,9 +75,9 @@ class RegisterPage extends React.Component<CoreProps> {
                   />
                 </div>
                 <CardActions className={classes.cardActions}>
-                  <Button color={'primary'} variant={'contained'} fullWidth>
+                  <GradientButton variant={'contained'} fullWidth>
                     Submit
-                  </Button>
+                  </GradientButton>
                 </CardActions>
               </CardContent>
             </Card>

@@ -35,7 +35,7 @@ export function getSubscribeToMoreOptions(): SubscribeToMoreOptions<
       if (!subscriptionData.data) return prev;
       return {
         ...prev,
-        allStations: prev.allRealTimeStations.map((station: AllRealTimeStationsQueryStation) => {
+        items: prev.items.map((station: AllRealTimeStationsQueryStation) => {
           if (station.id === subscriptionData.data.onStationsChanged.id) {
             return {
               ...station,

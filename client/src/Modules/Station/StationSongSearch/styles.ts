@@ -22,5 +22,8 @@ export const styles = ({ palette, spacing }: Theme) =>
     inputLabel: {},
     button: {
       marginLeft: spacing.mediumUnit
+    },
+    loadingContainer: {
+      padding: spacing.smallUnit
     }
   });

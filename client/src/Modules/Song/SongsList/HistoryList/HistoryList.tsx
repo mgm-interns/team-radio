@@ -19,10 +19,10 @@ class HistoryList extends React.Component<CoreProps> {
         <RealTimeStationDistinctHistorySongQuery variables={this.parseQueryParams()} fetchPolicy={'cache-and-network'}>
           {({ error, loading, data }) => {
             if (error) return <Typography color={'error'}>Error {error.message}</Typography>;
-            if (loading && !data.allDistinctHistorySongs) return <Loading />;
+            if (loading && !data.items) return <Loading />;
             return (
               <List className={classnames(classes.listContainer, className)} style={style}>
-                {data.allDistinctHistorySongs.map(song => (
+                {data.items.map(song => (
                   <SongItem.SimpleSong
                     key={song.url}
                     song={song}

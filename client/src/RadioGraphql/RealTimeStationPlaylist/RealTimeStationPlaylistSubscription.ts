@@ -39,7 +39,7 @@ export function getSubscribeToMoreOptions(
 
       return {
         ...prev,
-        StationPlaylist: subscriptionData.data.onStationPlaylistChanged
+        items: subscriptionData.data.onStationPlaylistChanged
       };
     }
   };

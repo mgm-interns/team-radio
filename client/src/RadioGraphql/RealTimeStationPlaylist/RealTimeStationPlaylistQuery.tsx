@@ -5,7 +5,7 @@ import { PartialQueryProps } from '../types';
 
 const QUERY = gql`
   query StationPlaylist($stationId: String!) {
-    StationPlaylist(stationId: $stationId) {
+    items: StationPlaylist(stationId: $stationId) {
       currentPlayingSongId
       playlist {
         id
@@ -50,7 +50,7 @@ export interface PlaylistSong {
 }
 
 export interface Response {
-  readonly StationPlaylist: Playlist;
+  readonly items: Playlist;
 }
 
 export interface Variables {

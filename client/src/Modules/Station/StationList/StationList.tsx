@@ -42,7 +42,7 @@ class StationList extends ReactSubscriptionComponent<CoreProps> {
       );
     }
 
-    return children(data.allRealTimeStations);
+    return children(data.items);
   };
 }
 

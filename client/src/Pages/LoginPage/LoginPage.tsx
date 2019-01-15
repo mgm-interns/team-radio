@@ -4,14 +4,13 @@ import {
   CardActions,
   CardContent,
   FormHelperText,
-  Icon,
   TextField,
   Typography,
   withStyles,
   WithStyles
 } from '@material-ui/core';
 import { ApolloClient } from 'apollo-boost';
-import { InternalLink, Picture } from 'Components';
+import { GradientButton, InternalLink, Picture } from 'Components';
 import { FullLayout } from 'Containers';
 import { ErrorHelper } from 'Error';
 import { LoginMutationVariables, withLoginMutation, WithLoginMutationProps } from 'RadioGraphql';
@@ -64,14 +63,10 @@ class LoginPage extends React.Component<CoreProps, CoreStates> {
                     </Typography>
                     <CardActions className={classes.loginActions}>
                       <Button variant={'fab'} className={classes.facebookLoginButton}>
-                        <Icon>
-                          <FaFacebookF />
-                        </Icon>
+                        <FaFacebookF />
                       </Button>
                       <Button variant={'fab'} className={classes.googleLoginButton}>
-                        <Icon>
-                          <FaGooglePlusG />
-                        </Icon>
+                        <FaGooglePlusG />
                       </Button>
                     </CardActions>
                     <div className={classes.textFieldsContainer}>
@@ -99,8 +94,7 @@ class LoginPage extends React.Component<CoreProps, CoreStates> {
                       </FormHelperText>
                     </div>
                     <CardActions className={classes.cardActions}>
-                      <Button
-                        color={'primary'}
+                      <GradientButton
                         variant={'contained'}
                         fullWidth
                         onClick={() => this.onSubmit(client)}
@@ -108,11 +102,19 @@ class LoginPage extends React.Component<CoreProps, CoreStates> {
                         type={'submit'}
                       >
                         Login
-                      </Button>
-                      <InternalLink href={'/'} className={classes.textLink} TypographyProps={{ color: 'primary' }}>
+                      </GradientButton>
+                      <InternalLink
+                        href={'/register'}
+                        className={classes.textLink}
+                        TypographyProps={{ color: 'primary' }}
+                      >
                         Forgot your password
                       </InternalLink>
-                      <InternalLink href={'/'} className={classes.textLink} TypographyProps={{ color: 'primary' }}>
+                      <InternalLink
+                        href={'/register'}
+                        className={classes.textLink}
+                        TypographyProps={{ color: 'primary' }}
+                      >
                         Create an account
                       </InternalLink>
                     </CardActions>

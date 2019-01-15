@@ -5,7 +5,7 @@ import { PartialQueryProps } from '../types';
 
 const QUERY = gql`
   query RealTimeStation($stationId: String!) {
-    RealTimeStation(stationId: $stationId) {
+    item: RealTimeStation(stationId: $stationId) {
       id
       stationId
       stationName
@@ -64,7 +64,7 @@ export interface OnlineAnonymous {
 }
 
 export interface Response {
-  readonly RealTimeStation: Station;
+  readonly item: Station;
 }
 
 export interface Variables {

@@ -45,12 +45,12 @@ class Playlist extends ReactSubscriptionComponent<CoreProps> {
     } else if (data.loading) {
       // Loading
       content = <Loading />;
-    } else if (!data.StationPlaylist.playlist.length) {
+    } else if (!data.items.playlist.length) {
       // No playing song and no song in playlist
       content = <Typography>No song</Typography>;
     } else {
       // Playing song is active
-      return children(data.StationPlaylist);
+      return children(data.items);
     }
 
     return (

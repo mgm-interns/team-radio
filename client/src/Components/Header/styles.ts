@@ -4,7 +4,7 @@ import { ThemeType } from 'Themes';
 export const styles = ({ palette, spacing, zIndex }: Theme) =>
   createStyles({
     container: {
-      background: palette.type === ThemeType.LIGHT ? palette.primary.main : palette.secondary.main,
+      background: palette.type === ThemeType.LIGHT ? palette.primary.mainGradient : palette.secondary.mainGradient,
       zIndex: zIndex.drawer + 1
     },
     toolBarContainer: {

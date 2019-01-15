@@ -5,7 +5,7 @@ import { PartialQueryProps } from '../types';
 
 const QUERY = gql`
   {
-    allRealTimeStations {
+    items: allRealTimeStations {
       id
       createdAt
       isPrivate
@@ -40,7 +40,7 @@ export interface Station {
 }
 
 export interface Response {
-  readonly allRealTimeStations: Station[];
+  readonly items: Station[];
 }
 
 export interface Variables {}

@@ -35,11 +35,11 @@ class StationPage extends React.Component<CoreProps, CoreStates> {
         {({ data, loading, error, subscribeToMore }) => {
           let stationName = <Loading color={'inherit'} />;
           if (!loading && !error) {
-            stationName = <span>{data.RealTimeStation.stationName}</span>;
+            stationName = <span>{data.item.stationName}</span>;
           }
           return (
             <PageLogic
-              RealTimeStation={data && data.RealTimeStation}
+              RealTimeStation={data && data.item}
               layout={<Layout {...this.getLayoutProps(stationName)} />}
               params={this.props.match.params}
               subscribeToMore={subscribeToMore}

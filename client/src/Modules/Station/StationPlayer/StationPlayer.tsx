@@ -60,16 +60,16 @@ class StationPlayer extends ReactSubscriptionComponent<CoreProps> {
     } else if (data.loading) {
       // Loading
       content = <Loading />;
-    } else if (!data.StationPlayer.playing && !data.StationPlayer.playlistCount) {
+    } else if (!data.player.playing && !data.player.playlistCount) {
       // No playing song and no song in playlist
       content = <Typography>No song, add a new one to start listening.</Typography>;
-    } else if (data.StationPlayer.nextSongThumbnail) {
+    } else if (data.player.nextSongThumbnail) {
       // Display next song thumbnail if there is one in response
-      content = <img src={data.StationPlayer.nextSongThumbnail} className={classes.thumbnail} />;
+      content = <img src={data.player.nextSongThumbnail} className={classes.thumbnail} />;
     }
     return (
       <Card className={classes.container}>
-        {children(data.StationPlayer)}
+        {children(data.player)}
         {content && <div className={classes.overlayContainer}>{content}</div>}
       </Card>
     );

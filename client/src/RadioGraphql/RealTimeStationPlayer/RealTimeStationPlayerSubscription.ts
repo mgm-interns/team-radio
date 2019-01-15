@@ -41,7 +41,7 @@ export function getSubscribeToMoreOptions(
 
       return {
         ...prev,
-        StationPlayer: subscriptionData.data.onStationPlayerChanged
+        player: subscriptionData.data.onStationPlayerChanged
       };
     }
   };
