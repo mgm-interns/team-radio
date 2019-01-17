@@ -72,6 +72,7 @@ export class UserCRUDService extends BaseCRUDService {
 
   public async update(
     id: string,
+    password?: string,
     username?: string,
     email?: string,
     firstname?: string,
@@ -92,7 +93,20 @@ export class UserCRUDService extends BaseCRUDService {
     if (country) user.country = country;
     if (avatarUrl) user.avatarUrl = avatarUrl;
     if (coverUrl) user.coverUrl = coverUrl;
-
+    if (password) {
+      if (password.length >= 6 && password.length <= 32) user.generatePassword(password);
+      else {
+        const error = new ValidationError();
+        error.property = 'password';
+        error.constraints = {
+          minLength: 'Password must be longer than 6 characters',
+          maxLength: 'Password must not be longer than 32 characters'
+        };
+        error.value = password;
+        error.children = [];
+        throw new UnprocessedEntityException('Can not save User', [error]);
+      }
+    }
     return this.userRepository.saveOrFail(user);
   }
 

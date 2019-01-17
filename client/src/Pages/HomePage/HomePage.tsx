@@ -1,14 +1,5 @@
-import {
-  Button,
-  FormControlLabel,
-  FormGroup,
-  Switch,
-  TextField,
-  Typography,
-  WithStyles,
-  withStyles
-} from '@material-ui/core';
-import { Picture } from 'Components';
+import { FormControlLabel, FormGroup, Switch, TextField, Typography, WithStyles, withStyles } from '@material-ui/core';
+import { GradientButton, Picture } from 'Components';
 import { FullLayout } from 'Containers';
 import { StationItem, StationList } from 'Modules';
 import * as React from 'react';
@@ -81,15 +72,14 @@ class HomePage extends React.Component<CoreProps, CoreStates> {
                   label={<Typography color={'primary'}>Private</Typography>}
                 />
               </FormGroup>
-              <Button
+              <GradientButton
                 className={classnames({ disabled: this.state.inputValue === '' })}
                 variant={'contained'}
-                color={'primary'}
                 fullWidth
                 disabled={this.state.inputValue === ''}
               >
                 <MdCreate /> <span className={classes.createButtonLabel}>Create</span>
-              </Button>
+              </GradientButton>
             </div>
           </div>
           <div className={classes.stations}>

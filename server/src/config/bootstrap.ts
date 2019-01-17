@@ -1,17 +1,17 @@
+import { ApolloServer } from 'apollo-server-express';
 import * as Express from 'express';
+import { execute, subscribe } from 'graphql';
+import { createServer } from 'http';
 import * as Path from 'path';
 import { Logger } from 'services';
-import { createServer } from 'http';
-import { ApolloServer } from 'apollo-server-express';
-import { execute, subscribe } from 'graphql';
-import { RealTimeStationsManager } from 'subscription/station';
 import { SubscriptionManager } from 'subscription';
+import { RealTimeStationsManager } from 'subscription/station';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { Container } from 'typedi';
 import { sleep } from 'utils';
 import { WorkersManager } from 'workers';
 import { DataAccess } from './DataAccess';
 import { GraphQLManager } from './GraphQLManager';
-import { SubscriptionServer } from 'subscriptions-transport-ws';
 
 export async function bootstrap() {
   // Retrieve logger instance
@@ -37,6 +37,7 @@ export async function bootstrap() {
     schema,
     context: graphQLManager.getContextHandler(),
     playground: true,
+    introspection: true,
     formatError: graphQLManager.getErrorFormatter(),
     subscriptions: false // Disable subscription config in apollo server due unknow bug
   });
@@ -67,7 +68,9 @@ export async function bootstrap() {
         subscribe,
         schema,
         onConnect: subscriptionManager.getOnConnectingHandler(),
-        onDisconnect: subscriptionManager.getOnDisconnectingHandler()
+        onDisconnect: subscriptionManager.getOnDisconnectingHandler(),
+        // This is a fix for Heroku deployment
+        keepAlive: parseInt(process.env.WEBSOCKET_KEEP_ALIVE_INTERVAL || '20000', 10)
       },
       { server: httpServer, path: endpoint }
     );

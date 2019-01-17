@@ -1,13 +1,13 @@
-import { createStyles, Theme } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-export const styles = ({ typography, spacing }: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexDirection: 'column'
-    },
-    tooltip: {
-      ...typography.body1,
-      marginLeft: spacing.largeUnit
-    }
-  });
+export const useStyles = makeStyles(({ typography, spacing }: Theme) => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  tooltip: {
+    ...typography.body1,
+    marginLeft: spacing.largeUnit
+  }
+}));

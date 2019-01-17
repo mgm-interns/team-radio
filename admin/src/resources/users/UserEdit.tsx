@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { email, length, url } from 'validator';
+import { email, length, required, url } from 'validator';
 import { UserTitle } from './UserTitle';
 
-const { Edit, LongTextInput, SimpleForm } = require('react-admin');
+const { Edit, LongTextInput, SimpleForm, TextInput } = require('react-admin');
 
 export const UserEdit = (props: any) => (
   <Edit title={<UserTitle />} {...props}>
@@ -10,6 +10,7 @@ export const UserEdit = (props: any) => (
       <LongTextInput source="id" disabled />
       <LongTextInput source="email" validate={[email(), length({ min: 6, max: 64 })]} />
       <LongTextInput source="username" validate={[length({ min: 6, max: 32 })]} />
+      <TextInput source="password" type="password" validate={[required()]} />
       <LongTextInput source="firstname" />
       <LongTextInput source="lastname" />
       <LongTextInput source="name" />

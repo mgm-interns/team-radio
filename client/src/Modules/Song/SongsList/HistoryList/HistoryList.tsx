@@ -1,4 +1,4 @@
-import { List, Typography, withStyles, WithStyles } from '@material-ui/core';
+import { List, Typography } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
 import { Loading } from 'Components';
 import { SongItem } from 'Modules';
@@ -9,49 +9,53 @@ import {
 import * as React from 'react';
 import { classnames } from 'Themes';
 import { ItemAction } from './ItemAction';
-import { styles } from './styles';
+import { useStyles } from './styles';
 
-class HistoryList extends React.Component<CoreProps> {
-  public render(): React.ReactNode {
-    const { id, classes, className, style } = this.props;
-    return (
-      <div id={id} className={classnames(classes.container, className)} style={style}>
-        <RealTimeStationDistinctHistorySongQuery variables={this.parseQueryParams()} fetchPolicy={'cache-and-network'}>
-          {({ error, loading, data }) => {
-            if (error) return <Typography color={'error'}>Error {error.message}</Typography>;
-            if (loading && !data.items) return <Loading />;
-            return (
-              <List className={classnames(classes.listContainer, className)} style={style}>
-                {data.items.map(song => (
-                  <SongItem.SimpleSong
-                    key={song.url}
-                    song={song}
-                    actions={<ItemAction song={song} />}
-                    textClassName={classes.itemText}
-                  />
-                ))}
-              </List>
-            );
-          }}
-        </RealTimeStationDistinctHistorySongQuery>
-      </div>
-    );
-  }
+const HistoryList: React.FunctionComponent<CoreProps> = props => {
+  const classes = useStyles();
+  const { id, className, style } = props;
 
-  private parseQueryParams = (): RealTimeStationDistinctHistorySongQueryVariables => {
-    if (this.props.params.perPage) {
-      return this.props.params;
-    }
-    return {
-      ...this.props.params,
-      perPage: 50
-    };
-  };
-}
+  const params = React.useMemo(
+    (): RealTimeStationDistinctHistorySongQueryVariables => {
+      if (props.params.perPage) {
+        return props.params;
+      }
+      return { ...props.params, perPage: 50 };
+    },
+    [props.params]
+  );
 
-interface CoreProps extends WithStyles<typeof styles>, Props {}
+  return (
+    <div id={id} className={classnames(classes.container, className)} style={style}>
+      <RealTimeStationDistinctHistorySongQuery
+        key={params.stationId}
+        variables={params}
+        fetchPolicy={'cache-and-network'}
+      >
+        {({ error, loading, data }) => {
+          if (error) return <Typography color={'error'}>Error {error.message}</Typography>;
+          if (loading && !data.items) return <Loading />;
+          return (
+            <List className={classnames(classes.listContainer, className)} style={style}>
+              {data.items.map(song => (
+                <SongItem.SimpleSong
+                  key={song.url}
+                  song={song}
+                  actions={<ItemAction song={song} />}
+                  textClassName={classes.itemText}
+                />
+              ))}
+            </List>
+          );
+        }}
+      </RealTimeStationDistinctHistorySongQuery>
+    </div>
+  );
+};
 
-export default withStyles(styles)(HistoryList);
+interface CoreProps extends Props {}
+
+export default HistoryList;
 
 export interface Props extends Identifiable, Styleable {
   params: RealTimeStationDistinctHistorySongQueryVariables;

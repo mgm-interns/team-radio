@@ -1,38 +1,38 @@
-import { CssBaseline, MuiThemeProvider, Theme } from '@material-ui/core';
+import { CssBaseline } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
+import { Container as CommonContainer } from 'Common';
+import { useLocalStorage } from 'Hooks';
 import * as React from 'react';
-import { SwitchThemeFunction, ThemeContext, ThemeLocalStorageHelper, themes, ThemeType } from 'Themes';
+import { THEME_LOCAL_STORAGE_KEY, ThemeContext, themes, ThemeType } from 'Themes';
 
-export class Container extends React.Component<CoreProps, CoreStates> {
-  public state: CoreStates = {
-    theme: ThemeLocalStorageHelper.get() === ThemeType.LIGHT ? themes.light : themes.dark
-  };
+const Container: React.FunctionComponent<CoreProps> = props => {
+  const [theme, setTheme] = useLocalStorage<ThemeType>(THEME_LOCAL_STORAGE_KEY, ThemeType.LIGHT);
+  const switchTheme = React.useCallback(
+    (desiredTheme?: ThemeType) => {
+      if (!desiredTheme) {
+        setTheme(theme === ThemeType.LIGHT ? ThemeType.DARK : ThemeType.LIGHT);
+      } else {
+        setTheme(desiredTheme);
+      }
+    },
+    [theme]
+  );
 
-  public render(): React.ReactNode {
-    console.log(this.state.theme);
-    return (
-      <ThemeContext.Provider value={{ theme: this.state.theme, switchTheme: this.switchTheme }}>
-        <MuiThemeProvider theme={this.state.theme}>
-          <CssBaseline />
-          {this.props.children}
-        </MuiThemeProvider>
-      </ThemeContext.Provider>
-    );
-  }
-
-  private switchTheme: SwitchThemeFunction = (desiredTheme?: ThemeType) => {
-    let theme = this.state.theme.palette.type === 'light' ? themes.dark : themes.light;
-    if (desiredTheme) {
-      theme = desiredTheme === ThemeType.LIGHT ? themes.light : themes.dark;
-    }
-    this.setState({ theme }, () => ThemeLocalStorageHelper.set(this.state.theme.palette.type));
-  };
-}
+  const muiTheme = React.useMemo(() => (theme === ThemeType.LIGHT ? themes.light : themes.dark), [theme]);
+  console.log(theme);
+  console.log(muiTheme);
+  return (
+    <ThemeContext.Provider value={{ theme, switchTheme }}>
+      <ThemeProvider theme={muiTheme}>
+        <CssBaseline />
+        {props.children}
+      </ThemeProvider>
+    </ThemeContext.Provider>
+  );
+};
 
 interface CoreProps extends Props {}
-interface CoreStates {
-  theme: Theme;
-}
 
 export default Container;
 
-export interface Props {}
+export interface Props extends CommonContainer {}

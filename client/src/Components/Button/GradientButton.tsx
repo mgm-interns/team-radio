@@ -1,25 +1,32 @@
-import { Button, withStyles, WithStyles } from '@material-ui/core';
+import { Button, Theme } from '@material-ui/core';
 import { ButtonProps } from '@material-ui/core/Button';
-import { Container, Identifiable, Styleable } from 'Common';
+import { makeStyles } from '@material-ui/styles';
 import * as React from 'react';
 import { classnames } from 'Themes';
-import { styles } from './styles';
 
-export const GradientButton = ({ classes, className, ...props }: CoreProps) => (
-  <Button
-    color={'primary'}
-    className={classnames(classes.button, className)}
-    classes={{ disabled: classes.disabledButton }}
-    {...props}
-  />
-);
+export const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
+  button: {
+    background: palette.primary.mainGradient
+  },
+  disabledButton: {
+    background: palette.secondary.light
+  }
+}));
 
-interface CoreProps extends WithStyles<typeof styles>, Props {}
+export const GradientButton: React.FunctionComponent<CoreProps> = props => {
+  const classes = useStyles();
+  return (
+    <Button
+      {...props}
+      color={'primary'}
+      className={classnames(classes.button, props.className)}
+      classes={{ disabled: classes.disabledButton, ...props.classes }}
+    />
+  );
+};
 
-export default withStyles(styles)(GradientButton);
+interface CoreProps extends Props {}
 
-export interface Props
-  extends Identifiable,
-    Styleable,
-    Container,
-    Pick<ButtonProps, Exclude<Exclude<keyof ButtonProps, 'classes'>, 'color'>> {}
+export default GradientButton;
+
+export interface Props extends Pick<ButtonProps, Exclude<keyof ButtonProps, 'color'>> {}

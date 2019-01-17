@@ -21,9 +21,11 @@ const MUTATION = gql`
 
 export class MutationComponent extends GraphQLMutation<Response, Variables> {}
 
-export default function LoginMutation(props: Props) {
+const LoginMutation: any = (props: Props) => {
   return <MutationComponent mutation={MUTATION} {...props} />;
-}
+};
+
+export default LoginMutation;
 
 LoginMutation.saveLoginSession = (data: Response) => {
   const { authToken, roles } = data.login;

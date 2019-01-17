@@ -3,8 +3,8 @@ import { UserCRUDService } from 'services';
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject } from 'typedi';
 import { BaseFilter, ListMetaData } from 'types';
-import { BaseUserResolver } from './BaseUserResolver';
 import { ICRUDResolver } from '../ICRUDResolver';
+import { BaseUserResolver } from './BaseUserResolver';
 
 @Resolver(of => User)
 export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<User> {
@@ -74,6 +74,7 @@ export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<
   @Mutation(returns => User, { name: 'updateUser', description: 'Update a user in system.' })
   public async update(
     @Arg('id') id: string,
+    @Arg('password', { nullable: true }) password?: string,
     @Arg('username', { nullable: true }) username?: string,
     @Arg('email', { nullable: true }) email?: string,
     @Arg('firstname', { nullable: true }) firstname?: string,
@@ -86,6 +87,7 @@ export class UserCRUDResolver extends BaseUserResolver implements ICRUDResolver<
   ): Promise<User> {
     return this.userCRUDService.update(
       id,
+      password,
       username,
       email,
       firstname,

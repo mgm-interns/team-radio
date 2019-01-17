@@ -1,6 +1,6 @@
-import { Typography, withStyles, WithStyles } from '@material-ui/core';
-import { ReactSubscriptionComponent } from 'Common';
+import { Typography } from '@material-ui/core';
 import { Loading } from 'Components';
+import { useSubscription } from 'Hooks';
 import {
   AllRealTimeStationsQueryStation,
   getSubscribeToMoreOptionsForRealTimeStationsSubscription,
@@ -10,47 +10,52 @@ import {
 import * as React from 'react';
 import { StationsHelper } from 'team-radio-shared';
 import { StationItemProps } from '../StationItem';
-import { styles } from './styles';
+import { useStyles } from './styles';
 
-class StationList extends ReactSubscriptionComponent<CoreProps> {
-  public render() {
-    const { StationItem, onItemClick } = this.props;
+const StationList: React.FunctionComponent<CoreProps> = props => {
+  const classes = useStyles();
 
-    return this.renderWrapper(data =>
-      StationsHelper.sortRealTimeStations(data).map(station => (
+  const subscribeToMoreOptions = React.useMemo(getSubscribeToMoreOptionsForRealTimeStationsSubscription, []);
+
+  useSubscription(props.data, subscribeToMoreOptions);
+
+  const renderWrapper = React.useCallback(
+    (children: (data: AllRealTimeStationsQueryStation[]) => React.ReactElement<{}>) => {
+      const { data } = props;
+
+      if (data.loading) {
+        return <Loading />;
+      }
+
+      if (data.error) {
+        return (
+          <Typography className={classes.error} color={'error'}>
+            Error {data.error.message}
+          </Typography>
+        );
+      }
+
+      return children(data.items);
+    },
+    [classes, props.data]
+  );
+
+  const { StationItem, onItemClick } = props;
+
+  return renderWrapper(data => (
+    <>
+      {StationsHelper.sortRealTimeStations(data).map(station => (
         <StationItem key={station.id} station={station} onClick={onItemClick} />
-      ))
-    );
-  }
+      ))}
+    </>
+  ));
+};
 
-  protected getSubscribeToMoreOptions = () => {
-    return getSubscribeToMoreOptionsForRealTimeStationsSubscription();
-  };
-
-  private renderWrapper = (children: (data: AllRealTimeStationsQueryStation[]) => React.ReactNode) => {
-    const { data, classes } = this.props;
-
-    if (data.loading) {
-      return <Loading />;
-    }
-
-    if (data.error) {
-      return (
-        <Typography className={classes.error} color={'error'}>
-          Error {data.error.message}
-        </Typography>
-      );
-    }
-
-    return children(data.items);
-  };
-}
-
-interface CoreProps extends WithAllRealTimeStationsQueryProps, WithStyles<typeof styles>, Props {}
+interface CoreProps extends WithAllRealTimeStationsQueryProps, Props {}
 
 export default withAllRealTimeStationsQuery<Props>({
   options: { notifyOnNetworkStatusChange: true, fetchPolicy: 'network-only' }
-})(withStyles(styles)(StationList));
+})(StationList);
 
 export interface Props {
   StationItem: React.ComponentType<StationItemProps>;

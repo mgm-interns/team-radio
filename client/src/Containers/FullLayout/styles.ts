@@ -1,8 +1,8 @@
-import { createStyles, Theme } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-export const styles = ({ palette, spacing }: Theme) =>
-  createStyles({
-    body: {
-      height: '100%'
-    }
-  });
+export const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
+  body: {
+    height: '100%'
+  }
+}));

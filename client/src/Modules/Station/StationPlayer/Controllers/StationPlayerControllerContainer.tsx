@@ -2,22 +2,18 @@ import { Container } from 'Common';
 import * as React from 'react';
 import { StationPlayerController } from './Context';
 
-function StationPlayerControllerContainer({ children }: CoreProps) {
+const StationPlayerControllerContainer: React.FunctionComponent<CoreProps> = ({ children }) => {
+  const stationPlayerControllerContext = React.useContext(StationPlayerController);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  React.useLayoutEffect(() => {
+    stationPlayerControllerContext.setContainer({ container: containerRef.current });
+  });
   return (
-    <StationPlayerController.Consumer>
-      {({ setContainer }) => (
-        <div
-          style={{ width: '100%', height: '100%' }}
-          ref={(ref: React.ReactInstance) => {
-            setContainer({ container: ref });
-          }}
-        >
-          {children}
-        </div>
-      )}
-    </StationPlayerController.Consumer>
+    <div style={{ width: '100%', height: '100%' }} ref={containerRef}>
+      {children}
+    </div>
   );
-}
+};
 
 interface CoreProps extends Props {}
 

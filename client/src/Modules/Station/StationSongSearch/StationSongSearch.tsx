@@ -1,87 +1,79 @@
-import { Card, IconButton, InputAdornment, TextField, withStyles, WithStyles } from '@material-ui/core';
+import { Card, IconButton, InputAdornment, TextField } from '@material-ui/core';
 import { Identifiable } from 'Common';
 import { GradientButton, Loading } from 'Components';
+import { useLoading } from 'Hooks';
 import { withAddSongMutation, WithAddSongMutationProps } from 'RadioGraphql';
 import * as React from 'react';
 import { MdClear as ClearIcon } from 'react-icons/md';
 import { YoutubeHelper } from 'team-radio-shared';
-import { styles } from './styles';
+import { useStyles } from './styles';
 
-class StationSongSearch extends React.Component<CoreProps, CoreStates> {
-  public state: CoreStates = {
-    url: '',
-    error: null,
-    loading: false
-  };
+const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
+  const classes = useStyles();
+  const { id } = props;
 
-  private youtubeHelper = new YoutubeHelper(window.fetch);
+  const youtubeHelper = React.useMemo<YoutubeHelper>(() => new YoutubeHelper(window.fetch), []);
+  const [error, setError] = React.useState<string>(null);
+  const [url, setUrl] = React.useState<string>('');
+  const { loading, toggleLoadingOn, toggleLoadingOff } = useLoading();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  public render() {
-    const { classes, id } = this.props;
-    return (
-      <Card id={id} className={classes.container}>
-        <TextField
-          placeholder={'Type youtube URL here'}
-          className={classes.textField}
-          InputProps={{
-            className: classes.input,
-            readOnly: this.state.loading,
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton disabled={this.state.loading} onClick={this.reset}>
-                  <ClearIcon />
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-          InputLabelProps={{ className: classes.inputLabel }}
-          FormHelperTextProps={{ error: true }}
-          value={this.state.url}
-          onChange={e => this.setState({ url: e.target.value })}
-          helperText={this.state.error}
-        />
-        <GradientButton
-          variant={'contained'}
-          className={classes.button}
-          onClick={this.submit}
-          disabled={this.state.loading}
-        >
-          {this.state.loading ? <Loading color={'inherit'} size={16} className={classes.loadingContainer} /> : 'Submit'}
-        </GradientButton>
-      </Card>
-    );
-  }
+  const submit = React.useCallback(
+    async () => {
+      if (!url) return;
+      try {
+        youtubeHelper.parseVideoUrl(url);
+        setError(null);
+        toggleLoadingOn();
+        await props.mutate({ variables: { url } });
+        setUrl('');
+        toggleLoadingOff();
+        inputRef.current.focus();
+      } catch (error) {
+        setError(error.message);
+      }
+    },
+    [url]
+  );
 
-  private submit = async () => {
-    const { url } = this.state;
-    if (!url) return;
-    try {
-      this.youtubeHelper.parseVideoUrl(url);
-      this.setState({ error: null, loading: true });
-      await this.props.mutate({ variables: { url } });
-      this.setState({ loading: false, url: '', error: null });
-    } catch (error) {
-      this.setState({ error: error.message });
-    }
-  };
+  const reset = React.useCallback(() => {
+    setError(null);
+    toggleLoadingOff();
+    setUrl('');
+  }, []);
 
-  private reset = () => {
-    this.setState({
-      url: '',
-      error: null,
-      loading: false
-    });
-  };
-}
+  return (
+    <Card id={id} className={classes.container}>
+      <TextField
+        placeholder={'Type youtube URL here'}
+        className={classes.textField}
+        InputProps={{
+          className: classes.input,
+          readOnly: loading,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton disabled={loading} onClick={reset}>
+                <ClearIcon />
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
+        InputLabelProps={{ className: classes.inputLabel }}
+        FormHelperTextProps={{ error: true }}
+        value={url}
+        onChange={e => setUrl(e.target.value)}
+        inputRef={inputRef}
+        helperText={error}
+      />
+      <GradientButton variant={'contained'} className={classes.button} onClick={submit} disabled={loading}>
+        {loading ? <Loading color={'inherit'} size={16} className={classes.loadingContainer} /> : 'Submit'}
+      </GradientButton>
+    </Card>
+  );
+};
 
-interface CoreProps extends WithAddSongMutationProps, WithStyles<typeof styles>, Props {}
+interface CoreProps extends WithAddSongMutationProps, Props {}
 
-interface CoreStates {
-  url: string;
-  error?: string;
-  loading: boolean;
-}
-
-export default withAddSongMutation()(withStyles(styles)(StationSongSearch));
+export default withAddSongMutation()(StationSongSearch);
 
 export interface Props extends Identifiable {}

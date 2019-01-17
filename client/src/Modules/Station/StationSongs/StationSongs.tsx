@@ -1,112 +1,110 @@
-import { Card, Icon, Tab, Tabs, Tooltip, withStyles, WithStyles } from '@material-ui/core';
+import { Card, Icon, Tab, Tabs, Theme, Tooltip } from '@material-ui/core';
+import { useTheme } from '@material-ui/styles';
 import { Identifiable } from 'Common';
+import { useWindowResizeEffect } from 'Hooks';
 import { HistoryList, Playlist } from 'Modules';
 import { RealTimeStationPlayerQueryVariables } from 'RadioGraphql';
 import * as React from 'react';
 import { MdFavorite as FavoriteIcon, MdHistory as HistoryIcon, MdQueueMusic as PlaylistIcon } from 'react-icons/md';
-import { classnames } from 'Themes';
-import { styles } from './styles';
+import { classnames, ThemeType } from 'Themes';
+import { useTabWidth } from './hooks';
+import { useStyles } from './styles';
 
-class StationSongs extends React.Component<CoreProps, CoreStates> {
-  public state: CoreStates = {
-    tabValue: 0
-  };
+const StationSongs: React.FunctionComponent<CoreProps> = props => {
+  const classes = useStyles();
 
-  private tabRef?: HTMLDivElement;
+  const { params, id } = props;
 
-  public componentDidMount() {
-    window.addEventListener('resize', this.resizeListener);
-    this.resizeListener();
-  }
+  const [tabValue, setTabValue] = React.useState<number>(0);
+  const onTabChanged = React.useCallback<(event: React.ChangeEvent<{}>, value: number) => void>(
+    (event, value) => {
+      event.preventDefault();
+      setTabValue(value);
+    },
+    [tabValue]
+  );
 
-  public componentWillUnmount() {
-    window.removeEventListener('resize', this.resizeListener);
-  }
+  const { setTabWidth, shouldRenderIcon } = useTabWidth();
+  const tabsRef = React.useRef<{ tabsRef: HTMLElement }>(null);
+  const updateTabWidthCallback = React.useCallback(
+    () => {
+      if (tabsRef.current) {
+        if (!tabsRef.current.tabsRef) throw new Error('Can not find tabsRef. Please check');
+        setTabWidth(tabsRef.current.tabsRef.clientWidth);
+      }
+    },
+    [tabsRef]
+  );
+  // Execute callback when window resize event trigger
+  useWindowResizeEffect(updateTabWidthCallback, [updateTabWidthCallback]);
+  // Execute callback after render to set initial value for tab width
+  React.useLayoutEffect(updateTabWidthCallback, [updateTabWidthCallback]);
 
-  public render() {
-    const { tabValue } = this.state;
-    const { classes, params, id } = this.props;
-    let shouldRenderIcon: boolean = false;
-    if (this.state.tabsWidth && this.state.tabsWidth < 480) {
-      shouldRenderIcon = true;
-    }
+  const iconWrapper = React.useCallback<(icon: React.ReactNode, tooltip: string) => React.ReactElement<any>>(
+    (icon, tooltip) => {
+      return (
+        <Tooltip title={tooltip}>
+          <Icon>{icon}</Icon>
+        </Tooltip>
+      );
+    },
+    []
+  );
 
-    return (
-      <Card id={id} className={classes.container}>
-        <Tabs
-          value={tabValue}
-          onChange={this.handleTabChange}
-          indicatorColor={'primary'}
-          textColor={'primary'}
-          variant={'fullWidth'}
-          innerRef={ref => {
-            this.tabRef = ref && ref.tabsRef;
-          }}
-        >
-          <Tab
-            className={classnames({ [classes.iconTab]: shouldRenderIcon })}
-            icon={shouldRenderIcon && this.iconWrapper(<PlaylistIcon />, 'Playlist')}
-            label={shouldRenderIcon ? undefined : 'Playlist'}
-          />
-          <Tab
-            className={classnames({ [classes.iconTab]: shouldRenderIcon })}
-            icon={shouldRenderIcon && this.iconWrapper(<HistoryIcon />, 'History')}
-            label={shouldRenderIcon ? undefined : 'History'}
-          />
-          <Tab
-            className={classnames({ [classes.iconTab]: shouldRenderIcon })}
-            icon={shouldRenderIcon && this.iconWrapper(<FavoriteIcon />, 'Favorite')}
-            label={shouldRenderIcon ? undefined : 'Favorite'}
-          />
-        </Tabs>
-        {tabValue === 0 && this.generateTabContainer(<Playlist params={params} />)}
-        {tabValue === 1 && this.generateTabContainer(<HistoryList params={params} />)}
-        {tabValue === 2 && this.generateTabContainer()}
-      </Card>
-    );
-  }
+  const theme = useTheme<Theme>();
+  const containerWrapper = React.useCallback<(tab?: React.ReactNode) => React.ReactNode>(
+    tab => {
+      let content: React.ReactNode = tab;
+      if (!tab) {
+        const bg = theme.palette.type === ThemeType.DARK ? theme.palette.grey['600'] : theme.palette.grey['300'];
+        content = Array.from({ length: 20 }).map((item, index) => (
+          <div key={index} style={{ background: bg, height: 80, marginTop: 4, marginBottom: 4 }} />
+        ));
+      }
+      return <div className={classes.tabContainer}>{content}</div>;
+    },
+    [classes]
+  );
 
-  private iconWrapper = (icon: React.ReactNode, tooltip: string) => {
-    return (
-      <Tooltip title={tooltip}>
-        <Icon>{icon}</Icon>
-      </Tooltip>
-    );
-  };
+  return (
+    <Card id={id} className={classes.container}>
+      <Tabs
+        value={tabValue}
+        onChange={onTabChanged}
+        indicatorColor={'primary'}
+        textColor={'primary'}
+        variant={'fullWidth'}
+        innerRef={tabsRef}
+      >
+        <Tab
+          className={classnames({ [classes.iconTab]: shouldRenderIcon })}
+          icon={shouldRenderIcon && iconWrapper(<PlaylistIcon />, 'Playlist')}
+          label={shouldRenderIcon ? undefined : 'Playlist'}
+          classes={{ wrapper: shouldRenderIcon ? classes.tabIconWrapper : undefined }}
+        />
+        <Tab
+          className={classnames({ [classes.iconTab]: shouldRenderIcon })}
+          icon={shouldRenderIcon && iconWrapper(<HistoryIcon />, 'History')}
+          label={shouldRenderIcon ? undefined : 'History'}
+          classes={{ wrapper: shouldRenderIcon ? classes.tabIconWrapper : undefined }}
+        />
+        <Tab
+          className={classnames({ [classes.iconTab]: shouldRenderIcon })}
+          icon={shouldRenderIcon && iconWrapper(<FavoriteIcon />, 'Favorite')}
+          label={shouldRenderIcon ? undefined : 'Favorite'}
+          classes={{ wrapper: shouldRenderIcon ? classes.tabIconWrapper : undefined }}
+        />
+      </Tabs>
+      {tabValue === 0 && containerWrapper(<Playlist params={params} />)}
+      {tabValue === 1 && containerWrapper(<HistoryList params={params} />)}
+      {tabValue === 2 && containerWrapper()}
+    </Card>
+  );
+};
 
-  // TODO: fetch data for each tab
-  private generateTabContainer = (tab?: React.ReactNode): React.ReactElement<{}> => {
-    const { classes } = this.props;
-    let content: React.ReactNode = tab;
-    if (!tab) {
-      content = Array.from({ length: 20 }).map((item, index) => (
-        <div key={index} style={{ height: 80, marginTop: 4, marginBottom: 4, background: 'grey' }} />
-      ));
-    }
-    return <div className={classes.tabContainer}>{content}</div>;
-  };
+interface CoreProps extends Props {}
 
-  private handleTabChange = (event: React.ChangeEvent<{}>, value: number): void => {
-    event.preventDefault();
-    this.setState({
-      tabValue: value
-    });
-  };
-
-  private resizeListener = () => {
-    if (this.tabRef) {
-      this.setState({ tabsWidth: this.tabRef.clientWidth });
-    }
-  };
-}
-
-interface CoreProps extends WithStyles<typeof styles>, Props {}
-interface CoreStates {
-  tabValue: number;
-  tabsWidth?: number;
-}
-
-export default withStyles(styles)(StationSongs);
+export default StationSongs;
 
 export interface Props extends Identifiable {
   params: RealTimeStationPlayerQueryVariables;

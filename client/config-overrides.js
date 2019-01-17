@@ -1,6 +1,6 @@
 const Path = require('path');
 const Fs = require('fs');
-const { getBabelLoader, compose } = require('react-app-rewired');
+const { compose } = require('react-app-rewired');
 const rewireTypescript = require('react-app-rewire-typescript');
 
 module.exports = (config, env) => {
@@ -11,13 +11,6 @@ module.exports = (config, env) => {
 
   // Production config
   if (env === 'production') {
-    // Force all node_modules file js to go through babel-loader to resolve graphql-ast-types issue
-    const babelLoader = getBabelLoader(config.module.rules);
-    config.module.rules.push({
-      test: /.js$/,
-      include: /node_modules/,
-      use: [{ loader: babelLoader.loader, options: babelLoader.options }]
-    });
   }
   // Development config
   else {

@@ -1,14 +1,15 @@
-import { Drawer, Grid, Icon, IconButton, Typography, WithStyles, withStyles } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
+import { Drawer, Grid, Icon, IconButton, Typography } from '@material-ui/core';
+import { Identifiable, InContainer, Styleable } from 'Common';
 import { Header, InternalLink, Responsive } from 'Components';
 import { StationPlayerControllerContainer } from 'Modules';
 import * as React from 'react';
 import { MdArrowBack as BackIcon, MdMenu as DrawerIcon } from 'react-icons/md';
 import { classnames } from 'Themes';
-import { styles } from './styles';
+import { useStyles } from './styles';
 
-export const DefaultLayout = (props: CoreProps) => {
-  const { classes, title, stationSongs, stationChatBox, stationSongSearch, stations, drawer, toolbar } = props;
+const DefaultLayout: React.FunctionComponent<CoreProps> = props => {
+  const classes = useStyles();
+  const { title, stationSongs, stationChatBox, stationSongSearch, stations, drawer, toolbar } = props;
   const homeLink = (
     <div className={classes.drawerBottomSection}>
       <InternalLink href={'/'}>
@@ -154,11 +155,11 @@ export const DefaultLayout = (props: CoreProps) => {
   );
 };
 
-interface CoreProps extends WithStyles<typeof styles>, Props {}
+interface CoreProps extends Props {}
 
-export default withStyles(styles)(DefaultLayout);
+export default DefaultLayout;
 
-export interface Props extends Identifiable, Styleable {
+export interface Props extends Identifiable, Styleable, InContainer {
   title?: React.ReactNode;
   stationSongs: React.ReactNode;
   stationChatBox: React.ReactNode;

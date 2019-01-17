@@ -42,8 +42,7 @@ export class App extends React.Component<Props, States> {
 interface ErrorContext {
   error?: string;
 }
-const RadioErrorContext = React.createContext<ErrorContext>({});
-export const RadioErrorConsumer = RadioErrorContext.Consumer;
+export const RadioErrorContext = React.createContext<ErrorContext>({});
 
 export interface Props {}
 

@@ -49,6 +49,7 @@
     "react",
     "react-admin",
     "redux",
-    "websocket"
+    "websocket",
+    "react-hooks"
   ]
 }

@@ -1,127 +1,130 @@
-import { LinearProgress, Tooltip, withStyles, WithStyles } from '@material-ui/core';
-import { Identifiable } from 'Common';
+import { LinearProgress, Tooltip } from '@material-ui/core';
+import { Identifiable, Styleable } from 'Common';
 import * as React from 'react';
-import ReactPlayer, { ReactPlayerProps } from 'react-player';
-import { styles } from './styles';
+import ReactPlayer from 'react-player';
+import { useStyles } from './styles';
 
-export class Player extends React.Component<CoreProps, CoreStates> {
-  public static defaultProps: Partial<CoreProps> = {
-    maximumDelaySeconds: 5,
-    progressBarHeight: 5
-  };
+const initialState: CoreStates = {
+  playedAt: 0,
+  loadedAt: 0,
+  loadedAtPercent: 0,
+  playedAtPercent: 0
+};
 
-  public state: CoreStates = {
-    playedAt: this.props.currentlyPlayedAt,
-    loadedAt: 0,
-    loadedAtPercent: 0,
-    playedAtPercent: 0,
-    preload: false
-  };
+const Player: React.FunctionComponent<CoreProps> = props => {
+  const classes = useStyles();
 
-  private reactPlayer: ReactPlayer;
+  const [preload, setPreload] = React.useState<boolean>(false);
 
-  public componentDidUpdate(prevProps: CoreProps) {
-    if (prevProps.currentlyPlayedAt !== this.props.currentlyPlayedAt) {
-      this.setState({ playedAt: this.props.currentlyPlayedAt });
-    }
-    if (prevProps.url !== this.props.url && !this.props.url) {
-      this.setState({
-        playedAt: 0,
-        loadedAt: 0,
-        loadedAtPercent: 0,
-        playedAtPercent: 0
-      });
-    }
-  }
+  const [playerState, setPlayerState] = React.useState<CoreStates>(initialState);
 
-  public render() {
-    const {
-      classes,
-      id,
-      style,
-      className,
-      height,
-      width,
-      currentlyPlayedAt,
-      maximumDelaySeconds,
-      progressBarHeight,
-      onPlayerError,
-      ...otherProps
-    } = this.props;
-    return (
-      <div style={{ height, width }} className={classes.root}>
-        <ReactPlayer
-          {...otherProps}
-          id={id}
-          style={{ pointerEvents: 'none', ...style }}
-          config={{ youtube: { preload: this.state.preload } }}
-          className={className}
-          height={this.resolvePlayerHeight()}
-          width={width}
-          onProgress={this.onProgress}
-          onStart={() => this.setState({ preload: true })}
-          ref={this.ref}
-          onError={errorCode => {
-            if (onPlayerError) {
-              onPlayerError(errorCode, this.props.url!);
-            }
-          }}
+  const reactPlayerRef = React.useRef<ReactPlayer>(null);
+
+  const isSeekedTime = React.useRef(false);
+
+  React.useEffect(
+    () => {
+      isSeekedTime.current = false;
+    },
+    [props.currentlyPlayedAt]
+  );
+
+  const shouldSeekTime = React.useCallback(
+    () => {
+      if (isSeekedTime.current) return false;
+      return Math.abs(playerState.playedAt - props.currentlyPlayedAt) > 5;
+    },
+    [playerState.playedAt, props.currentlyPlayedAt]
+  );
+
+  const onProgress = React.useCallback<(state: OnPlayerProgressState) => void>(
+    ({ played, playedSeconds, loaded, loadedSeconds }): void => {
+      if (props.onProgress) {
+        props.onProgress({ played, playedSeconds, loaded, loadedSeconds });
+      }
+      if (shouldSeekTime()) {
+        isSeekedTime.current = true;
+        reactPlayerRef.current.seekTo(props.currentlyPlayedAt);
+      } else {
+        setPlayerState({
+          playedAt: playedSeconds,
+          loadedAt: loadedSeconds,
+          playedAtPercent: played,
+          loadedAtPercent: loaded
+        });
+      }
+    },
+    [props.onProgress, props.currentlyPlayedAt, shouldSeekTime]
+  );
+
+  React.useEffect(() => setPlayerState(initialState), [props.url]);
+
+  const playerHeight = React.useMemo(
+    () => {
+      if (typeof props.height === 'number') {
+        return `calc(${props.height}px - ${props.progressBarHeight}px)`;
+      }
+      return `calc(${props.height} - ${props.progressBarHeight}px)`;
+    },
+    [props.height, props.progressBarHeight]
+  );
+
+  // This memo value is a fix for the issue when user loads the player on the first time with "url" set to undefined
+  // then it will make player to be set to stopped state
+  const playing = React.useMemo<boolean>(() => !!props.url, [props.url]);
+
+  const {
+    id,
+    style,
+    height,
+    width,
+    currentlyPlayedAt,
+    maximumDelaySeconds,
+    progressBarHeight,
+    onError,
+    ...otherProps
+  } = props;
+
+  return (
+    <div style={{ height, width }} className={classes.root}>
+      <ReactPlayer
+        {...otherProps}
+        id={id}
+        playing={playing}
+        style={{ pointerEvents: 'none', ...style }}
+        config={{ youtube: { preload } }}
+        height={playerHeight}
+        width={width}
+        onProgress={onProgress}
+        ref={reactPlayerRef}
+        onStart={() => setPreload(true)}
+        onError={errorCode => {
+          if (onError) {
+            onError(errorCode, props.url!);
+          }
+        }}
+      />
+      <Tooltip
+        title={`${Math.round(playerState.playedAt)} seconds`}
+        placement={'top-start'}
+        classes={{ tooltipPlacementTop: classes.tooltip, tooltipPlacementBottom: classes.tooltip }}
+      >
+        <LinearProgress
+          color={'primary'}
+          style={{ height: progressBarHeight, width: '100%' }}
+          variant={'buffer'}
+          value={playerState.playedAtPercent * 100}
+          valueBuffer={playerState.loadedAtPercent * 100}
         />
-        <Tooltip
-          title={`${Math.round(this.state.playedAt)} seconds`}
-          placement={'top-start'}
-          classes={{ tooltipPlacementTop: classes.tooltip, tooltipPlacementBottom: classes.tooltip }}
-        >
-          <LinearProgress
-            color={'primary'}
-            style={{ height: progressBarHeight, width: '100%' }}
-            variant={'buffer'}
-            value={this.state.playedAtPercent * 100}
-            valueBuffer={this.state.loadedAtPercent * 100}
-          />
-        </Tooltip>
-      </div>
-    );
-  }
+      </Tooltip>
+    </div>
+  );
+};
 
-  protected shouldPlayerSeekTime = (oldPlayedSeconds: number, newPlayedSeconds: number): boolean => {
-    if (Math.abs(newPlayedSeconds - oldPlayedSeconds) > this.props.maximumDelaySeconds) {
-      return true;
-    }
-    return false;
-  };
-
-  protected onProgress = ({ played, playedSeconds, loaded, loadedSeconds }: OnPlayerProgressState): void => {
-    if (this.props.onProgress) {
-      this.props.onProgress({ played, playedSeconds, loaded, loadedSeconds });
-    }
-    if (this.shouldPlayerSeekTime(this.state.playedAt, playedSeconds)) {
-      this.reactPlayer.seekTo(this.state.playedAt);
-    } else {
-      this.setState({
-        playedAt: playedSeconds,
-        loadedAt: loadedSeconds,
-        playedAtPercent: played,
-        loadedAtPercent: loaded
-      });
-    }
-  };
-
-  private ref = (player: ReactPlayer) => {
-    if (this.props.ref) {
-      this.props.ref(player);
-    }
-    this.reactPlayer = player;
-  };
-
-  private resolvePlayerHeight = () => {
-    const { height, progressBarHeight } = this.props;
-    if (typeof height === 'number') {
-      return `calc(${height}px - ${progressBarHeight}px)`;
-    }
-    return `calc(${height} - ${progressBarHeight}px)`;
-  };
-}
+Player.defaultProps = {
+  maximumDelaySeconds: 5,
+  progressBarHeight: 5
+};
 
 export interface OnPlayerProgressState {
   played: number;
@@ -130,28 +133,25 @@ export interface OnPlayerProgressState {
   loadedSeconds: number;
 }
 
-interface CoreProps extends WithStyles<typeof styles>, Props {}
+interface CoreProps extends Props {}
 
 interface CoreStates {
   playedAt: number;
   loadedAt: number;
   playedAtPercent: number;
   loadedAtPercent: number;
-
-  preload: boolean;
 }
 
-export default withStyles(styles)(Player);
+export default Player;
 
-export interface Props extends Identifiable, ReactPlayerProps {
-  onError: never;
+export interface Props extends Identifiable, Styleable {
   url?: string;
-  currentlyPlayedAt: number;
+  currentlyPlayedAt?: number;
   maximumDelaySeconds?: number;
   progressBarHeight?: number | string;
-  /**
-   * @deprecated should not use this
-   */
-  ref?(player: ReactPlayer): void;
-  onPlayerError?(errorCode: number, url: string): void;
+  height: string;
+  width: string;
+  muted: boolean;
+  onError?(errorCode: number, url: string): void;
+  onProgress?(state: OnPlayerProgressState): void;
 }

@@ -1,24 +1,21 @@
-import { Typography, withStyles, WithStyles } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { Identifiable, Styleable } from 'Common';
 import * as React from 'react';
-import { styles } from './styles';
+import { useStyles } from './styles';
 
-class Footer extends React.Component<CoreProps, CoreStates> {
-  public render(): React.ReactNode {
-    const { classes } = this.props;
-    return (
-      <div className={classes.container}>
-        <Typography color={'inherit'} variant={'body2'}>
-          Copyright &copy; 2018 by TeamRadio
-        </Typography>
-      </div>
-    );
-  }
-}
+const Footer: React.FunctionComponent<CoreProps> = props => {
+  const classes = useStyles();
+  return (
+    <div className={classes.container}>
+      <Typography color={'inherit'} variant={'body2'}>
+        Copyright &copy; 2018 by TeamRadio
+      </Typography>
+    </div>
+  );
+};
 
-interface CoreProps extends Props, WithStyles<typeof styles> {}
-interface CoreStates {}
+interface CoreProps extends Props {}
 
-export default withStyles(styles)(Footer);
+export default Footer;
 
 export interface Props extends Identifiable, Styleable {}

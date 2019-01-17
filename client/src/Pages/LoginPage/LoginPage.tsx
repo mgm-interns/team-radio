@@ -134,7 +134,17 @@ class LoginPage extends React.Component<CoreProps, CoreStates> {
       return;
     }
     try {
-      await this.props.mutate({ variables: this.state });
+      const variables: LoginMutationVariables = {
+        password: this.state.password
+      };
+
+      if (this.state.username.includes('@')) {
+        variables.email = this.state.username;
+      } else {
+        variables.username = this.state.username;
+      }
+
+      await this.props.mutate({ variables });
       this.setState({ loading: false });
       client.resetStore();
       if (this.props.history.length > 2) this.props.history.goBack();

@@ -59,6 +59,6 @@ export const ThemeType: { LIGHT: 'light'; DARK: 'dark' } = { LIGHT: 'light', DAR
 export type SwitchThemeFunction = (theme?: ThemeType) => void;
 
 export interface IThemeContext {
-  theme: Theme;
+  theme: ThemeType;
   switchTheme: SwitchThemeFunction;
 }
