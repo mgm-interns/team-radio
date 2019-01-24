@@ -1,4 +1,4 @@
-import { Identifiable, Styleable } from 'Common';
+import { Identifiable, Styleable } from '@Common';
 import { SimpleSong } from './SimpleSong';
 
 export const SongItem = {

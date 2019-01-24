@@ -1,1 +1,1 @@
-export { default as SimpleStation, Props as SimpleStationProps } from './SimpleStation';
+export { default as SimpleStation } from './SimpleStation';

@@ -1,6 +1,7 @@
 import { Avatar, Divider, Hidden, ListItemIcon, ListItemText, Menu as MuiMenu, MenuItem } from '@material-ui/core';
-import { Authenticated, UnAuthenticated } from 'Modules/Authentication';
-import { LoginMutation } from 'RadioGraphql/Authentication';
+import { Authenticated, UnAuthenticated } from '@Modules/Authentication';
+import { LoginMutation } from '@RadioGraphql/Authentication';
+import { ThemeContext, ThemeType } from '@Themes';
 import * as React from 'react';
 import { ApolloConsumer } from 'react-apollo';
 import {
@@ -12,7 +13,6 @@ import {
   MdVpnKey
 } from 'react-icons/md';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { ThemeContext, ThemeType } from 'Themes';
 import { useStyles } from './styles';
 
 export const Menu: React.FunctionComponent<CoreProps> = props => {

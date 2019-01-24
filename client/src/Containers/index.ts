@@ -1,3 +1,3 @@
-export { default as Container, Props as ContainerProps } from './Container';
+export { default as Container } from './Container';
 export * from './FullLayout';
 export * from './StationLayout';

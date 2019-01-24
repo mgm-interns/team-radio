@@ -1,5 +1,5 @@
+import { Identifiable, Styleable } from '@Common';
 import { LinearProgress, Tooltip } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
 import * as React from 'react';
 import ReactPlayer from 'react-player';
 import { useStyles } from './styles';
@@ -11,6 +11,11 @@ const initialState: CoreStates = {
   playedAtPercent: 0
 };
 
+const defaultProps = {
+  maximumDelaySeconds: 5,
+  progressBarHeight: 5
+};
+
 const Player: React.FunctionComponent<CoreProps> = props => {
   const classes = useStyles();
 
@@ -20,54 +25,42 @@ const Player: React.FunctionComponent<CoreProps> = props => {
 
   const reactPlayerRef = React.useRef<ReactPlayer>(null);
 
-  const isSeekedTime = React.useRef(false);
+  const shouldSeekTime = React.useCallback<() => boolean>(() => {
+    return (
+      Math.abs(playerState.playedAt - (props.currentlyPlayedAt || 0)) >
+      (props.maximumDelaySeconds || defaultProps.maximumDelaySeconds)
+    );
+  }, [playerState.playedAt, props.maximumDelaySeconds, props.currentlyPlayedAt]);
 
-  React.useEffect(
-    () => {
-      isSeekedTime.current = false;
-    },
-    [props.currentlyPlayedAt]
-  );
-
-  const shouldSeekTime = React.useCallback(
-    () => {
-      if (isSeekedTime.current) return false;
-      return Math.abs(playerState.playedAt - props.currentlyPlayedAt) > 5;
-    },
-    [playerState.playedAt, props.currentlyPlayedAt]
-  );
+  React.useEffect(() => {
+    if (reactPlayerRef.current && shouldSeekTime()) {
+      reactPlayerRef.current.seekTo(props.currentlyPlayedAt || 0);
+    }
+  }, [props.currentlyPlayedAt, reactPlayerRef.current]);
 
   const onProgress = React.useCallback<(state: OnPlayerProgressState) => void>(
-    ({ played, playedSeconds, loaded, loadedSeconds }): void => {
+    ({ played, playedSeconds, loaded, loadedSeconds }) => {
       if (props.onProgress) {
         props.onProgress({ played, playedSeconds, loaded, loadedSeconds });
       }
-      if (shouldSeekTime()) {
-        isSeekedTime.current = true;
-        reactPlayerRef.current.seekTo(props.currentlyPlayedAt);
-      } else {
-        setPlayerState({
-          playedAt: playedSeconds,
-          loadedAt: loadedSeconds,
-          playedAtPercent: played,
-          loadedAtPercent: loaded
-        });
-      }
+      setPlayerState({
+        playedAt: playedSeconds,
+        loadedAt: loadedSeconds,
+        playedAtPercent: played,
+        loadedAtPercent: loaded
+      });
     },
-    [props.onProgress, props.currentlyPlayedAt, shouldSeekTime]
+    [props.onProgress]
   );
 
   React.useEffect(() => setPlayerState(initialState), [props.url]);
 
-  const playerHeight = React.useMemo(
-    () => {
-      if (typeof props.height === 'number') {
-        return `calc(${props.height}px - ${props.progressBarHeight}px)`;
-      }
-      return `calc(${props.height} - ${props.progressBarHeight}px)`;
-    },
-    [props.height, props.progressBarHeight]
-  );
+  const playerHeight = React.useMemo(() => {
+    if (typeof props.height === 'number') {
+      return `calc(${props.height}px - ${props.progressBarHeight || defaultProps.progressBarHeight}px)`;
+    }
+    return `calc(${props.height} - ${props.progressBarHeight || defaultProps.progressBarHeight}px)`;
+  }, [props.height, props.progressBarHeight]);
 
   // This memo value is a fix for the issue when user loads the player on the first time with "url" set to undefined
   // then it will make player to be set to stopped state
@@ -119,11 +112,6 @@ const Player: React.FunctionComponent<CoreProps> = props => {
       </Tooltip>
     </div>
   );
-};
-
-Player.defaultProps = {
-  maximumDelaySeconds: 5,
-  progressBarHeight: 5
 };
 
 export interface OnPlayerProgressState {

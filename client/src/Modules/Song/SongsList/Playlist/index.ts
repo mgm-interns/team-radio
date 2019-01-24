@@ -1,1 +1,1 @@
-export { default as Playlist, Props as PlaylistProps } from './Playlist';
+export { default as Playlist } from './Playlist';

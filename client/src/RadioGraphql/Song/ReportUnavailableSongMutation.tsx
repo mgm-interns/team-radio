@@ -3,7 +3,7 @@ import * as React from 'react';
 import { graphql, MutateProps, Mutation as GraphQLMutation, OperationOption } from 'react-apollo';
 import { PartialMutationProps } from '../types';
 
-const MUTATION = gql`
+export const MUTATION = gql`
   mutation reportUnavailableSong($url: String!, $errorCode: Int!, $stationId: String) {
     reportUnavailableSong(url: $url, errorCode: $errorCode, stationId: $stationId)
   }
@@ -16,7 +16,7 @@ export default function ReportUnavailableSongMutation(props: Props) {
 }
 
 export function withHOC<TProps>(options?: OperationOption<TProps, Response, Variables>) {
-  return graphql<TProps, Response, Variables>(MUTATION, options);
+  return graphql(MUTATION, options);
 }
 
 export interface Response {

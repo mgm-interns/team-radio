@@ -1,9 +1,11 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
 import { graphql, Mutation as GraphQLMutation, MutationFn, OperationOption } from 'react-apollo';
+import * as ReactApolloHooks from 'react-apollo-hooks';
+import { MutationHookOptions } from 'react-apollo-hooks/lib/useMutation';
 import { PartialMutationProps } from '../types';
 
-const MUTATION = gql`
+export const MUTATION = gql`
   mutation leaveStation($stationId: String!) {
     leaveStation(stationId: $stationId)
   }
@@ -16,10 +18,14 @@ export default function LeaveStationMutation(props: Props) {
 }
 
 export function withHOC<TProps>(options?: OperationOption<TProps, Response, Variables>) {
-  return graphql<TProps, Response, Variables>(MUTATION, {
+  return graphql(MUTATION, {
     name: 'leaveStation',
     ...options
   });
+}
+
+export function useMutation(options?: MutationHookOptions<Response, Variables>) {
+  return ReactApolloHooks.useMutation<Response, Variables>(MUTATION, options);
 }
 
 export interface Response {

@@ -1,1 +1,1 @@
-export { default as Footer, Props as FooterProps } from './Footer';
+export { default as Footer } from './Footer';

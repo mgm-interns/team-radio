@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DataProps, DataValue, graphql, OperationOption, Query as GraphQLQuery } from 'react-apollo';
 import { PartialQueryProps } from '../types';
 
-const QUERY = gql`
+export const QUERY = gql`
   query StationPlaylist($stationId: String!) {
     items: StationPlaylist(stationId: $stationId) {
       currentPlayingSongId

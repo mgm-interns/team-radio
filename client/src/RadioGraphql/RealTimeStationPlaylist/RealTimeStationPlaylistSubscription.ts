@@ -1,11 +1,7 @@
 import { SubscribeToMoreOptions } from 'apollo-boost';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import {
-  RealTimeStationPlaylistQueryPlaylist,
-  RealTimeStationPlaylistQueryResponse,
-  RealTimeStationPlaylistQueryVariables
-} from '.';
+import { RealTimeStationPlaylistQuery } from '.';
 
 const SUBSCRIPTION = gql`
   subscription onStationPlaylistChanged($stationId: String!) {
@@ -30,7 +26,7 @@ export const withHOC = <TProps>() => graphql<TProps, Response, Variables>(SUBSCR
 
 export function getSubscribeToMoreOptions(
   variables: Variables
-): SubscribeToMoreOptions<RealTimeStationPlaylistQueryResponse, RealTimeStationPlaylistQueryVariables, Response> {
+): SubscribeToMoreOptions<RealTimeStationPlaylistQuery.Response, RealTimeStationPlaylistQuery.Variables, Response> {
   return {
     variables,
     document: SUBSCRIPTION,
@@ -46,7 +42,7 @@ export function getSubscribeToMoreOptions(
 }
 
 export interface Response {
-  readonly onStationPlaylistChanged: RealTimeStationPlaylistQueryPlaylist;
+  readonly onStationPlaylistChanged: RealTimeStationPlaylistQuery.Playlist;
 }
 
 export interface Variables {

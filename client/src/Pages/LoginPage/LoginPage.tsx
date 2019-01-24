@@ -1,38 +1,62 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  FormHelperText,
-  TextField,
-  Typography,
-  withStyles,
-  WithStyles
-} from '@material-ui/core';
-import { ApolloClient } from 'apollo-boost';
-import { GradientButton, InternalLink, Picture } from 'Components';
-import { FullLayout } from 'Containers';
-import { ErrorHelper } from 'Error';
-import { LoginMutationVariables, withLoginMutation, WithLoginMutationProps } from 'RadioGraphql';
+import { GradientButton, InternalLink, Picture } from '@Components';
+import { FullLayout } from '@Containers';
+import { ErrorHelper } from '@Error';
+import { useToggle } from '@Hooks';
+import { Card, CardActions, CardContent, Fab, FormHelperText, TextField, Typography } from '@material-ui/core';
+import { LoginMutation } from '@RadioGraphql';
 import * as React from 'react';
-import { ApolloConsumer } from 'react-apollo';
+import { useApolloClient } from 'react-apollo-hooks';
 import { FaFacebookF, FaGooglePlusG } from 'react-icons/fa';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { styles } from './styles';
+import { useStyles } from './styles';
 
-class LoginPage extends React.Component<CoreProps, CoreStates> {
-  public state: CoreStates = { username: '', password: '', errorText: '', loading: false };
+const LoginPage: React.FunctionComponent<CoreProps> = props => {
+  const classes = useStyles();
 
-  public render(): React.ReactNode {
-    const { classes } = this.props;
-    return (
-      <FullLayout>
-        <div className={classes.container}>
-          <div className={classes.backgroundContainer}>
-            <Picture
-              className={classes.image}
-              sizes="(max-width: 2520px) 100vw, 2520px"
-              srcSet="
+  const [username, setUsername] = React.useState<string>('');
+  const [password, setPassword] = React.useState<string>('');
+  const [errorText, setErrorText] = React.useState<string>('');
+  const [loading, loadingAction] = useToggle(false);
+
+  const login = LoginMutation.useMutation();
+  const client = useApolloClient();
+
+  const onSubmit = React.useCallback(async () => {
+    setErrorText('');
+    loadingAction.toggleOn();
+    if (!username && !password) return;
+    try {
+      const variables: LoginMutation.Variables = { password };
+
+      if (username && username.includes('@')) {
+        variables.email = username;
+      } else {
+        variables.username = username;
+      }
+
+      await login({ variables });
+      loadingAction.toggleOff();
+      client.resetStore();
+      if (props.history.length > 2) props.history.goBack();
+      else props.history.replace('/');
+    } catch (errors) {
+      const error = ErrorHelper.extractError(errors);
+      if (error) {
+        setErrorText(error.message);
+        loadingAction.toggleOff();
+        console.error(error);
+      }
+    }
+  }, [username, password]);
+
+  return (
+    <FullLayout>
+      <div className={classes.container}>
+        <div className={classes.backgroundContainer}>
+          <Picture
+            className={classes.image}
+            sizes="(max-width: 2520px) 100vw, 2520px"
+            srcSet="
                 /images/login_BG_m7gib7_c_scale,w_320.jpg 320w,
                 /images/login_BG_m7gib7_c_scale,w_760.jpg 760w,
                 /images/login_BG_m7gib7_c_scale,w_1065.jpg 1065w,
@@ -46,126 +70,72 @@ class LoginPage extends React.Component<CoreProps, CoreStates> {
                 /images/login_BG_m7gib7_c_scale,w_2457.jpg 2457w,
                 /images/login_BG_m7gib7_c_scale,w_2514.jpg 2514w,
                 /images/login_BG_m7gib7_c_scale,w_2520.jpg 2520w"
-              src="/images/login_BG_m7gib7_c_scale,w_2520.jpg"
-              alt=""
-            />
-          </div>
-          <ApolloConsumer>
-            {client => (
-              <form className={classes.pageInfoContainer} onSubmit={() => this.onSubmit(client)}>
-                <Card className={classes.cardContainer}>
-                  <CardContent>
-                    <Typography className={classes.cardHeaderTitle} variant={'h5'}>
-                      Login
-                    </Typography>
-                    <Typography className={classes.cardHeaderTitle} variant={'subtitle1'}>
-                      to start listening and sharing music
-                    </Typography>
-                    <CardActions className={classes.loginActions}>
-                      <Button variant={'fab'} className={classes.facebookLoginButton}>
-                        <FaFacebookF />
-                      </Button>
-                      <Button variant={'fab'} className={classes.googleLoginButton}>
-                        <FaGooglePlusG />
-                      </Button>
-                    </CardActions>
-                    <div className={classes.textFieldsContainer}>
-                      <TextField
-                        className={classes.textField}
-                        fullWidth
-                        label={'Username'}
-                        InputProps={{ className: classes.input }}
-                        InputLabelProps={{ className: classes.inputLabel }}
-                        value={this.state.username}
-                        onChange={e => this.setState({ username: e.target.value })}
-                      />
-                      <TextField
-                        className={classes.textField}
-                        fullWidth
-                        label={'Password'}
-                        type={'password'}
-                        InputProps={{ className: classes.input }}
-                        InputLabelProps={{ className: classes.inputLabel }}
-                        value={this.state.password}
-                        onChange={e => this.setState({ password: e.target.value })}
-                      />
-                      <FormHelperText id="error-text" error>
-                        {this.state.errorText}
-                      </FormHelperText>
-                    </div>
-                    <CardActions className={classes.cardActions}>
-                      <GradientButton
-                        variant={'contained'}
-                        fullWidth
-                        onClick={() => this.onSubmit(client)}
-                        disabled={this.state.loading}
-                        type={'submit'}
-                      >
-                        Login
-                      </GradientButton>
-                      <InternalLink
-                        href={'/register'}
-                        className={classes.textLink}
-                        TypographyProps={{ color: 'primary' }}
-                      >
-                        Forgot your password
-                      </InternalLink>
-                      <InternalLink
-                        href={'/register'}
-                        className={classes.textLink}
-                        TypographyProps={{ color: 'primary' }}
-                      >
-                        Create an account
-                      </InternalLink>
-                    </CardActions>
-                  </CardContent>
-                </Card>
-              </form>
-            )}
-          </ApolloConsumer>
+            src="/images/login_BG_m7gib7_c_scale,w_2520.jpg"
+            alt=""
+          />
         </div>
-      </FullLayout>
-    );
-  }
+        <form className={classes.pageInfoContainer} onSubmit={onSubmit}>
+          <Card className={classes.cardContainer}>
+            <CardContent>
+              <Typography className={classes.cardHeaderTitle} variant={'h5'}>
+                Login
+              </Typography>
+              <Typography className={classes.cardHeaderTitle} variant={'subtitle1'}>
+                to start listening and sharing music
+              </Typography>
+              <CardActions className={classes.loginActions}>
+                <Fab className={classes.facebookLoginButton}>
+                  <FaFacebookF />
+                </Fab>
+                <Fab className={classes.googleLoginButton}>
+                  <FaGooglePlusG />
+                </Fab>
+              </CardActions>
+              <div className={classes.textFieldsContainer}>
+                <TextField
+                  className={classes.textField}
+                  fullWidth
+                  label={'Username'}
+                  InputProps={{ className: classes.input }}
+                  InputLabelProps={{ className: classes.inputLabel }}
+                  value={username}
+                  onChange={e => setUsername(e.target.value)}
+                />
+                <TextField
+                  className={classes.textField}
+                  fullWidth
+                  label={'Password'}
+                  type={'password'}
+                  InputProps={{ className: classes.input }}
+                  InputLabelProps={{ className: classes.inputLabel }}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                />
+                <FormHelperText id="error-text" error>
+                  {errorText}
+                </FormHelperText>
+              </div>
+              <CardActions className={classes.cardActions}>
+                <GradientButton variant={'contained'} fullWidth onClick={onSubmit} disabled={loading} type={'submit'}>
+                  Login
+                </GradientButton>
+                <InternalLink href={'/register'} className={classes.textLink} TypographyProps={{ color: 'primary' }}>
+                  Forgot your password
+                </InternalLink>
+                <InternalLink href={'/register'} className={classes.textLink} TypographyProps={{ color: 'primary' }}>
+                  Create an account
+                </InternalLink>
+              </CardActions>
+            </CardContent>
+          </Card>
+        </form>
+      </div>
+    </FullLayout>
+  );
+};
 
-  private onSubmit = async (client: ApolloClient<any>) => {
-    this.setState({ errorText: '', loading: true });
-    if (!this.state.username && !this.state.password) {
-      return;
-    }
-    try {
-      const variables: LoginMutationVariables = {
-        password: this.state.password
-      };
+interface CoreProps extends RouteComponentProps, Props {}
 
-      if (this.state.username.includes('@')) {
-        variables.email = this.state.username;
-      } else {
-        variables.username = this.state.username;
-      }
-
-      await this.props.mutate({ variables });
-      this.setState({ loading: false });
-      client.resetStore();
-      if (this.props.history.length > 2) this.props.history.goBack();
-      else this.props.history.replace('/');
-    } catch (errors) {
-      const error = ErrorHelper.extractError(errors);
-      if (error) {
-        this.setState({ errorText: error.message, loading: false });
-        console.error(error);
-      }
-    }
-  };
-}
-
-interface CoreProps extends WithLoginMutationProps, RouteComponentProps, WithStyles<typeof styles>, Props {}
-
-interface CoreStates extends LoginMutationVariables {
-  errorText: string;
-  loading: boolean;
-}
-
-export default withLoginMutation<Props>()(withStyles(styles)(withRouter(LoginPage)));
+export default withRouter(LoginPage);
 
 export interface Props {}

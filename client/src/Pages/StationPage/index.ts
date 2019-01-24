@@ -1,1 +1,1 @@
-export { default as StationPage, Props as StationPageProps } from './StationPage';
+export { default as StationPage } from './StationPage';

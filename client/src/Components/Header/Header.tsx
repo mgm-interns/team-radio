@@ -1,8 +1,8 @@
+import { Identifiable, Styleable } from '@Common';
+import { InternalLink } from '@Components';
 import { AppBar, Avatar, Hidden, IconButton, Toolbar, Tooltip } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
-import { InternalLink } from 'Components';
-import { UnAuthenticated } from 'Modules';
-import { CurrentUserQuery } from 'RadioGraphql';
+import { UnAuthenticated } from '@Modules';
+import { CurrentUserQuery } from '@RadioGraphql';
 import * as React from 'react';
 import { MdMoreVert, MdVpnKey } from 'react-icons/md';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -62,17 +62,17 @@ const Header: React.FunctionComponent<CoreProps> = props => {
               </UnAuthenticated>
             </Hidden>
             <IconButton aira-owns={openMenu ? 'menu-appbar' : null} color={'inherit'} onClick={openMenu}>
-              <CurrentUserQuery>
+              <CurrentUserQuery.default>
                 {({ loading, error, data }) => (
                   <Tooltip title={'Menu'}>
-                    {loading || error || !data.currentUser.avatarUrl ? (
+                    {loading || error || (data && !data.currentUser.avatarUrl) ? (
                       <MdMoreVert />
                     ) : (
-                      <Avatar src={data.currentUser.avatarUrl} className={classes.avatar} />
+                      <Avatar src={data && data.currentUser.avatarUrl} className={classes.avatar} />
                     )}
                   </Tooltip>
                 )}
-              </CurrentUserQuery>
+              </CurrentUserQuery.default>
             </IconButton>
             <Menu anchorEl={anchorEl} onClose={closeMenu} />
           </div>

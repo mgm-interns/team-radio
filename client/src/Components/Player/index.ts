@@ -1,1 +1,1 @@
-export { default as Player, Props as PlayerProps, OnPlayerProgressState } from './Player';
+export { default as Player } from './Player';

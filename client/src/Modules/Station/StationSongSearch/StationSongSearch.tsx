@@ -1,8 +1,8 @@
+import { Identifiable } from '@Common';
+import { GradientButton, Loading } from '@Components';
+import { useToggle } from '@Hooks';
 import { Card, IconButton, InputAdornment, TextField } from '@material-ui/core';
-import { Identifiable } from 'Common';
-import { GradientButton, Loading } from 'Components';
-import { useLoading } from 'Hooks';
-import { withAddSongMutation, WithAddSongMutationProps } from 'RadioGraphql';
+import { AddSongMutation } from '@RadioGraphql';
 import * as React from 'react';
 import { MdClear as ClearIcon } from 'react-icons/md';
 import { YoutubeHelper } from 'team-radio-shared';
@@ -13,32 +13,29 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
   const { id } = props;
 
   const youtubeHelper = React.useMemo<YoutubeHelper>(() => new YoutubeHelper(window.fetch), []);
-  const [error, setError] = React.useState<string>(null);
+  const [error, setError] = React.useState<string | null>(null);
   const [url, setUrl] = React.useState<string>('');
-  const { loading, toggleLoadingOn, toggleLoadingOff } = useLoading();
+  const [loading, loadingAction] = useToggle();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const submit = React.useCallback(
-    async () => {
-      if (!url) return;
-      try {
-        youtubeHelper.parseVideoUrl(url);
-        setError(null);
-        toggleLoadingOn();
-        await props.mutate({ variables: { url } });
-        setUrl('');
-        toggleLoadingOff();
-        inputRef.current.focus();
-      } catch (error) {
-        setError(error.message);
-      }
-    },
-    [url]
-  );
+  const submit = React.useCallback(async () => {
+    if (!url) return;
+    try {
+      youtubeHelper.parseVideoUrl(url);
+      setError(null);
+      loadingAction.toggleOn();
+      await props.mutate({ variables: { url } });
+      setUrl('');
+      loadingAction.toggleOff();
+      if (inputRef.current) inputRef.current.focus();
+    } catch (error) {
+      setError(error.message);
+    }
+  }, [url]);
 
   const reset = React.useCallback(() => {
     setError(null);
-    toggleLoadingOff();
+    loadingAction.toggleOff();
     setUrl('');
   }, []);
 
@@ -64,6 +61,7 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
         onChange={e => setUrl(e.target.value)}
         inputRef={inputRef}
         helperText={error}
+        autoFocus
       />
       <GradientButton variant={'contained'} className={classes.button} onClick={submit} disabled={loading}>
         {loading ? <Loading color={'inherit'} size={16} className={classes.loadingContainer} /> : 'Submit'}
@@ -72,8 +70,8 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
   );
 };
 
-interface CoreProps extends WithAddSongMutationProps, Props {}
+interface CoreProps extends AddSongMutation.WithHOCProps, Props {}
 
-export default withAddSongMutation()(StationSongSearch);
+export default AddSongMutation.withHOC()(StationSongSearch as any);
 
 export interface Props extends Identifiable {}

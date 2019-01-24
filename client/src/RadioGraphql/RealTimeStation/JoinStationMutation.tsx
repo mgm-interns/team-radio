@@ -1,13 +1,11 @@
-/**
- * No need to define LeaveStation mutation
- * because of the server has an utility to remove when user join another station
- */
 import gql from 'graphql-tag';
 import * as React from 'react';
 import { graphql, Mutation as GraphQLMutation, MutationFn, OperationOption } from 'react-apollo';
+import * as ReactApolloHooks from 'react-apollo-hooks';
+import { MutationHookOptions } from 'react-apollo-hooks/lib/useMutation';
 import { PartialMutationProps } from '../types';
 
-const MUTATION = gql`
+export const MUTATION = gql`
   mutation joinStation($stationId: String!) {
     joinStation(stationId: $stationId)
   }
@@ -20,10 +18,14 @@ export default function JoinStationMutation(props: Props) {
 }
 
 export function withHOC<TProps>(options?: OperationOption<TProps, Response, Variables>) {
-  return graphql<TProps, Response, Variables>(MUTATION, {
+  return graphql(MUTATION, {
     name: 'joinStation',
     ...options
   });
+}
+
+export function useMutation(options?: MutationHookOptions<Response, Variables>) {
+  return ReactApolloHooks.useMutation<Response, Variables>(MUTATION, options);
 }
 
 export interface Response {

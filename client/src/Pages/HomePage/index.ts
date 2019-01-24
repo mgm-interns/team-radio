@@ -1,1 +1,1 @@
-export { default as HomePage, Props as HomePageProps } from './HomePage';
+export { default as HomePage } from './HomePage';

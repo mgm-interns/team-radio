@@ -1,7 +1,7 @@
+import { Identifiable, InContainer, Styleable } from '@Common';
 import { CircularProgress } from '@material-ui/core';
-import { Identifiable, InContainer, Styleable } from 'Common';
+import { classnames } from '@Themes';
 import * as React from 'react';
-import { classnames } from 'Themes';
 import { useStyles } from './styles';
 
 const Loading: React.FunctionComponent<CoreProps> = props => {

@@ -1,1 +1,1 @@
-export { default as FullLayout, Props as FullLayoutProps } from './FullLayout';
+export { default as FullLayout } from './FullLayout';

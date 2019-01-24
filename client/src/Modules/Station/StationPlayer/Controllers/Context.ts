@@ -1,27 +1,23 @@
 import * as React from 'react';
 
-export interface IStationPlayerControllerLocalState {
-  container?: React.ReactInstance;
+export interface IStationPlayerPositionState {
   top: number;
   left: number;
   width: number;
   height: number;
 }
 
-export type SetStationPlayerControllerContainerFunction = (
-  options: Partial<IStationPlayerControllerLocalState>
-) => void;
-
-export interface IStationPlayerController extends IStationPlayerControllerLocalState {
-  setContainer: SetStationPlayerControllerContainerFunction;
+export interface IStationPlayerPosition extends IStationPlayerPositionState {
+  setPosition: (options: IStationPlayerPositionState) => void;
+  resetPosition: () => void;
 }
 
-export const StationPlayerController = React.createContext<IStationPlayerController>({
-  container: null,
+export const StationPlayerPositionContext = React.createContext<IStationPlayerPosition>({
   top: 0,
   left: 0,
   width: 0,
   height: 0,
 
-  setContainer: () => ({})
+  setPosition: () => ({}),
+  resetPosition: () => ({})
 });

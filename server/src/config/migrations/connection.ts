@@ -3,10 +3,7 @@ import { Db, MongoClient } from 'mongodb';
 let client: MongoClient | undefined;
 
 export const connect = async () => {
-  client = await MongoClient.connect(
-    getConnectionString(),
-    { useNewUrlParser: true }
-  );
+  client = await MongoClient.connect(getConnectionString(), { useNewUrlParser: true });
   return client.db(process.env.TYPEORM_DATABASE);
 };
 

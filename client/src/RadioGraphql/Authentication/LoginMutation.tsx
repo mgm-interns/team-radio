@@ -1,10 +1,12 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
 import { graphql, MutateProps, Mutation as GraphQLMutation } from 'react-apollo';
+import * as ReactApolloHooks from 'react-apollo-hooks';
+import { MutationHookOptions } from 'react-apollo-hooks/lib/useMutation';
 import { UserRole } from '.';
 import { PartialMutationProps } from '../types';
 
-const MUTATION = gql`
+export const MUTATION = gql`
   mutation login($username: String, $email: String, $password: String!) {
     login(credential: { username: $username, email: $email, password: $password }) {
       authToken {
@@ -27,14 +29,14 @@ const LoginMutation: any = (props: Props) => {
 
 export default LoginMutation;
 
-LoginMutation.saveLoginSession = (data: Response) => {
+export const saveLoginSession = (data: Response) => {
   const { authToken, roles } = data.login;
   localStorage.setItem('token', authToken.token);
   localStorage.setItem('refreshToken', authToken.refreshToken);
   localStorage.setItem('roles', JSON.stringify(roles));
 };
 
-LoginMutation.clearLoginSession = () => {
+export const clearLoginSession = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('roles');
@@ -43,9 +45,13 @@ LoginMutation.clearLoginSession = () => {
 export function withHOC<TProps>() {
   return graphql<TProps, Response, Variables>(MUTATION, {
     options: {
-      onCompleted: LoginMutation.saveLoginSession
+      onCompleted: saveLoginSession
     }
   });
+}
+
+export function useMutation(options?: MutationHookOptions<Response, Variables>) {
+  return ReactApolloHooks.useMutation<Response, Variables>(MUTATION, options);
 }
 
 export interface Response {

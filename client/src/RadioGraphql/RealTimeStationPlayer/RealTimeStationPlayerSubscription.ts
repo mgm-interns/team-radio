@@ -1,11 +1,7 @@
 import { SubscribeToMoreOptions } from 'apollo-boost';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import {
-  RealTimeStationPlayerQueryPlayer,
-  RealTimeStationPlayerQueryResponse,
-  RealTimeStationPlayerQueryVariables
-} from '.';
+import { RealTimeStationPlayerQuery } from '.';
 
 const SUBSCRIPTION = gql`
   subscription onStationPlayerChanged($stationId: String!) {
@@ -32,7 +28,7 @@ export const withHOC = <TProps>() => graphql<TProps, Response, Variables>(SUBSCR
 
 export function getSubscribeToMoreOptions(
   variables: Variables
-): SubscribeToMoreOptions<RealTimeStationPlayerQueryResponse, RealTimeStationPlayerQueryVariables, Response> {
+): SubscribeToMoreOptions<RealTimeStationPlayerQuery.Response, RealTimeStationPlayerQuery.Variables, Response> {
   return {
     variables,
     document: SUBSCRIPTION,
@@ -48,7 +44,7 @@ export function getSubscribeToMoreOptions(
 }
 
 export interface Response {
-  readonly onStationPlayerChanged: RealTimeStationPlayerQueryPlayer;
+  readonly onStationPlayerChanged: RealTimeStationPlayerQuery.Player;
 }
 
 export interface Variables {

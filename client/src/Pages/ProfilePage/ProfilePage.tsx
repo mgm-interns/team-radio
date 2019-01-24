@@ -1,21 +1,19 @@
-import { withStyles, WithStyles } from '@material-ui/core';
-import { FullLayout } from 'Containers';
+import { FullLayout } from '@Containers';
 import * as React from 'react';
-import { styles } from './styles';
+import { useStyles } from './styles';
 
-class ProfilePage extends React.Component<CoreProps> {
-  public render(): React.ReactNode {
-    return (
-      <FullLayout>
-        <div>Profile here</div>
-      </FullLayout>
-    );
-  }
-}
+const ProfilePage: React.FunctionComponent<CoreProps> = () => {
+  const classes = useStyles();
 
-interface CoreProps extends WithStyles<typeof styles>, Props {}
-interface CoreStates {}
+  return (
+    <FullLayout>
+      <div>Profile here</div>
+    </FullLayout>
+  );
+};
 
-export default withStyles(styles)(ProfilePage);
+interface CoreProps extends Props {}
+
+export default ProfilePage;
 
 export interface Props {}

@@ -1,38 +1,35 @@
+import { Identifiable, Styleable } from '@Common';
+import { Loading, Player } from '@Components';
+import { useSubscription } from '@Hooks';
 import { Card, Typography } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
-import { Loading, Player } from 'Components';
-import { useSubscription } from 'Hooks';
 import {
-  getSubscribeToMoreOptionsForRealTimeStationPlayerSubscription,
-  RealTimeStationPlayerQueryPlayer,
-  RealTimeStationPlayerQueryVariables,
-  ReportUnavailableSongMutation,
-  withRealTimeStationPlayerQuery,
-  WithRealTimeStationPlayerQueryProps
-} from 'RadioGraphql';
+  RealTimeStationPlayerQuery,
+  RealTimeStationPlayerSubscription,
+  ReportUnavailableSongMutation
+} from '@RadioGraphql';
 import * as React from 'react';
-import { StationController } from '../StationContext';
+import { StationControllerContext } from '../StationContext';
 import { useStyles } from './styles';
 
 const StationPlayer: React.FunctionComponent<CoreProps> = props => {
   const classes = useStyles();
 
-  const parseCurrentlyPlayedAt = React.useCallback((data: RealTimeStationPlayerQueryPlayer) => {
+  const parseCurrentlyPlayedAt = React.useCallback((data: RealTimeStationPlayerQuery.Player) => {
     if (!data.startedAt) return 0;
     return (Date.now() - new Date(data.startedAt).getTime()) / 1000;
   }, []);
 
   const subscribeToMoreOptions = React.useMemo(
-    () => getSubscribeToMoreOptionsForRealTimeStationPlayerSubscription(props.params),
+    () => RealTimeStationPlayerSubscription.getSubscribeToMoreOptions(props.params),
     [props.params]
   );
 
   useSubscription(props.data, subscribeToMoreOptions);
 
-  const stationControllerContext = React.useContext(StationController);
+  const stationControllerContext = React.useContext(StationControllerContext);
 
   const renderPlayerWrapper = React.useCallback(
-    (children: (data?: RealTimeStationPlayerQueryPlayer) => React.ReactNode) => {
+    (children: (data?: RealTimeStationPlayerQuery.Player) => React.ReactNode) => {
       const { data } = props;
       let content: React.ReactNode;
 
@@ -43,7 +40,7 @@ const StationPlayer: React.FunctionComponent<CoreProps> = props => {
       } else if (data.loading) {
         // Loading
         content = <Loading />;
-      } else if (!data.player.playing && !data.player.playlistCount) {
+      } else if (!data.player || (!data.player.playing && !data.player.playlistCount)) {
         // No playing song and no song in playlist
         content = <Typography>No song, add a new one to start listening.</Typography>;
       } else if (data.player.nextSongThumbnail) {
@@ -62,7 +59,7 @@ const StationPlayer: React.FunctionComponent<CoreProps> = props => {
 
   const { id, style, className } = props;
   return renderPlayerWrapper(data => (
-    <ReportUnavailableSongMutation>
+    <ReportUnavailableSongMutation.default>
       {reportUnavailableSong => (
         <Player
           id={id}
@@ -76,21 +73,21 @@ const StationPlayer: React.FunctionComponent<CoreProps> = props => {
           onError={(errorCode: number, url: string) => {
             console.error(`Error while playing video`, errorCode, url);
             reportUnavailableSong({
-              variables: { errorCode, url, stationId: this.props.params.stationId }
+              variables: { errorCode, url, stationId: props.params.stationId }
             });
           }}
         />
       )}
-    </ReportUnavailableSongMutation>
+    </ReportUnavailableSongMutation.default>
   ));
 };
 
-interface CoreProps extends WithRealTimeStationPlayerQueryProps, Props {}
+interface CoreProps extends RealTimeStationPlayerQuery.WithHOCProps, Props {}
 
-export default withRealTimeStationPlayerQuery<Props>({
-  options: (props: Props) => ({ variables: props.params, fetchPolicy: 'network-only' })
-})(StationPlayer);
+export default RealTimeStationPlayerQuery.withHOC<Props>({
+  options: (props: any) => ({ variables: props.params, fetchPolicy: 'network-only' })
+})(StationPlayer as any);
 
 export interface Props extends Identifiable, Styleable {
-  params: RealTimeStationPlayerQueryVariables;
+  params: RealTimeStationPlayerQuery.Variables;
 }

@@ -1,8 +1,8 @@
 import { Grid, IconButton } from '@material-ui/core';
-import { AddSongMutation, RealTimeStationDistinctHistorySong } from 'RadioGraphql';
+import { AddSongMutation, RealTimeStationDistinctHistorySongQuery } from '@RadioGraphql';
+import { classnames } from '@Themes';
 import * as React from 'react';
 import { MdFavorite, MdReplay } from 'react-icons/md';
-import { classnames } from 'Themes';
 import { useStyles } from './styles';
 
 export const PlaylistItemAction: React.FunctionComponent<CoreProps> = props => {
@@ -10,7 +10,7 @@ export const PlaylistItemAction: React.FunctionComponent<CoreProps> = props => {
   const { song } = props;
   return (
     <Grid container>
-      <AddSongMutation>
+      <AddSongMutation.default>
         {addSong => (
           <IconButton
             className={classnames(classes.iconButton)}
@@ -19,7 +19,7 @@ export const PlaylistItemAction: React.FunctionComponent<CoreProps> = props => {
             <MdReplay />
           </IconButton>
         )}
-      </AddSongMutation>
+      </AddSongMutation.default>
       <IconButton className={classnames(classes.iconButton)}>
         <MdFavorite />
       </IconButton>
@@ -32,5 +32,5 @@ interface CoreProps extends Props {}
 export default PlaylistItemAction;
 
 export interface Props {
-  song: RealTimeStationDistinctHistorySong;
+  song: RealTimeStationDistinctHistorySongQuery.Song;
 }

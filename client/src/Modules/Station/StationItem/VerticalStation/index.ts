@@ -1,1 +1,1 @@
-export { default as VerticalStation, Props as VerticalStationProps } from './VerticalStation';
+export { default as VerticalStation } from './VerticalStation';

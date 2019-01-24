@@ -1,4 +1,4 @@
-import { Identifiable, Styleable } from 'Common';
+import { Identifiable, Styleable } from '@Common';
 import { SimpleStation } from './SimpleStation';
 import { VerticalStation } from './VerticalStation';
 

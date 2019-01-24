@@ -1,1 +1,1 @@
-export { default as HistoryList, Props as HistoryListProps } from './HistoryList';
+export { default as HistoryList } from './HistoryList';

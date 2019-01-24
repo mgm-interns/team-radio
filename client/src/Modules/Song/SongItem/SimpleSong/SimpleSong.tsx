@@ -1,7 +1,7 @@
+import { Identifiable } from '@Common';
 import { Avatar, ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
-import { Identifiable } from 'Common';
+import { classnames } from '@Themes';
 import * as React from 'react';
-import { classnames } from 'Themes';
 import { SongItemProps } from '..';
 import { useStyles } from './styles';
 

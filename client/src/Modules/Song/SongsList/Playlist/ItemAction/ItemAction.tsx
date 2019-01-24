@@ -1,23 +1,20 @@
 import { Badge, Grid, IconButton, LinearProgress } from '@material-ui/core';
-import { RealTimeStationPlaylistQueryPlaylistSong } from 'RadioGraphql';
+import { RealTimeStationPlaylistQuery } from '@RadioGraphql';
+import { classnames } from '@Themes';
 import * as React from 'react';
 import { MdFavorite, MdThumbDown, MdThumbUp } from 'react-icons/md';
-import { classnames } from 'Themes';
 import { useStyles } from './styles';
 
 const PlaylistItemAction: React.FunctionComponent<CoreProps> = props => {
   const classes = useStyles();
   const { song, currentPlayingSongId } = props;
 
-  const voteRating = React.useMemo<number>(
-    () => {
-      const upVotes = song.upVotes.length;
-      const downVotes = song.downVotes.length;
-      if (upVotes === 0 && downVotes === 0) return 50;
-      return (upVotes / (upVotes + downVotes)) * 100;
-    },
-    [song.upVotes, song.downVotes]
-  );
+  const voteRating = React.useMemo<number>(() => {
+    const upVotes = song.upVotes.length;
+    const downVotes = song.downVotes.length;
+    if (upVotes === 0 && downVotes === 0) return 50;
+    return (upVotes / (upVotes + downVotes)) * 100;
+  }, [song.upVotes, song.downVotes]);
 
   return (
     <Grid container>
@@ -52,6 +49,6 @@ interface CoreProps extends Props {}
 export default PlaylistItemAction;
 
 export interface Props {
-  song: RealTimeStationPlaylistQueryPlaylistSong;
+  song: RealTimeStationPlaylistQuery.PlaylistSong;
   currentPlayingSongId?: string;
 }

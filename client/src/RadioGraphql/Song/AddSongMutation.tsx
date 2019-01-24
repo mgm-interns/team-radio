@@ -3,7 +3,7 @@ import * as React from 'react';
 import { graphql, MutateProps, Mutation as GraphQLMutation, OperationOption } from 'react-apollo';
 import { PartialMutationProps } from '../types';
 
-const MUTATION = gql`
+export const MUTATION = gql`
   mutation addSong($url: String!) {
     addSong(url: $url) {
       id
@@ -18,7 +18,7 @@ export default function JoinStationMutation(props: Props) {
 }
 
 export function withHOC<TProps>(options?: OperationOption<TProps, Response, Variables>) {
-  return graphql<TProps, Response, Variables>(MUTATION, options);
+  return graphql(MUTATION, options);
 }
 
 export interface Response {

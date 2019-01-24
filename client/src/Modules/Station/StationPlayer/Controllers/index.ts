@@ -1,9 +1,3 @@
 export * from './Context';
-export {
-  default as StationPlayerControllerProvider,
-  Props as StationPlayerControllerProviderProps
-} from './StationPlayerControllerProvider';
-export {
-  default as StationPlayerControllerContainer,
-  Props as StationPlayerControllerContainerProps
-} from './StationPlayerControllerContainer';
+export { default as StationPlayerControllerProvider } from './StationPlayerPositionProvider';
+export { default as StationPlayerControllerContainer } from './StationPlayerPositionContainer';

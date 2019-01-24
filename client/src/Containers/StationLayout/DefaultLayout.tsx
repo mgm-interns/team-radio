@@ -1,10 +1,10 @@
+import { Identifiable, InContainer, Styleable } from '@Common';
+import { Header, InternalLink, Responsive } from '@Components';
 import { Drawer, Grid, Icon, IconButton, Typography } from '@material-ui/core';
-import { Identifiable, InContainer, Styleable } from 'Common';
-import { Header, InternalLink, Responsive } from 'Components';
-import { StationPlayerControllerContainer } from 'Modules';
+import { StationPlayerControllerContainer } from '@Modules';
+import { classnames } from '@Themes';
 import * as React from 'react';
 import { MdArrowBack as BackIcon, MdMenu as DrawerIcon } from 'react-icons/md';
-import { classnames } from 'Themes';
 import { useStyles } from './styles';
 
 const DefaultLayout: React.FunctionComponent<CoreProps> = props => {
@@ -25,11 +25,11 @@ const DefaultLayout: React.FunctionComponent<CoreProps> = props => {
       {/* Only display drawer icon on tablet and mobile devices */}
       <Header
         leftIcon={
-          <Responsive maxWidth={768}>
+          <Responsive.Query maxWidth={768}>
             <IconButton color={'inherit'} onClick={drawer.toggle}>
               <DrawerIcon />
             </IconButton>
-          </Responsive>
+          </Responsive.Query>
         }
         leftText={
           title && (

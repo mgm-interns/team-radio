@@ -1,17 +1,4 @@
-export {
-  default as AddSongMutation,
-  Props as AddSongMutationProps,
-  Variables as AddSongMutationVariables,
-  Response as AddSongMutationResponse,
-  withHOC as withAddSongMutation,
-  WithHOCProps as WithAddSongMutationProps
-} from './AddSongMutation';
+import * as AddSongMutation from './AddSongMutation';
+import * as ReportUnavailableSongMutation from './ReportUnavailableSongMutation';
 
-export {
-  default as ReportUnavailableSongMutation,
-  Props as ReportUnavailableSongMutationProps,
-  Variables as ReportUnavailableSongMutationVariables,
-  Response as ReportUnavailableSongMutationResponse,
-  withHOC as withReportUnavailableSongMutation,
-  WithHOCProps as WithReportUnavailableSongMutationProps
-} from './ReportUnavailableSong';
+export { AddSongMutation, ReportUnavailableSongMutation };

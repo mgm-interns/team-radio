@@ -1,6 +1,6 @@
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { ThemeType } from 'Themes';
+import { ThemeType } from '@Themes';
 
 export const useStyles = makeStyles(({ palette, spacing, zIndex }: Theme) => ({
   container: {

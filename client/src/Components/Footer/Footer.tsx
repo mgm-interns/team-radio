@@ -1,5 +1,5 @@
+import { Identifiable, Styleable } from '@Common';
 import { Typography } from '@material-ui/core';
-import { Identifiable, Styleable } from 'Common';
 import * as React from 'react';
 import { useStyles } from './styles';
 

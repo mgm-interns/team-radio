@@ -1,1 +1,1 @@
-export { default as ProfilePage, Props as ProfilePageProps } from './ProfilePage';
+export { default as ProfilePage } from './ProfilePage';

@@ -1,5 +1,5 @@
-import { Container, Identifiable, Styleable } from 'Common';
-import { Footer, Header } from 'Components';
+import { Container, Identifiable, Styleable } from '@Common';
+import { Footer, Header } from '@Components';
 import * as React from 'react';
 import { useStyles } from './styles';
 

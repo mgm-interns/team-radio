@@ -1,1 +1,1 @@
-export { default as InternalLink, Props as InternalLinkProps } from './InternalLink';
+export { default as InternalLink } from './InternalLink';

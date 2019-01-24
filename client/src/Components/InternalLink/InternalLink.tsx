@@ -1,9 +1,9 @@
+import { Container, Identifiable, Styleable } from '@Common';
 import { Typography } from '@material-ui/core';
 import { TypographyProps } from '@material-ui/core/Typography';
-import { Container, Identifiable, Styleable } from 'Common';
+import { classnames } from '@Themes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { classnames } from 'Themes';
 import { useStyles } from './styles';
 
 function InternalLink(props: CoreProps): React.ReactElement<CoreProps> {

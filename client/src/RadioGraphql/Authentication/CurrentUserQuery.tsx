@@ -4,7 +4,7 @@ import { DataProps, graphql, OperationOption, Query as GraphQLQuery } from 'reac
 import { UserRole } from '.';
 import { PartialQueryProps } from '../types';
 
-const QUERY = gql`
+export const QUERY = gql`
   query currentUser {
     currentUser {
       id
@@ -29,7 +29,7 @@ export default function CurrentUserQuery(props: Props) {
 }
 
 export function withHOC<TProps>(options?: OperationOption<TProps, Response, Variables>) {
-  return graphql<TProps, Response, Variables>(QUERY, options);
+  return graphql(QUERY, options);
 }
 
 export interface User {

@@ -1,4 +1,3 @@
-import { Theme } from '@material-ui/core';
 import { RGBA } from './rgba';
 
 declare module '@material-ui/core/styles/createPalette' {

@@ -1,7 +1,7 @@
+import { InternalLink } from '@Components';
 import { Typography } from '@material-ui/core';
-import { InternalLink } from 'Components';
+import { classnames } from '@Themes';
 import * as React from 'react';
-import { classnames } from 'Themes';
 import { StationItemProps } from '..';
 import { useStyles } from './styles';
 

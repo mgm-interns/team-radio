@@ -7,7 +7,7 @@
     ],
     "rules": {
       "no-console": false,
-      "no-namespace": false,
+      "no-namespace": true,
       //
       "variable-name": false,
       "no-empty-interface": false,

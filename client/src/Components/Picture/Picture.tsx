@@ -1,4 +1,4 @@
-import { Identifiable, Styleable } from 'Common';
+import { Identifiable, Styleable } from '@Common';
 import * as React from 'react';
 import { useStyles } from './styles';
 

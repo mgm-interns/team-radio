@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DataProps, graphql, OperationOption, Query as GraphQLQuery } from 'react-apollo';
 import { PartialQueryProps } from '../types';
 
-const QUERY = gql`
+export const QUERY = gql`
   query RealTimeStation($stationId: String!) {
     item: RealTimeStation(stationId: $stationId) {
       id
@@ -35,7 +35,7 @@ export default function RealTimeStationQuery(props: Props) {
 }
 
 export function withHOC<TProps>(options: OperationOption<TProps, Response, Variables>) {
-  return graphql<TProps, Response, Variables>(QUERY, options);
+  return graphql(QUERY, options);
 }
 
 export interface Station {

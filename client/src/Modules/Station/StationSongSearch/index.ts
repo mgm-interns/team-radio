@@ -1,1 +1,1 @@
-export { default as StationSongSearch, Props as StationSongSearchProps } from './StationSongSearch';
+export { default as StationSongSearch } from './StationSongSearch';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DataProps, graphql, OperationOption, Query as GraphQLQuery } from 'react-apollo';
 import { PartialQueryProps } from '../types';
 
-const QUERY = gql`
+export const QUERY = gql`
   {
     items: allRealTimeStations {
       id

@@ -1,12 +1,12 @@
+import { Identifiable } from '@Common';
+import { useWindowResizeEffect } from '@Hooks';
 import { Card, Icon, Tab, Tabs, Theme, Tooltip } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
-import { Identifiable } from 'Common';
-import { useWindowResizeEffect } from 'Hooks';
-import { HistoryList, Playlist } from 'Modules';
-import { RealTimeStationPlayerQueryVariables } from 'RadioGraphql';
+import { HistoryList, Playlist } from '@Modules';
+import { RealTimeStationPlayerQuery } from '@RadioGraphql';
+import { classnames, ThemeType } from '@Themes';
 import * as React from 'react';
 import { MdFavorite as FavoriteIcon, MdHistory as HistoryIcon, MdQueueMusic as PlaylistIcon } from 'react-icons/md';
-import { classnames, ThemeType } from 'Themes';
 import { useTabWidth } from './hooks';
 import { useStyles } from './styles';
 
@@ -26,15 +26,12 @@ const StationSongs: React.FunctionComponent<CoreProps> = props => {
 
   const { setTabWidth, shouldRenderIcon } = useTabWidth();
   const tabsRef = React.useRef<{ tabsRef: HTMLElement }>(null);
-  const updateTabWidthCallback = React.useCallback(
-    () => {
-      if (tabsRef.current) {
-        if (!tabsRef.current.tabsRef) throw new Error('Can not find tabsRef. Please check');
-        setTabWidth(tabsRef.current.tabsRef.clientWidth);
-      }
-    },
-    [tabsRef]
-  );
+  const updateTabWidthCallback = React.useCallback(() => {
+    if (tabsRef.current) {
+      if (!tabsRef.current.tabsRef) throw new Error('Can not find tabsRef. Please check');
+      setTabWidth(tabsRef.current.tabsRef.clientWidth);
+    }
+  }, [tabsRef]);
   // Execute callback when window resize event trigger
   useWindowResizeEffect(updateTabWidthCallback, [updateTabWidthCallback]);
   // Execute callback after render to set initial value for tab width
@@ -78,19 +75,19 @@ const StationSongs: React.FunctionComponent<CoreProps> = props => {
       >
         <Tab
           className={classnames({ [classes.iconTab]: shouldRenderIcon })}
-          icon={shouldRenderIcon && iconWrapper(<PlaylistIcon />, 'Playlist')}
+          icon={shouldRenderIcon ? iconWrapper(<PlaylistIcon />, 'Playlist') : undefined}
           label={shouldRenderIcon ? undefined : 'Playlist'}
           classes={{ wrapper: shouldRenderIcon ? classes.tabIconWrapper : undefined }}
         />
         <Tab
           className={classnames({ [classes.iconTab]: shouldRenderIcon })}
-          icon={shouldRenderIcon && iconWrapper(<HistoryIcon />, 'History')}
+          icon={shouldRenderIcon ? iconWrapper(<HistoryIcon />, 'History') : undefined}
           label={shouldRenderIcon ? undefined : 'History'}
           classes={{ wrapper: shouldRenderIcon ? classes.tabIconWrapper : undefined }}
         />
         <Tab
           className={classnames({ [classes.iconTab]: shouldRenderIcon })}
-          icon={shouldRenderIcon && iconWrapper(<FavoriteIcon />, 'Favorite')}
+          icon={shouldRenderIcon ? iconWrapper(<FavoriteIcon />, 'Favorite') : undefined}
           label={shouldRenderIcon ? undefined : 'Favorite'}
           classes={{ wrapper: shouldRenderIcon ? classes.tabIconWrapper : undefined }}
         />
@@ -107,5 +104,5 @@ interface CoreProps extends Props {}
 export default StationSongs;
 
 export interface Props extends Identifiable {
-  params: RealTimeStationPlayerQueryVariables;
+  params: RealTimeStationPlayerQuery.Variables;
 }

@@ -1,9 +1,11 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
 import { DataProps, DataValue, graphql, OperationOption, Query as GraphQLQuery } from 'react-apollo';
+import * as ReactApolloHooks from 'react-apollo-hooks';
+import { QueryHookOptions } from 'react-apollo-hooks/lib/useQuery';
 import { PartialQueryProps } from '../types';
 
-const QUERY = gql`
+export const QUERY = gql`
   query allDistinctHistorySongs($stationId: String!, $perPage: Int, $page: Int) {
     items: allDistinctHistorySongs(filter: { stationId: $stationId }, perPage: $perPage, page: $page) {
       title
@@ -24,6 +26,10 @@ export default function RealTimeStationPlaylistQuery(props: Props) {
 
 export function withHOC<TProps>(options: OperationOption<{}, Response, Variables>) {
   return graphql<TProps, Response, Variables>(QUERY, options);
+}
+
+export function useQuery(options: QueryHookOptions<Variables>) {
+  return ReactApolloHooks.useQuery<Response, Variables>(QUERY, options);
 }
 
 export interface Song {

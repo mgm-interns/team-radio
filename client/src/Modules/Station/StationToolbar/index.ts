@@ -1,1 +1,1 @@
-export { default as StationToolbar, Props as StationToolbarProps } from './StationToolbar';
+export { default as StationToolbar } from './StationToolbar';

@@ -1,1 +1,1 @@
-export { default as ErrorHeader, Props as ErrorHeaderProps } from './ErrorHeader';
+export { default as ErrorHeader } from './ErrorHeader';

@@ -1,12 +1,10 @@
+import { RadioGraphQLError } from '@Error';
 import { ApolloClient, ApolloLink, InMemoryCache } from 'apollo-boost';
 import * as ContextLink from 'apollo-link-context';
 import * as ErrorLink from 'apollo-link-error';
 import * as HttpLink from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import { RadioGraphQLError } from 'Error';
-
-declare const process: any;
 
 export interface RadioClient extends ApolloClient<any> {}
 export interface RadioClientConfig {
@@ -92,7 +90,7 @@ export function initClient(config: RadioClientConfig) {
         console.log('found error', graphQLError.message);
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
-        client.resetStore();
+        if (client) client.resetStore();
         errorType = 'expired_token';
       }
       config.onError(graphQLError, errorType);

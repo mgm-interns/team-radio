@@ -1,4 +1,6 @@
-import App from 'App';
+// tslint:disable ordered-imports
+import './bootstrap';
+import App from '@App';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 

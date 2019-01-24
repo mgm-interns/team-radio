@@ -1,12 +1,7 @@
+import { Loading } from '@Components';
+import { useSubscription } from '@Hooks';
 import { Typography } from '@material-ui/core';
-import { Loading } from 'Components';
-import { useSubscription } from 'Hooks';
-import {
-  AllRealTimeStationsQueryStation,
-  getSubscribeToMoreOptionsForRealTimeStationsSubscription,
-  withAllRealTimeStationsQuery,
-  WithAllRealTimeStationsQueryProps
-} from 'RadioGraphql';
+import { AllRealTimeStationsQuery, RealTimeStationsSubscription } from '@RadioGraphql';
 import * as React from 'react';
 import { StationsHelper } from 'team-radio-shared';
 import { StationItemProps } from '../StationItem';
@@ -15,12 +10,12 @@ import { useStyles } from './styles';
 const StationList: React.FunctionComponent<CoreProps> = props => {
   const classes = useStyles();
 
-  const subscribeToMoreOptions = React.useMemo(getSubscribeToMoreOptionsForRealTimeStationsSubscription, []);
+  const subscribeToMoreOptions = React.useMemo(RealTimeStationsSubscription.getSubscribeToMoreOptions, []);
 
   useSubscription(props.data, subscribeToMoreOptions);
 
   const renderWrapper = React.useCallback(
-    (children: (data: AllRealTimeStationsQueryStation[]) => React.ReactElement<{}>) => {
+    (children: (data: AllRealTimeStationsQuery.Station[]) => React.ReactElement<{}>) => {
       const { data } = props;
 
       if (data.loading) {
@@ -34,6 +29,8 @@ const StationList: React.FunctionComponent<CoreProps> = props => {
           </Typography>
         );
       }
+
+      if (!data.items) return null;
 
       return children(data.items);
     },
@@ -51,11 +48,11 @@ const StationList: React.FunctionComponent<CoreProps> = props => {
   ));
 };
 
-interface CoreProps extends WithAllRealTimeStationsQueryProps, Props {}
+interface CoreProps extends AllRealTimeStationsQuery.WithHOCProps, Props {}
 
-export default withAllRealTimeStationsQuery<Props>({
-  options: { notifyOnNetworkStatusChange: true, fetchPolicy: 'network-only' }
-})(StationList);
+export default AllRealTimeStationsQuery.withHOC<Props>({
+  options: { notifyOnNetworkStatusChange: true }
+})(StationList as any);
 
 export interface Props {
   StationItem: React.ComponentType<StationItemProps>;

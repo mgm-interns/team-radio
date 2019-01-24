@@ -1,1 +1,1 @@
-export { default as LoginPage, Props as LoginPageProps } from './LoginPage';
+export { default as LoginPage } from './LoginPage';
