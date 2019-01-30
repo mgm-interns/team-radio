@@ -1,4 +1,6 @@
 import { Badge, Grid, IconButton, LinearProgress } from '@material-ui/core';
+import { Authenticated } from '@Modules';
+import { useAuthenticated } from '@Modules/Authentication/Authenticated';
 import { RealTimeStationPlaylistQuery } from '@RadioGraphql';
 import { classnames } from '@Themes';
 import * as React from 'react';
@@ -15,6 +17,9 @@ const PlaylistItemAction: React.FunctionComponent<CoreProps> = props => {
     if (upVotes === 0 && downVotes === 0) return 50;
     return (upVotes / (upVotes + downVotes)) * 100;
   }, [song.upVotes, song.downVotes]);
+
+  const authenticated = useAuthenticated();
+  if (!authenticated) return null;
 
   return (
     <Grid container>
@@ -37,9 +42,11 @@ const PlaylistItemAction: React.FunctionComponent<CoreProps> = props => {
           </Grid>
         </Grid>
       </div>
-      <IconButton className={classnames(classes.iconButton, classes.favoriteButton)}>
-        <MdFavorite />
-      </IconButton>
+      <Authenticated>
+        <IconButton className={classnames(classes.iconButton, classes.favoriteButton)}>
+          <MdFavorite />
+        </IconButton>
+      </Authenticated>
     </Grid>
   );
 };

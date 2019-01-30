@@ -30,6 +30,7 @@ export const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
     paddingRight: spacing.smallUnit,
     fontSize: 10,
     backgroundColor: palette.common.transparent(0.66),
+    color: palette.common.white,
     borderTopLeftRadius: spacing.smallUnit
   },
   text: {

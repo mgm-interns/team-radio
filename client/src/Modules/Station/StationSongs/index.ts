@@ -1,1 +1,1 @@
-export { default as StationSongs } from './StationSongs';
+export { default as StationSongs, StationTab } from './StationSongs';

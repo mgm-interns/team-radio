@@ -45,3 +45,9 @@ export function withAuthenticated<TProps>(redirect?: string) {
     </WithRouterAuthenticated>
   );
 }
+
+export function useAuthenticated(): boolean {
+  const { error, loading } = useQuery(CurrentUserQuery.QUERY, { suspend: false });
+  if (error || loading) return false;
+  return true;
+}

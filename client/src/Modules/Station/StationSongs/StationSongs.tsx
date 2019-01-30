@@ -1,28 +1,42 @@
 import { Identifiable } from '@Common';
+import { FakeList } from '@Components';
 import { useWindowResizeEffect } from '@Hooks';
-import { Card, Icon, Tab, Tabs, Theme, Tooltip } from '@material-ui/core';
-import { useTheme } from '@material-ui/styles';
+import { Card, Icon, Tab, Tabs, Tooltip } from '@material-ui/core';
 import { HistoryList, Playlist } from '@Modules';
-import { RealTimeStationPlayerQuery } from '@RadioGraphql';
-import { classnames, ThemeType } from '@Themes';
+import { StationPageParams } from '@Pages/StationPage/StationPage';
+import { classnames } from '@Themes';
 import * as React from 'react';
 import { MdFavorite as FavoriteIcon, MdHistory as HistoryIcon, MdQueueMusic as PlaylistIcon } from 'react-icons/md';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { useTabWidth } from './hooks';
 import { useStyles } from './styles';
+
+export enum StationTab {
+  PLAYLIST = 'playlist',
+  HISTORY_LIST = 'history',
+  FAVOURITE_LIST = 'favourite'
+}
+
+const TABS = [
+  { key: StationTab.PLAYLIST, label: 'Playlist', icon: <PlaylistIcon /> },
+  { key: StationTab.HISTORY_LIST, label: 'History', icon: <HistoryIcon /> },
+  { key: StationTab.FAVOURITE_LIST, label: 'Favourite', icon: <FavoriteIcon /> }
+];
 
 const StationSongs: React.FunctionComponent<CoreProps> = props => {
   const classes = useStyles();
 
-  const { params, id } = props;
+  const { id, params } = props;
 
-  const [tabValue, setTabValue] = React.useState<number>(0);
-  const onTabChanged = React.useCallback<(event: React.ChangeEvent<{}>, value: number) => void>(
-    (event, value) => {
-      event.preventDefault();
-      setTabValue(value);
-    },
-    [tabValue]
-  );
+  const activeTab = React.useMemo(() => {
+    if (!props.match.params.tab) return StationTab.PLAYLIST;
+    return props.match.params.tab;
+  }, [props.match.params.tab]);
+
+  const onTabChanged = React.useCallback<(e: React.ChangeEvent<{}>, value: StationTab) => void>((e, value) => {
+    e.preventDefault();
+    props.history.push(`/station/${props.match.params.stationId}/${value}`);
+  }, []);
 
   const { setTabWidth, shouldRenderIcon } = useTabWidth();
   const tabsRef = React.useRef<{ tabsRef: HTMLElement }>(null);
@@ -37,72 +51,48 @@ const StationSongs: React.FunctionComponent<CoreProps> = props => {
   // Execute callback after render to set initial value for tab width
   React.useLayoutEffect(updateTabWidthCallback, [updateTabWidthCallback]);
 
-  const iconWrapper = React.useCallback<(icon: React.ReactNode, tooltip: string) => React.ReactElement<any>>(
-    (icon, tooltip) => {
-      return (
-        <Tooltip title={tooltip}>
-          <Icon>{icon}</Icon>
-        </Tooltip>
-      );
-    },
-    []
-  );
-
-  const theme = useTheme<Theme>();
-  const containerWrapper = React.useCallback<(tab?: React.ReactNode) => React.ReactNode>(
-    tab => {
-      let content: React.ReactNode = tab;
-      if (!tab) {
-        const bg = theme.palette.type === ThemeType.DARK ? theme.palette.grey['600'] : theme.palette.grey['300'];
-        content = Array.from({ length: 20 }).map((item, index) => (
-          <div key={index} style={{ background: bg, height: 80, marginTop: 4, marginBottom: 4 }} />
-        ));
-      }
-      return <div className={classes.tabContainer}>{content}</div>;
-    },
-    [classes]
-  );
-
   return (
     <Card id={id} className={classes.container}>
       <Tabs
-        value={tabValue}
+        value={activeTab}
         onChange={onTabChanged}
         indicatorColor={'primary'}
         textColor={'primary'}
         variant={'fullWidth'}
         innerRef={tabsRef}
       >
-        <Tab
-          className={classnames({ [classes.iconTab]: shouldRenderIcon })}
-          icon={shouldRenderIcon ? iconWrapper(<PlaylistIcon />, 'Playlist') : undefined}
-          label={shouldRenderIcon ? undefined : 'Playlist'}
-          classes={{ wrapper: shouldRenderIcon ? classes.tabIconWrapper : undefined }}
-        />
-        <Tab
-          className={classnames({ [classes.iconTab]: shouldRenderIcon })}
-          icon={shouldRenderIcon ? iconWrapper(<HistoryIcon />, 'History') : undefined}
-          label={shouldRenderIcon ? undefined : 'History'}
-          classes={{ wrapper: shouldRenderIcon ? classes.tabIconWrapper : undefined }}
-        />
-        <Tab
-          className={classnames({ [classes.iconTab]: shouldRenderIcon })}
-          icon={shouldRenderIcon ? iconWrapper(<FavoriteIcon />, 'Favorite') : undefined}
-          label={shouldRenderIcon ? undefined : 'Favorite'}
-          classes={{ wrapper: shouldRenderIcon ? classes.tabIconWrapper : undefined }}
-        />
+        {TABS.map(({ key, label, icon }) => (
+          <Tab
+            key={key}
+            value={key}
+            className={classnames({ [classes.iconTab]: shouldRenderIcon })}
+            icon={
+              !shouldRenderIcon ? (
+                undefined
+              ) : (
+                <Tooltip title={label}>
+                  <Icon>{icon}</Icon>
+                </Tooltip>
+              )
+            }
+            label={shouldRenderIcon ? undefined : label}
+            classes={{ wrapper: !shouldRenderIcon ? undefined : classes.tabIconWrapper }}
+          />
+        ))}
       </Tabs>
-      {tabValue === 0 && containerWrapper(<Playlist params={params} />)}
-      {tabValue === 1 && containerWrapper(<HistoryList params={params} />)}
-      {tabValue === 2 && containerWrapper()}
+      <div className={classes.tabContainer}>
+        {activeTab === StationTab.PLAYLIST && <Playlist params={params} />}
+        {activeTab === StationTab.HISTORY_LIST && <HistoryList params={params} />}
+        {activeTab === StationTab.FAVOURITE_LIST && <FakeList />}
+      </div>
     </Card>
   );
 };
 
-interface CoreProps extends Props {}
+interface CoreProps extends Props, RouteComponentProps<StationPageParams> {}
 
-export default StationSongs;
+export default withRouter(StationSongs);
 
 export interface Props extends Identifiable {
-  params: RealTimeStationPlayerQuery.Variables;
+  params: StationPageParams;
 }

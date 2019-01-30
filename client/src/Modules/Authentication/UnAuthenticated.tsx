@@ -43,3 +43,9 @@ export function withUnAuthenticated<TProps>(redirect?: string) {
     </WithRouterUnAuthenticated>
   );
 }
+
+export function useUnAuthenticated(): boolean {
+  const { error } = useQuery(CurrentUserQuery.QUERY, { suspend: false });
+  if (error) return true;
+  return false;
+}

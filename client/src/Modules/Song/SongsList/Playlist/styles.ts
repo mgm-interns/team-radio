@@ -12,7 +12,8 @@ export const useStyles = makeStyles(({ palette, spacing, typography }: Theme) =>
   listContainer: {
     width: '100%',
     height: '100%',
-    overflowY: 'auto'
+    overflowY: 'auto',
+    position: 'relative'
   },
   itemText: {
     '& >*': {

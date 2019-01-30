@@ -18,20 +18,24 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
   const [loading, loadingAction] = useToggle();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const submit = React.useCallback(async () => {
-    if (!url) return;
-    try {
-      youtubeHelper.parseVideoUrl(url);
-      setError(null);
-      loadingAction.toggleOn();
-      await props.mutate({ variables: { url } });
-      setUrl('');
-      loadingAction.toggleOff();
-      if (inputRef.current) inputRef.current.focus();
-    } catch (error) {
-      setError(error.message);
-    }
-  }, [url]);
+  const submit = React.useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!url) return;
+      try {
+        youtubeHelper.parseVideoUrl(url);
+        setError(null);
+        loadingAction.toggleOn();
+        await props.mutate({ variables: { url } });
+        setUrl('');
+        loadingAction.toggleOff();
+        if (inputRef.current) inputRef.current.focus();
+      } catch (error) {
+        setError(error.message);
+      }
+    },
+    [url]
+  );
 
   const reset = React.useCallback(() => {
     setError(null);
@@ -41,31 +45,33 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
 
   return (
     <Card id={id} className={classes.container}>
-      <TextField
-        placeholder={'Type youtube URL here'}
-        className={classes.textField}
-        InputProps={{
-          className: classes.input,
-          readOnly: loading,
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton disabled={loading} onClick={reset}>
-                <ClearIcon />
-              </IconButton>
-            </InputAdornment>
-          )
-        }}
-        InputLabelProps={{ className: classes.inputLabel }}
-        FormHelperTextProps={{ error: true }}
-        value={url}
-        onChange={e => setUrl(e.target.value)}
-        inputRef={inputRef}
-        helperText={error}
-        autoFocus
-      />
-      <GradientButton variant={'contained'} className={classes.button} onClick={submit} disabled={loading}>
-        {loading ? <Loading color={'inherit'} size={16} className={classes.loadingContainer} /> : 'Submit'}
-      </GradientButton>
+      <form onSubmit={submit}>
+        <TextField
+          placeholder={'Type youtube URL here'}
+          className={classes.textField}
+          InputProps={{
+            className: classes.input,
+            readOnly: loading,
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={reset}>
+                  <ClearIcon />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
+          InputLabelProps={{ className: classes.inputLabel }}
+          FormHelperTextProps={{ error: true }}
+          value={url}
+          onChange={e => setUrl(e.target.value)}
+          inputRef={inputRef}
+          helperText={error}
+          autoFocus
+        />
+        <GradientButton variant={'contained'} className={classes.button} onClick={submit} disabled={loading}>
+          {loading ? <Loading color={'inherit'} size={16} className={classes.loadingContainer} /> : 'Submit'}
+        </GradientButton>
+      </form>
     </Card>
   );
 };

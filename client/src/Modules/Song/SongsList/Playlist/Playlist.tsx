@@ -3,9 +3,12 @@ import { Loading } from '@Components';
 import { useSubscription } from '@Hooks';
 import { List, Typography } from '@material-ui/core';
 import { SongItem } from '@Modules';
+import { useAuthenticated } from '@Modules/Authentication/Authenticated';
+import { StationPageParams } from '@Pages/StationPage/StationPage';
 import { RealTimeStationPlaylistQuery, RealTimeStationPlaylistSubscription } from '@RadioGraphql';
 import { classnames } from '@Themes';
 import * as React from 'react';
+import FlipMove from 'react-flip-move';
 import { ItemAction } from './ItemAction';
 import { useStyles } from './styles';
 
@@ -13,6 +16,8 @@ const Playlist: React.FunctionComponent<CoreProps> = props => {
   const classes = useStyles();
 
   const { id, className, style } = props;
+
+  const authenticated = useAuthenticated();
 
   const subscribeToMoreOptions = React.useMemo(
     () => RealTimeStationPlaylistSubscription.getSubscribeToMoreOptions(props.params),
@@ -50,15 +55,18 @@ const Playlist: React.FunctionComponent<CoreProps> = props => {
 
   return renderPlayerWrapper(data => (
     <List className={classnames(classes.listContainer, className)} style={style}>
-      {data.playlist.map(song => (
-        <SongItem.SimpleSong
-          key={song.id}
-          song={song}
-          actions={<ItemAction song={song} currentPlayingSongId={data.currentPlayingSongId} />}
-          playing={song.id === data.currentPlayingSongId}
-          textClassName={classes.itemText}
-        />
-      ))}
+      <FlipMove typeName={null}>
+        {data.playlist.map(song => (
+          <div key={song.id}>
+            <SongItem.SimpleSong
+              song={song}
+              actions={<ItemAction song={song} currentPlayingSongId={data.currentPlayingSongId} />}
+              playing={song.id === data.currentPlayingSongId}
+              textClassName={authenticated ? classes.itemText : ''}
+            />
+          </div>
+        ))}
+      </FlipMove>
     </List>
   ));
 };
@@ -67,12 +75,12 @@ interface CoreProps extends RealTimeStationPlaylistQuery.WithHOCProps, Props {}
 
 export default RealTimeStationPlaylistQuery.withHOC<Props>({
   options: (props: any) => ({
-    variables: props.params,
+    variables: { stationId: props.params.stationId },
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only'
   })
 })(Playlist as any);
 
 export interface Props extends Identifiable, Styleable {
-  params: RealTimeStationPlaylistQuery.Variables;
+  params: StationPageParams;
 }

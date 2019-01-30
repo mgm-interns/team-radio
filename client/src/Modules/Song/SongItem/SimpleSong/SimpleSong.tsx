@@ -33,7 +33,7 @@ const SimpleSong: React.FunctionComponent<CoreProps> = props => {
         </Avatar>
       </Tooltip>
     );
-  }, [data, loading]);
+  }, [data, loading, classes]);
 
   return (
     <ListItem

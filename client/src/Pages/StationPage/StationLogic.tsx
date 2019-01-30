@@ -5,6 +5,7 @@ import {
   StationPlayerControllerProvider,
   StationPlayerPositionContext
 } from '@Modules';
+import { StationPageParams } from '@Pages/StationPage/StationPage';
 import { RealTimeStationQuery, RealTimeStationSubscription } from '@RadioGraphql';
 import { SubscribeToMoreOptions } from 'apollo-boost';
 import * as React from 'react';
@@ -26,10 +27,13 @@ const StationLogic: React.FunctionComponent<CoreProps> = props => {
 
   const [muted, setMuted] = useMutedLocalStorage<boolean>(false);
 
-  const subscribeToMoreOptions = React.useMemo(
-    () => RealTimeStationSubscription.getSubscribeToMoreOptions(props.params),
-    [props.params]
-  );
+  const variables = React.useMemo<RealTimeStationQuery.Variables>(() => ({ stationId: props.params.stationId }), [
+    props.params.stationId
+  ]);
+
+  const subscribeToMoreOptions = React.useMemo(() => RealTimeStationSubscription.getSubscribeToMoreOptions(variables), [
+    variables
+  ]);
 
   useSubscription(props.subscribeToMore, subscribeToMoreOptions);
 
@@ -56,6 +60,6 @@ export default StationLogic;
 export interface Props {
   station?: RealTimeStationQuery.Station;
   layout: React.ReactNode;
-  params: RealTimeStationQuery.Variables;
+  params: StationPageParams;
   subscribeToMore: (options: SubscribeToMoreOptions<any, any, any>) => () => void;
 }

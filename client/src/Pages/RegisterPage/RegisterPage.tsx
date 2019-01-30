@@ -2,6 +2,7 @@ import { Identifiable, Styleable } from '@Common';
 import { GradientButton, Picture } from '@Components';
 import { FullLayout } from '@Containers';
 import { Card, CardActions, CardContent, TextField, Typography } from '@material-ui/core';
+import { withUnAuthenticated } from '@Modules';
 import * as React from 'react';
 import { useStyles } from './styles';
 
@@ -88,6 +89,6 @@ const RegisterPage: React.FunctionComponent<CoreProps> = props => {
 
 interface CoreProps extends Props {}
 
-export default RegisterPage;
+export default withUnAuthenticated('/')(RegisterPage);
 
 export interface Props extends Identifiable, Styleable {}

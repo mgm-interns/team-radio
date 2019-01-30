@@ -1,6 +1,8 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
 import { graphql, MutateProps, Mutation as GraphQLMutation, OperationOption } from 'react-apollo';
+import * as ReactApolloHooks from 'react-apollo-hooks';
+import { MutationHookOptions } from 'react-apollo-hooks/lib/useMutation';
 import { PartialMutationProps } from '../types';
 
 export const MUTATION = gql`
@@ -17,6 +19,10 @@ export default function ReportUnavailableSongMutation(props: Props) {
 
 export function withHOC<TProps>(options?: OperationOption<TProps, Response, Variables>) {
   return graphql(MUTATION, options);
+}
+
+export function useMutation(options?: MutationHookOptions<Response, Variables>) {
+  return ReactApolloHooks.useMutation<Response, Variables>(MUTATION, options);
 }
 
 export interface Response {

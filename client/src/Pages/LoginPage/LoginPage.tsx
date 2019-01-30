@@ -3,6 +3,7 @@ import { FullLayout } from '@Containers';
 import { ErrorHelper } from '@Error';
 import { useToggle } from '@Hooks';
 import { Card, CardActions, CardContent, Fab, FormHelperText, TextField, Typography } from '@material-ui/core';
+import { withUnAuthenticated } from '@Modules';
 import { LoginMutation } from '@RadioGraphql';
 import * as React from 'react';
 import { useApolloClient } from 'react-apollo-hooks';
@@ -34,9 +35,10 @@ const LoginPage: React.FunctionComponent<CoreProps> = props => {
         variables.username = username;
       }
 
-      await login({ variables });
+      const response = await login({ variables });
       loadingAction.toggleOff();
       client.resetStore();
+      if (response.data) LoginMutation.saveLoginSession(response.data);
       if (props.history.length > 2) props.history.goBack();
       else props.history.replace('/');
     } catch (errors) {
@@ -136,6 +138,6 @@ const LoginPage: React.FunctionComponent<CoreProps> = props => {
 
 interface CoreProps extends RouteComponentProps, Props {}
 
-export default withRouter(LoginPage);
+export default withUnAuthenticated('/')(withRouter(LoginPage));
 
 export interface Props {}

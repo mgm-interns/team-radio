@@ -1,4 +1,5 @@
 import { FullLayout } from '@Containers';
+import { withAuthenticated } from '@Modules';
 import * as React from 'react';
 import { useStyles } from './styles';
 
@@ -14,6 +15,6 @@ const ProfilePage: React.FunctionComponent<CoreProps> = () => {
 
 interface CoreProps extends Props {}
 
-export default ProfilePage;
+export default withAuthenticated('/')(ProfilePage);
 
 export interface Props {}

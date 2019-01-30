@@ -1,13 +1,22 @@
 import { Loading } from '@Components';
 import { DefaultStationLayoutProps, StationLayout } from '@Containers';
-import { StationChatBox, StationItem, StationList, StationSongs, StationSongSearch, StationToolbar } from '@Modules';
+import { useToggle } from '@Hooks';
+import {
+  StationChatBox,
+  StationItem,
+  StationList,
+  StationSongs,
+  StationSongSearch,
+  StationTab,
+  StationToolbar
+} from '@Modules';
 import { JoinStationMutation, LeaveStationMutation, RealTimeStationQuery } from '@RadioGraphql';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import PageLogic from './StationLogic';
 
 const StationPage: React.FunctionComponent<CoreProps> = props => {
-  const [drawerState, setDrawerState] = React.useState<boolean>(false);
+  const [drawerState, drawerAction] = useToggle(false);
   const Layout = React.useMemo(() => {
     // TODO: any other layouts?
     switch (true) {
@@ -24,31 +33,31 @@ const StationPage: React.FunctionComponent<CoreProps> = props => {
         stationSongs: <StationSongs params={props.match.params} />,
         stationSongSearch: <StationSongSearch />,
         toolbar: <StationToolbar />,
-        stations: <StationList StationItem={StationItem.VerticalStation} onItemClick={() => setDrawerState(false)} />,
+        stations: <StationList StationItem={StationItem.VerticalStation} onItemClick={drawerAction.toggleOff} />,
         drawer: {
           open: drawerState,
-          onClose: () => setDrawerState(false),
-          onOpen: () => setDrawerState(true),
-          toggle: () => setDrawerState(!drawerState)
+          onClose: () => drawerAction.toggleOn(),
+          onOpen: () => drawerAction.toggleOff(),
+          toggle: () => drawerAction.toggle()
         }
       };
     },
     [props.match]
   );
 
-  const joinStation = JoinStationMutation.useMutation();
-  const leaveStation = LeaveStationMutation.useMutation({ variables: props.match.params });
+  const variables = React.useMemo<RealTimeStationQuery.Variables>(() => {
+    return { stationId: props.match.params.stationId };
+  }, [props.match.params.stationId]);
+  const joinStation = JoinStationMutation.useMutation({ variables });
+  const leaveStation = LeaveStationMutation.useMutation({ variables });
 
   React.useEffect(() => {
+    joinStation();
     return leaveStation;
-  }, [leaveStation, props.match]);
+  }, [props.match.params.stationId]);
 
   return (
-    <RealTimeStationQuery.default
-      variables={props.match.params}
-      notifyOnNetworkStatusChange
-      onCompleted={() => joinStation({ variables: props.match.params })}
-    >
+    <RealTimeStationQuery.default variables={variables} notifyOnNetworkStatusChange>
       {({ data, loading, error, subscribeToMore }) => {
         let stationName = <Loading color={'inherit'} />;
         if (!loading && !error) {
@@ -67,8 +76,12 @@ const StationPage: React.FunctionComponent<CoreProps> = props => {
   );
 };
 
-interface CoreProps extends RouteComponentProps<RealTimeStationQuery.Variables>, Props {}
+interface CoreProps extends RouteComponentProps<StationPageParams>, Props {}
 
 export default withRouter(StationPage);
 
+export interface StationPageParams {
+  stationId: string;
+  tab?: StationTab;
+}
 export interface Props {}

@@ -3,7 +3,7 @@ import { Authenticated, UnAuthenticated } from '@Modules/Authentication';
 import { LoginMutation } from '@RadioGraphql/Authentication';
 import { ThemeContext, ThemeType } from '@Themes';
 import * as React from 'react';
-import { ApolloConsumer } from 'react-apollo';
+import { useApolloClient } from 'react-apollo-hooks';
 import {
   MdAccountCircle,
   MdAssignment,
@@ -19,6 +19,8 @@ export const Menu: React.FunctionComponent<CoreProps> = props => {
   const classes = useStyles();
 
   const themeContext = React.useContext(ThemeContext);
+
+  const client = useApolloClient();
 
   const {
     anchorEl,
@@ -97,26 +99,22 @@ export const Menu: React.FunctionComponent<CoreProps> = props => {
         </MenuItem>
       </UnAuthenticated>
       <Authenticated disableLoading>
-        <ApolloConsumer>
-          {client => (
-            <MenuItem
-              onClick={() => {
-                onClose();
-                LoginMutation.clearLoginSession();
-                client.resetStore();
-                // FIXME: This is an temporary cheat, due to the websocket does not remove the connection
-                if (match.path === '/station/:stationId') {
-                  window.location.reload();
-                }
-              }}
-            >
-              <ListItemText>Logout</ListItemText>
-              <ListItemIcon>
-                <MdPowerSettingsNew />
-              </ListItemIcon>
-            </MenuItem>
-          )}
-        </ApolloConsumer>
+        <MenuItem
+          onClick={() => {
+            onClose();
+            LoginMutation.clearLoginSession();
+            client.resetStore();
+            // FIXME: This is an temporary cheat, due to the websocket does not remove the connection
+            if (match.path === '/station/:stationId/:tab?') {
+              window.location.reload();
+            }
+          }}
+        >
+          <ListItemText>Logout</ListItemText>
+          <ListItemIcon>
+            <MdPowerSettingsNew />
+          </ListItemIcon>
+        </MenuItem>
       </Authenticated>
       <MenuItem
         onClick={() => {

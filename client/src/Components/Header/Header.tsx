@@ -29,6 +29,14 @@ const Header: React.FunctionComponent<CoreProps> = props => {
     setAnchorEl(null);
   }, []);
 
+  const userQuery = CurrentUserQuery.useQuery({ suspend: false });
+
+  const menu = React.useMemo(() => {
+    const { loading, error, data } = userQuery;
+    if (loading || error || !data || (data && !data.currentUser.avatarUrl)) return <MdMoreVert />;
+    return <Avatar src={data.currentUser.avatarUrl} className={classes.avatar} />;
+  }, [userQuery, classes.avatar]);
+
   return (
     <ErrorHeader>
       <AppBar position={'static'} className={classes.container}>
@@ -62,17 +70,7 @@ const Header: React.FunctionComponent<CoreProps> = props => {
               </UnAuthenticated>
             </Hidden>
             <IconButton aira-owns={openMenu ? 'menu-appbar' : null} color={'inherit'} onClick={openMenu}>
-              <CurrentUserQuery.default>
-                {({ loading, error, data }) => (
-                  <Tooltip title={'Menu'}>
-                    {loading || error || (data && !data.currentUser.avatarUrl) ? (
-                      <MdMoreVert />
-                    ) : (
-                      <Avatar src={data && data.currentUser.avatarUrl} className={classes.avatar} />
-                    )}
-                  </Tooltip>
-                )}
-              </CurrentUserQuery.default>
+              <Tooltip title={'Menu'}>{menu}</Tooltip>
             </IconButton>
             <Menu anchorEl={anchorEl} onClose={closeMenu} />
           </div>

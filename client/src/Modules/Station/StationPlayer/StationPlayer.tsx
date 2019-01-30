@@ -2,9 +2,11 @@ import { Identifiable, Styleable } from '@Common';
 import { Loading, Player } from '@Components';
 import { useSubscription } from '@Hooks';
 import { Card, Typography } from '@material-ui/core';
+import { StationPageParams } from '@Pages/StationPage/StationPage';
 import {
   RealTimeStationPlayerQuery,
   RealTimeStationPlayerSubscription,
+  RealTimeStationQuery,
   ReportUnavailableSongMutation
 } from '@RadioGraphql';
 import * as React from 'react';
@@ -19,9 +21,13 @@ const StationPlayer: React.FunctionComponent<CoreProps> = props => {
     return (Date.now() - new Date(data.startedAt).getTime()) / 1000;
   }, []);
 
+  const params = React.useMemo<RealTimeStationQuery.Variables>(() => ({ stationId: props.params.stationId }), [
+    props.params.stationId
+  ]);
+
   const subscribeToMoreOptions = React.useMemo(
     () => RealTimeStationPlayerSubscription.getSubscribeToMoreOptions(props.params),
-    [props.params]
+    [params]
   );
 
   useSubscription(props.data, subscribeToMoreOptions);
@@ -57,37 +63,38 @@ const StationPlayer: React.FunctionComponent<CoreProps> = props => {
     [props.data]
   );
 
+  const reportUnavailableSong = ReportUnavailableSongMutation.useMutation();
+
   const { id, style, className } = props;
   return renderPlayerWrapper(data => (
-    <ReportUnavailableSongMutation.default>
-      {reportUnavailableSong => (
-        <Player
-          id={id}
-          style={style}
-          className={className}
-          url={data && data.playing && data.playing.url}
-          height="100%"
-          width="100%"
-          currentlyPlayedAt={data && parseCurrentlyPlayedAt(data)}
-          muted={stationControllerContext.muted}
-          onError={(errorCode: number, url: string) => {
-            console.error(`Error while playing video`, errorCode, url);
-            reportUnavailableSong({
-              variables: { errorCode, url, stationId: props.params.stationId }
-            });
-          }}
-        />
-      )}
-    </ReportUnavailableSongMutation.default>
+    <Player
+      id={id}
+      style={style}
+      className={className}
+      url={data && data.playing && data.playing.url}
+      height="100%"
+      width="100%"
+      currentlyPlayedAt={data && parseCurrentlyPlayedAt(data)}
+      muted={stationControllerContext.muted}
+      onError={(errorCode: number, url: string) => {
+        console.error(`Error while playing video`, errorCode, url);
+        reportUnavailableSong({
+          variables: { errorCode, url, stationId: props.params.stationId }
+        });
+      }}
+    />
   ));
 };
 
 interface CoreProps extends RealTimeStationPlayerQuery.WithHOCProps, Props {}
 
 export default RealTimeStationPlayerQuery.withHOC<Props>({
-  options: (props: any) => ({ variables: props.params, fetchPolicy: 'network-only' })
+  options: (props: any) => ({
+    variables: { stationId: props.params.stationId },
+    fetchPolicy: 'network-only'
+  })
 })(StationPlayer as any);
 
 export interface Props extends Identifiable, Styleable {
-  params: RealTimeStationPlayerQuery.Variables;
+  params: StationPageParams;
 }

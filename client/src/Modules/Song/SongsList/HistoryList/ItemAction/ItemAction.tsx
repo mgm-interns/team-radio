@@ -1,4 +1,5 @@
 import { Grid, IconButton } from '@material-ui/core';
+import { useAuthenticated } from '@Modules/Authentication/Authenticated';
 import { AddSongMutation, RealTimeStationDistinctHistorySongQuery } from '@RadioGraphql';
 import { classnames } from '@Themes';
 import * as React from 'react';
@@ -8,18 +9,17 @@ import { useStyles } from './styles';
 export const PlaylistItemAction: React.FunctionComponent<CoreProps> = props => {
   const classes = useStyles();
   const { song } = props;
+
+  const addSong = AddSongMutation.useMutation({ variables: { url: song.url } });
+
+  const authenticated = useAuthenticated();
+  if (!authenticated) return null;
+
   return (
     <Grid container>
-      <AddSongMutation.default>
-        {addSong => (
-          <IconButton
-            className={classnames(classes.iconButton)}
-            onClick={() => addSong({ variables: { url: song.url } })}
-          >
-            <MdReplay />
-          </IconButton>
-        )}
-      </AddSongMutation.default>
+      <IconButton className={classnames(classes.iconButton)} onClick={() => addSong()}>
+        <MdReplay />
+      </IconButton>
       <IconButton className={classnames(classes.iconButton)}>
         <MdFavorite />
       </IconButton>
