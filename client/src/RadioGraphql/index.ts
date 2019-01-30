@@ -6,3 +6,4 @@ export * from './RealTimeStationPlayer';
 export * from './RealTimeStationPlaylist';
 export * from './RealTimeStationHistory';
 export * from './Song';
+export * from './User';
