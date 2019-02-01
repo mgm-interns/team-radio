@@ -1,7 +1,8 @@
 import { Identifiable } from '@Common';
 import { GradientButton, Loading } from '@Components';
 import { useToggle } from '@Hooks';
-import { Card, IconButton, InputAdornment, TextField } from '@material-ui/core';
+import { Card, IconButton, InputAdornment, TextField, Typography } from '@material-ui/core';
+import { ToastContext, ToastDelay, ToastSeverity } from '@Modules';
 import { AddSongMutation } from '@RadioGraphql';
 import * as React from 'react';
 import { MdClear as ClearIcon } from 'react-icons/md';
@@ -18,6 +19,8 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
   const [loading, loadingAction] = useToggle();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
+  const toastContext = React.useContext(ToastContext);
+
   const submit = React.useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -32,6 +35,7 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
         if (inputRef.current) inputRef.current.focus();
       } catch (error) {
         setError(error.message);
+        toastContext.add({ payload: { message: error.message, severity: ToastSeverity.ERROR } });
       }
     },
     [url]

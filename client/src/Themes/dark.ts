@@ -3,9 +3,6 @@ import Red from '@material-ui/core/colors/red';
 import { rgba } from './rgba';
 
 export const dark = createMuiTheme({
-  metrics: {
-    headerHeight: 64
-  },
   palette: {
     type: 'dark',
     primary: {
@@ -28,6 +25,12 @@ export const dark = createMuiTheme({
       dark: Red['800'],
       mainGradient: 'linear-gradient(to right, #cb2d3e, #ef473a)'
     },
+    warning: {
+      light: '#ffff50',
+      main: '#ffcc00',
+      dark: '#c79c00',
+      mainGradient: '#ffcc00'
+    },
     common: {
       rgba,
       black: '#000',
@@ -44,7 +47,8 @@ export const dark = createMuiTheme({
     smallUnit: 4,
     mediumUnit: 8,
     largeUnit: 16,
-    hugeUnit: 32
+    hugeUnit: 32,
+    headerHeight: 64
   },
   typography: {
     useNextVariants: true

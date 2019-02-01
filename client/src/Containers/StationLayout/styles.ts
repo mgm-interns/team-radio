@@ -2,7 +2,7 @@ import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { ThemeType } from '@Themes';
 
-export const useStyles = makeStyles(({ metrics, spacing, palette }: Theme) => ({
+export const useStyles = makeStyles(({ spacing, palette }: Theme) => ({
   root: {
     flexGrow: 1,
     zIndex: 1,
@@ -32,20 +32,20 @@ export const useStyles = makeStyles(({ metrics, spacing, palette }: Theme) => ({
   drawerPaperDesktop: {
     position: 'relative',
     width: 160,
-    height: `calc(100vh - ${metrics.headerHeight}px - ${spacing.largeUnit}px)`,
+    height: `calc(100vh - ${spacing.headerHeight}px - ${spacing.largeUnit}px)`,
     marginTop: spacing.mediumUnit
   },
   drawerPaperLargeDesktop: {
     position: 'relative',
     width: 200,
-    height: `calc(100vh - ${metrics.headerHeight}px - ${spacing.largeUnit}px)`,
+    height: `calc(100vh - ${spacing.headerHeight}px - ${spacing.largeUnit}px)`,
     marginTop: spacing.mediumUnit
   },
   halfHeight: {
     height: '50%'
   },
   fullHeight: {
-    height: `calc(100vh - ${metrics.headerHeight}px)`
+    height: `calc(100vh - ${spacing.headerHeight}px)`
   },
   searchBoxOtherLayout: {
     height: `calc(100% - 300px)`

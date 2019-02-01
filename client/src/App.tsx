@@ -1,4 +1,6 @@
 import { initClient, RadioClient } from '@Config';
+import { Container } from '@Containers';
+import { ToastContainer } from '@Modules';
 import { AppRouter } from '@router';
 import * as React from 'react';
 import { ApolloProvider } from 'react-apollo';
@@ -12,9 +14,6 @@ export const App: React.FunctionComponent<Props> = props => {
     const client = initClient({
       onError: error => {
         if (typeof error === 'string') setAppError(error);
-        else if (error.statusCode === 500) {
-          setAppError(error.message);
-        }
       }
     });
     client.onResetStore(() => {
@@ -29,7 +28,11 @@ export const App: React.FunctionComponent<Props> = props => {
     <ApolloProvider client={apolloClient}>
       <ApolloHookProvider client={apolloClient}>
         <RadioErrorContext.Provider value={{ error: appError }}>
-          <AppRouter />
+          <Container>
+            <ToastContainer>
+              <AppRouter />
+            </ToastContainer>
+          </Container>
         </RadioErrorContext.Provider>
       </ApolloHookProvider>
     </ApolloProvider>

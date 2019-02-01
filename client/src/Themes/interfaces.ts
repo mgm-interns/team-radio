@@ -8,6 +8,14 @@ declare module '@material-ui/core/styles/createPalette' {
   interface PaletteColor {
     mainGradient: string;
   }
+
+  interface Palette {
+    warning: PaletteColor | SimplePaletteColorOptions;
+  }
+
+  interface PaletteOptions {
+    warning: PaletteColor | SimplePaletteColorOptions;
+  }
 }
 
 declare module '@material-ui/core/styles/spacing' {
@@ -16,6 +24,7 @@ declare module '@material-ui/core/styles/spacing' {
     mediumUnit: number;
     largeUnit: number;
     hugeUnit: number;
+    headerHeight: number;
   }
 }
 
@@ -35,20 +44,6 @@ declare module '@material-ui/core/styles/zIndex' {
   interface ZIndex {
     fullScreenLoading: number;
     stationPlayerContainer: number;
-  }
-}
-
-interface RadioMetrics {
-  headerHeight: number;
-}
-
-declare module '@material-ui/core/styles/createMuiTheme' {
-  export interface Theme {
-    metrics: RadioMetrics;
-  }
-
-  export interface ThemeOptions {
-    metrics: RadioMetrics;
   }
 }
 

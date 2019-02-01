@@ -1,6 +1,7 @@
 export * from './Loading';
 export * from './FakeList';
 export * from './Button';
+export * from './Portal';
 export * from './Header';
 export * from './Footer';
 export * from './Picture';
