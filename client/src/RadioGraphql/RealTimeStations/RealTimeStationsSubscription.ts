@@ -1,7 +1,8 @@
-import { SubscribeToMoreOptions } from 'apollo-boost';
+import { useSubscription } from '@Hooks';
 import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
-import { AllRealTimeStationsQuery } from '.';
+import * as React from 'react';
+import { QueryHookOptions } from 'react-apollo-hooks/lib/useQuery';
+import { RealTimeStationsQuery } from '.';
 
 const SUBSCRIPTION = gql`
   subscription {
@@ -18,35 +19,36 @@ const SUBSCRIPTION = gql`
   }
 `;
 
-export const withHOC = graphql<{}, Response, Variables>(SUBSCRIPTION);
+export function useQueryWithSubscription(options: QueryHookOptions<Variables>) {
+  const query = RealTimeStationsQuery.useQuery(options);
 
-export function getSubscribeToMoreOptions(): SubscribeToMoreOptions<
-  AllRealTimeStationsQuery.Response,
-  AllRealTimeStationsQuery.Variables,
-  Response
-> {
-  return {
-    document: SUBSCRIPTION,
-    updateQuery: (prev, { subscriptionData }) => {
-      if (!subscriptionData.data) return prev;
+  const {
+    data: { onStationsChanged }
+  } = useSubscription<Response, Variables>(SUBSCRIPTION, options);
+
+  React.useEffect(() => {
+    if (!onStationsChanged) return;
+    query.updateQuery(prev => {
       return {
         ...prev,
-        items: prev.items.map((station: AllRealTimeStationsQuery.Station) => {
-          if (station.id === subscriptionData.data.onStationsChanged.id) {
+        items: prev.items.map((station: RealTimeStationsQuery.Station) => {
+          if (station.id === onStationsChanged.id) {
             return {
               ...station,
-              ...subscriptionData.data.onStationsChanged
+              ...onStationsChanged
             };
           }
           return station;
         })
       };
-    }
-  };
+    });
+  }, [onStationsChanged]);
+
+  return query;
 }
 
 export interface Response {
-  readonly onStationsChanged: AllRealTimeStationsQuery.Station;
+  readonly onStationsChanged: RealTimeStationsQuery.Station;
 }
 
 export interface Variables {}

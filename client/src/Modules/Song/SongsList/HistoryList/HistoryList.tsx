@@ -3,7 +3,7 @@ import { Loading } from '@Components';
 import { Button, List, Typography } from '@material-ui/core';
 import { SongItem } from '@Modules';
 import { useAuthenticated } from '@Modules/Authentication/Authenticated';
-import { StationPageParams } from '@Pages/StationPage/StationPage';
+import { StationPageParams } from '@Pages';
 import { RealTimeStationDistinctHistorySongQuery } from '@RadioGraphql';
 import { classnames } from '@Themes';
 import * as React from 'react';

@@ -1,6 +1,7 @@
-import { SubscribeToMoreOptions } from 'apollo-boost';
+import { useSubscription } from '@Hooks';
 import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+import * as React from 'react';
+import { QueryHookOptions } from 'react-apollo-hooks/lib/useQuery';
 import { RealTimeStationQuery } from '.';
 
 const SUBSCRIPTION = gql`
@@ -28,20 +29,24 @@ const SUBSCRIPTION = gql`
   }
 `;
 
-export const withHOC = <TProps>() => graphql<TProps, Response, Variables>(SUBSCRIPTION);
+export function useQueryWithSubscription(options: QueryHookOptions<Variables>) {
+  const query = RealTimeStationQuery.useQuery(options);
 
-export function getSubscribeToMoreOptions(
-  params: Variables
-): SubscribeToMoreOptions<RealTimeStationQuery.Response, RealTimeStationQuery.Variables, Response> {
-  return {
-    document: SUBSCRIPTION,
-    variables: params,
-    updateQuery: (prev: RealTimeStationQuery.Response, { subscriptionData }) => {
-      if (!subscriptionData.data) return prev;
-      // TODO: Implement subscription for real time station
-      return prev;
-    }
-  };
+  const {
+    data: { onStationChanged }
+  } = useSubscription<Response, Variables>(SUBSCRIPTION, options);
+
+  React.useEffect(() => {
+    if (!onStationChanged) return;
+    query.updateQuery(prev => {
+      return {
+        ...prev,
+        item: onStationChanged
+      };
+    });
+  }, [onStationChanged]);
+
+  return query;
 }
 
 export interface Response {

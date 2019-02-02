@@ -1,8 +1,8 @@
 import { Identifiable } from '@Common';
 import { GradientButton, Loading } from '@Components';
 import { useToggle } from '@Hooks';
-import { Card, IconButton, InputAdornment, TextField, Typography } from '@material-ui/core';
-import { ToastContext, ToastDelay, ToastSeverity } from '@Modules';
+import { Card, IconButton, InputAdornment, TextField } from '@material-ui/core';
+import { ToastContext, ToastSeverity } from '@Modules';
 import { AddSongMutation } from '@RadioGraphql';
 import * as React from 'react';
 import { MdClear as ClearIcon } from 'react-icons/md';
@@ -19,6 +19,7 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
   const [loading, loadingAction] = useToggle();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
+  const addSong = AddSongMutation.useMutation();
   const toastContext = React.useContext(ToastContext);
 
   const submit = React.useCallback(
@@ -29,7 +30,7 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
         youtubeHelper.parseVideoUrl(url);
         setError(null);
         loadingAction.toggleOn();
-        await props.mutate({ variables: { url } });
+        await addSong({ variables: { url } });
         setUrl('');
         loadingAction.toggleOff();
         if (inputRef.current) inputRef.current.focus();
@@ -80,8 +81,8 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
   );
 };
 
-interface CoreProps extends AddSongMutation.WithHOCProps, Props {}
+interface CoreProps extends Props {}
 
-export default AddSongMutation.withHOC()(StationSongSearch as any);
+export default StationSongSearch;
 
 export interface Props extends Identifiable {}

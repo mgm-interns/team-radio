@@ -1,12 +1,10 @@
 import { Identifiable, Styleable } from '@Common';
 import { Loading, Player } from '@Components';
-import { useSubscription } from '@Hooks';
 import { Card, Typography } from '@material-ui/core';
-import { StationPageParams } from '@Pages/StationPage/StationPage';
+import { StationPageParams } from '@Pages';
 import {
   RealTimeStationPlayerQuery,
   RealTimeStationPlayerSubscription,
-  RealTimeStationQuery,
   ReportUnavailableSongMutation
 } from '@RadioGraphql';
 import * as React from 'react';
@@ -16,65 +14,64 @@ import { useStyles } from './styles';
 const StationPlayer: React.FunctionComponent<CoreProps> = props => {
   const classes = useStyles();
 
-  const parseCurrentlyPlayedAt = React.useCallback((data: RealTimeStationPlayerQuery.Player) => {
-    if (!data.startedAt) return 0;
-    return (Date.now() - new Date(data.startedAt).getTime()) / 1000;
+  const parseCurrentlyPlayedAt = React.useCallback((player: RealTimeStationPlayerQuery.Player) => {
+    if (!player.startedAt) return 0;
+    return (Date.now() - new Date(player.startedAt).getTime()) / 1000;
   }, []);
 
-  const params = React.useMemo<RealTimeStationQuery.Variables>(() => ({ stationId: props.params.stationId }), [
+  const params = React.useMemo<RealTimeStationPlayerQuery.Variables>(() => ({ stationId: props.params.stationId }), [
     props.params.stationId
   ]);
 
-  const subscribeToMoreOptions = React.useMemo(
-    () => RealTimeStationPlayerSubscription.getSubscribeToMoreOptions(props.params),
-    [params]
-  );
-
-  useSubscription(props.data, subscribeToMoreOptions);
+  const { data, loading, error } = RealTimeStationPlayerSubscription.useQueryWithSubscription({
+    variables: params,
+    fetchPolicy: 'network-only',
+    suspend: false
+  });
 
   const stationControllerContext = React.useContext(StationControllerContext);
 
   const renderPlayerWrapper = React.useCallback(
     (children: (data?: RealTimeStationPlayerQuery.Player) => React.ReactNode) => {
-      const { data } = props;
       let content: React.ReactNode;
 
-      if (data.error) {
-        console.error(data.error);
+      if (error) {
+        console.error(error);
         // Error
-        content = <Typography color={'error'}>Error {data.error.message}</Typography>;
-      } else if (data.loading) {
+        content = <Typography color={'error'}>Error {error.message}</Typography>;
+      } else if (loading) {
         // Loading
         content = <Loading />;
-      } else if (!data.player || (!data.player.playing && !data.player.playlistCount)) {
+      } else if (data && (!data.player || (!data.player.playing && !data.player.playlistCount))) {
         // No playing song and no song in playlist
         content = <Typography>No song, add a new one to start listening.</Typography>;
-      } else if (data.player.nextSongThumbnail) {
+      } else if (data && data.player.nextSongThumbnail) {
         // Display next song thumbnail if there is one in response
         content = <img src={data.player.nextSongThumbnail} className={classes.thumbnail} />;
       }
       return (
         <Card className={classes.container}>
-          {children(data.player)}
+          {children(data && data.player)}
           {content && <div className={classes.overlayContainer}>{content}</div>}
         </Card>
       );
     },
-    [props.data]
+    [data, loading, error, classes]
   );
 
   const reportUnavailableSong = ReportUnavailableSongMutation.useMutation();
 
   const { id, style, className } = props;
-  return renderPlayerWrapper(data => (
+  return renderPlayerWrapper(player => (
     <Player
+      key={params.stationId}
       id={id}
       style={style}
       className={className}
-      url={data && data.playing && data.playing.url}
+      url={player && player.playing && player.playing.url}
       height="100%"
       width="100%"
-      currentlyPlayedAt={data && parseCurrentlyPlayedAt(data)}
+      currentlyPlayedAt={player && parseCurrentlyPlayedAt(player)}
       muted={stationControllerContext.muted}
       onError={(errorCode: number, url: string) => {
         console.error(`Error while playing video`, errorCode, url);
@@ -86,14 +83,9 @@ const StationPlayer: React.FunctionComponent<CoreProps> = props => {
   ));
 };
 
-interface CoreProps extends RealTimeStationPlayerQuery.WithHOCProps, Props {}
+interface CoreProps extends Props {}
 
-export default RealTimeStationPlayerQuery.withHOC<Props>({
-  options: (props: any) => ({
-    variables: { stationId: props.params.stationId },
-    fetchPolicy: 'network-only'
-  })
-})(StationPlayer as any);
+export default StationPlayer;
 
 export interface Props extends Identifiable, Styleable {
   params: StationPageParams;

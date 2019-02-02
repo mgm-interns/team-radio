@@ -2,22 +2,18 @@ import gql from 'graphql-tag';
 import * as React from 'react';
 import * as ReactApolloHooks from 'react-apollo-hooks';
 import { QueryHookOptions } from 'react-apollo-hooks/lib/useQuery';
-import { UserRole } from '.';
 
 export const QUERY = gql`
-  query currentUser {
-    currentUser {
+  {
+    items: allRealTimeStations {
       id
-      email
-      username
-      firstname
-      lastname
-      name
-      avatarUrl
-      roles {
-        role
-        stationId
-      }
+      createdAt
+      isPrivate
+      ownerId
+      stationId
+      stationName
+      onlineCount
+      thumbnail
     }
   }
 `;
@@ -26,19 +22,19 @@ export function useQuery(options?: QueryHookOptions<Variables>) {
   return ReactApolloHooks.useQuery<Response, Variables>(QUERY, options);
 }
 
-export interface User {
+export interface Station {
   readonly id: string;
-  readonly email: string;
-  readonly username: string;
-  readonly firstname?: string;
-  readonly lastname?: string;
-  readonly name?: string;
-  readonly avatarUrl?: string;
-  readonly roles: UserRole[];
+  readonly stationId: string;
+  readonly stationName: string;
+  readonly createdAt: number;
+  readonly ownerId: string;
+  readonly isPrivate: boolean;
+  readonly onlineCount: number;
+  readonly thumbnail?: string;
 }
 
 export interface Response {
-  readonly currentUser: User;
+  readonly items: Station[];
 }
 
 export interface Variables {}

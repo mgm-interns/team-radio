@@ -1,10 +1,9 @@
 import { Identifiable, Styleable } from '@Common';
 import { Loading } from '@Components';
-import { useSubscription } from '@Hooks';
 import { List, Typography } from '@material-ui/core';
 import { SongItem } from '@Modules';
 import { useAuthenticated } from '@Modules/Authentication/Authenticated';
-import { StationPageParams } from '@Pages/StationPage/StationPage';
+import { StationPageParams } from '@Pages';
 import { RealTimeStationPlaylistQuery, RealTimeStationPlaylistSubscription } from '@RadioGraphql';
 import { classnames } from '@Themes';
 import * as React from 'react';
@@ -19,27 +18,29 @@ const Playlist: React.FunctionComponent<CoreProps> = props => {
 
   const authenticated = useAuthenticated();
 
-  const subscribeToMoreOptions = React.useMemo(
-    () => RealTimeStationPlaylistSubscription.getSubscribeToMoreOptions(props.params),
-    [props.params]
-  );
+  const params = React.useMemo<RealTimeStationPlaylistQuery.Variables>(() => ({ stationId: props.params.stationId }), [
+    props.params.stationId
+  ]);
 
-  useSubscription(props.data, subscribeToMoreOptions);
+  const { data, error, loading } = RealTimeStationPlaylistSubscription.useQueryWithSubscription({
+    variables: params,
+    fetchPolicy: 'network-only',
+    suspend: false
+  });
 
-  const renderPlayerWrapper = React.useCallback(
+  const renderPlaylistWrapper = React.useCallback(
     (children: (data: RealTimeStationPlaylistQuery.Playlist) => React.ReactElement<{}>) => {
       let content: React.ReactElement<{}> | null = null;
-      const { data } = props;
-      if (data.error) {
+      if (error) {
         // Error
-        content = <Typography color={'error'}>Error {data.error.message}</Typography>;
-      } else if (data.loading) {
+        content = <Typography color={'error'}>Error {error.message}</Typography>;
+      } else if (loading) {
         // Loading
         content = <Loading />;
-      } else if (data && data.items && !data.items.playlist.length) {
+      } else if (data && data && !data.items.playlist.length) {
         // No playing song and no song in playlist
         content = <Typography>No song</Typography>;
-      } else if (data.items) {
+      } else if (data) {
         // Playing song is active
         return children(data.items);
       }
@@ -50,18 +51,18 @@ const Playlist: React.FunctionComponent<CoreProps> = props => {
         </div>
       );
     },
-    [classes, props.data]
+    [classes, data, error, loading]
   );
 
-  return renderPlayerWrapper(data => (
+  return renderPlaylistWrapper(({ playlist, currentPlayingSongId }) => (
     <List className={classnames(classes.listContainer, className)} style={style}>
       <FlipMove typeName={null}>
-        {data.playlist.map(song => (
+        {playlist.map(song => (
           <div key={song.id}>
             <SongItem.SimpleSong
               song={song}
-              actions={<ItemAction song={song} currentPlayingSongId={data.currentPlayingSongId} />}
-              playing={song.id === data.currentPlayingSongId}
+              actions={<ItemAction song={song} currentPlayingSongId={currentPlayingSongId} />}
+              playing={song.id === currentPlayingSongId}
               textClassName={authenticated ? classes.itemText : ''}
             />
           </div>
@@ -71,15 +72,9 @@ const Playlist: React.FunctionComponent<CoreProps> = props => {
   ));
 };
 
-interface CoreProps extends RealTimeStationPlaylistQuery.WithHOCProps, Props {}
+interface CoreProps extends Props {}
 
-export default RealTimeStationPlaylistQuery.withHOC<Props>({
-  options: (props: any) => ({
-    variables: { stationId: props.params.stationId },
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'network-only'
-  })
-})(Playlist as any);
+export default Playlist;
 
 export interface Props extends Identifiable, Styleable {
   params: StationPageParams;

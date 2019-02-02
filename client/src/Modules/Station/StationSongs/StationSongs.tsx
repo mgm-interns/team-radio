@@ -3,7 +3,7 @@ import { FakeList } from '@Components';
 import { useWindowResizeEffect } from '@Hooks';
 import { Card, Icon, Tab, Tabs, Tooltip } from '@material-ui/core';
 import { HistoryList, Playlist } from '@Modules';
-import { StationPageParams } from '@Pages/StationPage/StationPage';
+import { StationPageParams } from '@Pages';
 import { classnames } from '@Themes';
 import * as React from 'react';
 import { MdFavorite as FavoriteIcon, MdHistory as HistoryIcon, MdQueueMusic as PlaylistIcon } from 'react-icons/md';
@@ -26,7 +26,7 @@ const TABS = [
 const StationSongs: React.FunctionComponent<CoreProps> = props => {
   const classes = useStyles();
 
-  const { id, params } = props;
+  const { id } = props;
 
   const activeTab = React.useMemo(() => {
     if (!props.match.params.tab) return StationTab.PLAYLIST;
@@ -81,8 +81,8 @@ const StationSongs: React.FunctionComponent<CoreProps> = props => {
         ))}
       </Tabs>
       <div className={classes.tabContainer}>
-        {activeTab === StationTab.PLAYLIST && <Playlist params={params} />}
-        {activeTab === StationTab.HISTORY_LIST && <HistoryList params={params} />}
+        {activeTab === StationTab.PLAYLIST && <Playlist params={props.match.params} />}
+        {activeTab === StationTab.HISTORY_LIST && <HistoryList params={props.match.params} />}
         {activeTab === StationTab.FAVOURITE_LIST && <FakeList />}
       </div>
     </Card>
@@ -93,6 +93,4 @@ interface CoreProps extends Props, RouteComponentProps<StationPageParams> {}
 
 export default withRouter(StationSongs);
 
-export interface Props extends Identifiable {
-  params: StationPageParams;
-}
+export interface Props extends Identifiable {}

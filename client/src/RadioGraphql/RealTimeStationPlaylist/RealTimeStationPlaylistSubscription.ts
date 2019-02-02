@@ -1,6 +1,7 @@
-import { SubscribeToMoreOptions } from 'apollo-boost';
+import { useSubscription } from '@Hooks';
 import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+import * as React from 'react';
+import { QueryHookOptions } from 'react-apollo-hooks/lib/useQuery';
 import { RealTimeStationPlaylistQuery } from '.';
 
 const SUBSCRIPTION = gql`
@@ -22,23 +23,24 @@ const SUBSCRIPTION = gql`
   }
 `;
 
-export const withHOC = <TProps>() => graphql<TProps, Response, Variables>(SUBSCRIPTION);
+export function useQueryWithSubscription(options: QueryHookOptions<Variables>) {
+  const query = RealTimeStationPlaylistQuery.useQuery(options);
 
-export function getSubscribeToMoreOptions(
-  variables: Variables
-): SubscribeToMoreOptions<RealTimeStationPlaylistQuery.Response, RealTimeStationPlaylistQuery.Variables, Response> {
-  return {
-    variables,
-    document: SUBSCRIPTION,
-    updateQuery: (prev, { subscriptionData }) => {
-      if (!subscriptionData.data) return prev;
+  const {
+    data: { onStationPlaylistChanged }
+  } = useSubscription<Response, Variables>(SUBSCRIPTION, options);
 
+  React.useEffect(() => {
+    if (!onStationPlaylistChanged) return;
+    query.updateQuery(prev => {
       return {
         ...prev,
-        items: subscriptionData.data.onStationPlaylistChanged
+        items: onStationPlaylistChanged
       };
-    }
-  };
+    });
+  }, [onStationPlaylistChanged]);
+
+  return query;
 }
 
 export interface Response {
