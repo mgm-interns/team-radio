@@ -6,8 +6,10 @@ const Portal: React.FunctionComponent<Props> = props => {
 
   React.useLayoutEffect(() => {
     document.body.appendChild(element);
-    return () => document.body.removeChild(element);
-  }, []);
+    return () => {
+      document.body.removeChild(element);
+    };
+  }, [element]);
 
   return ReactDOM.createPortal(props.children, element);
 };

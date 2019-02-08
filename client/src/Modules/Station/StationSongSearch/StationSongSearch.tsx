@@ -36,7 +36,7 @@ const StationSongSearch: React.FunctionComponent<CoreProps> = props => {
         if (inputRef.current) inputRef.current.focus();
       } catch (error) {
         setError(error.message);
-        toastContext.add({ payload: { message: error.message, severity: ToastSeverity.ERROR } });
+        toastContext.add({ message: error.message, severity: ToastSeverity.ERROR });
       }
     },
     [url]

@@ -18,11 +18,11 @@ const ToastContainer: React.FunctionComponent<{}> = props => {
   return (
     <ToastContext.Provider
       value={{
-        add({ payload }) {
+        add(payload) {
           // tslint:disable-next-line object-shorthand-properties-first
           dispatch({ type: ActionType.ADD, payload });
         },
-        remove({ payload }) {
+        remove(payload) {
           // tslint:disable-next-line object-shorthand-properties-first
           dispatch({ type: ActionType.REMOVE, payload });
         },

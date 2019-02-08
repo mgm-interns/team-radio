@@ -2,8 +2,8 @@ import * as React from 'react';
 import { AddAction, RemoveAction } from './actions';
 
 interface IToastContext {
-  add({ payload }: Pick<AddAction, 'payload'>): void;
-  remove({ payload }: Pick<RemoveAction, 'payload'>): void;
+  add(payload: AddAction['payload']): void;
+  remove(payload: RemoveAction['payload']): void;
   reset(): void;
 }
 

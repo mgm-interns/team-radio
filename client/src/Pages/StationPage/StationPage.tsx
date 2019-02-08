@@ -64,7 +64,9 @@ const StationPage: React.FunctionComponent<CoreProps> = props => {
   React.useEffect(() => {
     if (!data) return;
     joinStation();
-    return leaveStation;
+    return () => {
+      leaveStation();
+    };
   }, [props.match.params.stationId]);
 
   const stationName = React.useMemo(() => {
