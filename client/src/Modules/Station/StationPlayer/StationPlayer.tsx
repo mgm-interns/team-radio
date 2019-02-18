@@ -1,5 +1,5 @@
 import { Identifiable, Styleable } from '@Common';
-import { Loading, Player } from '@Components';
+import { EmptyContainer, Loading, Player } from '@Components';
 import { Card, Typography } from '@material-ui/core';
 import { StationPageParams } from '@Pages';
 import {
@@ -44,7 +44,7 @@ const StationPlayer: React.FunctionComponent<CoreProps> = props => {
         content = <Loading />;
       } else if (data && (!data.player || (!data.player.playing && !data.player.playlistCount))) {
         // No playing song and no song in playlist
-        content = <Typography>No song, add a new one to start listening.</Typography>;
+        content = <EmptyContainer noImg label={'Add a song to start the player'} />;
       } else if (data && data.player.nextSongThumbnail) {
         // Display next song thumbnail if there is one in response
         content = <img src={data.player.nextSongThumbnail} className={classes.thumbnail} />;

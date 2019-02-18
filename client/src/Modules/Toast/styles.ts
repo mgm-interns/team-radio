@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 export const useStyles = makeStyles(({ palette, spacing, zIndex }: Theme) => ({
   container: {
     position: 'fixed',
-    bottom: spacing.headerHeight,
+    bottom: spacing.unit,
     left: spacing.unit,
     zIndex: zIndex.tooltip
   }

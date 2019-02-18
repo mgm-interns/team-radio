@@ -41,10 +41,10 @@ const StationSongs: React.FunctionComponent<CoreProps> = props => {
   const { setTabWidth, shouldRenderIcon } = useTabWidth();
   const tabsRef = React.useRef<{ tabsRef: HTMLElement }>(null);
   const updateTabWidthCallback = React.useCallback(() => {
-    if (tabsRef.current) {
-      if (!tabsRef.current.tabsRef) throw new Error('Can not find tabsRef. Please check');
-      setTabWidth(tabsRef.current.tabsRef.clientWidth);
+    if (!tabsRef.current || !tabsRef.current.tabsRef) {
+      throw new Error('Can not find tabsRef. Please check the render method of StationSongs.');
     }
+    setTabWidth(tabsRef.current.tabsRef.clientWidth);
   }, [tabsRef]);
   // Execute callback when window resize event trigger
   useWindowResizeEffect(updateTabWidthCallback, [updateTabWidthCallback]);

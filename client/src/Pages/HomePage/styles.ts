@@ -3,6 +3,9 @@ import { makeStyles } from '@material-ui/styles';
 import { ThemeType } from '@Themes';
 
 export const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
+  appBar: {
+    background: palette.common.transparent(0.2)
+  },
   container: {},
   backgroundContainer: {
     background: palette.secondary.dark,

@@ -19,7 +19,7 @@ const HomePage: React.FunctionComponent<CoreProps> = props => {
   const [isPrivate, isPrivateAction] = useToggle(false);
 
   return (
-    <FullLayout>
+    <FullLayout headerProps={{ position: 'fixed', classes: { appBar: classes.appBar } }}>
       <div className={classes.container}>
         <div className={classes.backgroundContainer}>
           <Picture

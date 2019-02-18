@@ -89,6 +89,6 @@ const RegisterPage: React.FunctionComponent<CoreProps> = props => {
 
 interface CoreProps extends Props {}
 
-export default withUnAuthenticated('/')(RegisterPage);
+export default withUnAuthenticated('/', 'You need to logout first.')(RegisterPage);
 
 export interface Props extends Identifiable, Styleable {}

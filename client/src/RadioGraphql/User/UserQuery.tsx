@@ -13,6 +13,10 @@ export const QUERY = gql`
       lastname
       name
       avatarUrl
+      coverUrl
+      country
+      city
+      bio
     }
   }
 `;
@@ -29,6 +33,10 @@ export interface User {
   readonly lastname?: string;
   readonly name?: string;
   readonly avatarUrl?: string;
+  readonly coverUrl?: string;
+  readonly country?: string;
+  readonly city?: string;
+  readonly bio?: string;
 }
 
 export interface Response {

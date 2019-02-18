@@ -138,6 +138,6 @@ const LoginPage: React.FunctionComponent<CoreProps> = props => {
 
 interface CoreProps extends RouteComponentProps, Props {}
 
-export default withUnAuthenticated('/')(withRouter(LoginPage));
+export default withUnAuthenticated('/', 'You need to logout first.')(withRouter(LoginPage));
 
 export interface Props {}

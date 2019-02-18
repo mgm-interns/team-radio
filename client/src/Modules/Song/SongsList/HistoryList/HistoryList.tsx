@@ -23,7 +23,8 @@ const HistoryList: React.FunctionComponent<CoreProps> = props => {
 
   const { error, loading, data } = RealTimeStationDistinctHistorySongQuery.useQuery({
     suspend: false,
-    variables: params
+    variables: params,
+    fetchPolicy: 'cache-and-network'
   });
 
   const authenticated = useAuthenticated();

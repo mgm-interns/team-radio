@@ -1,5 +1,5 @@
 import { Identifiable, Styleable } from '@Common';
-import { Loading } from '@Components';
+import { EmptyContainer, Loading } from '@Components';
 import { List, Typography } from '@material-ui/core';
 import { SongItem } from '@Modules';
 import { useAuthenticated } from '@Modules/Authentication/Authenticated';
@@ -39,7 +39,7 @@ const Playlist: React.FunctionComponent<CoreProps> = props => {
         content = <Loading />;
       } else if (data && data && !data.items.playlist.length) {
         // No playing song and no song in playlist
-        content = <Typography>No song</Typography>;
+        content = <EmptyContainer />;
       } else if (data) {
         // Playing song is active
         return children(data.items);

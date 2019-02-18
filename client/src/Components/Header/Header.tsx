@@ -3,6 +3,7 @@ import { InternalLink } from '@Components';
 import { AppBar, Avatar, Hidden, IconButton, Toolbar, Tooltip } from '@material-ui/core';
 import { UnAuthenticated } from '@Modules';
 import { CurrentUserQuery } from '@RadioGraphql';
+import { classnames } from '@Themes';
 import * as React from 'react';
 import { MdMoreVert, MdVpnKey } from 'react-icons/md';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -39,7 +40,10 @@ const Header: React.FunctionComponent<CoreProps> = props => {
 
   return (
     <ErrorHeader>
-      <AppBar position={'static'} className={classes.container}>
+      <AppBar
+        position={props.position || 'static'}
+        className={classnames(classes.container, props.classes && props.classes.appBar)}
+      >
         <Toolbar color={'primary'} className={classes.toolBarContainer}>
           <div className={classes.containerLeft}>
             {leftIcon}
@@ -88,4 +92,6 @@ export interface Props extends Identifiable, Styleable {
   leftIcon?: React.ReactNode;
   leftText?: React.ReactNode;
   additionalRightIcons?: React.ReactNode;
+  position?: 'fixed' | 'absolute' | 'sticky' | 'static' | 'relative';
+  classes?: { appBar: string };
 }
