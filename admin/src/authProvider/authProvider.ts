@@ -25,7 +25,17 @@ export const authProvider = (type: string, params: any): Promise<any> => {
 async function login(params: any) {
   try {
     const { username, password } = params;
+
+    const variables: any = { password };
+
+    if (username && username.includes('@')) {
+      variables.email = username;
+    } else {
+      variables.username = username;
+    }
+
     const { data, errors } = await request({
+      variables,
       query: `
         mutation login($email: String, $username: String, $password: String!) {
           login(credential: { email: $email, username: $username, password: $password }) {
@@ -39,8 +49,7 @@ async function login(params: any) {
             }
           }
         }
-      `,
-      variables: { username, password }
+      `
     });
     if (errors) {
       const error = errors[0];

@@ -20,8 +20,12 @@
     "moment": "2.x"
   },
   "devDependencies": {
-    "typescript": "^3.2.1"
+    "typescript": "^3.3.3"
   },
   "main": "build/index.js",
-  "files": ["src", "typing", "build"]
+  "files": [
+    "src",
+    "typing",
+    "build"
+  ]
 }
